@@ -15,7 +15,28 @@
                 black: '#000000',
                 silver: '#A1A1A4',
                 purple: '#3E2680',
+              },
+              cmd: {
+                bg: '#0a0e17',
+                surface: '#111827',
+                card: '#1a1f2e',
+                border: '#1e293b',
+                'border-light': '#334155',
               }
+            },
+            animation: {
+              'slide-up': 'slide-up 0.6s ease-out both',
+              'slide-up-1': 'slide-up 0.6s ease-out 0.15s both',
+              'slide-up-2': 'slide-up 0.6s ease-out 0.3s both',
+              'slide-up-3': 'slide-up 0.6s ease-out 0.45s both',
+              'glow-pulse': 'glow-pulse 2s ease-in-out infinite',
+              'shimmer': 'shimmer 2s linear infinite',
+              'float': 'float 6s ease-in-out infinite',
+              'gradient-shift': 'gradient-shift 4s ease infinite',
+              'bar-grow': 'bar-grow 1s ease-out both',
+              'ring-fill': 'ring-fill 1.5s ease-out both',
+              'border-glow': 'border-glow 3s ease-in-out infinite',
+              'text-reveal': 'text-reveal 0.8s ease-out both',
             }
           }
         }
@@ -23,29 +44,70 @@
     </script>
     <style>
       body {
-        background-color: #f8fafc;
-        color: #0f172a;
+        background-color: #0a0e17;
+        color: #e2e8f0;
       }
       ::-webkit-scrollbar {
         width: 6px;
         height: 6px;
       }
       ::-webkit-scrollbar-track {
-        background: #f1f5f9;
+        background: #111827;
       }
       ::-webkit-scrollbar-thumb {
-        background: #cbd5e1;
+        background: #334155;
         border-radius: 4px;
       }
       ::-webkit-scrollbar-thumb:hover {
         background: #CE1141;
       }
+
+      /* ---- Keyframe Animations ---- */
       @keyframes fade-in {
         from { opacity: 0; transform: translateY(8px); }
         to { opacity: 1; transform: translateY(0); }
       }
-      .animate-fade-in {
-        animation: fade-in 0.3s ease-out;
+      .animate-fade-in { animation: fade-in 0.3s ease-out; }
+
+      @keyframes slide-up {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes glow-pulse {
+        0%, 100% { box-shadow: 0 0 15px rgba(206,17,65,0.3), 0 0 30px rgba(206,17,65,0.1); }
+        50% { box-shadow: 0 0 25px rgba(206,17,65,0.5), 0 0 50px rgba(206,17,65,0.2); }
+      }
+      @keyframes shimmer {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+      }
+      @keyframes float {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-10px) rotate(2deg); }
+      }
+      @keyframes gradient-shift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+      @keyframes bar-grow {
+        from { transform: scaleX(0); }
+        to { transform: scaleX(1); }
+      }
+      @keyframes ring-fill {
+        from { stroke-dashoffset: 283; }
+      }
+      @keyframes border-glow {
+        0%, 100% { border-color: rgba(206,17,65,0.3); }
+        50% { border-color: rgba(206,17,65,0.7); }
+      }
+      @keyframes text-reveal {
+        from { opacity: 0; clip-path: inset(0 100% 0 0); }
+        to { opacity: 1; clip-path: inset(0 0 0 0); }
+      }
+      @keyframes pulse-dot {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.5; transform: scale(1.5); }
       }
       @keyframes drive {
         0% { transform: translate(0, 0); }
@@ -66,6 +128,92 @@
       @keyframes pulse-svg {
         0%, 100% { r: 1.5; opacity: 1; }
         50% { r: 2.5; opacity: 0.5; }
+      }
+      @keyframes spin-glow {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      /* ---- Utility Classes ---- */
+      .glass-card {
+        background: rgba(17, 24, 39, 0.7);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(30, 41, 59, 0.8);
+        border-radius: 1rem;
+      }
+      .gradient-border {
+        position: relative;
+        border: none;
+      }
+      .gradient-border::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        padding: 1.5px;
+        background: linear-gradient(135deg, #CE1141, #3E2680, #CE1141, #3E2680);
+        background-size: 300% 300%;
+        animation: gradient-shift 4s ease infinite;
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        pointer-events: none;
+        z-index: 1;
+      }
+      .card-3d {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        transform-style: preserve-3d;
+        perspective: 800px;
+      }
+      .card-3d:hover {
+        transform: rotateX(-3deg) rotateY(3deg) translateY(-4px);
+        box-shadow: 0 20px 40px rgba(206,17,65,0.15), 0 0 20px rgba(206,17,65,0.1);
+      }
+      .neon-text {
+        text-shadow: 0 0 10px rgba(206,17,65,0.5), 0 0 20px rgba(206,17,65,0.3), 0 0 40px rgba(206,17,65,0.1);
+      }
+      .neon-text-subtle {
+        text-shadow: 0 0 8px rgba(206,17,65,0.3), 0 0 16px rgba(206,17,65,0.1);
+      }
+      .hover-lift {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .hover-lift:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 24px rgba(0,0,0,0.4), 0 0 12px rgba(206,17,65,0.1);
+      }
+      .bg-grid {
+        background-image:
+          linear-gradient(rgba(206,17,65,0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(206,17,65,0.03) 1px, transparent 1px);
+        background-size: 40px 40px;
+      }
+      .shimmer-bg {
+        background: linear-gradient(90deg, transparent, rgba(206,17,65,0.08), transparent);
+        background-size: 200% 100%;
+        animation: shimmer 2s linear infinite;
+      }
+      .btn-ripple {
+        position: relative;
+        overflow: hidden;
+      }
+      .btn-ripple::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at var(--ripple-x, 50%) var(--ripple-y, 50%), rgba(206,17,65,0.3), transparent 70%);
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+      .btn-ripple:active::after {
+        opacity: 1;
+      }
+      .glow-border {
+        box-shadow: 0 0 15px rgba(206,17,65,0.2), inset 0 0 15px rgba(206,17,65,0.05);
+      }
+      .win-ring-glow {
+        filter: drop-shadow(0 0 8px rgba(206,17,65,0.5));
       }
     </style>
   </head>
@@ -443,7 +591,57 @@ const {
   RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar
 } = Recharts;
 
-const { useState, useEffect, useRef } = React;
+const { useState, useEffect, useRef, useCallback } = React;
+
+// ============================================================
+// MICRO-COMPONENTS
+// ============================================================
+const AnimatedCounter = ({ value, decimals = 1, duration = 1200, prefix = '', suffix = '' }) => {
+  const [display, setDisplay] = useState(0);
+  const ref = useRef(null);
+  useEffect(() => {
+    const target = Number(value) || 0;
+    let start = null;
+    const step = (ts) => {
+      if (!start) start = ts;
+      const progress = Math.min((ts - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setDisplay(eased * target);
+      if (progress < 1) ref.current = requestAnimationFrame(step);
+    };
+    ref.current = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(ref.current);
+  }, [value, duration]);
+  return React.createElement('span', null, prefix + display.toFixed(decimals) + suffix);
+};
+
+const WinProbRing = ({ value, size = 100 }) => {
+  const r = 40;
+  const circ = 2 * Math.PI * r;
+  const offset = circ - (circ * (value || 0)) / 100;
+  return (
+    <div className="relative win-ring-glow" style={{ width: size, height: size }}>
+      <svg viewBox="0 0 100 100" className="w-full h-full -rotate-90">
+        <circle cx="50" cy="50" r={r} fill="none" stroke="rgba(206,17,65,0.15)" strokeWidth="6" />
+        <circle cx="50" cy="50" r={r} fill="none" stroke="url(#ringGrad)" strokeWidth="6" strokeLinecap="round" strokeDasharray={circ} strokeDashoffset={offset} className="animate-ring-fill" style={{ animation: 'ring-fill 1.5s ease-out both' }} />
+        <defs>
+          <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#CE1141" />
+            <stop offset="100%" stopColor="#3E2680" />
+          </linearGradient>
+        </defs>
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <div className="text-2xl font-black text-white neon-text"><AnimatedCounter value={value} decimals={0} suffix="%" /></div>
+        <div className="text-[8px] uppercase font-bold text-slate-400 tracking-wider">Win Prob</div>
+      </div>
+    </div>
+  );
+};
+
+const GlowDivider = () => (
+  <div className="h-px w-full bg-gradient-to-r from-transparent via-raptors-red/40 to-transparent my-2"></div>
+);
 
 // ============================================================
 // COURT DIAGRAM
@@ -455,17 +653,17 @@ const getDiagram = (type) => {
                 <g>
                    <circle cx="50" cy="50" r="1.5" fill="#CE1141" style={{animation: 'drive 3s infinite'}} />
                    <path d="M50 50 Q 60 40 70 30" fill="none" stroke="#CE1141" strokeWidth="0.5" markerEnd="url(#arrowhead)" strokeDasharray="2,1" opacity="0.5" />
-                   <circle cx="55" cy="45" r="1.5" fill="black" style={{animation: 'screen-anim 3s infinite 1s'}} />
-                   <line x1="55" y1="45" x2="60" y2="40" stroke="black" strokeWidth="1" strokeLinecap="round" opacity="0.5" />
-                   <text x="45" y="55" fontSize="2" fill="black">PG</text>
-                   <text x="52" y="44" fontSize="2" fill="black">C</text>
+                   <circle cx="55" cy="45" r="1.5" fill="#94a3b8" style={{animation: 'screen-anim 3s infinite 1s'}} />
+                   <line x1="55" y1="45" x2="60" y2="40" stroke="#94a3b8" strokeWidth="1" strokeLinecap="round" opacity="0.5" />
+                   <text x="45" y="55" fontSize="2" fill="#94a3b8">PG</text>
+                   <text x="52" y="44" fontSize="2" fill="#94a3b8">C</text>
                 </g>
             );
         case 'horns':
              return (
                 <g>
-                    <circle cx="70" cy="20" r="1.5" fill="black" />
-                    <circle cx="70" cy="40" r="1.5" fill="black" />
+                    <circle cx="70" cy="20" r="1.5" fill="#94a3b8" />
+                    <circle cx="70" cy="40" r="1.5" fill="#94a3b8" />
                     <circle cx="60" cy="30" r="1.5" fill="#CE1141" />
                     <path d="M60 30 L 70 20" fill="none" stroke="#CE1141" strokeWidth="0.5" strokeDasharray="1,1" style={{animation: 'pass 2s infinite'}} />
                     <path d="M60 30 L 70 40" fill="none" stroke="#CE1141" strokeWidth="0.5" strokeDasharray="1,1" style={{animation: 'pass 2s infinite 1s'}} />
@@ -474,11 +672,11 @@ const getDiagram = (type) => {
         case 'zone':
              return (
                 <g>
-                    <circle cx="75" cy="20" r="1.5" fill="blue" opacity="0.6" style={{animation: 'pulse-svg 2s infinite'}} />
-                    <circle cx="75" cy="40" r="1.5" fill="blue" opacity="0.6" style={{animation: 'pulse-svg 2s infinite 0.5s'}} />
-                    <circle cx="85" cy="15" r="1.5" fill="blue" opacity="0.6" style={{animation: 'pulse-svg 2s infinite 1s'}} />
-                    <circle cx="85" cy="30" r="1.5" fill="blue" opacity="0.6" style={{animation: 'pulse-svg 2s infinite 1.5s'}} />
-                    <circle cx="85" cy="45" r="1.5" fill="blue" opacity="0.6" style={{animation: 'pulse-svg 2s infinite 2s'}} />
+                    <circle cx="75" cy="20" r="1.5" fill="#6366f1" opacity="0.7" style={{animation: 'pulse-svg 2s infinite'}} />
+                    <circle cx="75" cy="40" r="1.5" fill="#6366f1" opacity="0.7" style={{animation: 'pulse-svg 2s infinite 0.5s'}} />
+                    <circle cx="85" cy="15" r="1.5" fill="#6366f1" opacity="0.7" style={{animation: 'pulse-svg 2s infinite 1s'}} />
+                    <circle cx="85" cy="30" r="1.5" fill="#6366f1" opacity="0.7" style={{animation: 'pulse-svg 2s infinite 1.5s'}} />
+                    <circle cx="85" cy="45" r="1.5" fill="#6366f1" opacity="0.7" style={{animation: 'pulse-svg 2s infinite 2s'}} />
                 </g>
              );
         default:
@@ -486,7 +684,7 @@ const getDiagram = (type) => {
                 <g>
                     <path d="M60 10 Q 75 30 85 30" fill="none" stroke="#CE1141" strokeWidth="0.8" markerEnd="url(#arrowhead)" strokeDasharray="2,1" style={{animation: 'pass 3s infinite'}} />
                     <circle cx="60" cy="10" r="1.5" fill="#CE1141" style={{animation: 'pulse-svg 1s infinite'}} />
-                    <text x="55" y="10" fontSize="3" fill="black">ISO</text>
+                    <text x="55" y="10" fontSize="3" fill="#94a3b8">ISO</text>
                 </g>
             );
     }
@@ -504,23 +702,23 @@ const PlayOverlay = ({ play }) => (
 );
 
 const CourtDiagram = ({ play }) => (
-    <div className="relative w-full pt-[60%] bg-[#f0e6d2] rounded-xl overflow-hidden border border-slate-200 shadow-sm">
+    <div className="relative w-full pt-[60%] bg-[#0f1520] rounded-xl overflow-hidden border border-cmd-border shadow-lg">
       <div className="absolute inset-0">
           <svg viewBox="0 0 100 60" className="w-full h-full" preserveAspectRatio="none">
-             <rect x="0" y="0" width="100" height="60" fill="#f8f4eb" />
-             <rect x="0" y="22" width="12" height="16" fill="#CE1141" fillOpacity="0.1" />
-             <rect x="88" y="22" width="12" height="16" fill="#333" fillOpacity="0.05" />
-             <circle cx="50" cy="30" r="8" fill="none" stroke="#94a3b8" strokeWidth="0.5" opacity="0.5" />
-             <path d="M50 0 V60" stroke="#94a3b8" strokeWidth="0.2" opacity="0.5" />
-             <rect x="0" y="22" width="12" height="16" fill="none" stroke="#CE1141" strokeWidth="0.5" />
-             <circle cx="12" cy="30" r="4" fill="none" stroke="#CE1141" strokeWidth="0.5" />
-             <path d="M0 10 A 15 15 0 0 1 15 50" fill="none" stroke="#94a3b8" strokeWidth="0.5" strokeDasharray="1,1" opacity="0.5" />
-             <rect x="88" y="22" width="12" height="16" fill="none" stroke="#333" strokeWidth="0.5" />
-             <circle cx="88" cy="30" r="4" fill="none" stroke="#333" strokeWidth="0.5" />
+             <rect x="0" y="0" width="100" height="60" fill="#0f1520" />
+             <rect x="0" y="22" width="12" height="16" fill="#CE1141" fillOpacity="0.08" />
+             <rect x="88" y="22" width="12" height="16" fill="#3E2680" fillOpacity="0.08" />
+             <circle cx="50" cy="30" r="8" fill="none" stroke="rgba(206,17,65,0.25)" strokeWidth="0.5" />
+             <path d="M50 0 V60" stroke="rgba(206,17,65,0.15)" strokeWidth="0.2" />
+             <rect x="0" y="22" width="12" height="16" fill="none" stroke="rgba(206,17,65,0.4)" strokeWidth="0.5" />
+             <circle cx="12" cy="30" r="4" fill="none" stroke="rgba(206,17,65,0.4)" strokeWidth="0.5" />
+             <path d="M0 10 A 15 15 0 0 1 15 50" fill="none" stroke="rgba(206,17,65,0.2)" strokeWidth="0.5" strokeDasharray="1,1" />
+             <rect x="88" y="22" width="12" height="16" fill="none" stroke="rgba(62,38,128,0.4)" strokeWidth="0.5" />
+             <circle cx="88" cy="30" r="4" fill="none" stroke="rgba(62,38,128,0.4)" strokeWidth="0.5" />
              {play && <PlayOverlay play={play} />}
           </svg>
       </div>
-      <div className="absolute top-2 left-2 bg-white/90 backdrop-blur text-slate-800 border border-slate-200 px-3 py-1 rounded text-[10px] font-mono font-bold uppercase z-10 shadow-sm">
+      <div className="absolute top-2 left-2 bg-cmd-surface/90 backdrop-blur text-slate-300 border border-cmd-border px-3 py-1 rounded text-[10px] font-mono font-bold uppercase z-10">
          {play ? play.name : 'Tactical Board'}
       </div>
     </div>
@@ -530,9 +728,9 @@ const CourtDiagram = ({ play }) => (
 // PLAYER DEEP DIVE
 // ============================================================
 const StatBox = ({ label, value, sub, color }) => (
-    <div className="bg-slate-50 p-3 rounded-lg border border-slate-100 hover:bg-white hover:shadow-sm transition-all">
-        <div className="text-[10px] text-slate-400 uppercase font-bold">{label}</div>
-        <div className={`text-xl font-mono font-bold ${color || 'text-slate-900'}`}>{value !== undefined ? value : '-'}</div>
+    <div className="bg-cmd-bg/50 p-3 rounded-lg border border-cmd-border hover:border-raptors-red/30 hover:shadow-lg hover:shadow-raptors-red/5 transition-all">
+        <div className="text-[10px] text-slate-500 uppercase font-bold">{label}</div>
+        <div className={`text-xl font-mono font-bold ${color || 'text-white'}`}>{value !== undefined ? <AnimatedCounter value={Number(String(value).replace('%','')) || 0} decimals={1} suffix={String(value).includes('%') ? '%' : ''} /> : '-'}</div>
         {sub && <div className="text-[10px] text-slate-500 mt-1">{sub}</div>}
     </div>
 );
@@ -550,59 +748,59 @@ const PlayerDeepDive = ({ player, opponentName, onClose }) => {
     { subject: 'TS%', A: (a.ts || 0), fullMark: 100 },
   ];
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-      <div className="bg-white w-full max-w-5xl rounded-3xl overflow-hidden border border-slate-200 shadow-2xl flex flex-col max-h-[90vh]">
-        <div className="relative h-48 bg-slate-900 overflow-hidden flex-shrink-0">
-             <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-800 to-raptors-red/30"></div>
-             <img src={`https://cdn.nba.com/headshots/nba/latest/1040x760/${player.id}.png`} className="absolute bottom-0 right-10 h-[120%] object-contain drop-shadow-2xl" alt={player.name} />
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+      <div className="bg-cmd-surface w-full max-w-5xl rounded-3xl overflow-hidden border border-raptors-red/20 shadow-2xl shadow-raptors-red/10 flex flex-col max-h-[90vh]">
+        <div className="relative h-48 bg-cmd-bg overflow-hidden flex-shrink-0">
+             <div className="absolute inset-0 bg-gradient-to-r from-cmd-bg via-cmd-surface to-raptors-red/20"></div>
+             <img src={`https://cdn.nba.com/headshots/nba/latest/1040x760/${player.id}.png`} className="absolute bottom-0 right-10 h-[120%] object-contain" style={{filter: 'drop-shadow(0 0 20px rgba(206,17,65,0.4))'}} alt={player.name} />
              <div className="absolute top-0 left-0 p-8">
-                 <button onClick={onClose} className="mb-4 text-slate-400 hover:text-white flex items-center gap-2"><X className="w-5 h-5" /> Close Scouting Report</button>
-                 <h2 className="text-5xl font-black text-white uppercase italic tracking-tighter">{player.name}</h2>
-                 <div className="flex gap-4 mt-2 text-xl font-mono text-slate-300"><span>#{player.number}</span><span>|</span><span>{player.position}</span></div>
+                 <button onClick={onClose} className="mb-4 text-slate-500 hover:text-raptors-red flex items-center gap-2 transition-colors"><X className="w-5 h-5" /> Close Scouting Report</button>
+                 <h2 className="text-5xl font-black text-white uppercase italic tracking-tighter neon-text">{player.name}</h2>
+                 <div className="flex gap-4 mt-2 text-xl font-mono text-slate-400"><span>#{player.number}</span><span>|</span><span>{player.position}</span></div>
              </div>
         </div>
         <div className="p-8 overflow-y-auto custom-scrollbar">
            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                <div className="space-y-6">
-                   <h3 className="flex items-center gap-2 text-raptors-red font-bold uppercase tracking-widest border-b border-slate-100 pb-2"><Activity className="w-4 h-4" /> Season Averages</h3>
+                   <h3 className="flex items-center gap-2 text-raptors-red font-bold uppercase tracking-widest border-b border-cmd-border pb-2"><Activity className="w-4 h-4" /> Season Averages</h3>
                    <div className="grid grid-cols-2 gap-4">
                        <StatBox label="PPG" value={s.ppg} />
                        <StatBox label="RPG" value={s.rpg} sub={`${s.oreb || 0} Off / ${s.dreb || 0} Def`} />
                        <StatBox label="APG" value={s.apg} />
-                       <StatBox label="+/-" value={s.plusMinus} color={s.plusMinus > 0 ? 'text-green-600' : 'text-red-600'} />
+                       <StatBox label="+/-" value={s.plusMinus} color={s.plusMinus > 0 ? 'text-green-400' : 'text-red-400'} />
                        <StatBox label="FG%" value={`${s.fgPct}%`} />
                        <StatBox label="3P%" value={`${s.threePtPct}%`} />
                    </div>
-                   <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                   <div className="bg-cmd-bg/50 p-4 rounded-xl border border-cmd-border">
                        <div className="text-xs text-slate-500 uppercase mb-2 font-bold">Efficiency Metrics</div>
-                       <div className="flex justify-between items-center text-sm mb-1"><span className="text-slate-700">PER</span><span className="font-bold text-slate-900">{a.per}</span></div>
-                       <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden"><div className="bg-raptors-red h-full" style={{width: `${(a.per/35)*100}%`}}></div></div>
-                       <div className="flex justify-between items-center text-sm mt-3 mb-1"><span className="text-slate-700">True Shooting</span><span className="font-bold text-slate-900">{a.ts}%</span></div>
-                       <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden"><div className="bg-blue-500 h-full" style={{width: `${a.ts}%`}}></div></div>
+                       <div className="flex justify-between items-center text-sm mb-1"><span className="text-slate-400">PER</span><span className="font-bold text-white">{a.per}</span></div>
+                       <div className="w-full bg-cmd-border h-1.5 rounded-full overflow-hidden"><div className="bg-raptors-red h-full rounded-full shadow-lg shadow-raptors-red/30" style={{width: `${(a.per/35)*100}%`, animation: 'bar-grow 1s ease-out both', transformOrigin: 'left'}}></div></div>
+                       <div className="flex justify-between items-center text-sm mt-3 mb-1"><span className="text-slate-400">True Shooting</span><span className="font-bold text-white">{a.ts}%</span></div>
+                       <div className="w-full bg-cmd-border h-1.5 rounded-full overflow-hidden"><div className="bg-blue-500 h-full rounded-full shadow-lg shadow-blue-500/30" style={{width: `${a.ts}%`, animation: 'bar-grow 1s ease-out 0.2s both', transformOrigin: 'left'}}></div></div>
                    </div>
                </div>
                <div className="space-y-6">
-                   <h3 className="flex items-center gap-2 text-blue-600 font-bold uppercase tracking-widest border-b border-slate-100 pb-2"><Target className="w-4 h-4" /> VS {opponentName}</h3>
-                   <div className="bg-blue-50 border border-blue-100 p-6 rounded-2xl">
-                       <div className="text-center mb-6"><div className="text-4xl font-black text-slate-900 mb-1">{v.ppg || '-'}</div><div className="text-xs text-blue-600 uppercase font-bold">Points vs {opponentName}</div></div>
+                   <h3 className="flex items-center gap-2 text-blue-400 font-bold uppercase tracking-widest border-b border-cmd-border pb-2"><Target className="w-4 h-4" /> VS {opponentName}</h3>
+                   <div className="bg-blue-500/5 border border-blue-500/20 p-6 rounded-2xl">
+                       <div className="text-center mb-6"><div className="text-4xl font-black text-white mb-1 neon-text-subtle">{v.ppg || '-'}</div><div className="text-xs text-blue-400 uppercase font-bold">Points vs {opponentName}</div></div>
                        <div className="space-y-4">
-                           <div className="flex justify-between items-center p-3 bg-white rounded-lg shadow-sm"><span className="text-slate-500 text-sm font-medium">Rebounds</span><span className="font-mono font-bold text-slate-900">{v.rpg || '-'}</span></div>
-                           <div className="flex justify-between items-center p-3 bg-white rounded-lg shadow-sm"><span className="text-slate-500 text-sm font-medium">Assists</span><span className="font-mono font-bold text-slate-900">{v.apg || '-'}</span></div>
-                           <div className="flex justify-between items-center p-3 bg-white rounded-lg shadow-sm"><span className="text-slate-500 text-sm font-medium">Turnovers</span><span className="font-mono font-bold text-slate-900">{v.turnovers || '-'}</span></div>
+                           <div className="flex justify-between items-center p-3 bg-cmd-bg/50 rounded-lg border border-cmd-border"><span className="text-slate-400 text-sm font-medium">Rebounds</span><span className="font-mono font-bold text-white">{v.rpg || '-'}</span></div>
+                           <div className="flex justify-between items-center p-3 bg-cmd-bg/50 rounded-lg border border-cmd-border"><span className="text-slate-400 text-sm font-medium">Assists</span><span className="font-mono font-bold text-white">{v.apg || '-'}</span></div>
+                           <div className="flex justify-between items-center p-3 bg-cmd-bg/50 rounded-lg border border-cmd-border"><span className="text-slate-400 text-sm font-medium">Turnovers</span><span className="font-mono font-bold text-white">{v.turnovers || '-'}</span></div>
                        </div>
                    </div>
-                   <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm"><p className="text-sm text-slate-600 italic leading-relaxed">"{player.analysis || `Key player for the rotation against ${opponentName}.`}"</p></div>
+                   <div className="bg-cmd-bg/50 p-4 rounded-xl border border-cmd-border"><p className="text-sm text-slate-400 italic leading-relaxed">"{player.analysis || `Key player for the rotation against ${opponentName}.`}"</p></div>
                </div>
                <div className="space-y-6">
-                   <h3 className="flex items-center gap-2 text-slate-900 font-bold uppercase tracking-widest border-b border-slate-100 pb-2"><TrendingUp className="w-4 h-4" /> Impact Profile</h3>
+                   <h3 className="flex items-center gap-2 text-white font-bold uppercase tracking-widest border-b border-cmd-border pb-2"><TrendingUp className="w-4 h-4" /> Impact Profile</h3>
                    <div className="h-64 w-full">
                        <ResponsiveContainer width="100%" height="100%">
                            <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
-                               <PolarGrid stroke="#e2e8f0" />
-                               <PolarAngleAxis dataKey="subject" tick={{ fill: '#64748b', fontSize: 10, fontWeight: 'bold' }} />
+                               <PolarGrid stroke="#1e293b" />
+                               <PolarAngleAxis dataKey="subject" tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 'bold' }} />
                                <PolarRadiusAxis angle={30} domain={[0, 'auto']} tick={false} axisLine={false} />
-                               <Radar name={player.name} dataKey="A" stroke="#CE1141" fill="#CE1141" fillOpacity={0.6} />
-                               <Tooltip contentStyle={{ backgroundColor: '#fff', borderColor: '#e2e8f0', borderRadius: '8px', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} itemStyle={{ color: '#0f172a', fontWeight: 'bold' }} />
+                               <Radar name={player.name} dataKey="A" stroke="#3E2680" fill="#CE1141" fillOpacity={0.5} />
+                               <Tooltip contentStyle={{ backgroundColor: '#111827', borderColor: '#1e293b', borderRadius: '8px', boxShadow: '0 4px 20px rgba(206,17,65,0.2)', color: '#e2e8f0' }} itemStyle={{ color: '#e2e8f0', fontWeight: 'bold' }} />
                            </RadarChart>
                        </ResponsiveContainer>
                    </div>
@@ -625,33 +823,33 @@ const ScheduleList = ({ games, onSelectGame, selectedGameId }) => {
     return { month: 'GAME', day: '' };
   };
   return (
-    <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm h-full flex flex-col">
-      <div className="p-3 border-b border-slate-100 bg-slate-50 sticky top-0 z-10">
-        <h2 className="text-sm font-bold text-slate-800 flex items-center gap-2 uppercase tracking-tight"><Calendar className="text-raptors-red w-4 h-4" /> 25-26 Schedule</h2>
+    <div className="glass-card overflow-hidden h-full flex flex-col">
+      <div className="p-3 border-b border-cmd-border bg-gradient-to-r from-raptors-red/10 to-transparent sticky top-0 z-10">
+        <h2 className="text-sm font-bold text-slate-200 flex items-center gap-2 uppercase tracking-tight"><Calendar className="text-raptors-red w-4 h-4" /> 25-26 Schedule</h2>
       </div>
-      <div className="overflow-y-auto flex-1 divide-y divide-slate-100">
-        {games.length === 0 ? (<div className="p-4 text-center text-slate-400 text-xs animate-pulse">Loading...</div>) : (
+      <div className="overflow-y-auto flex-1 divide-y divide-cmd-border">
+        {games.length === 0 ? (<div className="p-4 text-center text-slate-500 text-xs animate-pulse">Loading...</div>) : (
           games.map((game) => {
             const { month, day } = formatDate(game.date);
             const isSelected = selectedGameId === game.id;
             return (
-            <div key={game.id} onClick={() => onSelectGame(game)} className={`px-3 py-2 cursor-pointer transition-all hover:bg-slate-50 group relative ${isSelected ? 'bg-slate-100' : ''}`}>
-              {isSelected && <div className="absolute left-0 top-0 bottom-0 w-1 bg-raptors-red"></div>}
+            <div key={game.id} onClick={() => onSelectGame(game)} className={`px-3 py-2 cursor-pointer transition-all hover:bg-cmd-card/50 group relative ${isSelected ? 'bg-raptors-red/5' : ''}`}>
+              {isSelected && <div className="absolute left-0 top-0 bottom-0 w-1 bg-raptors-red shadow-lg shadow-raptors-red/50"></div>}
               <div className="flex items-center gap-2">
-                 <div className="flex-shrink-0 w-8 text-center"><div className="text-[9px] uppercase font-bold text-slate-400 leading-none">{month}</div><div className="text-sm font-black text-slate-800 leading-none mt-0.5">{day}</div></div>
+                 <div className="flex-shrink-0 w-8 text-center"><div className="text-[9px] uppercase font-bold text-slate-500 leading-none">{month}</div><div className="text-sm font-black text-slate-200 leading-none mt-0.5">{day}</div></div>
                  <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5 mb-0.5">
-                        <span className={`text-[10px] font-bold uppercase ${game.isHome ? 'text-slate-400' : 'text-slate-500'}`}>{game.isHome ? 'VS' : '@'}</span>
+                        <span className={`text-[10px] font-bold uppercase ${game.isHome ? 'text-slate-500' : 'text-slate-400'}`}>{game.isHome ? 'VS' : '@'}</span>
                         <div className="flex items-center gap-1.5 min-w-0">
-                             {game.opponentId ? (<img src={`https://cdn.nba.com/logos/nba/${game.opponentId}/primary/L/logo.svg`} className="w-4 h-4 object-contain" alt={game.opponent} />) : (<div className="w-4 h-4 rounded-full bg-slate-200"></div>)}
-                             <span className="font-bold text-slate-900 text-xs truncate leading-none">{game.opponent}</span>
+                             {game.opponentId ? (<img src={`https://cdn.nba.com/logos/nba/${game.opponentId}/primary/L/logo.svg`} className="w-4 h-4 object-contain" alt={game.opponent} />) : (<div className="w-4 h-4 rounded-full bg-cmd-border"></div>)}
+                             <span className="font-bold text-slate-200 text-xs truncate leading-none">{game.opponent}</span>
                         </div>
                     </div>
                  </div>
                  <div className="text-right">
-                    {game.status === 'completed' && game.result ? (<div className={`text-[10px] font-bold ${game.result.startsWith('W') ? 'text-green-600' : 'text-red-600'}`}>{game.result}</div>
-                    ) : game.status === 'live' ? (<div className="text-[9px] bg-raptors-red text-white px-1.5 py-0.5 rounded animate-pulse">LIVE</div>
-                    ) : (<div className="text-[9px] text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">UP</div>)}
+                    {game.status === 'completed' && game.result ? (<div className={`text-[10px] font-bold ${game.result.startsWith('W') ? 'text-green-400' : 'text-red-400'}`} style={game.result.startsWith('W') ? {textShadow: '0 0 6px rgba(74,222,128,0.3)'} : {textShadow: '0 0 6px rgba(248,113,113,0.3)'}}>{game.result}</div>
+                    ) : game.status === 'live' ? (<div className="text-[9px] bg-raptors-red text-white px-1.5 py-0.5 rounded shadow-lg shadow-raptors-red/40" style={{animation: 'glow-pulse 2s ease-in-out infinite'}}>LIVE</div>
+                    ) : (<div className="text-[9px] text-raptors-red/80 bg-raptors-red/10 border border-raptors-red/20 px-1.5 py-0.5 rounded">UP</div>)}
                  </div>
               </div>
             </div>
@@ -669,20 +867,20 @@ const ScheduleList = ({ games, onSelectGame, selectedGameId }) => {
 const PlayerCard = ({ player, onClick, onDeepDive, isOpponent, isSelected }) => {
     const [imgError, setImgError] = useState(false);
     return (
-        <div className={`group relative rounded-xl overflow-hidden transition-all duration-300 shadow-sm cursor-pointer ${isSelected ? 'ring-2 ring-raptors-red scale-105 z-20 shadow-xl' : 'hover:shadow-md hover:-translate-y-1'} bg-white border border-slate-200 h-40 flex flex-col justify-end`} onClick={onClick}>
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-90"></div>
+        <div className={`card-3d group relative rounded-xl overflow-hidden transition-all duration-300 cursor-pointer ${isSelected ? 'ring-2 ring-raptors-red scale-105 z-20 shadow-xl shadow-raptors-red/20' : 'hover-lift'} bg-cmd-card border border-cmd-border h-40 flex flex-col justify-end`} onClick={onClick}>
+            <div className="absolute inset-0 bg-gradient-to-t from-cmd-bg via-transparent to-transparent opacity-95"></div>
             {!imgError ? (<img src={`https://cdn.nba.com/headshots/nba/latest/1040x760/${player.id}.png`} onError={() => setImgError(true)} className={`absolute top-0 left-1/2 -translate-x-1/2 w-[140%] max-w-none object-cover object-top h-full ${isOpponent ? 'grayscale-[0.3]' : ''}`} alt={player.name} />
             ) : (<div className={`absolute inset-0 flex flex-col items-center justify-center opacity-20 ${isOpponent ? 'text-blue-500' : 'text-raptors-red'}`}><div className="text-4xl font-black">{player.number}</div></div>)}
-            <button onClick={(e) => { e.stopPropagation(); onDeepDive(); }} className="absolute top-1 right-1 z-30 p-1.5 rounded-full bg-white/20 hover:bg-raptors-red text-white opacity-0 group-hover:opacity-100 transition-all backdrop-blur-sm" title="View Analytics"><ChevronRight className="w-3 h-3" /></button>
+            <button onClick={(e) => { e.stopPropagation(); onDeepDive(); }} className="absolute top-1 right-1 z-30 p-1.5 rounded-full bg-cmd-surface/50 hover:bg-raptors-red text-white opacity-0 group-hover:opacity-100 transition-all backdrop-blur-sm" title="View Analytics"><ChevronRight className="w-3 h-3" /></button>
             <div className="relative z-20 p-2 pointer-events-none">
-                <div className={`text-[9px] font-black uppercase tracking-wider mb-0.5 ${isOpponent ? 'text-blue-300' : 'text-red-300'}`}>{player.position} • #{player.number}</div>
+                <div className={`text-[9px] font-black uppercase tracking-wider mb-0.5 ${isOpponent ? 'text-blue-400' : 'text-raptors-red'}`}>{player.position} • #{player.number}</div>
                 <div className="text-white font-bold leading-tight text-xs mb-1 truncate">{player.name.split(' ').slice(1).join(' ')}</div>
-                <div className="flex justify-between items-end border-t border-white/20 pt-1">
-                    <div className="text-[9px] text-slate-300">PER {Number(player.advanced?.per || 0).toFixed(1)}</div>
-                    <div className="text-[9px] font-mono font-bold text-white">{Number(player.seasonStats?.ppg || 0).toFixed(1)} PPG</div>
+                <div className="flex justify-between items-end border-t border-white/10 pt-1">
+                    <div className="text-[9px] text-slate-400">PER {Number(player.advanced?.per || 0).toFixed(1)}</div>
+                    <div className="text-[9px] font-mono font-bold text-white neon-text-subtle">{Number(player.seasonStats?.ppg || 0).toFixed(1)} PPG</div>
                 </div>
             </div>
-            {isSelected && (<div className="absolute inset-0 bg-raptors-red/20 z-10 flex items-center justify-center backdrop-blur-[1px]"><div className="bg-white text-raptors-red px-2 py-1 rounded text-[10px] font-bold shadow-lg uppercase">Select Swap</div></div>)}
+            {isSelected && (<div className="absolute inset-0 bg-raptors-red/20 z-10 flex items-center justify-center backdrop-blur-[2px]"><div className="bg-cmd-surface text-raptors-red px-2 py-1 rounded text-[10px] font-bold shadow-lg shadow-raptors-red/30 uppercase border border-raptors-red/30">Select Swap</div></div>)}
         </div>
     );
 };
@@ -690,11 +888,11 @@ const PlayerCard = ({ player, onClick, onDeepDive, isOpponent, isSelected }) => 
 const BenchCard = ({ player, onClick, isOpponent, isHighlighted }) => {
     const [imgError, setImgError] = useState(false);
     return (
-        <div onClick={onClick} className={`flex-shrink-0 w-16 h-20 rounded-lg overflow-hidden relative cursor-pointer group transition-all bg-slate-100 border ${isHighlighted ? 'ring-2 ring-raptors-red/50 border-raptors-red/30 shadow-md animate-pulse' : 'border-slate-200 hover:ring-2 hover:ring-slate-400'}`}>
-             {!imgError ? (<img src={`https://cdn.nba.com/headshots/nba/latest/1040x760/${player.id}.png`} onError={() => setImgError(true)} className={`w-full h-full object-cover object-top ${isOpponent ? 'grayscale-[0.3]' : ''}`} alt={player.name} />) : (<div className="w-full h-full flex items-center justify-center text-xs font-bold text-slate-400">{player.number}</div>)}
-            <div className="absolute bottom-0 inset-x-0 bg-slate-900/80 p-0.5 text-center">
+        <div onClick={onClick} className={`flex-shrink-0 w-16 h-20 rounded-lg overflow-hidden relative cursor-pointer group transition-all bg-cmd-card border ${isHighlighted ? 'ring-2 ring-raptors-red/50 border-raptors-red/30 shadow-lg shadow-raptors-red/10' : 'border-cmd-border hover:ring-2 hover:ring-raptors-red/30 hover:border-raptors-red/20'}`} style={isHighlighted ? {animation: 'border-glow 2s ease-in-out infinite'} : {}}>
+             {!imgError ? (<img src={`https://cdn.nba.com/headshots/nba/latest/1040x760/${player.id}.png`} onError={() => setImgError(true)} className={`w-full h-full object-cover object-top ${isOpponent ? 'grayscale-[0.3]' : ''}`} alt={player.name} />) : (<div className="w-full h-full flex items-center justify-center text-xs font-bold text-slate-500">{player.number}</div>)}
+            <div className="absolute bottom-0 inset-x-0 bg-cmd-bg/90 backdrop-blur-sm p-0.5 text-center">
                 <div className="text-[8px] text-white font-bold truncate">{player.name.split(' ').pop()}</div>
-                <div className="text-[7px] text-slate-300 font-mono">{Number(player.seasonStats?.ppg || 0).toFixed(1)}</div>
+                <div className="text-[7px] text-slate-400 font-mono">{Number(player.seasonStats?.ppg || 0).toFixed(1)}</div>
             </div>
         </div>
     );
@@ -704,14 +902,15 @@ const ComparisonRow = ({ label, raptorsVal, opponentVal, higherIsBetter }) => {
     const raptorsWins = higherIsBetter ? raptorsVal > opponentVal : raptorsVal < opponentVal;
     const opponentWins = higherIsBetter ? opponentVal > raptorsVal : opponentVal < raptorsVal;
     const tied = Math.abs(raptorsVal - opponentVal) < 0.05;
+    const pct = Math.min(100, Math.max(5, (raptorsVal / (raptorsVal + opponentVal || 1)) * 100));
     return (
         <div className="flex items-center gap-3">
-            <div className={`flex-1 text-right font-mono text-sm font-bold transition-colors ${tied ? 'text-slate-600' : raptorsWins ? 'text-green-600' : 'text-slate-400'}`}>{raptorsVal.toFixed(1)}</div>
+            <div className={`flex-1 text-right font-mono text-sm font-bold transition-colors ${tied ? 'text-slate-400' : raptorsWins ? 'text-green-400' : 'text-slate-500'}`} style={raptorsWins && !tied ? {textShadow: '0 0 8px rgba(74,222,128,0.3)'} : {}}>{raptorsVal.toFixed(1)}</div>
             <div className="flex-shrink-0 w-24">
-                <div className="relative h-2 bg-slate-200 rounded-full overflow-hidden"><div className="absolute left-0 top-0 h-full bg-raptors-red rounded-full transition-all duration-500" style={{ width: `${Math.min(100, Math.max(5, (raptorsVal / (raptorsVal + opponentVal || 1)) * 100))}%` }} /></div>
+                <div className="relative h-2 bg-cmd-border rounded-full overflow-hidden"><div className="absolute left-0 top-0 h-full bg-gradient-to-r from-raptors-red to-raptors-purple rounded-full" style={{ width: `${pct}%`, animation: 'bar-grow 1s ease-out both', transformOrigin: 'left' }} /></div>
                 <div className="text-[9px] text-slate-500 text-center mt-1 font-medium">{label}</div>
             </div>
-            <div className={`flex-1 text-left font-mono text-sm font-bold transition-colors ${tied ? 'text-slate-600' : opponentWins ? 'text-green-600' : 'text-slate-400'}`}>{opponentVal.toFixed(1)}</div>
+            <div className={`flex-1 text-left font-mono text-sm font-bold transition-colors ${tied ? 'text-slate-400' : opponentWins ? 'text-green-400' : 'text-slate-500'}`} style={opponentWins && !tied ? {textShadow: '0 0 8px rgba(74,222,128,0.3)'} : {}}>{opponentVal.toFixed(1)}</div>
         </div>
     );
 };
@@ -814,9 +1013,17 @@ const MatchupAnalyzer = ({ game }) => {
   const opponentAgg = calculateAggregates(activeOpponentLineup);
 
   if (loading) return (
-    <div className="h-full flex flex-col items-center justify-center space-y-6 animate-pulse p-12">
-       <div className="w-24 h-24 border-4 border-raptors-red border-t-transparent rounded-full animate-spin"></div>
-       <div className="text-center"><h2 className="text-xl font-bold text-slate-800 uppercase tracking-wider">Scouting {game.opponent}...</h2><p className="text-slate-500 mt-2">Gathering injury reports, film study, and social sentiment.</p></div>
+    <div className="h-full flex flex-col items-center justify-center space-y-6 p-12">
+       <div className="relative w-24 h-24">
+         <div className="absolute inset-0 rounded-full border-4 border-raptors-red/20"></div>
+         <div className="absolute inset-0 rounded-full border-4 border-raptors-red border-t-transparent animate-spin"></div>
+         <div className="absolute inset-2 rounded-full" style={{background: 'radial-gradient(circle, rgba(206,17,65,0.15) 0%, transparent 70%)'}}></div>
+       </div>
+       <div className="text-center">
+         <h2 className="text-xl font-bold text-white uppercase tracking-wider neon-text">Scouting {game.opponent}...</h2>
+         <p className="text-slate-500 mt-2">Gathering injury reports, film study, and social sentiment.</p>
+         <div className="mt-4 w-48 h-1 mx-auto rounded-full overflow-hidden bg-cmd-border"><div className="h-full shimmer-bg bg-raptors-red/20 w-full"></div></div>
+       </div>
     </div>
   );
 
@@ -825,61 +1032,64 @@ const MatchupAnalyzer = ({ game }) => {
   return (
     <div className="space-y-6 pb-20 animate-fade-in relative">
       {/* 1. MATCHUP HEADER */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-8 relative overflow-hidden shadow-sm">
-         <div className="absolute top-0 right-0 p-4 opacity-5"><img src={`https://cdn.nba.com/logos/nba/${game.opponentId}/primary/L/logo.svg`} className="w-64 h-64" alt="logo" /></div>
+      <div className="glass-card gradient-border p-8 relative overflow-hidden animate-slide-up">
+         <div className="absolute inset-0 bg-grid opacity-30"></div>
+         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full" style={{background: 'radial-gradient(circle, rgba(206,17,65,0.08) 0%, transparent 70%)'}}></div>
+         <div className="absolute top-0 right-0 p-4 opacity-[0.04] animate-float"><img src={`https://cdn.nba.com/logos/nba/${game.opponentId}/primary/L/logo.svg`} className="w-64 h-64" alt="logo" /></div>
          <div className="relative z-10 flex flex-col md:flex-row gap-8">
              <div className="flex-1">
-                <div className="flex items-center gap-3 mb-2"><span className="bg-raptors-red text-white px-2 py-0.5 rounded text-xs font-bold uppercase">Game Prep</span><span className="text-slate-400 text-sm font-mono">{game.date} &bull; {game.venue}</span></div>
-                <h1 className="text-4xl md:text-5xl font-black text-slate-900 italic uppercase tracking-tighter mb-4">Raptors vs {game.opponent}</h1>
-                <p className="text-lg text-slate-600 max-w-2xl leading-relaxed border-l-4 border-raptors-red pl-4">{analysis.summary}</p>
+                <div className="flex items-center gap-3 mb-2"><span className="bg-raptors-red/20 text-raptors-red border border-raptors-red/30 px-2 py-0.5 rounded text-xs font-bold uppercase">Game Prep</span><span className="text-slate-500 text-sm font-mono">{game.date} &bull; {game.venue}</span></div>
+                <h1 className="text-4xl md:text-6xl font-black text-white italic uppercase tracking-tighter mb-4 neon-text" style={{animation: 'text-reveal 0.8s ease-out both'}}>Raptors vs {game.opponent}</h1>
+                <p className="text-lg text-slate-400 max-w-2xl leading-relaxed border-l-4 border-raptors-red/50 pl-4">{analysis.summary}</p>
              </div>
              <div className="flex gap-4 items-end">
-                <div className="text-center"><div className="text-4xl font-black text-slate-900">{analysis.winProbability}%</div><div className="text-xs text-slate-500 uppercase font-bold">Win Prob</div></div>
-                <div className="h-12 w-px bg-slate-200"></div>
-                <div className="text-center"><div className="text-4xl font-black text-slate-900">{raptorsAgg.per.toFixed(1)}</div><div className="text-xs text-slate-500 uppercase font-bold">TOR PER</div></div>
-                <div className="h-12 w-px bg-slate-200"></div>
-                <div className="text-center"><div className="text-4xl font-black text-slate-900">{opponentAgg.per.toFixed(1)}</div><div className="text-xs text-slate-500 uppercase font-bold">OPP PER</div></div>
+                <WinProbRing value={analysis.winProbability} size={100} />
+                <div className="h-12 w-px bg-cmd-border"></div>
+                <div className="text-center"><div className="text-4xl font-black text-white neon-text-subtle"><AnimatedCounter value={raptorsAgg.per} /></div><div className="text-xs text-slate-500 uppercase font-bold">TOR PER</div></div>
+                <div className="h-12 w-px bg-cmd-border"></div>
+                <div className="text-center"><div className="text-4xl font-black text-white"><AnimatedCounter value={opponentAgg.per} /></div><div className="text-xs text-slate-500 uppercase font-bold">OPP PER</div></div>
              </div>
          </div>
       </div>
 
       {/* 2. STRATEGIC GAME PLAN */}
-      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-          <div className="flex items-center gap-3 mb-6 pb-4 border-b border-slate-100"><Brain className="w-6 h-6 text-raptors-red" /><h2 className="text-2xl font-bold text-slate-900">Strategic Game Plan</h2></div>
+      <div className="glass-card p-6 animate-slide-up" style={{animationDelay: '0.15s'}}>
+          <div className="flex items-center gap-3 mb-6 pb-4 border-b border-cmd-border"><Brain className="w-6 h-6 text-raptors-red" /><h2 className="text-2xl font-bold text-white">Strategic Game Plan</h2></div>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               <div className="space-y-6">
-                 <div><div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Offensive Profile</div><div className="flex flex-wrap gap-2">{analysis.scoutingReport.offensiveTendencies.map((t, i) => (<span key={i} className="bg-slate-100 text-slate-700 text-sm px-3 py-1.5 rounded-full font-medium border border-slate-200">{t}</span>))}</div></div>
-                 <div><div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Defensive Schemes</div><div className="flex flex-wrap gap-2">{analysis.scoutingReport.defensiveSchemes.map((t, i) => (<span key={i} className="bg-slate-100 text-slate-700 text-sm px-3 py-1.5 rounded-full font-medium border border-slate-200">{t}</span>))}</div></div>
+                 <div><div className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Offensive Profile</div><div className="flex flex-wrap gap-2">{analysis.scoutingReport.offensiveTendencies.map((t, i) => (<span key={i} className="bg-raptors-red/10 text-raptors-red/90 text-sm px-3 py-1.5 rounded-full font-medium border border-raptors-red/20 hover:bg-raptors-red/20 hover:shadow-lg hover:shadow-raptors-red/10 transition-all cursor-default">{t}</span>))}</div></div>
+                 <div><div className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Defensive Schemes</div><div className="flex flex-wrap gap-2">{analysis.scoutingReport.defensiveSchemes.map((t, i) => (<span key={i} className="bg-blue-500/10 text-blue-400 text-sm px-3 py-1.5 rounded-full font-medium border border-blue-500/20 hover:bg-blue-500/20 transition-all cursor-default">{t}</span>))}</div></div>
               </div>
-              <div className="bg-slate-50 rounded-xl p-5 border border-slate-100">
-                  <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4 flex items-center gap-2"><Zap className="w-4 h-4 text-yellow-500 fill-yellow-500" /> Keys to Victory</h3>
-                  <ul className="space-y-4">{analysis.scoutingReport.keysToVictory.map((key, i) => (<li key={i} className="flex gap-3 text-sm text-slate-700"><span className="flex-shrink-0 w-6 h-6 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs">{i+1}</span><span className="pt-0.5 font-medium leading-snug">{key}</span></li>))}</ul>
+              <div className="bg-cmd-bg/50 rounded-xl p-5 border border-cmd-border">
+                  <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2"><Zap className="w-4 h-4 text-yellow-500 fill-yellow-500" /> Keys to Victory</h3>
+                  <ul className="space-y-4">{analysis.scoutingReport.keysToVictory.map((key, i) => (<li key={i} className="flex gap-3 text-sm text-slate-300" style={{animation: `slide-up 0.4s ease-out ${0.1 * i}s both`}}><span className="flex-shrink-0 w-6 h-6 rounded-full bg-raptors-red/20 text-raptors-red border border-raptors-red/30 flex items-center justify-center font-bold text-xs shadow-lg shadow-raptors-red/10">{i+1}</span><span className="pt-0.5 font-medium leading-snug">{key}</span></li>))}</ul>
               </div>
-              <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-slate-900 to-slate-800 p-6 text-white flex flex-col justify-center">
-                  <div className="absolute top-0 right-0 p-4 opacity-10"><Activity className="w-32 h-32" /></div>
-                  <div className="relative z-10"><div className="text-xs font-bold text-raptors-red uppercase tracking-widest mb-2">X-Factor Matchup</div><div className="text-3xl font-black italic mb-2">{analysis.scoutingReport.xFactor}</div><p className="text-slate-300 text-sm leading-relaxed">"Controlling this player's impact is crucial for the defensive rotation scheme."</p></div>
+              <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-cmd-surface to-cmd-bg p-6 text-white flex flex-col justify-center animate-glow-pulse border border-raptors-red/10">
+                  <div className="absolute top-0 right-0 p-4 opacity-10 animate-float"><Activity className="w-32 h-32" /></div>
+                  <div className="relative z-10"><div className="text-xs font-bold text-raptors-red uppercase tracking-widest mb-2">X-Factor Matchup</div><div className="text-3xl font-black italic mb-2 neon-text">{analysis.scoutingReport.xFactor}</div><p className="text-slate-400 text-sm leading-relaxed">"Controlling this player's impact is crucial for the defensive rotation scheme."</p></div>
               </div>
           </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-slide-up" style={{animationDelay: '0.3s'}}>
           {/* 3. MEDIA & INTEL */}
-          <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm flex flex-col">
-              <div className="bg-slate-50 px-6 py-4 border-b border-slate-100 flex items-center justify-between"><h2 className="text-lg font-bold text-slate-900 flex items-center gap-2"><Radio className="text-raptors-red w-5 h-5" /> Media Row & Medical</h2></div>
+          <div className="glass-card overflow-hidden flex flex-col">
+              <div className="bg-cmd-bg/50 px-6 py-4 border-b border-cmd-border flex items-center justify-between"><h2 className="text-lg font-bold text-white flex items-center gap-2"><Radio className="text-raptors-red w-5 h-5" /> Media Row & Medical</h2></div>
               <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6 flex-1">
                   <div>
                       <div className="flex items-center gap-2 mb-4"><AlertTriangle className="text-orange-500 w-4 h-4" /><span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Injury Report</span></div>
                       <div className="space-y-3">
                           {analysis.intel?.injuries?.length > 0 ? analysis.intel.injuries.map((inj, i) => (
-                              <div key={i} className="flex items-start gap-3 bg-slate-50 p-3 rounded-lg border border-slate-100">
-                                  <div className={`mt-1 w-1.5 h-1.5 rounded-full flex-shrink-0 ${inj.status === 'Out' ? 'bg-red-500' : inj.status === 'Active' ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
-                                  <div><div className="flex items-center gap-2"><span className="text-sm font-bold text-slate-900">{inj.player}</span><span className={`text-[10px] px-1.5 rounded uppercase font-bold ${inj.status === 'Out' ? 'bg-red-100 text-red-600' : inj.status === 'Active' ? 'bg-green-100 text-green-600' : 'bg-yellow-100 text-yellow-600'}`}>{inj.status}</span></div><div className="text-xs text-slate-500 mt-1">{inj.details}</div></div>
+                              <div key={i} className={`flex items-start gap-3 bg-cmd-bg/50 p-3 rounded-lg border transition-all ${inj.status === 'Out' ? 'border-l-2 border-l-red-500 border-red-500/20' : inj.status === 'Active' ? 'border-l-2 border-l-green-500 border-green-500/20' : 'border-l-2 border-l-yellow-500 border-yellow-500/20'}`}>
+                                  {inj.status === 'Out' && <div className="absolute -top-1 -right-1 z-10"></div>}
+                                  <div className={`mt-1 w-1.5 h-1.5 rounded-full flex-shrink-0 ${inj.status === 'Out' ? 'bg-red-500' : inj.status === 'Active' ? 'bg-green-500' : 'bg-yellow-500'}`} style={inj.status === 'Out' ? {animation: 'pulse-dot 1.5s ease-in-out infinite'} : {}}></div>
+                                  <div><div className="flex items-center gap-2 flex-wrap"><span className="text-sm font-bold text-white">{inj.player}</span>{inj.status === 'Out' && <span className="text-[8px] px-1.5 py-0.5 rounded bg-red-500/20 text-red-400 border border-red-500/30 font-black uppercase tracking-wider">BREAKING</span>}<span className={`text-[10px] px-1.5 rounded uppercase font-bold ${inj.status === 'Out' ? 'bg-red-500/20 text-red-400' : inj.status === 'Active' ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'}`}>{inj.status}</span></div><div className="text-xs text-slate-500 mt-1">{inj.details}</div></div>
                               </div>
-                          )) : (<div className="text-slate-400 text-sm italic">No significant injuries reported.</div>)}
+                          )) : (<div className="text-slate-500 text-sm italic">No significant injuries reported.</div>)}
                       </div>
                   </div>
                   <div>
-                      <div className="flex items-center gap-2 mb-4"><MessageSquare className="text-blue-500 w-4 h-4" /><span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Social Feed</span></div>
+                      <div className="flex items-center gap-2 mb-4"><MessageSquare className="text-blue-400 w-4 h-4" /><span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Social Feed</span></div>
                       <div className="space-y-4">
                           {analysis.intel?.socialChatter?.map((item, i) => {
                               const isRaptors = item.source.toLowerCase().includes('raptors') || item.source.toLowerCase().includes('republic');
@@ -888,11 +1098,12 @@ const MatchupAnalyzer = ({ game }) => {
                               if (item.source.toLowerCase().includes('espn')) avatar = 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/ESPN_logo.svg/1200px-ESPN_logo.svg.png';
                               if (isRaptors) avatar = 'https://cdn.nba.com/logos/nba/1610612761/primary/L/logo.svg';
                               if (isOpponentSrc && game.opponentId) avatar = `https://cdn.nba.com/logos/nba/${game.opponentId}/primary/L/logo.svg`;
+                              const sentimentColor = item.sentiment === 'positive' ? 'border-l-green-500' : item.sentiment === 'negative' ? 'border-l-red-500' : 'border-l-blue-500';
                               return (
-                                <div key={i} className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow">
+                                <div key={i} className={`bg-cmd-bg/50 border border-cmd-border border-l-2 ${sentimentColor} rounded-xl p-4 hover-lift`}>
                                     <div className="flex gap-3">
-                                        <div className="flex-shrink-0"><img src={avatar} onError={(e) => e.currentTarget.src = 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'} alt="avatar" className="w-10 h-10 rounded-full object-contain border border-slate-100 bg-slate-50 p-1" /></div>
-                                        <div className="flex-1 min-w-0"><div className="flex items-center justify-between"><span className="text-sm font-bold text-slate-900 truncate">{item.source}</span><span className="text-xs text-slate-400">2h</span></div><p className="text-sm text-slate-800 mt-1 leading-snug">{item.headline}</p></div>
+                                        <div className="flex-shrink-0"><img src={avatar} onError={(e) => e.currentTarget.src = 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'} alt="avatar" className="w-10 h-10 rounded-full object-contain border border-cmd-border bg-cmd-surface p-1" /></div>
+                                        <div className="flex-1 min-w-0"><div className="flex items-center justify-between"><span className="text-sm font-bold text-white truncate">{item.source}</span><span className="text-xs text-slate-500">2h</span></div><p className="text-sm text-slate-300 mt-1 leading-snug">{item.headline}</p></div>
                                     </div>
                                 </div>
                               );
@@ -903,26 +1114,26 @@ const MatchupAnalyzer = ({ game }) => {
           </div>
 
           {/* 4. TACTICAL PLAYBOOK */}
-          <div className="bg-white border border-slate-200 rounded-2xl flex flex-col overflow-hidden shadow-sm">
-             <div className="bg-slate-50 px-6 py-4 border-b border-slate-100 flex items-center justify-between"><h3 className="text-lg font-bold text-slate-900 flex items-center gap-2"><LayoutTemplate className="text-orange-500 w-5 h-5" /> Interactive Playbook</h3></div>
+          <div className="glass-card flex flex-col overflow-hidden">
+             <div className="bg-cmd-bg/50 px-6 py-4 border-b border-cmd-border flex items-center justify-between"><h3 className="text-lg font-bold text-white flex items-center gap-2"><LayoutTemplate className="text-orange-500 w-5 h-5" /> Interactive Playbook</h3></div>
              <div className="flex flex-col md:flex-row h-auto md:h-[450px]">
-                 <div className="w-full md:w-3/5 bg-neutral-900/5 p-4 md:p-8 flex flex-col justify-center items-center">
-                     <div className="rounded-lg overflow-hidden border-2 border-slate-900 shadow-xl w-full max-w-lg aspect-[1.6]"><CourtDiagram play={selectedPlay} /></div>
+                 <div className="w-full md:w-3/5 bg-cmd-bg/30 p-4 md:p-8 flex flex-col justify-center items-center">
+                     <div className="rounded-lg overflow-hidden border-2 border-cmd-border shadow-xl shadow-raptors-red/5 w-full max-w-lg aspect-[1.6]"><CourtDiagram play={selectedPlay} /></div>
                  </div>
-                 <div className="w-full md:w-2/5 flex flex-col border-l border-slate-100 bg-white overflow-hidden">
-                     <div className="p-4 border-b border-slate-100 bg-slate-50/50 flex-shrink-0">
+                 <div className="w-full md:w-2/5 flex flex-col border-l border-cmd-border bg-cmd-surface/50 overflow-hidden">
+                     <div className="p-4 border-b border-cmd-border bg-cmd-bg/30 flex-shrink-0">
                         <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
-                            {analysis.playbook?.map((play) => (<button key={play.id} onClick={() => setSelectedPlay(play)} className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-bold transition-all border ${selectedPlay?.id === play.id ? 'bg-slate-900 text-white border-slate-900 shadow-md' : 'bg-white text-slate-500 border-slate-200 hover:border-slate-400'}`}>{play.name}</button>))}
+                            {analysis.playbook?.map((play) => (<button key={play.id} onClick={() => setSelectedPlay(play)} className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-bold transition-all border ${selectedPlay?.id === play.id ? 'bg-raptors-red text-white border-raptors-red shadow-lg shadow-raptors-red/30' : 'bg-cmd-surface text-slate-400 border-cmd-border hover:border-raptors-red/30 hover:text-white'}`}>{play.name}</button>))}
                         </div>
                      </div>
                      <div className="flex-1 p-6 overflow-y-auto custom-scrollbar">
                          {selectedPlay ? (
                              <div className="space-y-6">
-                                <div><div className="flex items-center justify-between mb-3"><h4 className="font-black text-xl text-slate-900 uppercase italic tracking-tighter">{selectedPlay.name}</h4><span className="text-[10px] font-bold bg-slate-100 text-slate-500 px-2 py-1 rounded uppercase">{selectedPlay.diagramType}</span></div><p className="text-sm text-slate-600 leading-snug">{selectedPlay.description}</p></div>
-                                <div><div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Execution Steps</div><div className="space-y-3 relative pl-2"><div className="absolute left-[11px] top-2 bottom-2 w-px bg-slate-200"></div>{selectedPlay.execution?.map((step, i) => (<div key={i} className="flex gap-3 relative"><div className="w-6 h-6 rounded-full bg-white border-2 border-slate-200 flex items-center justify-center text-[10px] font-bold text-slate-500 flex-shrink-0 z-10">{i+1}</div><p className="text-sm text-slate-700 pt-0.5">{step}</p></div>))}</div></div>
-                                <div className="bg-raptors-red/5 border border-raptors-red/20 p-4 rounded-xl mt-4"><div className="flex items-center gap-1.5 mb-2"><Shield className="w-4 h-4 text-raptors-red" /><span className="text-xs font-bold text-raptors-red uppercase tracking-widest">Defensive Key</span></div><p className="text-sm text-slate-900 font-bold leading-relaxed">{selectedPlay.raptorsCounter}</p></div>
+                                <div><div className="flex items-center justify-between mb-3"><h4 className="font-black text-xl text-white uppercase italic tracking-tighter">{selectedPlay.name}</h4><span className="text-[10px] font-bold bg-cmd-bg text-slate-400 border border-cmd-border px-2 py-1 rounded uppercase">{selectedPlay.diagramType}</span></div><p className="text-sm text-slate-400 leading-snug">{selectedPlay.description}</p></div>
+                                <div><div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Execution Steps</div><div className="space-y-3 relative pl-2"><div className="absolute left-[11px] top-2 bottom-2 w-px bg-raptors-red/20"></div>{selectedPlay.execution?.map((step, i) => (<div key={i} className="flex gap-3 relative" style={{animation: `slide-up 0.4s ease-out ${0.1 * i}s both`}}><div className="w-6 h-6 rounded-full bg-cmd-surface border-2 border-raptors-red/30 flex items-center justify-center text-[10px] font-bold text-raptors-red flex-shrink-0 z-10">{i+1}</div><p className="text-sm text-slate-300 pt-0.5">{step}</p></div>))}</div></div>
+                                <div className="bg-raptors-red/5 border border-raptors-red/20 p-4 rounded-xl mt-4" style={{animation: 'border-glow 3s ease-in-out infinite'}}><div className="flex items-center gap-1.5 mb-2"><Shield className="w-4 h-4 text-raptors-red" /><span className="text-xs font-bold text-raptors-red uppercase tracking-widest">Defensive Key</span></div><p className="text-sm text-white font-bold leading-relaxed">{selectedPlay.raptorsCounter}</p></div>
                              </div>
-                         ) : (<div className="flex flex-col items-center justify-center h-full text-slate-400 space-y-2"><Activity className="w-8 h-8 opacity-20" /><span className="text-sm font-medium">Select a play to view details</span></div>)}
+                         ) : (<div className="flex flex-col items-center justify-center h-full text-slate-500 space-y-2"><Activity className="w-8 h-8 opacity-20" /><span className="text-sm font-medium">Select a play to view details</span></div>)}
                      </div>
                  </div>
              </div>
@@ -930,17 +1141,18 @@ const MatchupAnalyzer = ({ game }) => {
       </div>
 
       {/* 5. ROTATION SIMULATOR */}
-      <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
-          <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 px-6 py-5">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div className="glass-card overflow-hidden animate-slide-up" style={{animationDelay: '0.45s'}}>
+          <div className="relative bg-gradient-to-r from-cmd-bg via-cmd-surface to-cmd-bg px-6 py-5 overflow-hidden">
+              <div className="absolute inset-0 bg-grid opacity-20"></div>
+              <div className="relative z-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                   <div>
-                      <h2 className="text-2xl font-black text-white flex items-center gap-3 uppercase tracking-tight"><div className="bg-raptors-red p-2 rounded-lg"><Activity className="w-5 h-5 text-white" /></div>Rotation Simulator</h2>
-                      <p className="text-slate-400 text-xs mt-1 ml-12">Click a player on court, then click a bench player to swap</p>
+                      <h2 className="text-2xl font-black text-white flex items-center gap-3 uppercase tracking-tight"><div className="bg-raptors-red p-2 rounded-lg shadow-lg shadow-raptors-red/30"><Activity className="w-5 h-5 text-white" /></div>Rotation Simulator</h2>
+                      <p className="text-slate-500 text-xs mt-1 ml-12">Click a player on court, then click a bench player to swap</p>
                   </div>
                   <div className="flex items-center gap-3 ml-12 sm:ml-0">
-                      <div className={`px-4 py-2 rounded-lg text-center ${(raptorsAgg.net - opponentAgg.net) >= 0 ? 'bg-green-500/20 border border-green-500/30' : 'bg-red-500/20 border border-red-500/30'}`}>
-                          <div className={`text-xl font-black font-mono ${(raptorsAgg.net - opponentAgg.net) >= 0 ? 'text-green-400' : 'text-red-400'}`}>{(raptorsAgg.net - opponentAgg.net) > 0 ? '+' : ''}{(raptorsAgg.net - opponentAgg.net).toFixed(1)}</div>
-                          <div className="text-[9px] text-slate-400 uppercase font-bold tracking-wider">Edge</div>
+                      <div className={`px-4 py-2 rounded-lg text-center ${(raptorsAgg.net - opponentAgg.net) >= 0 ? 'bg-green-500/10 border border-green-500/30' : 'bg-red-500/10 border border-red-500/30'}`}>
+                          <div className={`text-xl font-black font-mono ${(raptorsAgg.net - opponentAgg.net) >= 0 ? 'text-green-400' : 'text-red-400'}`} style={(raptorsAgg.net - opponentAgg.net) >= 0 ? {textShadow: '0 0 10px rgba(74,222,128,0.3)'} : {textShadow: '0 0 10px rgba(248,113,113,0.3)'}}>{(raptorsAgg.net - opponentAgg.net) > 0 ? '+' : ''}{(raptorsAgg.net - opponentAgg.net).toFixed(1)}</div>
+                          <div className="text-[9px] text-slate-500 uppercase font-bold tracking-wider">Edge</div>
                       </div>
                   </div>
               </div>
@@ -948,61 +1160,61 @@ const MatchupAnalyzer = ({ game }) => {
           <div className="p-6 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                  <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Raptors Presets</div>
-                  <div className="flex gap-1.5 bg-slate-100 p-1 rounded-lg">
-                       <button onClick={() => applyRaptorsPreset('starters')} className="flex-1 px-3 py-2 text-xs font-bold text-slate-700 hover:bg-white hover:shadow-sm rounded transition-all flex items-center justify-center gap-1.5"><Users className="w-3 h-3" /> Starters</button>
-                       <button onClick={() => applyRaptorsPreset('second')} className="flex-1 px-3 py-2 text-xs font-bold text-slate-700 hover:bg-white hover:shadow-sm rounded transition-all flex items-center justify-center gap-1.5"><RefreshCcw className="w-3 h-3" /> 2nd Unit</button>
-                       <button onClick={() => applyRaptorsPreset('speed')} className="flex-1 px-3 py-2 text-xs font-bold text-slate-700 hover:bg-white hover:shadow-sm rounded transition-all flex items-center justify-center gap-1.5"><Zap className="w-3 h-3" /> Speed</button>
-                       <button onClick={() => applyRaptorsPreset('big')} className="flex-1 px-3 py-2 text-xs font-bold text-slate-700 hover:bg-white hover:shadow-sm rounded transition-all flex items-center justify-center gap-1.5"><Shield className="w-3 h-3" /> Big</button>
+                  <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Raptors Presets</div>
+                  <div className="flex gap-1.5 bg-cmd-bg p-1 rounded-lg border border-cmd-border">
+                       <button onClick={() => applyRaptorsPreset('starters')} className="btn-ripple flex-1 px-3 py-2 text-xs font-bold text-slate-300 hover:bg-cmd-card hover:text-white rounded transition-all flex items-center justify-center gap-1.5"><Users className="w-3 h-3" /> Starters</button>
+                       <button onClick={() => applyRaptorsPreset('second')} className="btn-ripple flex-1 px-3 py-2 text-xs font-bold text-slate-300 hover:bg-cmd-card hover:text-white rounded transition-all flex items-center justify-center gap-1.5"><RefreshCcw className="w-3 h-3" /> 2nd Unit</button>
+                       <button onClick={() => applyRaptorsPreset('speed')} className="btn-ripple flex-1 px-3 py-2 text-xs font-bold text-slate-300 hover:bg-cmd-card hover:text-white rounded transition-all flex items-center justify-center gap-1.5"><Zap className="w-3 h-3" /> Speed</button>
+                       <button onClick={() => applyRaptorsPreset('big')} className="btn-ripple flex-1 px-3 py-2 text-xs font-bold text-slate-300 hover:bg-cmd-card hover:text-white rounded transition-all flex items-center justify-center gap-1.5"><Shield className="w-3 h-3" /> Big</button>
                   </div>
               </div>
               <div>
-                  <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">{game.opponent} Presets</div>
-                  <div className="flex gap-1.5 bg-slate-100 p-1 rounded-lg">
-                       <button onClick={() => applyPreset('starters')} className="flex-1 px-3 py-2 text-xs font-bold text-slate-700 hover:bg-white hover:shadow-sm rounded transition-all flex items-center justify-center gap-1.5"><Users className="w-3 h-3" /> Starters</button>
-                       <button onClick={() => applyPreset('second')} className="flex-1 px-3 py-2 text-xs font-bold text-slate-700 hover:bg-white hover:shadow-sm rounded transition-all flex items-center justify-center gap-1.5"><RefreshCcw className="w-3 h-3" /> 2nd Unit</button>
-                       <button onClick={() => applyPreset('speed')} className="flex-1 px-3 py-2 text-xs font-bold text-slate-700 hover:bg-white hover:shadow-sm rounded transition-all flex items-center justify-center gap-1.5"><Zap className="w-3 h-3" /> Speed</button>
+                  <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">{game.opponent} Presets</div>
+                  <div className="flex gap-1.5 bg-cmd-bg p-1 rounded-lg border border-cmd-border">
+                       <button onClick={() => applyPreset('starters')} className="btn-ripple flex-1 px-3 py-2 text-xs font-bold text-slate-300 hover:bg-cmd-card hover:text-white rounded transition-all flex items-center justify-center gap-1.5"><Users className="w-3 h-3" /> Starters</button>
+                       <button onClick={() => applyPreset('second')} className="btn-ripple flex-1 px-3 py-2 text-xs font-bold text-slate-300 hover:bg-cmd-card hover:text-white rounded transition-all flex items-center justify-center gap-1.5"><RefreshCcw className="w-3 h-3" /> 2nd Unit</button>
+                       <button onClick={() => applyPreset('speed')} className="btn-ripple flex-1 px-3 py-2 text-xs font-bold text-slate-300 hover:bg-cmd-card hover:text-white rounded transition-all flex items-center justify-center gap-1.5"><Zap className="w-3 h-3" /> Speed</button>
                   </div>
               </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative">
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 hidden md:block"><div className="bg-slate-900 p-2.5 rounded-full border-2 border-slate-700 shadow-xl"><Swords className="w-4 h-4 text-slate-300" /></div></div>
-                <div className="bg-gradient-to-br from-red-50/50 to-white rounded-xl p-4 border border-red-100">
-                    <div className="flex justify-between items-end mb-4 pb-2 border-b-2 border-raptors-red">
-                        <div className="flex items-center gap-2"><img src="https://cdn.nba.com/logos/nba/1610612761/primary/L/logo.svg" className="w-6 h-6" alt="TOR" /><h3 className="text-raptors-red font-black uppercase text-sm tracking-wider">TORONTO</h3></div>
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 hidden md:block"><div className="bg-raptors-red p-2.5 rounded-full border-2 border-raptors-red/50 shadow-xl shadow-raptors-red/20 animate-glow-pulse"><Swords className="w-4 h-4 text-white" /></div></div>
+                <div className="bg-gradient-to-br from-raptors-red/5 to-cmd-surface/50 rounded-xl p-4 border border-raptors-red/10">
+                    <div className="flex justify-between items-end mb-4 pb-2 border-b-2 border-raptors-red/50">
+                        <div className="flex items-center gap-2"><img src="https://cdn.nba.com/logos/nba/1610612761/primary/L/logo.svg" className="w-6 h-6" alt="TOR" /><h3 className="text-raptors-red font-black uppercase text-sm tracking-wider neon-text-subtle">TORONTO</h3></div>
                         <div className="flex items-center gap-3">
-                            <div className="text-[10px] font-mono text-slate-500">ORTG <span className="font-bold text-slate-900">{raptorsAgg.ortg.toFixed(1)}</span></div>
-                            <div className="text-[10px] font-mono text-slate-500">DRTG <span className="font-bold text-slate-900">{raptorsAgg.drtg.toFixed(1)}</span></div>
-                            <div className={`text-xs font-mono font-bold px-2 py-0.5 rounded ${raptorsAgg.net >= 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>NET {raptorsAgg.net > 0 ? '+' : ''}{raptorsAgg.net.toFixed(1)}</div>
+                            <div className="text-[10px] font-mono text-slate-500">ORTG <span className="font-bold text-white">{raptorsAgg.ortg.toFixed(1)}</span></div>
+                            <div className="text-[10px] font-mono text-slate-500">DRTG <span className="font-bold text-white">{raptorsAgg.drtg.toFixed(1)}</span></div>
+                            <div className={`text-xs font-mono font-bold px-2 py-0.5 rounded ${raptorsAgg.net >= 0 ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'}`}>NET {raptorsAgg.net > 0 ? '+' : ''}{raptorsAgg.net.toFixed(1)}</div>
                         </div>
                     </div>
                     <div className="grid grid-cols-5 gap-2">{activeRaptorsLineup.map((player, idx) => (<PlayerCard key={player.id} player={player} onClick={() => setSelectedSlot(selectedSlot?.team === 'raptors' && selectedSlot?.index === idx ? null : { team: 'raptors', index: idx })} onDeepDive={() => setSelectedPlayerForDeepDive(player)} isSelected={selectedSlot?.team === 'raptors' && selectedSlot?.index === idx} />))}</div>
-                    <div className="mt-4 pt-3 border-t border-red-100">
-                         <div className="flex items-center justify-between mb-2"><div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Bench ({raptorsBench.length})</div>{selectedSlot?.team === 'raptors' && <div className="text-[10px] font-bold text-raptors-red animate-pulse uppercase">Click to swap in</div>}</div>
+                    <div className="mt-4 pt-3 border-t border-raptors-red/10">
+                         <div className="flex items-center justify-between mb-2"><div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Bench ({raptorsBench.length})</div>{selectedSlot?.team === 'raptors' && <div className="text-[10px] font-bold text-raptors-red animate-pulse uppercase neon-text-subtle">Click to swap in</div>}</div>
                          <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">{raptorsBench.map(player => (<BenchCard key={player.id} player={player} onClick={() => handleBenchClick(player, 'raptors')} isHighlighted={selectedSlot?.team === 'raptors'} />))}</div>
                     </div>
                 </div>
-                <div className="bg-gradient-to-br from-blue-50/50 to-white rounded-xl p-4 border border-blue-100">
-                    <div className="flex justify-between items-end mb-4 pb-2 border-b-2 border-blue-600">
-                        <div className="flex items-center gap-2">{game.opponentId && <img src={`https://cdn.nba.com/logos/nba/${game.opponentId}/primary/L/logo.svg`} className="w-6 h-6" alt={game.opponent} />}<h3 className="text-blue-600 font-black uppercase text-sm tracking-wider">{game.opponent}</h3></div>
+                <div className="bg-gradient-to-br from-blue-500/5 to-cmd-surface/50 rounded-xl p-4 border border-blue-500/10">
+                    <div className="flex justify-between items-end mb-4 pb-2 border-b-2 border-blue-500/50">
+                        <div className="flex items-center gap-2">{game.opponentId && <img src={`https://cdn.nba.com/logos/nba/${game.opponentId}/primary/L/logo.svg`} className="w-6 h-6" alt={game.opponent} />}<h3 className="text-blue-400 font-black uppercase text-sm tracking-wider">{game.opponent}</h3></div>
                         <div className="flex items-center gap-3">
-                            <div className="text-[10px] font-mono text-slate-500">ORTG <span className="font-bold text-slate-900">{opponentAgg.ortg.toFixed(1)}</span></div>
-                            <div className="text-[10px] font-mono text-slate-500">DRTG <span className="font-bold text-slate-900">{opponentAgg.drtg.toFixed(1)}</span></div>
-                            <div className={`text-xs font-mono font-bold px-2 py-0.5 rounded ${opponentAgg.net >= 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>NET {opponentAgg.net > 0 ? '+' : ''}{opponentAgg.net.toFixed(1)}</div>
+                            <div className="text-[10px] font-mono text-slate-500">ORTG <span className="font-bold text-white">{opponentAgg.ortg.toFixed(1)}</span></div>
+                            <div className="text-[10px] font-mono text-slate-500">DRTG <span className="font-bold text-white">{opponentAgg.drtg.toFixed(1)}</span></div>
+                            <div className={`text-xs font-mono font-bold px-2 py-0.5 rounded ${opponentAgg.net >= 0 ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'}`}>NET {opponentAgg.net > 0 ? '+' : ''}{opponentAgg.net.toFixed(1)}</div>
                         </div>
                     </div>
                     <div className="grid grid-cols-5 gap-2">{activeOpponentLineup.map((player, idx) => (<PlayerCard key={player.id} player={player} onClick={() => setSelectedSlot(selectedSlot?.team === 'opponent' && selectedSlot?.index === idx ? null : { team: 'opponent', index: idx })} onDeepDive={() => setSelectedPlayerForDeepDive(player)} isOpponent isSelected={selectedSlot?.team === 'opponent' && selectedSlot?.index === idx} />))}</div>
-                    <div className="mt-4 pt-3 border-t border-blue-100">
-                         <div className="flex items-center justify-between mb-2"><div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Bench ({opponentBench.length})</div>{selectedSlot?.team === 'opponent' && <div className="text-[10px] font-bold text-blue-600 animate-pulse uppercase">Click to swap in</div>}</div>
+                    <div className="mt-4 pt-3 border-t border-blue-500/10">
+                         <div className="flex items-center justify-between mb-2"><div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Bench ({opponentBench.length})</div>{selectedSlot?.team === 'opponent' && <div className="text-[10px] font-bold text-blue-400 animate-pulse uppercase">Click to swap in</div>}</div>
                          <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">{opponentBench.map(player => (<BenchCard key={player.id} player={player} onClick={() => handleBenchClick(player, 'opponent')} isOpponent isHighlighted={selectedSlot?.team === 'opponent'} />))}</div>
                     </div>
                 </div>
           </div>
-          <div className="bg-slate-50 rounded-xl border border-slate-200 overflow-hidden">
-              <div className="bg-slate-100 px-5 py-3 border-b border-slate-200 flex items-center gap-2"><BarChart3 className="w-4 h-4 text-slate-600" /><h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Lineup Analytics Comparison</h3></div>
+          <div className="bg-cmd-bg/50 rounded-xl border border-cmd-border overflow-hidden">
+              <div className="bg-cmd-surface/50 px-5 py-3 border-b border-cmd-border flex items-center gap-2"><BarChart3 className="w-4 h-4 text-slate-400" /><h3 className="text-sm font-bold text-slate-200 uppercase tracking-wider">Lineup Analytics Comparison</h3></div>
               <div className="p-5">
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                      <div className="bg-white rounded-lg border border-slate-200 p-4">
+                      <div className="bg-cmd-surface/50 rounded-lg border border-cmd-border p-4">
                           <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Rating Comparison</div>
                           <div className="h-52">
                               <ResponsiveContainer width="100%" height="100%">
@@ -1012,18 +1224,18 @@ const MatchupAnalyzer = ({ game }) => {
                                       { name: 'PER', Raptors: Number(raptorsAgg.per.toFixed(1)), Opponent: Number(opponentAgg.per.toFixed(1)) },
                                       { name: 'NET', Raptors: Number(raptorsAgg.net.toFixed(1)), Opponent: Number(opponentAgg.net.toFixed(1)) },
                                   ]} barGap={2} barCategoryGap="20%">
-                                      <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                                      <XAxis dataKey="name" tick={{ fontSize: 11, fontWeight: 600, fill: '#64748b' }} />
-                                      <YAxis tick={{ fontSize: 10, fill: '#94a3b8' }} domain={['auto', 'auto']} />
-                                      <Tooltip contentStyle={{ backgroundColor: '#fff', borderColor: '#e2e8f0', borderRadius: '8px', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '12px' }} />
-                                      <Legend wrapperStyle={{ fontSize: '11px', fontWeight: 600 }} />
+                                      <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
+                                      <XAxis dataKey="name" tick={{ fontSize: 11, fontWeight: 600, fill: '#94a3b8' }} />
+                                      <YAxis tick={{ fontSize: 10, fill: '#64748b' }} domain={['auto', 'auto']} />
+                                      <Tooltip contentStyle={{ backgroundColor: '#111827', borderColor: '#1e293b', borderRadius: '8px', boxShadow: '0 4px 20px rgba(206,17,65,0.15)', fontSize: '12px', color: '#e2e8f0' }} itemStyle={{ color: '#e2e8f0' }} />
+                                      <Legend wrapperStyle={{ fontSize: '11px', fontWeight: 600, color: '#94a3b8' }} />
                                       <Bar dataKey="Raptors" fill="#CE1141" radius={[4, 4, 0, 0]} />
-                                      <Bar dataKey="Opponent" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                                      <Bar dataKey="Opponent" fill="#6366f1" radius={[4, 4, 0, 0]} />
                                   </BarChart>
                               </ResponsiveContainer>
                           </div>
                       </div>
-                      <div className="bg-white rounded-lg border border-slate-200 p-4">
+                      <div className="bg-cmd-surface/50 rounded-lg border border-cmd-border p-4">
                           <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Head-to-Head Breakdown</div>
                           <div className="space-y-3">
                               <ComparisonRow label="Offensive Rating" raptorsVal={raptorsAgg.ortg} opponentVal={opponentAgg.ortg} higherIsBetter={true} />
@@ -1067,16 +1279,17 @@ function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-raptors-red selection:text-white flex flex-col h-screen overflow-hidden">
-      <nav className="border-b border-slate-200 bg-white flex-shrink-0 z-30 shadow-sm">
+    <div className="min-h-screen bg-cmd-bg bg-grid text-slate-200 font-sans selection:bg-raptors-red selection:text-white flex flex-col h-screen overflow-hidden">
+      <nav className="border-b border-cmd-border bg-cmd-surface/90 backdrop-blur-xl flex-shrink-0 z-30 relative">
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-raptors-red/50 to-transparent"></div>
         <div className="w-full max-w-[98%] mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-             <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center p-1 border border-slate-100 shadow-sm">
+             <div className="w-10 h-10 bg-cmd-bg rounded-full flex items-center justify-center p-1 border border-raptors-red/30 shadow-lg shadow-raptors-red/10 animate-glow-pulse">
                <img src="https://cdn.nba.com/logos/nba/1610612761/primary/L/logo.svg" alt="Raptors Logo" className="w-full h-full object-contain" />
              </div>
-             <span className="text-xl font-bold tracking-tight text-slate-900">RAPTORS <span className="text-slate-400 font-light">INTEL</span></span>
+             <span className="text-xl font-bold tracking-tight text-white">RAPTORS <span className="text-raptors-red neon-text-subtle">INTEL</span></span>
           </div>
-          <div className="text-xs text-slate-500 font-mono font-bold">COACH'S DASHBOARD v2.1</div>
+          <div className="text-xs text-slate-500 font-mono font-bold bg-raptors-red/10 border border-raptors-red/20 px-3 py-1 rounded-full">COACH'S DASHBOARD v2.1</div>
         </div>
       </nav>
       <main className="flex-1 overflow-hidden w-full max-w-[98%] mx-auto px-4 py-4">
@@ -1084,11 +1297,14 @@ function App() {
           <div className="col-span-12 lg:col-span-2 h-full overflow-hidden"><ScheduleList games={games} onSelectGame={setSelectedGame} selectedGameId={selectedGame?.id} /></div>
           <div className="col-span-12 lg:col-span-10 h-full overflow-y-auto custom-scrollbar pb-10">
             {loadingSchedule ? (
-              <div className="h-full flex flex-col items-center justify-center border border-slate-200 rounded-xl bg-white shadow-sm"><div className="w-10 h-10 border-4 border-raptors-red border-t-transparent rounded-full animate-spin mb-4"></div><p className="text-slate-500 font-medium">Loading Season Data...</p></div>
+              <div className="h-full flex flex-col items-center justify-center glass-card">
+                <div className="relative w-10 h-10 mb-4"><div className="absolute inset-0 rounded-full border-4 border-raptors-red/20"></div><div className="absolute inset-0 rounded-full border-4 border-raptors-red border-t-transparent animate-spin"></div></div>
+                <p className="text-slate-400 font-medium">Loading Season Data...</p>
+              </div>
             ) : selectedGame ? (
               <MatchupAnalyzer game={selectedGame} />
             ) : (
-              <div className="h-full flex flex-col items-center justify-center border border-slate-200 rounded-xl bg-white shadow-sm text-slate-400"><LayoutDashboard className="w-12 h-12 mb-4 opacity-50" /><p>Select a game from the calendar to open the scouting report.</p></div>
+              <div className="h-full flex flex-col items-center justify-center glass-card text-slate-500"><LayoutDashboard className="w-12 h-12 mb-4 opacity-30" /><p>Select a game from the calendar to open the scouting report.</p></div>
             )}
           </div>
         </div>
