@@ -191,12 +191,27 @@ const RAPTORS_ROSTER = [
     advanced: { per: 3.0, ts: 30.0, usg: 5.0, ortg: 90.0, drtg: 112.0 },
     analysis: "Veteran mentor and locker room leader."
   },
+  // --- TWO-WAY PLAYERS ---
   {
-    id: "1629012", name: "Mo Bamba", position: "C", number: "5",
-    seasonStats: { ppg: 0.0, rpg: 0.0, apg: 0.0, spg: 0.5, bpg: 0.0, oreb: 0.0, dreb: 0.0, fgPct: 0.0, threePtPct: 0.0, ftPct: 50.0, plusMinus: -1.0, turnovers: 0.0 },
-    vsOpponentStats: { ppg: 0.0, rpg: 0.0, apg: 0.0, spg: 0.5, bpg: 0.0, oreb: 0.0, dreb: 0.0, fgPct: 0.0, threePtPct: 0.0, ftPct: 50.0, plusMinus: -1.0, turnovers: 0.0 },
-    advanced: { per: 2.0, ts: 25.0, usg: 5.0, ortg: 85.0, drtg: 115.0 },
-    analysis: "Reserve center with shot-blocking potential."
+    id: "1630639", name: "A.J. Lawson", position: "SG", number: "0",
+    seasonStats: { ppg: 2.5, rpg: 1.2, apg: 0.5, spg: 0.3, bpg: 0.1, oreb: 0.2, dreb: 1.0, fgPct: 42.0, threePtPct: 30.0, ftPct: 75.0, plusMinus: -1.0, turnovers: 0.4 },
+    vsOpponentStats: { ppg: 3.0, rpg: 1.5, apg: 0.6, spg: 0.4, bpg: 0.1, oreb: 0.3, dreb: 1.2, fgPct: 44.0, threePtPct: 32.0, ftPct: 77.0, plusMinus: -0.5, turnovers: 0.3 },
+    advanced: { per: 6.0, ts: 48.0, usg: 8.0, ortg: 100.0, drtg: 113.0 },
+    analysis: "Athletic two-way wing shuttling between NBA and G League."
+  },
+  {
+    id: "1642918", name: "Alijah Martin", position: "SG", number: "55",
+    seasonStats: { ppg: 2.0, rpg: 1.0, apg: 0.4, spg: 0.3, bpg: 0.1, oreb: 0.1, dreb: 0.9, fgPct: 40.0, threePtPct: 28.0, ftPct: 72.0, plusMinus: -1.5, turnovers: 0.3 },
+    vsOpponentStats: { ppg: 2.5, rpg: 1.2, apg: 0.5, spg: 0.3, bpg: 0.1, oreb: 0.2, dreb: 1.0, fgPct: 42.0, threePtPct: 30.0, ftPct: 74.0, plusMinus: -1.0, turnovers: 0.3 },
+    advanced: { per: 5.5, ts: 46.0, usg: 7.5, ortg: 98.0, drtg: 114.0 },
+    analysis: "2025 second-round pick out of Florida. Developing guard with defensive energy."
+  },
+  {
+    id: "1642935", name: "Chucky Hepburn", position: "PG", number: "24",
+    seasonStats: { ppg: 1.8, rpg: 0.8, apg: 1.2, spg: 0.2, bpg: 0.0, oreb: 0.1, dreb: 0.7, fgPct: 38.0, threePtPct: 30.0, ftPct: 78.0, plusMinus: -1.2, turnovers: 0.5 },
+    vsOpponentStats: { ppg: 2.0, rpg: 1.0, apg: 1.5, spg: 0.3, bpg: 0.0, oreb: 0.1, dreb: 0.9, fgPct: 40.0, threePtPct: 32.0, ftPct: 80.0, plusMinus: -0.8, turnovers: 0.4 },
+    advanced: { per: 5.0, ts: 45.0, usg: 7.0, ortg: 96.0, drtg: 115.0 },
+    analysis: "Two-way point guard developing his craft in the G League."
   }
 ];
 
@@ -323,19 +338,24 @@ const enrichRoster = (simpleRoster) => {
 
 const fetchRaptorsSchedule = async () => {
   const games = [
-    { id: "g43", date: "Jan 18", opponent: "Celtics", opponentId: "1610612738", isHome: true, time: "6:00 PM", venue: "Scotiabank Arena", status: "completed", result: "L 102-114" },
-    { id: "g44", date: "Jan 21", opponent: "Knicks", opponentId: "1610612752", isHome: false, time: "7:30 PM", venue: "Madison Square Garden", status: "completed", result: "W 108-104" },
-    { id: "g45", date: "Jan 25", opponent: "Hornets", opponentId: "1610612766", isHome: true, time: "6:00 PM", venue: "Scotiabank Arena", status: "completed", result: "W 118-105" },
-    { id: "g46", date: "Jan 28", opponent: "Hawks", opponentId: "1610612737", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "completed", result: "L 120-125" },
-    { id: "g47", date: "Jan 30", opponent: "Wizards", opponentId: "1610612764", isHome: false, time: "7:00 PM", venue: "Capital One Arena", status: "completed", result: "W 112-98" },
-    { id: "g48", date: "Feb 1", opponent: "Bucks", opponentId: "1610612749", isHome: true, time: "6:00 PM", venue: "Scotiabank Arena", status: "completed", result: "L 105-115" },
-    { id: "g49", date: "Feb 4", opponent: "Timberwolves", opponentId: "1610612750", isHome: false, time: "8:00 PM", venue: "Target Center", status: "upcoming" },
-    { id: "g50", date: "Feb 6", opponent: "Mavericks", opponentId: "1610612742", isHome: false, time: "8:30 PM", venue: "American Airlines Center", status: "upcoming" },
-    { id: "g51", date: "Feb 8", opponent: "Rockets", opponentId: "1610612745", isHome: true, time: "6:00 PM", venue: "Scotiabank Arena", status: "upcoming" },
-    { id: "g52", date: "Feb 10", opponent: "Cavaliers", opponentId: "1610612739", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "upcoming" },
-    { id: "g53", date: "Feb 12", opponent: "Celtics", opponentId: "1610612738", isHome: false, time: "7:30 PM", venue: "TD Garden", status: "upcoming" },
-    { id: "g54", date: "Feb 20", opponent: "Pistons", opponentId: "1610612765", isHome: true, time: "7:00 PM", venue: "Scotiabank Arena", status: "upcoming" },
-    { id: "g55", date: "Feb 22", opponent: "Magic", opponentId: "1610612753", isHome: false, time: "6:00 PM", venue: "Kia Center", status: "upcoming" },
+    { id: "g43", date: "Jan 16", opponent: "Clippers", opponentId: "1610612746", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "completed", result: "L 117-121 OT" },
+    { id: "g44", date: "Jan 18", opponent: "Lakers", opponentId: "1610612747", isHome: false, time: "10:30 PM", venue: "Crypto.com Arena", status: "completed", result: "L 93-110" },
+    { id: "g45", date: "Jan 20", opponent: "Warriors", opponentId: "1610612744", isHome: false, time: "10:00 PM", venue: "Chase Center", status: "completed", result: "W 145-127" },
+    { id: "g46", date: "Jan 21", opponent: "Kings", opponentId: "1610612758", isHome: false, time: "10:00 PM", venue: "Golden 1 Center", status: "completed", result: "W 122-109" },
+    { id: "g47", date: "Jan 23", opponent: "Trail Blazers", opponentId: "1610612757", isHome: false, time: "10:00 PM", venue: "Moda Center", status: "completed", result: "W 110-98" },
+    { id: "g48", date: "Jan 25", opponent: "Thunder", opponentId: "1610612760", isHome: false, time: "8:00 PM", venue: "Paycom Center", status: "completed", result: "W 103-101" },
+    { id: "g49", date: "Jan 28", opponent: "Knicks", opponentId: "1610612752", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "completed", result: "L 92-119" },
+    { id: "g50", date: "Jan 30", opponent: "Magic", opponentId: "1610612753", isHome: false, time: "7:00 PM", venue: "Kia Center", status: "completed", result: "L 120-130" },
+    { id: "g51", date: "Feb 1", opponent: "Jazz", opponentId: "1610612762", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "completed", result: "W 107-100" },
+    { id: "g52", date: "Feb 4", opponent: "Timberwolves", opponentId: "1610612750", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "upcoming" },
+    { id: "g53", date: "Feb 5", opponent: "Bulls", opponentId: "1610612741", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "upcoming" },
+    { id: "g54", date: "Feb 8", opponent: "Pacers", opponentId: "1610612754", isHome: true, time: "3:00 PM", venue: "Scotiabank Arena", status: "upcoming" },
+    { id: "g55", date: "Feb 11", opponent: "Pistons", opponentId: "1610612765", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "upcoming" },
+    { id: "g56", date: "Feb 19", opponent: "Bulls", opponentId: "1610612741", isHome: false, time: "8:00 PM", venue: "United Center", status: "upcoming" },
+    { id: "g57", date: "Feb 22", opponent: "Bucks", opponentId: "1610612749", isHome: false, time: "3:30 PM", venue: "Fiserv Forum", status: "upcoming" },
+    { id: "g58", date: "Feb 24", opponent: "Thunder", opponentId: "1610612760", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "upcoming" },
+    { id: "g59", date: "Feb 25", opponent: "Spurs", opponentId: "1610612759", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "upcoming" },
+    { id: "g60", date: "Feb 28", opponent: "Wizards", opponentId: "1610612764", isHome: false, time: "7:00 PM", venue: "Capital One Arena", status: "upcoming" },
   ];
   return { games, sources: [] };
 };

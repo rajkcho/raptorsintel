@@ -1,7 +1,5 @@
 {
   "name": "Raptors Intel - Matchup Analyzer",
-  "description": "Deep dive analytics dashboard for Toronto Raptors games featuring real-time matchup analysis, voice-enabled insights, and predictive modeling.",
-  "requestFramePermissions": [
-    "microphone"
-  ]
+  "description": "Deep dive analytics dashboard for Toronto Raptors games featuring real-time matchup analysis, AI-powered chat insights via OpenRouter, and predictive modeling.",
+  "requestFramePermissions": []
 }

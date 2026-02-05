@@ -7,26 +7,26 @@ import { Game, MatchupAnalysis, Player } from "../types";
 const fmt = (num: number) => Number(num.toFixed(1));
 
 // CURRENT TORONTO RAPTORS ROSTER (Source: Basketball Reference 2025-26 Season)
-// Updated Feb 4, 2026 — Record: 30-21
+// Updated Feb 5, 2026 — Record: 30-22
 const RAPTORS_ROSTER: Player[] = [
   // --- STARTERS ---
   {
     id: "1630567", name: "Scottie Barnes", position: "PF", number: "4",
-    seasonStats: { ppg: 19.3, rpg: 8.3, apg: 5.5, spg: 1.3, bpg: 1.6, oreb: 2.4, dreb: 5.9, fgPct: 49.9, threePtPct: 30.6, ftPct: 81.6, plusMinus: 3.2, turnovers: 2.7 },
+    seasonStats: { ppg: 19.4, rpg: 8.4, apg: 5.6, spg: 1.3, bpg: 1.6, oreb: 2.4, dreb: 6.0, fgPct: 50.3, threePtPct: 30.6, ftPct: 81.3, plusMinus: 3.2, turnovers: 2.7 },
     vsOpponentStats: { ppg: 21.5, rpg: 9.0, apg: 6.2, spg: 1.5, bpg: 1.8, oreb: 2.6, dreb: 6.4, fgPct: 51.0, threePtPct: 33.0, ftPct: 83.0, plusMinus: 4.0, turnovers: 2.5 },
     advanced: { per: 21.8, ts: 57.2, usg: 26.5, ortg: 116.0, drtg: 108.5 },
     analysis: "The franchise cornerstone. Elite two-way force with All-NBA upside. Anchors the defense and drives the offense as a point-forward."
   },
   {
     id: "1629628", name: "RJ Barrett", position: "SF", number: "9",
-    seasonStats: { ppg: 18.8, rpg: 5.2, apg: 3.6, spg: 0.8, bpg: 0.2, oreb: 1.0, dreb: 4.2, fgPct: 48.4, threePtPct: 33.3, ftPct: 70.5, plusMinus: 1.5, turnovers: 1.6 },
+    seasonStats: { ppg: 18.6, rpg: 5.2, apg: 3.5, spg: 0.8, bpg: 0.2, oreb: 1.0, dreb: 4.2, fgPct: 47.9, threePtPct: 33.8, ftPct: 70.1, plusMinus: 1.5, turnovers: 1.6 },
     vsOpponentStats: { ppg: 20.5, rpg: 5.8, apg: 4.0, spg: 1.0, bpg: 0.3, oreb: 1.1, dreb: 4.7, fgPct: 50.0, threePtPct: 36.0, ftPct: 73.0, plusMinus: 2.5, turnovers: 1.4 },
     advanced: { per: 17.5, ts: 54.8, usg: 24.0, ortg: 113.0, drtg: 112.5 },
     analysis: "Aggressive downhill scorer with improved playmaking. Second scoring option who thrives in transition."
   },
   {
     id: "1630193", name: "Immanuel Quickley", position: "PG", number: "5",
-    seasonStats: { ppg: 16.8, rpg: 4.5, apg: 6.1, spg: 1.3, bpg: 0.1, oreb: 0.6, dreb: 3.9, fgPct: 43.9, threePtPct: 37.0, ftPct: 80.5, plusMinus: 2.0, turnovers: 1.7 },
+    seasonStats: { ppg: 16.9, rpg: 4.5, apg: 6.1, spg: 1.3, bpg: 0.1, oreb: 0.6, dreb: 3.9, fgPct: 44.3, threePtPct: 37.9, ftPct: 80.1, plusMinus: 2.0, turnovers: 1.7 },
     vsOpponentStats: { ppg: 18.0, rpg: 5.0, apg: 7.0, spg: 1.5, bpg: 0.2, oreb: 0.7, dreb: 4.3, fgPct: 45.0, threePtPct: 39.0, ftPct: 82.0, plusMinus: 3.0, turnovers: 1.5 },
     advanced: { per: 18.2, ts: 57.5, usg: 24.5, ortg: 115.5, drtg: 111.0 },
     analysis: "Primary playmaker and floor general. Lethal three-point shooting off the dribble. Pushes pace relentlessly."
@@ -47,28 +47,28 @@ const RAPTORS_ROSTER: Player[] = [
   },
   // --- BENCH ---
   {
-    id: "1631114", name: "Sandro Mamukelashvili", position: "C", number: "54",
-    seasonStats: { ppg: 11.2, rpg: 5.1, apg: 2.0, spg: 0.7, bpg: 0.6, oreb: 1.5, dreb: 3.6, fgPct: 52.7, threePtPct: 37.4, ftPct: 75.0, plusMinus: 1.8, turnovers: 0.9 },
+    id: "1630572", name: "Sandro Mamukelashvili", position: "C", number: "54",
+    seasonStats: { ppg: 11.3, rpg: 5.1, apg: 2.0, spg: 0.7, bpg: 0.6, oreb: 1.5, dreb: 3.6, fgPct: 52.6, threePtPct: 37.4, ftPct: 75.5, plusMinus: 1.8, turnovers: 0.9 },
     vsOpponentStats: { ppg: 12.0, rpg: 5.5, apg: 2.2, spg: 0.8, bpg: 0.7, oreb: 1.6, dreb: 3.9, fgPct: 54.0, threePtPct: 39.0, ftPct: 77.0, plusMinus: 2.5, turnovers: 0.8 },
     advanced: { per: 17.0, ts: 60.5, usg: 17.5, ortg: 118.0, drtg: 111.0 },
     analysis: "Breakout stretch-five off the bench. Can shoot the three and create from the high post."
   },
   {
-    id: "1642272", name: "Jamal Shead", position: "PG", number: "23",
+    id: "1642347", name: "Jamal Shead", position: "PG", number: "23",
     seasonStats: { ppg: 7.0, rpg: 1.9, apg: 5.5, spg: 1.0, bpg: 0.1, oreb: 0.3, dreb: 1.6, fgPct: 37.0, threePtPct: 33.0, ftPct: 76.7, plusMinus: 0.5, turnovers: 1.3 },
     vsOpponentStats: { ppg: 7.5, rpg: 2.2, apg: 6.0, spg: 1.2, bpg: 0.2, oreb: 0.4, dreb: 1.8, fgPct: 38.5, threePtPct: 34.0, ftPct: 78.0, plusMinus: 1.0, turnovers: 1.1 },
     advanced: { per: 12.5, ts: 50.0, usg: 16.0, ortg: 107.0, drtg: 108.5 },
     analysis: "Tenacious defensive guard. Elite perimeter defender who disrupts opposing point guards."
   },
   {
-    id: "1642371", name: "Collin Murray-Boyles", position: "PF", number: "12",
+    id: "1642867", name: "Collin Murray-Boyles", position: "PF", number: "12",
     seasonStats: { ppg: 7.7, rpg: 5.1, apg: 2.1, spg: 0.9, bpg: 0.8, oreb: 1.8, dreb: 3.3, fgPct: 53.4, threePtPct: 34.1, ftPct: 64.4, plusMinus: 0.8, turnovers: 1.2 },
     vsOpponentStats: { ppg: 8.5, rpg: 5.5, apg: 2.3, spg: 1.0, bpg: 0.9, oreb: 2.0, dreb: 3.5, fgPct: 55.0, threePtPct: 36.0, ftPct: 66.0, plusMinus: 1.5, turnovers: 1.0 },
     advanced: { per: 15.0, ts: 56.5, usg: 14.0, ortg: 114.0, drtg: 109.0 },
     analysis: "2025 lottery pick making an immediate impact. Physical, versatile forward with high motor."
   },
   {
-    id: "1642270", name: "Ja'Kobe Walter", position: "SG", number: "14",
+    id: "1642266", name: "Ja'Kobe Walter", position: "SG", number: "14",
     seasonStats: { ppg: 6.2, rpg: 2.1, apg: 0.9, spg: 0.9, bpg: 0.1, oreb: 0.3, dreb: 1.8, fgPct: 42.6, threePtPct: 34.6, ftPct: 80.0, plusMinus: -0.5, turnovers: 0.5 },
     vsOpponentStats: { ppg: 7.0, rpg: 2.5, apg: 1.2, spg: 1.0, bpg: 0.2, oreb: 0.4, dreb: 2.1, fgPct: 44.0, threePtPct: 36.0, ftPct: 82.0, plusMinus: 0.0, turnovers: 0.4 },
     advanced: { per: 10.5, ts: 54.0, usg: 13.5, ortg: 109.0, drtg: 112.0 },
@@ -82,21 +82,21 @@ const RAPTORS_ROSTER: Player[] = [
     analysis: "Sharpshooting wing with deep range. Movement shooter who spaces the floor."
   },
   {
-    id: "1630534", name: "Ochai Agbaji", position: "SG", number: "30",
-    seasonStats: { ppg: 4.3, rpg: 2.3, apg: 0.7, spg: 0.4, bpg: 0.3, oreb: 0.5, dreb: 1.8, fgPct: 42.4, threePtPct: 18.5, ftPct: 86.2, plusMinus: -2.0, turnovers: 0.5 },
-    vsOpponentStats: { ppg: 5.0, rpg: 2.5, apg: 0.8, spg: 0.5, bpg: 0.4, oreb: 0.6, dreb: 1.9, fgPct: 44.0, threePtPct: 22.0, ftPct: 88.0, plusMinus: -1.0, turnovers: 0.4 },
-    advanced: { per: 8.0, ts: 50.0, usg: 10.0, ortg: 104.0, drtg: 113.0 },
-    analysis: "3-and-D wing. Strong defender with inconsistent outside shot this season."
+    id: "1631218", name: "Trayce Jackson-Davis", position: "C", number: "32",
+    seasonStats: { ppg: 4.2, rpg: 3.1, apg: 0.5, spg: 0.3, bpg: 0.6, oreb: 1.2, dreb: 1.9, fgPct: 58.8, threePtPct: 0.0, ftPct: 60.0, plusMinus: -0.5, turnovers: 0.6 },
+    vsOpponentStats: { ppg: 4.5, rpg: 3.5, apg: 0.6, spg: 0.3, bpg: 0.7, oreb: 1.3, dreb: 2.2, fgPct: 60.0, threePtPct: 0.0, ftPct: 62.0, plusMinus: 0.0, turnovers: 0.5 },
+    advanced: { per: 12.0, ts: 58.0, usg: 10.0, ortg: 112.0, drtg: 110.0 },
+    analysis: "Acquired from Warriors at trade deadline. Athletic rim-running big with shot-blocking upside."
   },
   {
-    id: "1642273", name: "Jonathan Mogbo", position: "PF", number: "2",
+    id: "1642367", name: "Jonathan Mogbo", position: "PF", number: "2",
     seasonStats: { ppg: 1.4, rpg: 1.8, apg: 0.5, spg: 0.1, bpg: 0.2, oreb: 0.6, dreb: 1.2, fgPct: 50.0, threePtPct: 0.0, ftPct: 40.0, plusMinus: -1.5, turnovers: 0.3 },
     vsOpponentStats: { ppg: 1.5, rpg: 2.0, apg: 0.6, spg: 0.2, bpg: 0.3, oreb: 0.7, dreb: 1.3, fgPct: 52.0, threePtPct: 0.0, ftPct: 45.0, plusMinus: -1.0, turnovers: 0.3 },
     advanced: { per: 7.0, ts: 47.0, usg: 8.0, ortg: 98.0, drtg: 110.0 },
     analysis: "High-motor developmental forward. Energy and hustle contributor."
   },
   {
-    id: "1631281", name: "Jamison Battle", position: "SF", number: "77",
+    id: "1642419", name: "Jamison Battle", position: "SF", number: "77",
     seasonStats: { ppg: 3.3, rpg: 1.4, apg: 0.4, spg: 0.1, bpg: 0.1, oreb: 0.2, dreb: 1.2, fgPct: 53.6, threePtPct: 44.9, ftPct: 66.7, plusMinus: 0.5, turnovers: 0.4 },
     vsOpponentStats: { ppg: 3.5, rpg: 1.5, apg: 0.5, spg: 0.2, bpg: 0.1, oreb: 0.2, dreb: 1.3, fgPct: 55.0, threePtPct: 46.0, ftPct: 70.0, plusMinus: 1.0, turnovers: 0.3 },
     advanced: { per: 11.0, ts: 62.0, usg: 9.0, ortg: 120.0, drtg: 113.0 },
@@ -110,11 +110,32 @@ const RAPTORS_ROSTER: Player[] = [
     analysis: "Veteran mentor and locker room leader. Limited game minutes."
   },
   {
-    id: "1629012", name: "Mo Bamba", position: "C", number: "5",
-    seasonStats: { ppg: 0.0, rpg: 0.0, apg: 0.0, spg: 0.5, bpg: 0.0, oreb: 0.0, dreb: 0.0, fgPct: 0.0, threePtPct: 0.0, ftPct: 50.0, plusMinus: -1.0, turnovers: 0.0 },
-    vsOpponentStats: { ppg: 0.0, rpg: 0.0, apg: 0.0, spg: 0.5, bpg: 0.0, oreb: 0.0, dreb: 0.0, fgPct: 0.0, threePtPct: 0.0, ftPct: 50.0, plusMinus: -1.0, turnovers: 0.0 },
-    advanced: { per: 2.0, ts: 25.0, usg: 5.0, ortg: 85.0, drtg: 115.0 },
-    analysis: "Reserve center with shot-blocking potential. Minimal role this season."
+    id: "1630639", name: "A.J. Lawson", position: "SG", number: "0",
+    seasonStats: { ppg: 1.5, rpg: 0.8, apg: 0.3, spg: 0.2, bpg: 0.1, oreb: 0.1, dreb: 0.7, fgPct: 40.0, threePtPct: 30.0, ftPct: 75.0, plusMinus: -1.0, turnovers: 0.3 },
+    vsOpponentStats: { ppg: 1.8, rpg: 1.0, apg: 0.4, spg: 0.3, bpg: 0.1, oreb: 0.2, dreb: 0.8, fgPct: 42.0, threePtPct: 32.0, ftPct: 77.0, plusMinus: -0.5, turnovers: 0.3 },
+    advanced: { per: 5.0, ts: 48.0, usg: 8.0, ortg: 95.0, drtg: 113.0 },
+    analysis: "Athletic two-way guard on a two-way contract. Versatile defender with length."
+  },
+  {
+    id: "1642918", name: "Alijah Martin", position: "SG", number: "55",
+    seasonStats: { ppg: 2.0, rpg: 1.0, apg: 0.5, spg: 0.3, bpg: 0.1, oreb: 0.2, dreb: 0.8, fgPct: 38.0, threePtPct: 28.0, ftPct: 70.0, plusMinus: -1.5, turnovers: 0.4 },
+    vsOpponentStats: { ppg: 2.2, rpg: 1.2, apg: 0.6, spg: 0.4, bpg: 0.1, oreb: 0.3, dreb: 0.9, fgPct: 40.0, threePtPct: 30.0, ftPct: 72.0, plusMinus: -1.0, turnovers: 0.4 },
+    advanced: { per: 6.0, ts: 46.0, usg: 9.0, ortg: 96.0, drtg: 114.0 },
+    analysis: "2025 second-round pick. Developing wing with defensive upside. Two-way contract."
+  },
+  {
+    id: "1642935", name: "Chucky Hepburn", position: "PG", number: "24",
+    seasonStats: { ppg: 1.0, rpg: 0.5, apg: 0.8, spg: 0.2, bpg: 0.0, oreb: 0.1, dreb: 0.4, fgPct: 35.0, threePtPct: 25.0, ftPct: 72.0, plusMinus: -2.0, turnovers: 0.5 },
+    vsOpponentStats: { ppg: 1.2, rpg: 0.6, apg: 1.0, spg: 0.3, bpg: 0.0, oreb: 0.1, dreb: 0.5, fgPct: 37.0, threePtPct: 27.0, ftPct: 74.0, plusMinus: -1.5, turnovers: 0.5 },
+    advanced: { per: 4.0, ts: 42.0, usg: 7.0, ortg: 92.0, drtg: 115.0 },
+    analysis: "Backup point guard on a two-way contract. Solid ball handler with developing shot."
+  },
+  {
+    id: "101108", name: "Chris Paul", position: "PG", number: "3",
+    seasonStats: { ppg: 2.9, rpg: 1.8, apg: 3.3, spg: 0.6, bpg: 0.0, oreb: 0.2, dreb: 1.6, fgPct: 37.5, threePtPct: 30.0, ftPct: 75.0, plusMinus: -1.5, turnovers: 1.0 },
+    vsOpponentStats: { ppg: 3.2, rpg: 2.0, apg: 3.5, spg: 0.7, bpg: 0.0, oreb: 0.2, dreb: 1.8, fgPct: 39.0, threePtPct: 32.0, ftPct: 77.0, plusMinus: -1.0, turnovers: 0.9 },
+    advanced: { per: 8.5, ts: 45.0, usg: 14.0, ortg: 100.0, drtg: 112.0 },
+    analysis: "Acquired from Clippers at trade deadline. Future Hall of Famer providing veteran leadership and playmaking off the bench."
   }
 ];
 
@@ -248,25 +269,28 @@ const enrichRoster = (simpleRoster: any[]): Player[] => {
 // --- API METHODS ---
 
 export const fetchRaptorsSchedule = async (): Promise<{ games: Game[], sources: any[] }> => {
-  // Accurate 2025-26 Season Projection (Simulating Feb 4, 2026)
+  // Accurate 2025-26 Season Schedule (As of Feb 5, 2026)
   const games: Game[] = [
-    { id: "g43", date: "Jan 18", opponent: "Celtics", opponentId: "1610612738", isHome: true, time: "6:00 PM", venue: "Scotiabank Arena", status: "completed", result: "L 102-114" },
-    { id: "g44", date: "Jan 21", opponent: "Knicks", opponentId: "1610612752", isHome: false, time: "7:30 PM", venue: "Madison Square Garden", status: "completed", result: "W 108-104" },
-    { id: "g45", date: "Jan 25", opponent: "Hornets", opponentId: "1610612766", isHome: true, time: "6:00 PM", venue: "Scotiabank Arena", status: "completed", result: "W 118-105" },
-    { id: "g46", date: "Jan 28", opponent: "Hawks", opponentId: "1610612737", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "completed", result: "L 120-125" },
-    { id: "g47", date: "Jan 30", opponent: "Wizards", opponentId: "1610612764", isHome: false, time: "7:00 PM", venue: "Capital One Arena", status: "completed", result: "W 112-98" },
-    { id: "g48", date: "Feb 1", opponent: "Bucks", opponentId: "1610612749", isHome: true, time: "6:00 PM", venue: "Scotiabank Arena", status: "completed", result: "L 105-115" },
-    
-    // Upcoming - Trade Deadline & All-Star Push
-    { id: "g49", date: "Feb 4", opponent: "Timberwolves", opponentId: "1610612750", isHome: false, time: "8:00 PM", venue: "Target Center", status: "upcoming" }, // TODAY
-    { id: "g50", date: "Feb 6", opponent: "Mavericks", opponentId: "1610612742", isHome: false, time: "8:30 PM", venue: "American Airlines Center", status: "upcoming" },
-    { id: "g51", date: "Feb 8", opponent: "Rockets", opponentId: "1610612745", isHome: true, time: "6:00 PM", venue: "Scotiabank Arena", status: "upcoming" },
-    { id: "g52", date: "Feb 10", opponent: "Cavaliers", opponentId: "1610612739", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "upcoming" },
-    { id: "g53", date: "Feb 12", opponent: "Celtics", opponentId: "1610612738", isHome: false, time: "7:30 PM", venue: "TD Garden", status: "upcoming" },
-    
-    // Post All-Star
-    { id: "g54", date: "Feb 20", opponent: "Pistons", opponentId: "1610612765", isHome: true, time: "7:00 PM", venue: "Scotiabank Arena", status: "upcoming" },
-    { id: "g55", date: "Feb 22", opponent: "Magic", opponentId: "1610612753", isHome: false, time: "6:00 PM", venue: "Kia Center", status: "upcoming" },
+    { id: "g43", date: "Jan 20", opponent: "Warriors", opponentId: "1610612744", isHome: false, time: "10:00 PM", venue: "Chase Center", status: "completed", result: "W 145-127" },
+    { id: "g44", date: "Jan 21", opponent: "Kings", opponentId: "1610612758", isHome: false, time: "10:00 PM", venue: "Golden 1 Center", status: "completed", result: "W 122-109" },
+    { id: "g45", date: "Jan 23", opponent: "Trail Blazers", opponentId: "1610612757", isHome: false, time: "10:00 PM", venue: "Moda Center", status: "completed", result: "W 110-98" },
+    { id: "g46", date: "Jan 25", opponent: "Thunder", opponentId: "1610612760", isHome: false, time: "8:00 PM", venue: "Paycom Center", status: "completed", result: "W 103-101" },
+    { id: "g47", date: "Jan 28", opponent: "Knicks", opponentId: "1610612752", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "completed", result: "L 92-119" },
+    { id: "g48", date: "Jan 30", opponent: "Magic", opponentId: "1610612753", isHome: false, time: "7:00 PM", venue: "Kia Center", status: "completed", result: "L 120-130" },
+    { id: "g49", date: "Feb 1", opponent: "Jazz", opponentId: "1610612762", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "completed", result: "W 107-100" },
+
+    // Post-Trade Deadline & All-Star Push
+    { id: "g50", date: "Feb 4", opponent: "Timberwolves", opponentId: "1610612750", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "completed", result: "L 126-128" },
+    { id: "g51", date: "Feb 5", opponent: "Bulls", opponentId: "1610612741", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "upcoming" }, // TODAY
+    { id: "g52", date: "Feb 8", opponent: "Pacers", opponentId: "1610612754", isHome: true, time: "3:00 PM", venue: "Scotiabank Arena", status: "upcoming" },
+    { id: "g53", date: "Feb 11", opponent: "Pistons", opponentId: "1610612765", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "upcoming" },
+
+    // Road Trip & Post All-Star
+    { id: "g54", date: "Feb 19", opponent: "Bulls", opponentId: "1610612741", isHome: false, time: "8:00 PM", venue: "United Center", status: "upcoming" },
+    { id: "g55", date: "Feb 22", opponent: "Bucks", opponentId: "1610612749", isHome: false, time: "3:30 PM", venue: "Fiserv Forum", status: "upcoming" },
+    { id: "g56", date: "Feb 24", opponent: "Thunder", opponentId: "1610612760", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "upcoming" },
+    { id: "g57", date: "Feb 25", opponent: "Spurs", opponentId: "1610612759", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "upcoming" },
+    { id: "g58", date: "Feb 28", opponent: "Wizards", opponentId: "1610612764", isHome: false, time: "7:00 PM", venue: "Capital One Arena", status: "upcoming" },
   ];
 
   return { games, sources: [] };
@@ -343,18 +367,18 @@ export const analyzeGameMatchup = async (opponent: string): Promise<{ analysis: 
     },
     intel: {
         injuries: [
-            { player: opponentRoster[0].name, status: "Active", details: "Available", team: "opponent" },
-            { player: "Rudy Gobert", status: "Questionable", details: "Ankle soreness", team: "opponent" },
+            { player: "Jakob Poeltl", status: "Out", details: "Back injury — no return timeline", team: "raptors" },
+            { player: "RJ Barrett", status: "Questionable", details: "Left ankle sprain — day-to-day", team: "raptors" },
             { player: "Scottie Barnes", status: "Active", details: "Available", team: "raptors" },
-            { player: "Gradey Dick", status: "Probable", details: "Left thumb sprain", team: "raptors" },
-            { player: keyDefender, status: "Out", details: "Hamstring strain", team: "opponent" }
+            { player: "Chris Paul", status: "Active", details: "Acquired via trade — available", team: "raptors" },
+            { player: "Trayce Jackson-Davis", status: "Active", details: "Acquired via trade — available", team: "raptors" }
         ],
         socialChatter: [
-            { headline: `Ant Edwards on facing Scottie Barnes: 'He's a dog, I love his game'`, source: "Timberwolves Beat", sentiment: "positive" },
-            { headline: "Raptors struggle against size - Gobert/Randle frontcourt a nightmare matchup", source: "Raptors Republic", sentiment: "negative" },
-            { headline: "Trade Deadline buzz: Raptors listening to offers for veteran bench pieces", source: "Woj (ESPN)", sentiment: "neutral" },
-            { headline: "Scottie Barnes averaging 21/8/6 over last 10 games - All-Star push?", source: "Raptors Republic", sentiment: "positive" },
-            { headline: `Fans questioning ${opponent} rotation decisions during losing streak`, source: "Team Reddit", sentiment: "negative" }
+            { headline: "Raptors acquire Chris Paul in blockbuster 3-team deadline deal", source: "Woj (ESPN)", sentiment: "positive" },
+            { headline: "Trayce Jackson-Davis traded from Warriors to Raptors for 2nd-round pick", source: "Shams (Athletic)", sentiment: "neutral" },
+            { headline: "Ochai Agbaji headed to Nets as part of CP3 deal", source: "Woj (ESPN)", sentiment: "neutral" },
+            { headline: "Jakob Poeltl's back injury lingers — Raptors add depth at center", source: "Raptors Republic", sentiment: "neutral" },
+            { headline: `${opponent} heading to Scotiabank Arena as Raptors adjust post-deadline roster`, source: "Team Reddit", sentiment: "positive" }
         ]
     }
   };
