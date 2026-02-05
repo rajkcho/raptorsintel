@@ -422,20 +422,299 @@ const OPPONENT_DATA = {
   "Celtics": {
     id: "1610612738",
     roster: [
-       { id: "1628369", name: "Jayson Tatum", position: "F", number: "0" },
-       { id: "1627759", name: "Jaylen Brown", position: "G-F", number: "7" },
-       { id: "204001", name: "Kristaps Porzingis", position: "C-F", number: "8" },
-       { id: "1628401", name: "Derrick White", position: "G", number: "9" },
-       { id: "201950", name: "Jrue Holiday", position: "G", number: "4" },
-       { id: "201143", name: "Al Horford", position: "C-F", number: "42" },
-       { id: "1630174", name: "Payton Pritchard", position: "G", number: "11" },
-       { id: "1628382", name: "Sam Hauser", position: "F", number: "30" }
+       { id: "1628369", name: "Jayson Tatum", position: "F", number: "0", seasonStats: { ppg: 27.5, rpg: 8.5, apg: 5.0 } },
+       { id: "1627759", name: "Jaylen Brown", position: "G-F", number: "7", seasonStats: { ppg: 23.0, rpg: 5.5, apg: 3.5 } },
+       { id: "204001", name: "Kristaps Porzingis", position: "C-F", number: "8", seasonStats: { ppg: 20.0, rpg: 7.0, apg: 2.0, bpg: 1.9 } },
+       { id: "1628401", name: "Derrick White", position: "G", number: "9", seasonStats: { ppg: 15.5, rpg: 4.0, apg: 5.0 } },
+       { id: "201950", name: "Jrue Holiday", position: "G", number: "4", seasonStats: { ppg: 12.5, rpg: 5.5, apg: 4.5 } },
+       { id: "201143", name: "Al Horford", position: "C-F", number: "42", seasonStats: { ppg: 8.5, rpg: 5.5, apg: 2.5 } },
+       { id: "1630174", name: "Payton Pritchard", position: "G", number: "11", seasonStats: { ppg: 14.0, rpg: 2.0, apg: 3.0 } },
+       { id: "1628382", name: "Sam Hauser", position: "F", number: "30", seasonStats: { ppg: 7.0, rpg: 3.0, apg: 1.0 } }
     ],
     tendencies: ["High Volume 3PT", "Switch Everything Defense", "Iso-Heavy Stars"],
     playbook: [
       { id: "p1", name: "5-Out Spacing", type: "offense", description: "All 5 players on perimeter.", diagramType: "iso", execution: ["Tatum isolation top of key", "Porzingis lifts to corner", "Corners stay wide"], raptorsCounter: "Stay home on shooters, force tough 2s." },
       { id: "p2", name: "Double Drag Screen", type: "offense", description: "Two high screens for ball handler.", diagramType: "pnr", execution: ["Holiday brings ball up", "Horford and Tatum set screens", "First screener rolls, second pops"], raptorsCounter: "Ice the first screen, switch the second." },
       { id: "p3", name: "Ghost Screen", type: "offense", description: "Fake screen to pop.", diagramType: "pnr", execution: ["Guard sprints to set screen", "Slips before contact", "Flares to 3pt line"], raptorsCounter: "Switch communication." }
+    ]
+  },
+  "Bulls": {
+    id: "1610612741",
+    roster: [
+       { id: "203897", name: "Zach LaVine", position: "G", number: "8", seasonStats: { ppg: 22.0, rpg: 4.5, apg: 4.0 } },
+       { id: "1629632", name: "Coby White", position: "G", number: "0", seasonStats: { ppg: 18.5, rpg: 3.5, apg: 5.5 } },
+       { id: "202696", name: "Nikola Vucevic", position: "C", number: "9", seasonStats: { ppg: 17.5, rpg: 10.5, apg: 3.2 } },
+       { id: "1630581", name: "Josh Giddey", position: "G", number: "3", seasonStats: { ppg: 12.5, rpg: 6.5, apg: 6.0 } },
+       { id: "1630172", name: "Patrick Williams", position: "F", number: "44", seasonStats: { ppg: 10.0, rpg: 3.5, apg: 1.8 } },
+       { id: "1630245", name: "Ayo Dosunmu", position: "G", number: "12", seasonStats: { ppg: 9.0, rpg: 3.0, apg: 4.0 } },
+       { id: "1628470", name: "Torrey Craig", position: "F", number: "5", seasonStats: { ppg: 4.5, rpg: 3.0, apg: 0.8 } },
+       { id: "1631259", name: "Julian Phillips", position: "F", number: "8", seasonStats: { ppg: 4.0, rpg: 2.5, apg: 1.0 } }
+    ],
+    injuries: [
+       { player: "Patrick Williams", status: "Questionable", details: "Right foot soreness — game-time decision", team: "opponent" }
+    ],
+    tendencies: ["Balanced Scoring", "Transition Offense", "Drop Coverage"],
+    playbook: [
+      { id: "p1", name: "LaVine Iso", type: "offense", description: "LaVine isolation from wing.", diagramType: "iso", execution: ["Clear out right side", "LaVine attacks off dribble", "Vucevic seals for dump-off"], raptorsCounter: "Force LaVine left, no clean looks." },
+      { id: "p2", name: "Vooch High-Low", type: "offense", description: "Vucevic elbow action.", diagramType: "horns", execution: ["Entry pass to elbow", "Vucevic faces up", "Cutters off baseline screens"], raptorsCounter: "Front the post, deny entry." },
+      { id: "p3", name: "Giddey PnR", type: "offense", description: "Giddey pick and roll playmaking.", diagramType: "pnr", execution: ["Giddey initiates high PnR", "Vucevic sets screen and pops", "Giddey reads the defense"], raptorsCounter: "Go under screens, contest the pop." }
+    ]
+  },
+  "Pacers": {
+    id: "1610612754",
+    roster: [
+       { id: "1630169", name: "Tyrese Haliburton", position: "G", number: "0", seasonStats: { ppg: 20.5, rpg: 3.5, apg: 10.5 } },
+       { id: "1627783", name: "Pascal Siakam", position: "F", number: "43", seasonStats: { ppg: 21.5, rpg: 7.0, apg: 3.8 } },
+       { id: "1626167", name: "Myles Turner", position: "C", number: "33", seasonStats: { ppg: 16.5, rpg: 7.0, apg: 1.5, bpg: 2.0 } },
+       { id: "1631097", name: "Bennedict Mathurin", position: "G", number: "00", seasonStats: { ppg: 16.0, rpg: 4.0, apg: 2.0 } },
+       { id: "1631111", name: "Andrew Nembhard", position: "G", number: "2", seasonStats: { ppg: 11.0, rpg: 3.0, apg: 5.5 } },
+       { id: "1630168", name: "Obi Toppin", position: "F", number: "1", seasonStats: { ppg: 10.5, rpg: 4.5, apg: 1.5 } },
+       { id: "1630187", name: "Aaron Nesmith", position: "F", number: "23", seasonStats: { ppg: 8.5, rpg: 3.5, apg: 1.2 } },
+       { id: "204456", name: "T.J. McConnell", position: "G", number: "9", seasonStats: { ppg: 6.5, rpg: 2.5, apg: 4.5 } }
+    ],
+    tendencies: ["NBA's Fastest Pace", "Drive & Kick", "Switch-Heavy Defense"],
+    playbook: [
+      { id: "p1", name: "Hali PnR", type: "offense", description: "Haliburton pick and roll with Turner.", diagramType: "pnr", execution: ["Haliburton calls for screen", "Turner sets and pops to three", "Haliburton drives or kicks"], raptorsCounter: "ICE the screen, stay attached." },
+      { id: "p2", name: "Siakam Post", type: "offense", description: "Siakam posts up from block.", diagramType: "iso", execution: ["Entry to Siakam on block", "Shooters space out", "Siakam spins baseline"], raptorsCounter: "Front the post, dig from weak side." },
+      { id: "p3", name: "Transition Push", type: "offense", description: "Fast break in under 7 seconds.", diagramType: "zone", execution: ["Turner outlets to Haliburton", "Wings sprint lanes", "Attack before defense sets"], raptorsCounter: "Get back! No transition 3s." }
+    ]
+  },
+  "Pistons": {
+    id: "1610612765",
+    roster: [
+       { id: "1630595", name: "Cade Cunningham", position: "G", number: "2", seasonStats: { ppg: 24.5, rpg: 6.5, apg: 9.5 } },
+       { id: "1631093", name: "Jaden Ivey", position: "G", number: "23", seasonStats: { ppg: 16.5, rpg: 3.5, apg: 4.5 } },
+       { id: "1631105", name: "Jalen Duren", position: "C", number: "0", seasonStats: { ppg: 13.5, rpg: 10.5, apg: 2.0 } },
+       { id: "203939", name: "Tobias Harris", position: "F", number: "12", seasonStats: { ppg: 11.5, rpg: 5.5, apg: 2.5 } },
+       { id: "1630191", name: "Isaiah Stewart", position: "C", number: "28", seasonStats: { ppg: 8.0, rpg: 6.5, apg: 1.5 } },
+       { id: "203501", name: "Tim Hardaway Jr.", position: "G", number: "10", seasonStats: { ppg: 10.5, rpg: 2.0, apg: 1.5 } },
+       { id: "1629066", name: "Malik Beasley", position: "G", number: "5", seasonStats: { ppg: 9.0, rpg: 2.5, apg: 1.5 } },
+       { id: "1641713", name: "Ausar Thompson", position: "F", number: "5", seasonStats: { ppg: 8.0, rpg: 5.0, apg: 1.5 } }
+    ],
+    tendencies: ["Cade-Centric Offense", "Transition Play", "Young & Athletic"],
+    playbook: [
+      { id: "p1", name: "Cade PnR", type: "offense", description: "Cunningham pick and roll.", diagramType: "pnr", execution: ["Cade brings ball up", "Duren sets screen", "Cade reads — drive or kick"], raptorsCounter: "Trap Cade high, rotate quickly." },
+      { id: "p2", name: "Ivey Downhill", type: "offense", description: "Ivey in transition.", diagramType: "iso", execution: ["Outlet to Ivey", "Attack in open court", "Finish at rim or find shooter"], raptorsCounter: "Match Ivey's speed, get back early." }
+    ]
+  },
+  "Bucks": {
+    id: "1610612749",
+    roster: [
+       { id: "203507", name: "Giannis Antetokounmpo", position: "F", number: "34", seasonStats: { ppg: 31.5, rpg: 12.0, apg: 6.5 } },
+       { id: "203081", name: "Damian Lillard", position: "G", number: "0", seasonStats: { ppg: 25.5, rpg: 4.5, apg: 7.5 } },
+       { id: "203114", name: "Khris Middleton", position: "F", number: "22", seasonStats: { ppg: 14.0, rpg: 4.5, apg: 4.5 } },
+       { id: "201572", name: "Brook Lopez", position: "C", number: "11", seasonStats: { ppg: 12.5, rpg: 5.0, apg: 1.5, bpg: 2.5 } },
+       { id: "1626171", name: "Bobby Portis", position: "F", number: "9", seasonStats: { ppg: 13.5, rpg: 7.5, apg: 1.5 } },
+       { id: "1626192", name: "Pat Connaughton", position: "G", number: "24", seasonStats: { ppg: 5.5, rpg: 3.0, apg: 1.5 } },
+       { id: "1631260", name: "AJ Green", position: "G", number: "20", seasonStats: { ppg: 7.0, rpg: 1.5, apg: 1.0 } },
+       { id: "1631098", name: "MarJon Beauchamp", position: "G-F", number: "3", seasonStats: { ppg: 5.5, rpg: 2.5, apg: 1.0 } }
+    ],
+    tendencies: ["Giannis Drive & Kick", "Elite Rim Protection", "Switch Defense"],
+    playbook: [
+      { id: "p1", name: "Giannis Freight Train", type: "offense", description: "Giannis attacks from top of key.", diagramType: "iso", execution: ["Giannis catches at top", "Euro-step or spin move", "Kick to corner shooters if help"], raptorsCounter: "Build a wall. Do NOT foul." },
+      { id: "p2", name: "Dame PnR", type: "offense", description: "Lillard-Lopez pick and roll.", diagramType: "pnr", execution: ["Dame calls for screen", "Lopez sets and drops", "Dame pulls from deep or drives"], raptorsCounter: "Go over screens, no open 3s." },
+      { id: "p3", name: "Giannis Post", type: "offense", description: "Giannis deep post-up.", diagramType: "horns", execution: ["Entry to Giannis on block", "Shooters on weak side", "Giannis faces up and drives"], raptorsCounter: "Front the post, double on catch." }
+    ]
+  },
+  "Thunder": {
+    id: "1610612760",
+    roster: [
+       { id: "1628983", name: "Shai Gilgeous-Alexander", position: "G", number: "2", seasonStats: { ppg: 32.5, rpg: 5.5, apg: 6.5 } },
+       { id: "1631114", name: "Jalen Williams", position: "F", number: "8", seasonStats: { ppg: 21.0, rpg: 5.5, apg: 5.0 } },
+       { id: "1631096", name: "Chet Holmgren", position: "C", number: "7", seasonStats: { ppg: 16.5, rpg: 7.5, apg: 2.5, bpg: 2.5 } },
+       { id: "1629652", name: "Luguentz Dort", position: "G", number: "5", seasonStats: { ppg: 10.5, rpg: 4.0, apg: 1.5 } },
+       { id: "1627936", name: "Alex Caruso", position: "G", number: "6", seasonStats: { ppg: 6.5, rpg: 3.5, apg: 3.5, spg: 1.5 } },
+       { id: "1628392", name: "Isaiah Hartenstein", position: "C", number: "55", seasonStats: { ppg: 8.0, rpg: 8.5, apg: 2.5 } },
+       { id: "1630598", name: "Aaron Wiggins", position: "G-F", number: "21", seasonStats: { ppg: 8.5, rpg: 3.0, apg: 1.5 } },
+       { id: "1629026", name: "Kenrich Williams", position: "F", number: "34", seasonStats: { ppg: 5.0, rpg: 3.5, apg: 2.0 } }
+    ],
+    tendencies: ["SGA Iso Machine", "Elite Team Defense", "Versatile Lineups"],
+    playbook: [
+      { id: "p1", name: "SGA Iso", type: "offense", description: "Shai isolates from either wing.", diagramType: "iso", execution: ["Clear one side", "SGA attacks off dribble", "Mid-range or floater finish"], raptorsCounter: "No clean iso looks. Force help." },
+      { id: "p2", name: "Chet Pop PnR", type: "offense", description: "Holmgren pick-and-pop.", diagramType: "pnr", execution: ["SGA or JWill ball-handle", "Chet sets and pops to 3", "Shooter relocates weak side"], raptorsCounter: "Recover to Chet on pop, contest." },
+      { id: "p3", name: "Motion Weak", type: "offense", description: "Off-ball movement.", diagramType: "zone", execution: ["Ball reversal", "Pin-down for shooter", "Backdoor cut option"], raptorsCounter: "Active hands in passing lanes." }
+    ]
+  },
+  "Spurs": {
+    id: "1610612759",
+    roster: [
+       { id: "1641705", name: "Victor Wembanyama", position: "C", number: "1", seasonStats: { ppg: 25.0, rpg: 10.5, apg: 3.5, bpg: 3.5 } },
+       { id: "1630170", name: "Devin Vassell", position: "G", number: "24", seasonStats: { ppg: 17.5, rpg: 3.5, apg: 4.0 } },
+       { id: "1631106", name: "Jeremy Sochan", position: "F", number: "10", seasonStats: { ppg: 12.0, rpg: 7.0, apg: 3.5 } },
+       { id: "1629640", name: "Keldon Johnson", position: "F", number: "3", seasonStats: { ppg: 12.5, rpg: 4.0, apg: 2.5 } },
+       { id: "1630200", name: "Tre Jones", position: "G", number: "33", seasonStats: { ppg: 8.5, rpg: 2.5, apg: 5.5 } },
+       { id: "1628380", name: "Zach Collins", position: "C", number: "23", seasonStats: { ppg: 8.0, rpg: 5.5, apg: 2.0 } },
+       { id: "203084", name: "Harrison Barnes", position: "F", number: "40", seasonStats: { ppg: 8.0, rpg: 4.0, apg: 1.5 } },
+       { id: "1641718", name: "Keyonte George", position: "G", number: "3", seasonStats: { ppg: 7.0, rpg: 2.0, apg: 3.0 } }
+    ],
+    tendencies: ["Wemby Rim Protection", "Pace & Space", "Development Focus"],
+    playbook: [
+      { id: "p1", name: "Wemby Block Party", type: "offense", description: "Wembanyama as roll man.", diagramType: "pnr", execution: ["Guard initiates PnR", "Wemby rolls hard to rim", "Lob or pop to three"], raptorsCounter: "Don't leave Wemby alone at the rim." },
+      { id: "p2", name: "Vassell DHO", type: "offense", description: "Dribble handoff action for Vassell.", diagramType: "horns", execution: ["Wemby at elbow", "Handoff to Vassell", "Vassell attacks or pulls up"], raptorsCounter: "Switch the handoff cleanly." }
+    ]
+  },
+  "Wizards": {
+    id: "1610612764",
+    roster: [
+       { id: "1629673", name: "Jordan Poole", position: "G", number: "13", seasonStats: { ppg: 17.5, rpg: 2.5, apg: 5.5 } },
+       { id: "1628398", name: "Kyle Kuzma", position: "F", number: "33", seasonStats: { ppg: 16.0, rpg: 6.0, apg: 2.5 } },
+       { id: "1630557", name: "Corey Kispert", position: "F", number: "24", seasonStats: { ppg: 10.5, rpg: 3.5, apg: 1.5 } },
+       { id: "1641706", name: "Bilal Coulibaly", position: "F", number: "0", seasonStats: { ppg: 9.0, rpg: 4.5, apg: 2.5 } },
+       { id: "202685", name: "Jonas Valanciunas", position: "C", number: "17", seasonStats: { ppg: 8.0, rpg: 7.5, apg: 1.5 } },
+       { id: "1627763", name: "Malcolm Brogdon", position: "G", number: "7", seasonStats: { ppg: 9.5, rpg: 3.0, apg: 4.0 } },
+       { id: "1630559", name: "Marvin Bagley III", position: "F", number: "35", seasonStats: { ppg: 5.5, rpg: 4.0, apg: 0.5 } },
+       { id: "1629011", name: "Carlton Carrington", position: "G", number: "2", seasonStats: { ppg: 7.5, rpg: 3.0, apg: 3.5 } }
+    ],
+    tendencies: ["Young & Developing", "Guard-Heavy Offense", "High Pace"],
+    playbook: [
+      { id: "p1", name: "Poole Party", type: "offense", description: "Jordan Poole in isolation.", diagramType: "iso", execution: ["Poole brings ball up", "Clear out wing", "Poole attacks or pulls up three"], raptorsCounter: "Stay disciplined, no fouls on pump fakes." },
+      { id: "p2", name: "Kuzma Post", type: "offense", description: "Kuzma mid-post action.", diagramType: "horns", execution: ["Entry to Kuzma at elbow", "Face-up jumper or drive", "Kick to Kispert in corner"], raptorsCounter: "Deny the entry, force tough 2s." }
+    ]
+  },
+  "Clippers": {
+    id: "1610612746",
+    roster: [
+       { id: "202695", name: "Kawhi Leonard", position: "F", number: "2", seasonStats: { ppg: 23.5, rpg: 6.0, apg: 3.5 } },
+       { id: "201935", name: "James Harden", position: "G", number: "1", seasonStats: { ppg: 19.0, rpg: 5.5, apg: 8.5 } },
+       { id: "1627826", name: "Ivica Zubac", position: "C", number: "40", seasonStats: { ppg: 11.5, rpg: 9.5, apg: 2.0 } },
+       { id: "1627741", name: "Norman Powell", position: "G", number: "24", seasonStats: { ppg: 16.0, rpg: 3.0, apg: 2.0 } },
+       { id: "1629611", name: "Terance Mann", position: "G-F", number: "14", seasonStats: { ppg: 8.5, rpg: 4.0, apg: 2.5 } },
+       { id: "1630538", name: "Bones Hyland", position: "G", number: "3", seasonStats: { ppg: 7.0, rpg: 2.0, apg: 2.5 } },
+       { id: "1629599", name: "Amir Coffey", position: "G-F", number: "7", seasonStats: { ppg: 5.5, rpg: 2.0, apg: 1.0 } },
+       { id: "1627739", name: "Kris Dunn", position: "G", number: "32", seasonStats: { ppg: 4.0, rpg: 2.0, apg: 3.0, spg: 1.0 } }
+    ],
+    tendencies: ["Kawhi Iso", "Harden Pick & Roll", "Switchable Defense"],
+    playbook: [
+      { id: "p1", name: "Kawhi Iso", type: "offense", description: "Leonard isolation from wing.", diagramType: "iso", execution: ["Clear side for Kawhi", "Kawhi faces up mid-post", "Attacks baseline or fades"], raptorsCounter: "Make Kawhi work for every touch." },
+      { id: "p2", name: "Harden Step-Back", type: "offense", description: "Harden creates from top of key.", diagramType: "pnr", execution: ["Harden PnR with Zubac", "Harden attacks switch", "Step-back three or lob to Zubac"], raptorsCounter: "Stay on Harden's hip, no space." }
+    ]
+  },
+  "Lakers": {
+    id: "1610612747",
+    roster: [
+       { id: "2544", name: "LeBron James", position: "F", number: "23", seasonStats: { ppg: 25.0, rpg: 7.5, apg: 8.0 } },
+       { id: "203076", name: "Anthony Davis", position: "F-C", number: "3", seasonStats: { ppg: 24.5, rpg: 12.0, apg: 3.5, bpg: 2.0 } },
+       { id: "1630559", name: "Austin Reaves", position: "G", number: "15", seasonStats: { ppg: 17.5, rpg: 4.5, apg: 5.5 } },
+       { id: "1626156", name: "D'Angelo Russell", position: "G", number: "1", seasonStats: { ppg: 14.0, rpg: 3.0, apg: 6.0 } },
+       { id: "1629060", name: "Rui Hachimura", position: "F", number: "28", seasonStats: { ppg: 12.0, rpg: 5.5, apg: 1.5 } },
+       { id: "1629020", name: "Jarred Vanderbilt", position: "F", number: "2", seasonStats: { ppg: 5.5, rpg: 5.0, apg: 1.5 } },
+       { id: "1629216", name: "Gabe Vincent", position: "G", number: "7", seasonStats: { ppg: 7.5, rpg: 2.0, apg: 3.0 } },
+       { id: "1631108", name: "Max Christie", position: "G", number: "10", seasonStats: { ppg: 5.5, rpg: 2.0, apg: 1.0 } }
+    ],
+    tendencies: ["LeBron Transition", "AD Paint Dominance", "Big-Ball Lineups"],
+    playbook: [
+      { id: "p1", name: "LeBron Drive", type: "offense", description: "LeBron attacks from top.", diagramType: "iso", execution: ["LeBron at top of key", "AD clears to dunker spot", "LeBron drives or kicks to shooters"], raptorsCounter: "Wall up at the rim, rotate to shooters." },
+      { id: "p2", name: "AD Post", type: "offense", description: "Anthony Davis deep post.", diagramType: "horns", execution: ["Entry pass to AD on block", "Shooters space perimeter", "AD faces up or hooks"], raptorsCounter: "Front the post, send early help." },
+      { id: "p3", name: "Reaves PnR", type: "offense", description: "Reaves-Davis pick and roll.", diagramType: "pnr", execution: ["Reaves initiates PnR", "AD rolls hard to rim", "Reaves reads the defense"], raptorsCounter: "Switch and recover." }
+    ]
+  },
+  "Warriors": {
+    id: "1610612744",
+    roster: [
+       { id: "201939", name: "Stephen Curry", position: "G", number: "30", seasonStats: { ppg: 26.5, rpg: 5.0, apg: 6.5 } },
+       { id: "203952", name: "Andrew Wiggins", position: "F", number: "22", seasonStats: { ppg: 14.5, rpg: 4.5, apg: 2.0 } },
+       { id: "203110", name: "Draymond Green", position: "F", number: "23", seasonStats: { ppg: 8.5, rpg: 6.0, apg: 5.5 } },
+       { id: "1630228", name: "Jonathan Kuminga", position: "F", number: "00", seasonStats: { ppg: 14.0, rpg: 4.5, apg: 2.0 } },
+       { id: "1626172", name: "Kevon Looney", position: "C", number: "5", seasonStats: { ppg: 5.5, rpg: 7.0, apg: 2.0 } },
+       { id: "1641722", name: "Brandin Podziemski", position: "G", number: "2", seasonStats: { ppg: 9.5, rpg: 4.5, apg: 3.5 } },
+       { id: "1630541", name: "Moses Moody", position: "G", number: "4", seasonStats: { ppg: 7.0, rpg: 3.0, apg: 1.0 } },
+       { id: "1627780", name: "Gary Payton II", position: "G", number: "8", seasonStats: { ppg: 5.0, rpg: 2.5, apg: 1.5, spg: 1.0 } }
+    ],
+    tendencies: ["Curry Off-Ball Movement", "Motion Offense", "Switch Everything"],
+    playbook: [
+      { id: "p1", name: "Curry Gravity", type: "offense", description: "Off-ball screens to free Curry.", diagramType: "zone", execution: ["Curry runs off double screen", "Draymond at top reads", "Curry catches and shoots or drives"], raptorsCounter: "Chase Curry over every screen." },
+      { id: "p2", name: "Draymond Short Roll", type: "offense", description: "Draymond as facilitator from short roll.", diagramType: "pnr", execution: ["Guard brings ball up", "Draymond sets screen and short rolls", "Finds cutters or shooters"], raptorsCounter: "Stunt at Draymond, recover to shooters." }
+    ]
+  },
+  "Kings": {
+    id: "1610612758",
+    roster: [
+       { id: "1628368", name: "De'Aaron Fox", position: "G", number: "5", seasonStats: { ppg: 26.5, rpg: 4.5, apg: 6.5 } },
+       { id: "1627734", name: "Domantas Sabonis", position: "F-C", number: "10", seasonStats: { ppg: 19.5, rpg: 13.5, apg: 7.5 } },
+       { id: "201942", name: "DeMar DeRozan", position: "G-F", number: "10", seasonStats: { ppg: 18.5, rpg: 4.0, apg: 4.5 } },
+       { id: "1631099", name: "Keegan Murray", position: "F", number: "13", seasonStats: { ppg: 14.5, rpg: 4.5, apg: 2.0 } },
+       { id: "1628370", name: "Malik Monk", position: "G", number: "0", seasonStats: { ppg: 15.0, rpg: 2.5, apg: 4.5 } },
+       { id: "1628989", name: "Kevin Huerter", position: "G", number: "9", seasonStats: { ppg: 8.5, rpg: 2.5, apg: 2.0 } },
+       { id: "1626168", name: "Trey Lyles", position: "F", number: "41", seasonStats: { ppg: 7.0, rpg: 4.5, apg: 1.0 } },
+       { id: "1631117", name: "Keon Ellis", position: "G", number: "23", seasonStats: { ppg: 5.0, rpg: 2.5, apg: 1.0, spg: 1.0 } }
+    ],
+    tendencies: ["Elite Passing Big", "Pace & Space", "Mid-Range Heavy"],
+    playbook: [
+      { id: "p1", name: "Fox Fast", type: "offense", description: "Fox in transition attack.", diagramType: "iso", execution: ["Sabonis outlets to Fox", "Fox pushes in transition", "Finishes at rim or finds trailer"], raptorsCounter: "Get back! Match Fox's speed." },
+      { id: "p2", name: "Sabonis Elbow", type: "offense", description: "Sabonis facilitates from elbow.", diagramType: "horns", execution: ["Entry to Sabonis at elbow", "Cutters off baseline", "Sabonis finds open man"], raptorsCounter: "Deny elbow entry, jump passing lanes." }
+    ]
+  },
+  "Trail Blazers": {
+    id: "1610612757",
+    roster: [
+       { id: "1629014", name: "Anfernee Simons", position: "G", number: "1", seasonStats: { ppg: 22.0, rpg: 3.0, apg: 5.5 } },
+       { id: "203924", name: "Jerami Grant", position: "F", number: "9", seasonStats: { ppg: 18.5, rpg: 4.5, apg: 2.5 } },
+       { id: "1629028", name: "Deandre Ayton", position: "C", number: "2", seasonStats: { ppg: 16.0, rpg: 10.5, apg: 2.0 } },
+       { id: "1631101", name: "Shaedon Sharpe", position: "G", number: "17", seasonStats: { ppg: 14.0, rpg: 3.5, apg: 2.0 } },
+       { id: "1630166", name: "Deni Avdija", position: "F", number: "8", seasonStats: { ppg: 10.0, rpg: 5.5, apg: 3.5 } },
+       { id: "1629057", name: "Robert Williams III", position: "C", number: "44", seasonStats: { ppg: 5.5, rpg: 5.0, apg: 1.0, bpg: 1.5 } },
+       { id: "203914", name: "Gary Harris", position: "G", number: "14", seasonStats: { ppg: 4.5, rpg: 1.5, apg: 1.0 } },
+       { id: "1641717", name: "Toumani Camara", position: "F", number: "33", seasonStats: { ppg: 7.0, rpg: 4.0, apg: 1.5 } }
+    ],
+    tendencies: ["Guard Scoring", "Rim Running", "Developing Talent"],
+    playbook: [
+      { id: "p1", name: "Ant PnR", type: "offense", description: "Simons pick and roll.", diagramType: "pnr", execution: ["Simons at top of key", "Ayton sets screen", "Simons pulls up or drives"], raptorsCounter: "Go over screens, contest the pull-up." },
+      { id: "p2", name: "Grant Iso", type: "offense", description: "Grant isolation from mid-post.", diagramType: "iso", execution: ["Grant catches at elbow", "Faces up and attacks", "Mid-range pull-up or drive"], raptorsCounter: "Force Grant into tough mid-range." }
+    ]
+  },
+  "Knicks": {
+    id: "1610612752",
+    roster: [
+       { id: "1628973", name: "Jalen Brunson", position: "G", number: "11", seasonStats: { ppg: 28.5, rpg: 3.5, apg: 7.5 } },
+       { id: "1626157", name: "Karl-Anthony Towns", position: "C", number: "32", seasonStats: { ppg: 25.0, rpg: 11.5, apg: 3.0 } },
+       { id: "1628969", name: "Mikal Bridges", position: "F", number: "25", seasonStats: { ppg: 17.5, rpg: 4.0, apg: 3.0 } },
+       { id: "1628384", name: "OG Anunoby", position: "F", number: "8", seasonStats: { ppg: 14.5, rpg: 4.5, apg: 2.0, spg: 1.5 } },
+       { id: "1628404", name: "Josh Hart", position: "G", number: "3", seasonStats: { ppg: 10.0, rpg: 8.5, apg: 4.5 } },
+       { id: "1630540", name: "Miles McBride", position: "G", number: "2", seasonStats: { ppg: 7.5, rpg: 2.5, apg: 2.5 } },
+       { id: "1629011", name: "Mitchell Robinson", position: "C", number: "23", seasonStats: { ppg: 6.0, rpg: 8.0, apg: 0.5, bpg: 1.5 } },
+       { id: "1626166", name: "Cameron Payne", position: "G", number: "1", seasonStats: { ppg: 5.0, rpg: 1.5, apg: 3.0 } }
+    ],
+    tendencies: ["Brunson Iso", "Physicality", "Rebounding Dominance"],
+    playbook: [
+      { id: "p1", name: "Brunson Cook", type: "offense", description: "Brunson iso from mid-range.", diagramType: "iso", execution: ["Brunson brings ball up", "Screen to switch", "Brunson cooks in mid-range"], raptorsCounter: "No switches — stay attached." },
+      { id: "p2", name: "KAT Pop", type: "offense", description: "Towns as stretch-five.", diagramType: "pnr", execution: ["PnR with Towns", "Towns pops to three", "Brunson drives or kicks"], raptorsCounter: "Recover to Towns, no open 3s." },
+      { id: "p3", name: "OG Corner", type: "offense", description: "OG Anunoby corner action.", diagramType: "zone", execution: ["Drive and kick to OG", "OG spots up corner three", "Cuts if defense closes"], raptorsCounter: "Stay glued to OG in corners." }
+    ]
+  },
+  "Magic": {
+    id: "1610612753",
+    roster: [
+       { id: "1631094", name: "Paolo Banchero", position: "F", number: "5", seasonStats: { ppg: 23.0, rpg: 7.0, apg: 5.5 } },
+       { id: "1630532", name: "Franz Wagner", position: "F", number: "22", seasonStats: { ppg: 21.0, rpg: 5.5, apg: 5.5 } },
+       { id: "1630591", name: "Jalen Suggs", position: "G", number: "4", seasonStats: { ppg: 12.5, rpg: 3.5, apg: 4.0, spg: 1.5 } },
+       { id: "1628976", name: "Wendell Carter Jr.", position: "C", number: "34", seasonStats: { ppg: 10.0, rpg: 7.5, apg: 2.5 } },
+       { id: "1630175", name: "Cole Anthony", position: "G", number: "50", seasonStats: { ppg: 10.5, rpg: 4.0, apg: 4.5 } },
+       { id: "203914", name: "Gary Harris", position: "G", number: "14", seasonStats: { ppg: 5.0, rpg: 2.0, apg: 1.5 } },
+       { id: "1628371", name: "Jonathan Isaac", position: "F", number: "1", seasonStats: { ppg: 6.0, rpg: 4.5, apg: 1.0, bpg: 1.5 } },
+       { id: "1629021", name: "Moritz Wagner", position: "C", number: "21", seasonStats: { ppg: 8.0, rpg: 4.0, apg: 1.5 } }
+    ],
+    tendencies: ["Length & Defense", "Paolo & Franz Two-Man Game", "Transition Play"],
+    playbook: [
+      { id: "p1", name: "Paolo Power", type: "offense", description: "Banchero attacks from top.", diagramType: "iso", execution: ["Paolo catches at top", "Drives left or right", "Kick to shooters if wall forms"], raptorsCounter: "Force Paolo into tough finish." },
+      { id: "p2", name: "Franz PnR", type: "offense", description: "Wagner pick and roll.", diagramType: "pnr", execution: ["Franz calls for screen", "WCJ sets and rolls", "Franz drives or pulls up"], raptorsCounter: "Drop coverage, protect the rim." }
+    ]
+  },
+  "Jazz": {
+    id: "1610612762",
+    roster: [
+       { id: "1628374", name: "Lauri Markkanen", position: "F", number: "23", seasonStats: { ppg: 23.0, rpg: 8.0, apg: 2.0 } },
+       { id: "1629012", name: "Collin Sexton", position: "G", number: "2", seasonStats: { ppg: 16.5, rpg: 2.5, apg: 4.0 } },
+       { id: "203903", name: "Jordan Clarkson", position: "G", number: "00", seasonStats: { ppg: 16.0, rpg: 3.0, apg: 4.0 } },
+       { id: "1628381", name: "John Collins", position: "F", number: "20", seasonStats: { ppg: 13.0, rpg: 6.5, apg: 1.5 } },
+       { id: "1631107", name: "Walker Kessler", position: "C", number: "24", seasonStats: { ppg: 8.5, rpg: 7.5, apg: 0.5, bpg: 2.0 } },
+       { id: "1641718", name: "Keyonte George", position: "G", number: "3", seasonStats: { ppg: 12.5, rpg: 2.5, apg: 4.5 } },
+       { id: "1631100", name: "Ochai Agbaji", position: "G", number: "30", seasonStats: { ppg: 6.5, rpg: 2.5, apg: 1.0 } },
+       { id: "1629655", name: "Daniel Gafford", position: "C", number: "21", seasonStats: { ppg: 5.5, rpg: 4.5, apg: 0.5, bpg: 1.5 } }
+    ],
+    tendencies: ["Markkanen Scoring", "Guard Penetration", "Rim Protection"],
+    playbook: [
+      { id: "p1", name: "Lauri Iso", type: "offense", description: "Markkanen isolation at elbow.", diagramType: "iso", execution: ["Entry to Lauri at elbow", "Face-up jumper or drive", "Kick to Clarkson on wing"], raptorsCounter: "Crowd the elbow, force tough shots." },
+      { id: "p2", name: "Sexton Downhill", type: "offense", description: "Sexton attacks in transition.", diagramType: "pnr", execution: ["Quick outlet to Sexton", "Sexton pushes tempo", "Finishes at rim or dishes"], raptorsCounter: "Get back in transition, wall up." }
     ]
   }
 };
@@ -555,18 +834,19 @@ const analyzeGameMatchup = async (opponent) => {
     },
     intel: {
         injuries: [
-            { player: "Jakob Poeltl", status: "Out", details: "Back injury — no return timeline", team: "raptors" },
-            { player: "RJ Barrett", status: "Questionable", details: "Left ankle sprain — day-to-day", team: "raptors" },
-            { player: "Scottie Barnes", status: "Active", details: "Available", team: "raptors" },
-            { player: "Chris Paul", status: "Active", details: "Acquired via trade — available", team: "raptors" },
-            { player: "Trayce Jackson-Davis", status: "Active", details: "Acquired via trade — available", team: "raptors" }
+            { player: "Jakob Poeltl", status: "Out", details: "Lower back soreness — re-evaluated in 2 weeks", team: "raptors" },
+            { player: "RJ Barrett", status: "Questionable", details: "Left ankle sprain — game-time decision", team: "raptors" },
+            { player: "Scottie Barnes", status: "Available", details: "Healthy — full practice participant", team: "raptors" },
+            { player: "Chris Paul", status: "Available", details: "Cleared to play — joined team post-deadline", team: "raptors" },
+            { player: "Trayce Jackson-Davis", status: "Available", details: "Cleared to play — acquired from Warriors", team: "raptors" },
+            ...(opponentData.injuries || [])
         ],
         socialChatter: [
-            { headline: "Raptors acquire Chris Paul in blockbuster 3-team deadline deal", source: "Woj (ESPN)", sentiment: "positive" },
-            { headline: "Trayce Jackson-Davis traded from Warriors to Raptors for 2nd-round pick", source: "Shams (Athletic)", sentiment: "neutral" },
-            { headline: "Ochai Agbaji headed to Nets as part of CP3 deal", source: "Woj (ESPN)", sentiment: "neutral" },
-            { headline: "Jakob Poeltl's back injury lingers — Raptors add depth at center", source: "Raptors Republic", sentiment: "neutral" },
-            { headline: `${opponent} heading to Scotiabank Arena as Raptors adjust post-deadline roster`, source: "Team Reddit", sentiment: "positive" }
+            { headline: "Raptors acquire Chris Paul in blockbuster 3-team deadline deal", source: "Shams Charania (ESPN)", sentiment: "positive", time: "4h" },
+            { headline: "Trayce Jackson-Davis headed to Toronto for 2nd-round pick", source: "Chris Haynes (TNT)", sentiment: "neutral", time: "5h" },
+            { headline: `Raptors post-deadline roster update: CP3 and TJD cleared vs ${opponent}`, source: "Doug Smith (Toronto Star)", sentiment: "positive", time: "2h" },
+            { headline: "Jakob Poeltl's back injury lingers — Raptors add frontcourt depth", source: "Raptors Republic", sentiment: "neutral", time: "3h" },
+            { headline: `${opponent} heading to Scotiabank Arena as Raptors adjust post-deadline roster`, source: "Blake Murphy (Sportsnet)", sentiment: "positive", time: "1h" }
         ]
     }
   };
@@ -1096,6 +1376,8 @@ const MatchupAnalyzer = ({ game }) => {
                               const isOpponentSrc = item.source.toLowerCase().includes(game.opponent.toLowerCase());
                               let avatar = 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
                               if (item.source.toLowerCase().includes('espn')) avatar = 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/ESPN_logo.svg/1200px-ESPN_logo.svg.png';
+                              if (item.source.toLowerCase().includes('sportsnet')) avatar = 'https://cdn.nba.com/logos/nba/1610612761/primary/L/logo.svg';
+                              if (item.source.toLowerCase().includes('toronto star')) avatar = 'https://cdn.nba.com/logos/nba/1610612761/primary/L/logo.svg';
                               if (isRaptors) avatar = 'https://cdn.nba.com/logos/nba/1610612761/primary/L/logo.svg';
                               if (isOpponentSrc && game.opponentId) avatar = `https://cdn.nba.com/logos/nba/${game.opponentId}/primary/L/logo.svg`;
                               const sentimentColor = item.sentiment === 'positive' ? 'border-l-green-500' : item.sentiment === 'negative' ? 'border-l-red-500' : 'border-l-blue-500';
@@ -1103,7 +1385,7 @@ const MatchupAnalyzer = ({ game }) => {
                                 <div key={i} className={`bg-cmd-bg/50 border border-cmd-border border-l-2 ${sentimentColor} rounded-xl p-4 hover-lift`}>
                                     <div className="flex gap-3">
                                         <div className="flex-shrink-0"><img src={avatar} onError={(e) => e.currentTarget.src = 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'} alt="avatar" className="w-10 h-10 rounded-full object-contain border border-cmd-border bg-cmd-surface p-1" /></div>
-                                        <div className="flex-1 min-w-0"><div className="flex items-center justify-between"><span className="text-sm font-bold text-white truncate">{item.source}</span><span className="text-xs text-slate-500">2h</span></div><p className="text-sm text-slate-300 mt-1 leading-snug">{item.headline}</p></div>
+                                        <div className="flex-1 min-w-0"><div className="flex items-center justify-between"><span className="text-sm font-bold text-white truncate">{item.source}</span><span className="text-xs text-slate-500">{item.time || '2h'}</span></div><p className="text-sm text-slate-300 mt-1 leading-snug">{item.headline}</p></div>
                                     </div>
                                 </div>
                               );
