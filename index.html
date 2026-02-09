@@ -7043,6 +7043,245 @@ const StarterVsBenchWidget = ({ isDark = true }) => {
   );
 };
 
+// Efficiency Leaders Widget
+const EfficiencyWidget = ({ isDark = true }) => {
+  const leaders = [
+    { name: 'Scottie Barnes', per: 21.8, ts: 57.2 },
+    { name: 'Jakob Poeltl', per: 18.5, ts: 62.4 },
+    { name: 'RJ Barrett', per: 17.5, ts: 54.8 }
+  ];
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <Gauge className="w-3 h-3 text-emerald-400" /> Efficiency
+        </h3>
+      </div>
+      
+      <div className="space-y-2">
+        {leaders.map((p, i) => (
+          <div key={i} className={`p-2 rounded-lg ${isDark ? 'bg-cmd-bg' : 'bg-light-card'}`}>
+            <div className="flex justify-between items-center mb-1">
+              <span className={`text-[10px] font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>{p.name.split(' ')[1]}</span>
+            </div>
+            <div className="flex justify-between text-[9px]">
+              <span className={isDark ? 'text-slate-400' : 'text-slate-500'}>PER: <span className="text-emerald-400 font-bold">{p.per}</span></span>
+              <span className={isDark ? 'text-slate-400' : 'text-slate-500'}>TS%: <span className="text-cyan-400 font-bold">{p.ts}%</span></span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Assist to Turnover Widget
+const AstToWidget = ({ isDark = true }) => {
+  const leaders = [
+    { name: 'Quickley', ast: 6.2, to: 2.1, ratio: 2.95 },
+    { name: 'Barnes', ast: 5.6, to: 2.7, ratio: 2.07 },
+    { name: 'Barrett', ast: 3.5, to: 1.6, ratio: 2.19 }
+  ];
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <ArrowRightLeft className="w-3 h-3 text-blue-400" /> AST/TO
+        </h3>
+      </div>
+      
+      <div className="space-y-2">
+        {leaders.map((p, i) => (
+          <div key={i} className="flex items-center justify-between text-[10px]">
+            <span className={isDark ? 'text-slate-300' : 'text-slate-600'}>{p.name}</span>
+            <div className="flex items-center gap-2">
+              <span className={isDark ? 'text-slate-500' : 'text-slate-400'}>{p.ast}/{p.to}</span>
+              <span className={`font-bold ${p.ratio >= 2.5 ? 'text-green-400' : 'text-yellow-400'}`}>{p.ratio.toFixed(2)}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Predicted Score Widget
+const PredictedScoreWidget = ({ isDark = true, opponent }) => {
+  const prediction = {
+    raptors: 112,
+    opponent: 108,
+    confidence: 62
+  };
+  
+  return (
+    <div className={`${isDark ? 'glass-card border-green-500/30' : 'bg-white border border-green-300 shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <Brain className="w-3 h-3 text-green-400" /> Predicted Score
+        </h3>
+        <span className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{prediction.confidence}% conf</span>
+      </div>
+      
+      <div className="flex items-center justify-center gap-4">
+        <div className="text-center">
+          <div className="text-2xl font-black text-raptors-red">{prediction.raptors}</div>
+          <div className={`text-[10px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>TOR</div>
+        </div>
+        <div className={`text-xl font-bold ${isDark ? 'text-slate-600' : 'text-slate-400'}`}>-</div>
+        <div className="text-center">
+          <div className={`text-2xl font-black ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{prediction.opponent}</div>
+          <div className={`text-[10px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{opponent?.slice(0,3) || 'OPP'}</div>
+        </div>
+      </div>
+      
+      <div className={`mt-3 text-center text-[10px] ${isDark ? 'text-green-400' : 'text-green-600'}`}>
+        Raptors by {prediction.raptors - prediction.opponent} 🏀
+      </div>
+    </div>
+  );
+};
+
+// Key Stats to Watch Widget
+const KeyStatsWidget = ({ isDark = true, opponent }) => {
+  const keyStats = [
+    { stat: 'Transition D', why: `${opponent} ranks 5th in fast break pts` },
+    { stat: 'Rebounding', why: 'Must win the boards' },
+    { stat: '3PT Defense', why: 'Contest every shot' }
+  ];
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <Eye className="w-3 h-3 text-amber-400" /> Keys to Watch
+        </h3>
+      </div>
+      
+      <div className="space-y-2">
+        {keyStats.map((k, i) => (
+          <div key={i} className={`p-2 rounded-lg ${isDark ? 'bg-amber-500/10' : 'bg-amber-500/5'}`}>
+            <div className={`text-[10px] font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>{i + 1}. {k.stat}</div>
+            <div className={`text-[9px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{k.why}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Points Off Assists Widget
+const PointsOffAssistsWidget = ({ isDark = true }) => {
+  const stats = {
+    ptsOffAst: 62.5,
+    pctAssisted: 56.2,
+    rank: 14
+  };
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <Share className="w-3 h-3 text-cyan-400" /> Team Ball
+        </h3>
+        <span className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>#{stats.rank}</span>
+      </div>
+      
+      <div className="grid grid-cols-2 gap-2 text-center">
+        <div className={`p-2 rounded-lg ${isDark ? 'bg-cyan-500/10' : 'bg-cyan-500/5'}`}>
+          <div className="text-xl font-black text-cyan-400">{stats.ptsOffAst}</div>
+          <div className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Pts Off AST</div>
+        </div>
+        <div className={`p-2 rounded-lg ${isDark ? 'bg-cmd-bg' : 'bg-light-card'}`}>
+          <div className={`text-xl font-black ${isDark ? 'text-white' : 'text-slate-800'}`}>{stats.pctAssisted}%</div>
+          <div className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Assisted FG</div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// vs League Average Widget
+const VsLeagueAvgWidget = ({ isDark = true }) => {
+  const comparison = [
+    { stat: 'PPG', team: 111.5, league: 114.2, diff: -2.7 },
+    { stat: 'RPG', team: 45.0, league: 43.8, diff: 1.2 },
+    { stat: '3P%', team: 34.3, league: 36.1, diff: -1.8 },
+    { stat: 'APG', team: 26.2, league: 25.8, diff: 0.4 }
+  ];
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <BarChart3 className="w-3 h-3 text-indigo-400" /> vs League Avg
+        </h3>
+      </div>
+      
+      <div className="space-y-2">
+        {comparison.map((c, i) => (
+          <div key={i} className="flex items-center justify-between text-[10px]">
+            <span className={isDark ? 'text-slate-400' : 'text-slate-500'}>{c.stat}</span>
+            <div className="flex items-center gap-2">
+              <span className={`font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>{c.team}</span>
+              <span className={`${c.diff > 0 ? 'text-green-400' : 'text-red-400'}`}>
+                ({c.diff > 0 ? '+' : ''}{c.diff.toFixed(1)})
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Fan Prediction Widget
+const FanPredictionWidget = ({ isDark = true }) => {
+  const [userPrediction, setUserPrediction] = useState(null);
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <MessageCircle className="w-3 h-3 text-pink-400" /> Your Pick
+        </h3>
+      </div>
+      
+      {userPrediction ? (
+        <div className="text-center">
+          <div className={`text-xl font-black ${userPrediction === 'raptors' ? 'text-raptors-red' : isDark ? 'text-slate-400' : 'text-slate-600'}`}>
+            {userPrediction === 'raptors' ? 'Raptors W! 🦖' : 'Loss 😢'}
+          </div>
+          <button
+            onClick={() => setUserPrediction(null)}
+            className={`mt-2 text-[10px] ${isDark ? 'text-slate-500 hover:text-slate-300' : 'text-slate-400 hover:text-slate-600'}`}
+          >
+            Change pick
+          </button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 gap-2">
+          <button
+            onClick={() => setUserPrediction('raptors')}
+            className={`p-3 rounded-lg text-center transition-all hover:scale-105 ${isDark ? 'bg-raptors-red/20 hover:bg-raptors-red/30' : 'bg-raptors-red/10 hover:bg-raptors-red/20'}`}
+          >
+            <span className="text-lg">🦖</span>
+            <div className={`text-[10px] font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>Raptors W</div>
+          </button>
+          <button
+            onClick={() => setUserPrediction('loss')}
+            className={`p-3 rounded-lg text-center transition-all hover:scale-105 ${isDark ? 'bg-cmd-bg hover:bg-cmd-card' : 'bg-light-card hover:bg-slate-200'}`}
+          >
+            <span className="text-lg">😢</span>
+            <div className={`text-[10px] font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>Loss</div>
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
 // Fun Facts Ticker
 const FunFactsTicker = ({ isDark = true }) => {
   const [currentFact, setCurrentFact] = useState(0);
@@ -7645,6 +7884,13 @@ function App() {
             <HalfPerformanceWidget isDark={isDark} />
             <TravelWidget isDark={isDark} />
             <StarterVsBenchWidget isDark={isDark} />
+            <EfficiencyWidget isDark={isDark} />
+            <AstToWidget isDark={isDark} />
+            {selectedGame?.status === 'upcoming' && <PredictedScoreWidget isDark={isDark} opponent={selectedGame.opponent} />}
+            {selectedGame && <KeyStatsWidget isDark={isDark} opponent={selectedGame.opponent} />}
+            <PointsOffAssistsWidget isDark={isDark} />
+            <VsLeagueAvgWidget isDark={isDark} />
+            <FanPredictionWidget isDark={isDark} />
             <LiveViewersWidget isDark={isDark} />
             <ArenaWidget isDark={isDark} />
           </div>
@@ -7668,7 +7914,7 @@ function App() {
         <div className="w-full max-w-[98%] mx-auto px-4 flex items-center justify-between text-xs text-slate-500">
           <div className="flex items-center gap-2">
             <span className="font-bold text-raptors-red neon-flicker">RAPTORS INTEL</span>
-            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v8.4</span>
+            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v8.5</span>
           </div>
           <div className="hidden md:flex items-center gap-4">
             <span>Built for Raptors fans 🦖</span>
