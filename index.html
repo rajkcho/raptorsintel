@@ -1574,6 +1574,64 @@ const PotgPrediction = ({ roster }) => {
   );
 };
 
+// Offensive vs Defensive Balance
+const OffDefBalance = ({ stats }) => {
+  const data = [
+    { name: 'Offense', value: stats.offRtg, fill: '#CE1141' },
+    { name: 'Defense', value: 130 - stats.defRtg, fill: '#3E2680' },
+  ];
+  
+  return (
+    <div className="glass-card overflow-hidden">
+      <div className="px-4 py-3 border-b border-cmd-border bg-gradient-to-r from-raptors-red/10 via-transparent to-raptors-purple/10">
+        <h3 className="text-sm font-bold text-white flex items-center gap-2"><Activity className="w-4 h-4 text-slate-400" /> Off/Def Balance</h3>
+      </div>
+      <div className="p-4 flex items-center gap-4">
+        <div className="flex-1">
+          <div className="flex justify-between items-center mb-1">
+            <span className="text-[10px] text-raptors-red font-bold uppercase">Offense</span>
+            <span className="text-xs font-mono text-white">{stats.offRtg.toFixed(1)}</span>
+          </div>
+          <div className="h-2 bg-cmd-border rounded-full overflow-hidden mb-3">
+            <div className="h-full bg-raptors-red rounded-full" style={{ width: `${((stats.offRtg - 100) / 25) * 100}%` }} />
+          </div>
+          <div className="flex justify-between items-center mb-1">
+            <span className="text-[10px] text-raptors-purple font-bold uppercase">Defense</span>
+            <span className="text-xs font-mono text-white">{stats.defRtg.toFixed(1)}</span>
+          </div>
+          <div className="h-2 bg-cmd-border rounded-full overflow-hidden">
+            <div className="h-full bg-raptors-purple rounded-full" style={{ width: `${((130 - stats.defRtg) / 25) * 100}%` }} />
+          </div>
+        </div>
+        <div className="text-center">
+          <div className={`text-2xl font-black ${stats.netRtg > 0 ? 'text-green-400' : 'text-red-400'}`}>
+            {stats.netRtg > 0 ? '+' : ''}{stats.netRtg.toFixed(1)}
+          </div>
+          <div className="text-[9px] text-slate-500 uppercase">Net Rtg</div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Quick Links
+const QuickLinks = () => (
+  <div className="glass-card-sm p-3">
+    <div className="flex flex-wrap gap-2 justify-center">
+      {[
+        { label: 'Raptors.com', url: 'https://www.nba.com/raptors' },
+        { label: 'Box Scores', url: 'https://www.nba.com/raptors/schedule' },
+        { label: 'Stats', url: 'https://www.nba.com/stats/team/1610612761' },
+        { label: 'Tickets', url: 'https://www.ticketmaster.ca/toronto-raptors-tickets/artist/806027' },
+      ].map((link, i) => (
+        <a key={i} href={link.url} target="_blank" rel="noopener noreferrer" className="text-[10px] font-bold text-slate-400 hover:text-raptors-red bg-cmd-bg border border-cmd-border hover:border-raptors-red/30 px-3 py-1.5 rounded-full transition-all">
+          {link.label}
+        </a>
+      ))}
+    </div>
+  </div>
+);
+
 // All-Time Record vs Opponent
 const AllTimeRecord = ({ opponentName }) => {
   const records = {
@@ -1908,6 +1966,8 @@ function App() {
             <ClutchStats />
             <SeasonProgress />
             <UpcomingGames games={SCHEDULE} />
+            <OffDefBalance stats={RAPTORS_TEAM_STATS} />
+            <QuickLinks />
           </div>
           
           {/* Main Content */}
