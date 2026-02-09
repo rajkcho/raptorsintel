@@ -1704,6 +1704,47 @@ const ThreePointComparison = ({ raptorsStats, opponentStats }) => {
   );
 };
 
+// Turnover Battle
+const TurnoverBattle = ({ raptorsStats, opponentStats }) => {
+  if (!opponentStats) return null;
+  const rapTov = 14.8;
+  const oppTov = 13.5;
+  
+  return (
+    <div className="glass-card-sm p-4">
+      <div className="text-[10px] text-slate-500 uppercase font-bold mb-3">Turnover Battle</div>
+      <div className="flex items-center justify-between">
+        <div className="text-center">
+          <div className={`text-xl font-mono font-bold ${rapTov < oppTov ? 'text-green-400' : 'text-red-400'}`}>{rapTov}</div>
+          <div className="text-[9px] text-slate-500">TOR TOV/G</div>
+        </div>
+        <div className="text-slate-500 font-bold">vs</div>
+        <div className="text-center">
+          <div className={`text-xl font-mono font-bold ${oppTov < rapTov ? 'text-green-400' : 'text-red-400'}`}>{oppTov}</div>
+          <div className="text-[9px] text-slate-500">OPP TOV/G</div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Bench Points
+const BenchPoints = () => (
+  <div className="glass-card-sm p-4">
+    <div className="text-[10px] text-slate-500 uppercase font-bold mb-3">Bench Production</div>
+    <div className="grid grid-cols-2 gap-4 text-center">
+      <div>
+        <div className="text-xl font-mono font-bold text-white">38.5</div>
+        <div className="text-[9px] text-slate-500">Bench PPG</div>
+      </div>
+      <div>
+        <div className="text-xl font-mono font-bold text-slate-400">35.2</div>
+        <div className="text-[9px] text-slate-500">Opp Bench PPG</div>
+      </div>
+    </div>
+  </div>
+);
+
 // Game Day Checklist
 const GameDayChecklist = ({ game }) => {
   const items = [
@@ -2186,6 +2227,8 @@ function App() {
             <MinutesDistribution />
             {currentOpponent && <ThreePointComparison raptorsStats={RAPTORS_TEAM_STATS} opponentStats={currentOpponent.teamStats} />}
             <GameDayChecklist game={selectedGame} />
+            {currentOpponent && <TurnoverBattle raptorsStats={RAPTORS_TEAM_STATS} opponentStats={currentOpponent.teamStats} />}
+            <BenchPoints />
           </div>
         </div>
       </main>
