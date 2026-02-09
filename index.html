@@ -5397,6 +5397,344 @@ const SocialBuzzWidget = ({ isDark = true }) => {
   );
 };
 
+// Team Chemistry Widget
+const TeamChemistryWidget = ({ isDark = true }) => {
+  const chemistry = {
+    overall: 78,
+    offense: 82,
+    defense: 74,
+    communication: 80,
+    momentum: 85
+  };
+  
+  const ChemBar = ({ label, value }) => (
+    <div className="space-y-1">
+      <div className="flex justify-between text-[10px]">
+        <span className={isDark ? 'text-slate-400' : 'text-slate-500'}>{label}</span>
+        <span className={`font-bold ${value >= 80 ? 'text-green-400' : value >= 60 ? 'text-yellow-400' : 'text-red-400'}`}>{value}</span>
+      </div>
+      <div className={`h-1.5 rounded-full overflow-hidden ${isDark ? 'bg-cmd-border' : 'bg-light-border'}`}>
+        <div 
+          className={`h-full rounded-full ${value >= 80 ? 'bg-green-500' : value >= 60 ? 'bg-yellow-500' : 'bg-red-500'}`}
+          style={{width: `${value}%`}}
+        />
+      </div>
+    </div>
+  );
+
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <Heart className="w-3 h-3 text-pink-400" /> Team Chemistry
+        </h3>
+        <span className={`text-lg font-black ${chemistry.overall >= 75 ? 'text-green-400' : 'text-yellow-400'}`}>{chemistry.overall}</span>
+      </div>
+      
+      <div className="space-y-2">
+        <ChemBar label="Offense" value={chemistry.offense} />
+        <ChemBar label="Defense" value={chemistry.defense} />
+        <ChemBar label="Communication" value={chemistry.communication} />
+        <ChemBar label="Momentum" value={chemistry.momentum} />
+      </div>
+    </div>
+  );
+};
+
+// Record Breakdown Widget
+const RecordBreakdownWidget = ({ isDark = true }) => {
+  const records = [
+    { label: 'vs East', record: '18-21', pct: 46.2 },
+    { label: 'vs West', record: '7-11', pct: 38.9 },
+    { label: 'vs .500+', record: '8-18', pct: 30.8 },
+    { label: 'vs <.500', record: '17-14', pct: 54.8 },
+    { label: 'OT Games', record: '2-1', pct: 66.7 },
+    { label: '1-Poss Games', record: '6-8', pct: 42.9 }
+  ];
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <BarChart3 className="w-3 h-3 text-cyan-400" /> Record Splits
+        </h3>
+      </div>
+      
+      <div className="grid grid-cols-2 gap-2">
+        {records.map((r, i) => (
+          <div key={i} className={`p-2 rounded-lg text-center ${isDark ? 'bg-cmd-bg' : 'bg-light-card'}`}>
+            <div className={`text-xs font-black ${r.pct >= 50 ? 'text-green-400' : 'text-red-400'}`}>{r.record}</div>
+            <div className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{r.label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Lineup Combos Widget
+const LineupCombosWidget = ({ isDark = true }) => {
+  const lineups = [
+    { players: 'Barnes-Barrett-IQ-Dick-Poeltl', mins: 124, netRtg: 8.2 },
+    { players: 'Barnes-Barrett-IQ-Boucher-Poeltl', mins: 86, netRtg: -2.1 },
+    { players: 'Barnes-Barrett-Olynyk-Dick-IQ', mins: 72, netRtg: 5.5 }
+  ];
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <Users className="w-3 h-3 text-indigo-400" /> Top Lineups
+        </h3>
+      </div>
+      
+      <div className="space-y-2">
+        {lineups.map((l, i) => (
+          <div key={i} className={`p-2 rounded-lg ${isDark ? 'bg-cmd-bg' : 'bg-light-card'}`}>
+            <div className={`text-[9px] ${isDark ? 'text-slate-300' : 'text-slate-600'} mb-1 truncate`}>{l.players}</div>
+            <div className="flex justify-between text-[10px]">
+              <span className={isDark ? 'text-slate-500' : 'text-slate-400'}>{l.mins} min</span>
+              <span className={`font-bold ${l.netRtg > 0 ? 'text-green-400' : 'text-red-400'}`}>
+                {l.netRtg > 0 ? '+' : ''}{l.netRtg}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Defensive Assignments Widget
+const DefensiveAssignmentsWidget = ({ isDark = true, opponent }) => {
+  const opponentData = OPPONENT_DATA[opponent];
+  if (!opponentData) return null;
+  
+  const topScorer = opponentData.roster.sort((a, b) => (b.seasonStats?.ppg || 0) - (a.seasonStats?.ppg || 0))[0];
+  
+  const assignments = [
+    { defender: 'Scottie Barnes', assignment: topScorer?.name || 'Top Scorer', rating: 'A' },
+    { defender: 'RJ Barrett', assignment: 'Secondary', rating: 'B+' },
+    { defender: 'Gradey Dick', assignment: '3PT Threat', rating: 'B' }
+  ];
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <Shield className="w-3 h-3 text-blue-400" /> Defensive Keys
+        </h3>
+      </div>
+      
+      <div className="space-y-2">
+        {assignments.map((a, i) => (
+          <div key={i} className="flex items-center justify-between text-[10px]">
+            <div>
+              <span className={`font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>{a.defender}</span>
+              <span className={isDark ? 'text-slate-500' : 'text-slate-400'}> → </span>
+              <span className={isDark ? 'text-slate-300' : 'text-slate-600'}>{a.assignment}</span>
+            </div>
+            <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold ${
+              a.rating.startsWith('A') ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'
+            }`}>{a.rating}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Momentum Tracker Widget
+const MomentumTrackerWidget = ({ isDark = true }) => {
+  const momentum = [
+    { game: -5, result: 'W', margin: 8 },
+    { game: -4, result: 'L', margin: -12 },
+    { game: -3, result: 'W', margin: 5 },
+    { game: -2, result: 'W', margin: 15 },
+    { game: -1, result: 'W', margin: 3 }
+  ];
+  
+  const currentMomentum = momentum.filter(m => m.result === 'W').length / momentum.length * 100;
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <TrendingUp className="w-3 h-3 text-green-400" /> Momentum
+        </h3>
+        <span className={`text-sm font-black ${currentMomentum >= 60 ? 'text-green-400' : 'text-yellow-400'}`}>
+          {currentMomentum.toFixed(0)}%
+        </span>
+      </div>
+      
+      <div className="flex justify-between items-end h-12 gap-1">
+        {momentum.map((m, i) => (
+          <div 
+            key={i} 
+            className={`flex-1 rounded-t ${m.result === 'W' ? 'bg-green-500' : 'bg-red-500'}`}
+            style={{height: `${Math.min(Math.abs(m.margin) * 3, 100)}%`}}
+            title={`${m.result} by ${Math.abs(m.margin)}`}
+          />
+        ))}
+      </div>
+      <div className="flex justify-between mt-1">
+        {momentum.map((m, i) => (
+          <span key={i} className={`text-[8px] flex-1 text-center ${m.result === 'W' ? 'text-green-400' : 'text-red-400'}`}>
+            {m.result}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Player Hot/Cold Widget
+const PlayerFormWidget = ({ isDark = true }) => {
+  const players = RAPTORS_ROSTER.filter(p => p.form === 'hot' || p.form === 'cold').slice(0, 4);
+  
+  if (players.length === 0) return null;
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <Flame className="w-3 h-3 text-orange-400" /> Player Form
+        </h3>
+      </div>
+      
+      <div className="grid grid-cols-2 gap-2">
+        {players.map((p, i) => (
+          <div key={i} className={`p-2 rounded-lg text-center ${
+            p.form === 'hot' ? (isDark ? 'bg-orange-500/10' : 'bg-orange-500/5') : (isDark ? 'bg-blue-500/10' : 'bg-blue-500/5')
+          }`}>
+            <div className="text-lg mb-1">{p.form === 'hot' ? '🔥' : '❄️'}</div>
+            <div className={`text-[10px] font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>{p.name.split(' ')[1]}</div>
+            <div className={`text-[9px] ${p.form === 'hot' ? 'text-orange-400' : 'text-blue-400'}`}>
+              L5: {p.last5?.ppg || '--'} PPG
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Points Distribution Widget
+const PointsDistributionWidget = ({ isDark = true }) => {
+  const distribution = {
+    paint: 48.2,
+    midrange: 14.5,
+    threePoint: 37.3
+  };
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <Target className="w-3 h-3 text-purple-400" /> Scoring Zones
+        </h3>
+      </div>
+      
+      <div className="space-y-2">
+        <div>
+          <div className="flex justify-between text-[10px] mb-1">
+            <span className={isDark ? 'text-slate-400' : 'text-slate-500'}>Paint</span>
+            <span className="font-bold text-raptors-red">{distribution.paint}%</span>
+          </div>
+          <div className={`h-2 rounded-full overflow-hidden ${isDark ? 'bg-cmd-border' : 'bg-light-border'}`}>
+            <div className="h-full bg-raptors-red rounded-full" style={{width: `${distribution.paint}%`}} />
+          </div>
+        </div>
+        <div>
+          <div className="flex justify-between text-[10px] mb-1">
+            <span className={isDark ? 'text-slate-400' : 'text-slate-500'}>Mid-Range</span>
+            <span className="font-bold text-yellow-400">{distribution.midrange}%</span>
+          </div>
+          <div className={`h-2 rounded-full overflow-hidden ${isDark ? 'bg-cmd-border' : 'bg-light-border'}`}>
+            <div className="h-full bg-yellow-400 rounded-full" style={{width: `${distribution.midrange}%`}} />
+          </div>
+        </div>
+        <div>
+          <div className="flex justify-between text-[10px] mb-1">
+            <span className={isDark ? 'text-slate-400' : 'text-slate-500'}>3-Point</span>
+            <span className="font-bold text-green-400">{distribution.threePoint}%</span>
+          </div>
+          <div className={`h-2 rounded-full overflow-hidden ${isDark ? 'bg-cmd-border' : 'bg-light-border'}`}>
+            <div className="h-full bg-green-400 rounded-full" style={{width: `${distribution.threePoint}%`}} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Assist Leaders Widget
+const AssistLeadersWidget = ({ isDark = true }) => {
+  const leaders = RAPTORS_ROSTER
+    .filter(p => p.seasonStats?.apg)
+    .sort((a, b) => b.seasonStats.apg - a.seasonStats.apg)
+    .slice(0, 3);
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <Share className="w-3 h-3 text-blue-400" /> Assist Leaders
+        </h3>
+      </div>
+      
+      <div className="space-y-2">
+        {leaders.map((p, i) => (
+          <div key={i} className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className={`text-[10px] font-bold ${i === 0 ? 'text-yellow-400' : isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+                {i + 1}.
+              </span>
+              <span className={`text-[10px] ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>{p.name.split(' ')[1]}</span>
+            </div>
+            <span className={`text-[10px] font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>{p.seasonStats.apg} APG</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Rebound Battle Widget
+const ReboundBattleWidget = ({ isDark = true }) => {
+  const rebounding = {
+    orb: 10.8,
+    drb: 34.2,
+    oppOrb: 9.5,
+    oppDrb: 32.8,
+    totalAdv: 2.7
+  };
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <ArrowUpDown className="w-3 h-3 text-orange-400" /> Rebound Battle
+        </h3>
+        <span className={`text-sm font-bold ${rebounding.totalAdv > 0 ? 'text-green-400' : 'text-red-400'}`}>
+          {rebounding.totalAdv > 0 ? '+' : ''}{rebounding.totalAdv}
+        </span>
+      </div>
+      
+      <div className="grid grid-cols-2 gap-2 text-center">
+        <div className={`p-2 rounded-lg ${isDark ? 'bg-green-500/10' : 'bg-green-500/5'}`}>
+          <div className="text-lg font-black text-green-400">{rebounding.orb}</div>
+          <div className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>ORB</div>
+        </div>
+        <div className={`p-2 rounded-lg ${isDark ? 'bg-blue-500/10' : 'bg-blue-500/5'}`}>
+          <div className="text-lg font-black text-blue-400">{rebounding.drb}</div>
+          <div className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>DRB</div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // Fun Facts Ticker
 const FunFactsTicker = ({ isDark = true }) => {
   const [currentFact, setCurrentFact] = useState(0);
@@ -5954,6 +6292,15 @@ function App() {
             {selectedGame?.status === 'upcoming' && <TVScheduleWidget isDark={isDark} game={selectedGame} />}
             {selectedGame?.status === 'upcoming' && <GameDayChecklistWidget isDark={isDark} game={selectedGame} />}
             <SocialBuzzWidget isDark={isDark} />
+            <TeamChemistryWidget isDark={isDark} />
+            <RecordBreakdownWidget isDark={isDark} />
+            <LineupCombosWidget isDark={isDark} />
+            {selectedGame && <DefensiveAssignmentsWidget isDark={isDark} opponent={selectedGame.opponent} />}
+            <MomentumTrackerWidget isDark={isDark} />
+            <PlayerFormWidget isDark={isDark} />
+            <PointsDistributionWidget isDark={isDark} />
+            <AssistLeadersWidget isDark={isDark} />
+            <ReboundBattleWidget isDark={isDark} />
             <LiveViewersWidget isDark={isDark} />
             <ArenaWidget isDark={isDark} />
           </div>
@@ -5977,7 +6324,7 @@ function App() {
         <div className="w-full max-w-[98%] mx-auto px-4 flex items-center justify-between text-xs text-slate-500">
           <div className="flex items-center gap-2">
             <span className="font-bold text-raptors-red neon-flicker">RAPTORS INTEL</span>
-            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v7.8</span>
+            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v7.9</span>
           </div>
           <div className="hidden md:flex items-center gap-4">
             <span>Built for Raptors fans 🦖</span>
