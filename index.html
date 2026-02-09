@@ -2992,6 +2992,194 @@ const AnimatedBadge = ({ children, variant = 'default', pulse = false }) => {
   );
 };
 
+// Circular Stat Gauge
+const CircularGauge = ({ value, max = 100, size = 100, strokeWidth = 10, color = '#CE1141', label, isDark = true }) => {
+  const radius = (size - strokeWidth) / 2;
+  const circumference = radius * 2 * Math.PI;
+  const pct = (value / max) * 100;
+  const offset = circumference - (pct / 100) * circumference;
+  
+  return (
+    <div className="relative inline-flex flex-col items-center">
+      <svg width={size} height={size} className="transform -rotate-90">
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          stroke={isDark ? '#1e293b' : '#e2e8f0'}
+          strokeWidth={strokeWidth}
+          fill="none"
+        />
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          stroke={`url(#gradient-${label})`}
+          strokeWidth={strokeWidth}
+          fill="none"
+          strokeLinecap="round"
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+          className="transition-all duration-1000 ease-out"
+          style={{ filter: `drop-shadow(0 0 8px ${color}60)` }}
+        />
+        <defs>
+          <linearGradient id={`gradient-${label}`} x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor={color} />
+            <stop offset="100%" stopColor={color + '99'} />
+          </linearGradient>
+        </defs>
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <span className={`text-xl font-black ${isDark ? 'text-white' : 'text-slate-800'}`}>{value}</span>
+        {label && <span className={`text-[8px] ${isDark ? 'text-slate-500' : 'text-slate-400'} uppercase`}>{label}</span>}
+      </div>
+    </div>
+  );
+};
+
+// Animated Comparison Bar
+const ComparisonBar = ({ left, right, leftLabel, rightLabel, leftColor = '#CE1141', rightColor = '#3B82F6', isDark = true }) => {
+  const total = left + right;
+  const leftPct = (left / total) * 100;
+  
+  return (
+    <div className="space-y-1">
+      <div className="flex justify-between text-[10px]">
+        <span style={{ color: leftColor }} className="font-bold">{leftLabel}: {left}</span>
+        <span style={{ color: rightColor }} className="font-bold">{rightLabel}: {right}</span>
+      </div>
+      <div className={`h-3 rounded-full overflow-hidden flex ${isDark ? 'bg-cmd-border' : 'bg-light-border'}`}>
+        <div 
+          className="h-full progress-fill"
+          style={{ 
+            width: `${leftPct}%`, 
+            background: `linear-gradient(90deg, ${leftColor}, ${leftColor}aa)`,
+            boxShadow: `0 0 10px ${leftColor}40`
+          }}
+        />
+        <div 
+          className="h-full flex-1 progress-fill"
+          style={{ 
+            background: `linear-gradient(90deg, ${rightColor}aa, ${rightColor})`,
+            boxShadow: `0 0 10px ${rightColor}40`,
+            animationDelay: '0.2s'
+          }}
+        />
+      </div>
+    </div>
+  );
+};
+
+// Stat Trend Indicator
+const TrendIndicator = ({ value, previousValue, suffix = '' }) => {
+  const diff = value - previousValue;
+  const pctChange = ((diff / previousValue) * 100).toFixed(1);
+  const isPositive = diff > 0;
+  const isNeutral = diff === 0;
+  
+  return (
+    <div className={`flex items-center gap-1 text-[10px] ${isNeutral ? 'text-slate-400' : isPositive ? 'text-green-400' : 'text-red-400'}`}>
+      {!isNeutral && (
+        <span className={isPositive ? 'rotate-0' : 'rotate-180'}>▲</span>
+      )}
+      <span className="font-bold">
+        {isPositive ? '+' : ''}{pctChange}%{suffix}
+      </span>
+    </div>
+  );
+};
+
+// Animated Win/Loss Block
+const WinLossBlock = ({ result, margin, opponent, date }) => {
+  const isWin = result === 'W';
+  
+  return (
+    <div className={`p-2 rounded-lg text-center transition-all hover:scale-105 cursor-pointer ${
+      isWin ? 'bg-green-500/20 hover:bg-green-500/30' : 'bg-red-500/20 hover:bg-red-500/30'
+    }`}>
+      <div className={`text-lg font-black ${isWin ? 'text-green-400' : 'text-red-400'}`}>{result}</div>
+      <div className={`text-[9px] ${isWin ? 'text-green-400/70' : 'text-red-400/70'}`}>
+        {isWin ? '+' : ''}{margin}
+      </div>
+    </div>
+  );
+};
+
+// Animated Pie Segment
+const PieChart = ({ segments, size = 100, isDark = true }) => {
+  let cumulativePercent = 0;
+  
+  const getCoordinatesForPercent = (percent) => {
+    const x = Math.cos(2 * Math.PI * percent);
+    const y = Math.sin(2 * Math.PI * percent);
+    return [x, y];
+  };
+  
+  return (
+    <svg width={size} height={size} viewBox="-1 -1 2 2" style={{ transform: 'rotate(-90deg)' }}>
+      {segments.map((segment, i) => {
+        const [startX, startY] = getCoordinatesForPercent(cumulativePercent);
+        cumulativePercent += segment.percent / 100;
+        const [endX, endY] = getCoordinatesForPercent(cumulativePercent);
+        const largeArcFlag = segment.percent > 50 ? 1 : 0;
+        const pathData = `M ${startX} ${startY} A 1 1 0 ${largeArcFlag} 1 ${endX} ${endY} L 0 0`;
+        
+        return (
+          <path 
+            key={i} 
+            d={pathData} 
+            fill={segment.color}
+            className="transition-all hover:opacity-80"
+            style={{ filter: `drop-shadow(0 0 4px ${segment.color}40)` }}
+          />
+        );
+      })}
+    </svg>
+  );
+};
+
+// Hover Card with Preview
+const HoverPreviewCard = ({ trigger, children, isDark = true }) => {
+  const [isHovered, setIsHovered] = useState(false);
+  
+  return (
+    <div 
+      className="relative"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {trigger}
+      {isHovered && (
+        <div className={`absolute z-50 top-full left-1/2 transform -translate-x-1/2 mt-2 p-3 rounded-xl scale-in ${isDark ? 'glass-premium' : 'bg-white shadow-xl border border-light-border'}`}>
+          {children}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Animated Rank Position
+const RankPosition = ({ rank, total = 30, label = 'Rank', isDark = true }) => {
+  const pct = ((total - rank + 1) / total) * 100;
+  const color = rank <= 10 ? '#22c55e' : rank <= 20 ? '#eab308' : '#ef4444';
+  
+  return (
+    <div className={`p-3 rounded-xl ${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg'}`}>
+      <div className="flex items-center justify-between mb-2">
+        <span className={`text-[10px] ${isDark ? 'text-slate-400' : 'text-slate-500'} uppercase`}>{label}</span>
+        <span className="text-2xl font-black" style={{ color }}>#{rank}</span>
+      </div>
+      <div className={`h-1.5 rounded-full overflow-hidden ${isDark ? 'bg-cmd-border' : 'bg-light-border'}`}>
+        <div 
+          className="h-full rounded-full progress-fill"
+          style={{ width: `${pct}%`, background: color }}
+        />
+      </div>
+    </div>
+  );
+};
+
 // ============================================================
 // PARTICLE SYSTEM - Floating basketballs and geometric shapes
 // ============================================================
@@ -8955,7 +9143,7 @@ function App() {
         <div className="w-full max-w-[98%] mx-auto px-4 flex items-center justify-between text-xs text-slate-500">
           <div className="flex items-center gap-2">
             <span className="font-bold text-raptors-red neon-flicker">RAPTORS INTEL</span>
-            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v8.7</span>
+            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v8.8</span>
           </div>
           <div className="hidden md:flex items-center gap-4">
             <span>Built for Raptors fans 🦖</span>
