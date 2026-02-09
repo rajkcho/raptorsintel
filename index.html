@@ -1670,6 +1670,69 @@ const MinutesDistribution = () => {
   );
 };
 
+// Three-Point Shooting Comparison
+const ThreePointComparison = ({ raptorsStats, opponentStats }) => {
+  if (!opponentStats) return null;
+  
+  return (
+    <div className="glass-card overflow-hidden">
+      <div className="px-4 py-3 border-b border-cmd-border bg-gradient-to-r from-green-500/10 to-transparent">
+        <h3 className="text-sm font-bold text-white flex items-center gap-2"><Target className="w-4 h-4 text-green-500" /> 3PT Battle</h3>
+      </div>
+      <div className="p-4">
+        <div className="flex items-center justify-between mb-4">
+          <div className="text-center">
+            <div className="text-2xl font-black text-raptors-red">{raptorsStats.threePct}%</div>
+            <div className="text-[10px] text-slate-500">TOR 3P%</div>
+          </div>
+          <div className="flex-1 mx-4">
+            <div className="h-3 bg-cmd-border rounded-full overflow-hidden flex">
+              <div className="bg-raptors-red h-full" style={{ width: `${(raptorsStats.threePct / (raptorsStats.threePct + opponentStats.threePct)) * 100}%` }} />
+              <div className="bg-blue-500 h-full" style={{ width: `${(opponentStats.threePct / (raptorsStats.threePct + opponentStats.threePct)) * 100}%` }} />
+            </div>
+          </div>
+          <div className="text-center">
+            <div className="text-2xl font-black text-blue-400">{opponentStats.threePct}%</div>
+            <div className="text-[10px] text-slate-500">OPP 3P%</div>
+          </div>
+        </div>
+        <div className="text-center text-xs text-slate-400">
+          {raptorsStats.threePct > opponentStats.threePct ? '🎯 Raptors have the edge from deep' : '⚠️ Opponent shooting better from 3'}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Game Day Checklist
+const GameDayChecklist = ({ game }) => {
+  const items = [
+    { text: 'Team shootaround complete', done: true },
+    { text: 'Injury report released', done: true },
+    { text: 'Starting lineup confirmed', done: false },
+    { text: 'Arena doors open (6:30 PM)', done: false },
+    { text: `Tip-off (${game?.time || '7:30 PM'})`, done: false },
+  ];
+  
+  return (
+    <div className="glass-card overflow-hidden">
+      <div className="px-4 py-3 border-b border-cmd-border bg-gradient-to-r from-slate-500/10 to-transparent">
+        <h3 className="text-sm font-bold text-white flex items-center gap-2"><Clock className="w-4 h-4 text-slate-400" /> Game Day</h3>
+      </div>
+      <div className="p-4 space-y-2">
+        {items.map((item, i) => (
+          <div key={i} className="flex items-center gap-2">
+            <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${item.done ? 'bg-green-500 border-green-500' : 'border-slate-500'}`}>
+              {item.done && <span className="text-white text-[10px]">✓</span>}
+            </div>
+            <span className={`text-xs ${item.done ? 'text-slate-400 line-through' : 'text-slate-300'}`}>{item.text}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 // Key Matchups Preview
 const KeyMatchups = ({ raptorsRoster, opponentRoster }) => {
   if (!opponentRoster || opponentRoster.length < 3) return null;
@@ -2038,7 +2101,7 @@ function App() {
             </div>
             <div>
               <span className="text-lg font-bold tracking-tight text-white">RAPTORS <span className="text-raptors-red neon-text-subtle">INTEL</span></span>
-              <div className="text-[9px] text-slate-500 -mt-0.5">Command Center v3.1</div>
+              <div className="text-[9px] text-slate-500 -mt-0.5">Command Center v4.3</div>
             </div>
           </div>
           
@@ -2121,6 +2184,8 @@ function App() {
             {currentOpponent && <DefensiveFocus opponentRoster={currentOpponent.roster} />}
             {currentOpponent && <KeyMatchups raptorsRoster={RAPTORS_ROSTER} opponentRoster={currentOpponent.roster} />}
             <MinutesDistribution />
+            {currentOpponent && <ThreePointComparison raptorsStats={RAPTORS_TEAM_STATS} opponentStats={currentOpponent.teamStats} />}
+            <GameDayChecklist game={selectedGame} />
           </div>
         </div>
       </main>
@@ -2130,7 +2195,7 @@ function App() {
         <div className="max-w-[1600px] mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-2 text-xs text-slate-500">
           <div className="flex items-center gap-2">
             <img src="https://cdn.nba.com/logos/nba/1610612761/primary/L/logo.svg" className="w-5 h-5" alt="" />
-            <span>Raptors Intel v3.5 • Game Day Command Center</span>
+            <span>Raptors Intel v4.3 • Game Day Command Center</span>
           </div>
           <div className="flex items-center gap-4">
             <span>Data sources: NBA.com, ESPN, The Athletic</span>
