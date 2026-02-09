@@ -5024,6 +5024,204 @@ const LiveViewersWidget = ({ isDark = true }) => {
   );
 };
 
+// Betting Edge Widget
+const BettingEdgeWidget = ({ isDark = true }) => {
+  const records = {
+    ats: { w: 28, l: 29, pct: 49.1 },
+    ou: { over: 30, under: 27, pct: 52.6 },
+    favorites: { w: 8, l: 12 },
+    underdogs: { w: 17, l: 20 }
+  };
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <Target className="w-3 h-3 text-emerald-400" /> Betting Edge
+        </h3>
+      </div>
+      
+      <div className="grid grid-cols-2 gap-2 mb-3">
+        <div className={`p-2 rounded-lg text-center ${isDark ? 'bg-cmd-bg' : 'bg-light-card'}`}>
+          <div className={`text-lg font-black ${records.ats.pct > 50 ? 'text-green-400' : 'text-red-400'}`}>
+            {records.ats.w}-{records.ats.l}
+          </div>
+          <div className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'} uppercase`}>ATS</div>
+        </div>
+        <div className={`p-2 rounded-lg text-center ${isDark ? 'bg-cmd-bg' : 'bg-light-card'}`}>
+          <div className={`text-lg font-black ${records.ou.pct > 50 ? 'text-green-400' : 'text-red-400'}`}>
+            {records.ou.over}-{records.ou.under}
+          </div>
+          <div className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'} uppercase`}>O/U</div>
+        </div>
+      </div>
+      
+      <div className={`text-[10px] ${isDark ? 'text-slate-300' : 'text-slate-600'} space-y-1`}>
+        <div className="flex justify-between">
+          <span>As Favorite</span>
+          <span className="font-bold">{records.favorites.w}-{records.favorites.l}</span>
+        </div>
+        <div className="flex justify-between">
+          <span>As Underdog</span>
+          <span className="font-bold">{records.underdogs.w}-{records.underdogs.l}</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Playoff Picture Widget
+const PlayoffPictureWidget = ({ isDark = true }) => {
+  const playoffData = {
+    position: 10,
+    gamesBack: 3.5,
+    magicNumber: 28,
+    clinchScenarios: 'Need 6 wins in next 10'
+  };
+  
+  const inPlayoffs = playoffData.position <= 10;
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <Trophy className="w-3 h-3 text-gold-400" /> Playoff Picture
+        </h3>
+        <span className={`text-[9px] px-1.5 py-0.5 rounded ${inPlayoffs ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
+          {inPlayoffs ? 'IN' : 'OUT'}
+        </span>
+      </div>
+      
+      <div className="grid grid-cols-3 gap-2 text-center mb-3">
+        <div className={`p-2 rounded-lg ${isDark ? 'bg-cmd-bg' : 'bg-light-card'}`}>
+          <div className={`text-xl font-black ${isDark ? 'text-white' : 'text-slate-800'}`}>{playoffData.position}</div>
+          <div className={`text-[8px] ${isDark ? 'text-slate-500' : 'text-slate-400'} uppercase`}>Seed</div>
+        </div>
+        <div className={`p-2 rounded-lg ${isDark ? 'bg-cmd-bg' : 'bg-light-card'}`}>
+          <div className="text-xl font-black text-orange-400">{playoffData.gamesBack}</div>
+          <div className={`text-[8px] ${isDark ? 'text-slate-500' : 'text-slate-400'} uppercase`}>GB</div>
+        </div>
+        <div className={`p-2 rounded-lg ${isDark ? 'bg-cmd-bg' : 'bg-light-card'}`}>
+          <div className="text-xl font-black text-purple-400">{playoffData.magicNumber}</div>
+          <div className={`text-[8px] ${isDark ? 'text-slate-500' : 'text-slate-400'} uppercase`}>Magic#</div>
+        </div>
+      </div>
+      
+      <div className={`text-[10px] ${isDark ? 'text-slate-400' : 'text-slate-500'} text-center`}>
+        {playoffData.clinchScenarios}
+      </div>
+    </div>
+  );
+};
+
+// Season Grades Widget
+const SeasonGradesWidget = ({ isDark = true }) => {
+  const grades = [
+    { category: 'Offense', grade: 'B+', color: 'text-green-400' },
+    { category: 'Defense', grade: 'B-', color: 'text-yellow-400' },
+    { category: 'Clutch', grade: 'A-', color: 'text-green-400' },
+    { category: 'Development', grade: 'A', color: 'text-emerald-400' }
+  ];
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <Award className="w-3 h-3 text-amber-400" /> Season Grades
+        </h3>
+      </div>
+      
+      <div className="grid grid-cols-2 gap-2">
+        {grades.map((g, i) => (
+          <div key={i} className={`p-2 rounded-lg text-center ${isDark ? 'bg-cmd-bg' : 'bg-light-card'}`}>
+            <div className={`text-xl font-black ${g.color}`}>{g.grade}</div>
+            <div className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{g.category}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Schedule Strength Widget
+const ScheduleStrengthWidget = ({ isDark = true }) => {
+  const strength = {
+    remaining: 0.485,
+    rank: 22,
+    toughGames: 8,
+    easyGames: 17
+  };
+  
+  const difficultyColor = strength.remaining < 0.5 ? 'text-green-400' : 'text-red-400';
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <Swords className="w-3 h-3 text-red-400" /> Schedule Strength
+        </h3>
+        <span className={`text-[9px] ${difficultyColor}`}>#{strength.rank}</span>
+      </div>
+      
+      <div className="text-center mb-3">
+        <div className={`text-2xl font-black ${difficultyColor}`}>{(strength.remaining * 100).toFixed(1)}%</div>
+        <div className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'} uppercase`}>Remaining SOS</div>
+      </div>
+      
+      <div className={`grid grid-cols-2 gap-2 text-[10px] ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>
+        <div className="flex justify-between">
+          <span>Tough Games</span>
+          <span className="font-bold text-red-400">{strength.toughGames}</span>
+        </div>
+        <div className="flex justify-between">
+          <span>Easy Games</span>
+          <span className="font-bold text-green-400">{strength.easyGames}</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Player Milestones Widget
+const MilestonesWidget = ({ isDark = true }) => {
+  const milestones = [
+    { player: 'Scottie', milestone: '5,000 career pts', progress: 4850, target: 5000 },
+    { player: 'RJ', milestone: '1,000 career AST', progress: 982, target: 1000 }
+  ];
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <Star className="w-3 h-3 text-yellow-400" /> Milestones
+        </h3>
+      </div>
+      
+      <div className="space-y-3">
+        {milestones.map((m, i) => {
+          const pct = (m.progress / m.target) * 100;
+          const remaining = m.target - m.progress;
+          return (
+            <div key={i}>
+              <div className="flex justify-between text-[10px] mb-1">
+                <span className={`font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>{m.player}</span>
+                <span className={isDark ? 'text-slate-400' : 'text-slate-500'}>{remaining} to go</span>
+              </div>
+              <div className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'} mb-1`}>{m.milestone}</div>
+              <div className={`h-2 rounded-full overflow-hidden ${isDark ? 'bg-cmd-border' : 'bg-light-border'}`}>
+                <div 
+                  className="h-full bg-gradient-to-r from-yellow-500 to-amber-400 rounded-full"
+                  style={{width: `${pct}%`}}
+                />
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
 // Fun Facts Ticker
 const FunFactsTicker = ({ isDark = true }) => {
   const [currentFact, setCurrentFact] = useState(0);
@@ -5571,6 +5769,11 @@ function App() {
             <StreakProbabilityWidget isDark={isDark} streak={RAPTORS_STATS.streak} />
             <CoachInsightsWidget isDark={isDark} />
             <DraftPickWidget isDark={isDark} />
+            <PlayoffPictureWidget isDark={isDark} />
+            <BettingEdgeWidget isDark={isDark} />
+            <SeasonGradesWidget isDark={isDark} />
+            <ScheduleStrengthWidget isDark={isDark} />
+            <MilestonesWidget isDark={isDark} />
             <LiveViewersWidget isDark={isDark} />
             <ArenaWidget isDark={isDark} />
           </div>
@@ -5594,7 +5797,7 @@ function App() {
         <div className="w-full max-w-[98%] mx-auto px-4 flex items-center justify-between text-xs text-slate-500">
           <div className="flex items-center gap-2">
             <span className="font-bold text-raptors-red neon-flicker">RAPTORS INTEL</span>
-            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v7.6</span>
+            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v7.7</span>
           </div>
           <div className="hidden md:flex items-center gap-4">
             <span>Built for Raptors fans 🦖</span>
