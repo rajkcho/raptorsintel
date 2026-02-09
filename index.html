@@ -5735,6 +5735,321 @@ const ReboundBattleWidget = ({ isDark = true }) => {
   );
 };
 
+// Usage Rate Widget
+const UsageRateWidget = ({ isDark = true }) => {
+  const usageLeaders = RAPTORS_ROSTER
+    .filter(p => p.advanced?.usg)
+    .sort((a, b) => b.advanced.usg - a.advanced.usg)
+    .slice(0, 4);
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <Gauge className="w-3 h-3 text-purple-400" /> Usage Rate
+        </h3>
+      </div>
+      
+      <div className="space-y-2">
+        {usageLeaders.map((p, i) => (
+          <div key={i}>
+            <div className="flex justify-between text-[10px] mb-1">
+              <span className={isDark ? 'text-slate-300' : 'text-slate-600'}>{p.name.split(' ')[1]}</span>
+              <span className={`font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>{p.advanced.usg}%</span>
+            </div>
+            <div className={`h-1.5 rounded-full overflow-hidden ${isDark ? 'bg-cmd-border' : 'bg-light-border'}`}>
+              <div 
+                className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"
+                style={{width: `${(p.advanced.usg / 35) * 100}%`}}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Turnover Analysis Widget
+const TurnoverWidget = ({ isDark = true }) => {
+  const toData = {
+    perGame: 13.8,
+    rank: 18,
+    liveTO: 8.2,
+    deadTO: 5.6,
+    ptsOffTO: 15.4,
+    oppPtsOffTO: 17.2
+  };
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <RefreshCcw className="w-3 h-3 text-red-400" /> Turnovers
+        </h3>
+        <span className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>#{toData.rank}</span>
+      </div>
+      
+      <div className="text-center mb-3">
+        <div className={`text-2xl font-black ${toData.perGame < 14 ? 'text-green-400' : 'text-red-400'}`}>{toData.perGame}</div>
+        <div className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'} uppercase`}>Per Game</div>
+      </div>
+      
+      <div className={`grid grid-cols-2 gap-2 text-[10px] ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>
+        <div className="flex justify-between">
+          <span>Live TO</span>
+          <span className="font-bold text-red-400">{toData.liveTO}</span>
+        </div>
+        <div className="flex justify-between">
+          <span>Dead TO</span>
+          <span className="font-bold text-yellow-400">{toData.deadTO}</span>
+        </div>
+        <div className="flex justify-between">
+          <span>Pts Off TO</span>
+          <span className="font-bold">{toData.ptsOffTO}</span>
+        </div>
+        <div className="flex justify-between">
+          <span>Opp Pts Off</span>
+          <span className="font-bold">{toData.oppPtsOffTO}</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Free Throw Widget
+const FreeThrowWidget = ({ isDark = true }) => {
+  const ftData = {
+    ftPct: 78.5,
+    ftaPerGame: 22.4,
+    ftr: 24.8,
+    rank: 14,
+    clutchFT: 82.1
+  };
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <Target className="w-3 h-3 text-cyan-400" /> Free Throws
+        </h3>
+      </div>
+      
+      <div className="grid grid-cols-2 gap-2 text-center mb-3">
+        <div className={`p-2 rounded-lg ${isDark ? 'bg-cyan-500/10' : 'bg-cyan-500/5'}`}>
+          <div className={`text-xl font-black ${ftData.ftPct >= 78 ? 'text-green-400' : 'text-yellow-400'}`}>{ftData.ftPct}%</div>
+          <div className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>FT%</div>
+        </div>
+        <div className={`p-2 rounded-lg ${isDark ? 'bg-cmd-bg' : 'bg-light-card'}`}>
+          <div className={`text-xl font-black ${isDark ? 'text-white' : 'text-slate-800'}`}>{ftData.ftaPerGame}</div>
+          <div className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>FTA/G</div>
+        </div>
+      </div>
+      
+      <div className={`text-[10px] ${isDark ? 'text-slate-400' : 'text-slate-500'} text-center`}>
+        Clutch FT: <span className="font-bold text-green-400">{ftData.clutchFT}%</span>
+      </div>
+    </div>
+  );
+};
+
+// Season Comparison Widget
+const SeasonComparisonWidget = ({ isDark = true }) => {
+  const comparison = {
+    thisYear: { w: 25, l: 32, ppg: 111.5, oppg: 112.8 },
+    lastYear: { w: 25, l: 57, ppg: 108.2, oppg: 114.5 },
+    paceFor: { w: 36, l: 46 }
+  };
+  
+  const improved = comparison.thisYear.ppg > comparison.lastYear.ppg;
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <History className="w-3 h-3 text-amber-400" /> vs Last Year
+        </h3>
+        <span className={`text-[9px] px-1.5 py-0.5 rounded ${improved ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
+          {improved ? '↑ Better' : '↓ Worse'}
+        </span>
+      </div>
+      
+      <div className="space-y-2 text-[10px]">
+        <div className="flex justify-between">
+          <span className={isDark ? 'text-slate-400' : 'text-slate-500'}>Record (same pt)</span>
+          <div>
+            <span className="font-bold text-green-400">{comparison.thisYear.w}-{comparison.thisYear.l}</span>
+            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}> vs </span>
+            <span className="font-bold text-red-400">{comparison.lastYear.w}-{comparison.lastYear.l}</span>
+          </div>
+        </div>
+        <div className="flex justify-between">
+          <span className={isDark ? 'text-slate-400' : 'text-slate-500'}>PPG</span>
+          <div>
+            <span className={`font-bold ${comparison.thisYear.ppg > comparison.lastYear.ppg ? 'text-green-400' : 'text-red-400'}`}>
+              {comparison.thisYear.ppg}
+            </span>
+            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}> vs </span>
+            <span className={isDark ? 'text-slate-300' : 'text-slate-600'}>{comparison.lastYear.ppg}</span>
+          </div>
+        </div>
+        <div className={`pt-2 border-t ${isDark ? 'border-cmd-border' : 'border-light-border'} flex justify-between`}>
+          <span className={isDark ? 'text-slate-400' : 'text-slate-500'}>Pace for</span>
+          <span className={`font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>{comparison.paceFor.w}-{comparison.paceFor.l}</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Foul Trouble Widget
+const FoulTroubleWidget = ({ isDark = true }) => {
+  const foulRisks = [
+    { player: 'Poeltl', foulsPerGame: 3.2, risk: 'High' },
+    { player: 'Barnes', foulsPerGame: 2.8, risk: 'Med' },
+    { player: 'Olynyk', foulsPerGame: 2.5, risk: 'Med' }
+  ];
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <AlertTriangle className="w-3 h-3 text-yellow-400" /> Foul Watch
+        </h3>
+      </div>
+      
+      <div className="space-y-2">
+        {foulRisks.map((p, i) => (
+          <div key={i} className="flex items-center justify-between text-[10px]">
+            <span className={isDark ? 'text-slate-300' : 'text-slate-600'}>{p.player}</span>
+            <div className="flex items-center gap-2">
+              <span className={isDark ? 'text-slate-400' : 'text-slate-500'}>{p.foulsPerGame} F/G</span>
+              <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold ${
+                p.risk === 'High' ? 'bg-red-500/20 text-red-400' : 'bg-yellow-500/20 text-yellow-400'
+              }`}>{p.risk}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Fantasy Projections Widget
+const FantasyProjectionsWidget = ({ isDark = true }) => {
+  const projections = [
+    { player: 'Scottie Barnes', dkPts: 45.2, fdPts: 42.8, value: 'A' },
+    { player: 'RJ Barrett', dkPts: 32.5, fdPts: 30.1, value: 'B+' },
+    { player: 'Immanuel Quickley', dkPts: 28.8, fdPts: 26.5, value: 'B' }
+  ];
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <Sparkles className="w-3 h-3 text-green-400" /> DFS Projections
+        </h3>
+      </div>
+      
+      <div className="space-y-2">
+        {projections.map((p, i) => (
+          <div key={i} className={`p-2 rounded-lg ${isDark ? 'bg-cmd-bg' : 'bg-light-card'}`}>
+            <div className="flex justify-between items-center mb-1">
+              <span className={`text-[10px] font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>{p.player.split(' ')[1]}</span>
+              <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold ${
+                p.value.startsWith('A') ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'
+              }`}>{p.value}</span>
+            </div>
+            <div className="flex justify-between text-[9px]">
+              <span className={isDark ? 'text-slate-400' : 'text-slate-500'}>DK: {p.dkPts}</span>
+              <span className={isDark ? 'text-slate-400' : 'text-slate-500'}>FD: {p.fdPts}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Timeout Tracker Widget
+const TimeoutTrackerWidget = ({ isDark = true }) => {
+  const timeouts = {
+    remaining: 5,
+    total: 7,
+    avgUsedQ1: 0.8,
+    avgUsedQ4: 2.2
+  };
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <Timer className="w-3 h-3 text-blue-400" /> Timeout Usage
+        </h3>
+      </div>
+      
+      <div className="flex justify-center gap-1 mb-3">
+        {Array.from({ length: timeouts.total }).map((_, i) => (
+          <div
+            key={i}
+            className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold ${
+              i < timeouts.remaining 
+                ? 'bg-blue-500 text-white' 
+                : `${isDark ? 'bg-cmd-border' : 'bg-light-border'} ${isDark ? 'text-slate-600' : 'text-slate-400'}`
+            }`}
+          >
+            {i + 1}
+          </div>
+        ))}
+      </div>
+      
+      <div className={`grid grid-cols-2 gap-2 text-[10px] text-center ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+        <div>Q1 Avg: {timeouts.avgUsedQ1}</div>
+        <div>Q4 Avg: {timeouts.avgUsedQ4}</div>
+      </div>
+    </div>
+  );
+};
+
+// Three Point Shooting Widget
+const ThreePointWidget = ({ isDark = true }) => {
+  const threeData = {
+    made: 13.2,
+    attempted: 38.5,
+    pct: 34.3,
+    rank: 22,
+    corner3Pct: 38.2,
+    aboveBreak: 33.1
+  };
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <Target className="w-3 h-3 text-green-400" /> 3PT Shooting
+        </h3>
+        <span className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>#{threeData.rank}</span>
+      </div>
+      
+      <div className="text-center mb-3">
+        <div className={`text-2xl font-black ${threeData.pct >= 35 ? 'text-green-400' : 'text-yellow-400'}`}>{threeData.pct}%</div>
+        <div className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{threeData.made}/{threeData.attempted} 3PM/A</div>
+      </div>
+      
+      <div className={`grid grid-cols-2 gap-2 text-[10px] ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>
+        <div className="flex justify-between">
+          <span>Corner 3</span>
+          <span className="font-bold text-green-400">{threeData.corner3Pct}%</span>
+        </div>
+        <div className="flex justify-between">
+          <span>Above Break</span>
+          <span className="font-bold">{threeData.aboveBreak}%</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // Fun Facts Ticker
 const FunFactsTicker = ({ isDark = true }) => {
   const [currentFact, setCurrentFact] = useState(0);
@@ -6301,6 +6616,14 @@ function App() {
             <PointsDistributionWidget isDark={isDark} />
             <AssistLeadersWidget isDark={isDark} />
             <ReboundBattleWidget isDark={isDark} />
+            <UsageRateWidget isDark={isDark} />
+            <TurnoverWidget isDark={isDark} />
+            <FreeThrowWidget isDark={isDark} />
+            <ThreePointWidget isDark={isDark} />
+            <SeasonComparisonWidget isDark={isDark} />
+            <FoulTroubleWidget isDark={isDark} />
+            <TimeoutTrackerWidget isDark={isDark} />
+            <FantasyProjectionsWidget isDark={isDark} />
             <LiveViewersWidget isDark={isDark} />
             <ArenaWidget isDark={isDark} />
           </div>
@@ -6324,7 +6647,7 @@ function App() {
         <div className="w-full max-w-[98%] mx-auto px-4 flex items-center justify-between text-xs text-slate-500">
           <div className="flex items-center gap-2">
             <span className="font-bold text-raptors-red neon-flicker">RAPTORS INTEL</span>
-            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v7.9</span>
+            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v8.0</span>
           </div>
           <div className="hidden md:flex items-center gap-4">
             <span>Built for Raptors fans 🦖</span>
