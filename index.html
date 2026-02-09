@@ -1638,6 +1638,78 @@ const StreakTracker = () => {
   );
 };
 
+// Minutes Distribution
+const MinutesDistribution = () => {
+  const data = [
+    { name: 'Barnes', mins: 35.2, color: '#CE1141' },
+    { name: 'Barrett', mins: 32.5, color: '#B91C1C' },
+    { name: 'Quickley', mins: 30.8, color: '#991B1B' },
+    { name: 'Ingram', mins: 33.1, color: '#7F1D1D' },
+    { name: 'Poeltl', mins: 28.5, color: '#450A0A' },
+  ];
+  
+  return (
+    <div className="glass-card overflow-hidden">
+      <div className="px-4 py-3 border-b border-cmd-border bg-gradient-to-r from-slate-500/10 to-transparent">
+        <h3 className="text-sm font-bold text-white flex items-center gap-2"><Clock className="w-4 h-4 text-slate-400" /> Minutes Leaders</h3>
+      </div>
+      <div className="p-4 space-y-2">
+        {data.map((player, i) => (
+          <div key={i}>
+            <div className="flex justify-between items-center mb-1">
+              <span className="text-xs text-slate-300">{player.name}</span>
+              <span className="text-xs font-mono text-white">{player.mins} MPG</span>
+            </div>
+            <div className="h-1.5 bg-cmd-border rounded-full overflow-hidden">
+              <div className="h-full rounded-full" style={{ width: `${(player.mins / 40) * 100}%`, backgroundColor: player.color }} />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Key Matchups Preview
+const KeyMatchups = ({ raptorsRoster, opponentRoster }) => {
+  if (!opponentRoster || opponentRoster.length < 3) return null;
+  
+  const matchups = [
+    { rap: raptorsRoster[0], opp: opponentRoster[0] },
+    { rap: raptorsRoster[1], opp: opponentRoster[1] },
+    { rap: raptorsRoster[2], opp: opponentRoster[2] },
+  ];
+  
+  return (
+    <div className="glass-card overflow-hidden">
+      <div className="px-4 py-3 border-b border-cmd-border bg-gradient-to-r from-orange-500/10 to-transparent">
+        <h3 className="text-sm font-bold text-white flex items-center gap-2"><Swords className="w-4 h-4 text-orange-500" /> Key Matchups</h3>
+      </div>
+      <div className="divide-y divide-cmd-border/50">
+        {matchups.map((m, i) => (
+          <div key={i} className="p-3 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <img src={`https://cdn.nba.com/headshots/nba/latest/1040x760/${m.rap.id}.png`} className="w-8 h-8 rounded-full object-cover bg-cmd-border border border-raptors-red" alt="" />
+              <div className="text-xs">
+                <div className="font-bold text-slate-200">{m.rap.name.split(' ')[1]}</div>
+                <div className="text-[10px] text-slate-500">{m.rap.seasonStats.ppg} PPG</div>
+              </div>
+            </div>
+            <div className="text-[10px] text-slate-500 font-bold">VS</div>
+            <div className="flex items-center gap-2">
+              <div className="text-xs text-right">
+                <div className="font-bold text-slate-200">{m.opp.name.split(' ')[1]}</div>
+                <div className="text-[10px] text-slate-500">{m.opp.seasonStats?.ppg || 0} PPG</div>
+              </div>
+              <img src={`https://cdn.nba.com/headshots/nba/latest/1040x760/${m.opp.id}.png`} className="w-8 h-8 rounded-full object-cover bg-cmd-border border border-blue-500" alt="" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 // Defensive Focus
 const DefensiveFocus = ({ opponentRoster }) => {
   if (!opponentRoster || opponentRoster.length === 0) return null;
@@ -2047,6 +2119,8 @@ function App() {
             <PotgPrediction roster={RAPTORS_ROSTER} />
             {selectedGame && <AllTimeRecord opponentName={selectedGame.opponent} />}
             {currentOpponent && <DefensiveFocus opponentRoster={currentOpponent.roster} />}
+            {currentOpponent && <KeyMatchups raptorsRoster={RAPTORS_ROSTER} opponentRoster={currentOpponent.roster} />}
+            <MinutesDistribution />
           </div>
         </div>
       </main>
