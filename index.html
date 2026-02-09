@@ -2306,9 +2306,22 @@ function App() {
     });
   };
 
+  const [showEasterEgg, setShowEasterEgg] = useState(false);
+  const konamiRef = useRef([]);
+  const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeydown = (e) => {
+      // Konami code detection
+      konamiRef.current.push(e.key);
+      if (konamiRef.current.length > 10) konamiRef.current.shift();
+      if (konamiRef.current.join(',') === konamiCode.join(',')) {
+        setShowEasterEgg(true);
+        konamiRef.current = [];
+        setTimeout(() => setShowEasterEgg(false), 5000);
+      }
+
       if (e.key === '?' && !e.ctrlKey && !e.metaKey) {
         setShowKeyboardHelp(prev => !prev);
       }
@@ -2319,13 +2332,14 @@ function App() {
         setShowKeyboardHelp(false);
         setShowReminder(false);
         setShowShare(false);
+        setShowEasterEgg(false);
       }
-      if (e.key === 'ArrowDown' && e.target.tagName !== 'INPUT') {
+      if (e.key === 'ArrowDown' && e.target.tagName !== 'INPUT' && !e.repeat) {
         e.preventDefault();
         const idx = games.findIndex(g => g.id === selectedGame?.id);
         if (idx < games.length - 1) setSelectedGame(games[idx + 1]);
       }
-      if (e.key === 'ArrowUp' && e.target.tagName !== 'INPUT') {
+      if (e.key === 'ArrowUp' && e.target.tagName !== 'INPUT' && !e.repeat) {
         e.preventDefault();
         const idx = games.findIndex(g => g.id === selectedGame?.id);
         if (idx > 0) setSelectedGame(games[idx - 1]);
@@ -2458,6 +2472,23 @@ function App() {
                 <Copy className="w-6 h-6 text-slate-400" />
                 <span className="text-xs">Copy Link</span>
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Easter Egg */}
+      {showEasterEgg && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-lg animate-fade-in" onClick={() => setShowEasterEgg(false)}>
+          <div className="text-center">
+            <div className="text-8xl mb-6 animate-bounce">🦖</div>
+            <div className="text-4xl font-black text-raptors-red mb-4 neon-text" style={{animation: 'glow-pulse 1s ease-in-out infinite'}}>WE THE NORTH!</div>
+            <div className="text-xl text-white mb-2">🏆 2019 NBA CHAMPIONS 🏆</div>
+            <div className="text-slate-400 text-sm">You found the secret! Press ESC to close.</div>
+            <div className="mt-6 flex justify-center gap-4 text-4xl">
+              {['🦖', '🏀', '🍁', '🔴', '⚫'].map((e, i) => (
+                <span key={i} style={{animation: `bounce 0.5s ease-in-out ${i * 0.1}s infinite`}}>{e}</span>
+              ))}
             </div>
           </div>
         </div>
