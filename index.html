@@ -3,7 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Raptors Intel</title>
+    <title>Raptors Intel | Game Day Scouting Dashboard</title>
+    <meta name="description" content="Advanced Toronto Raptors game day scouting dashboard with rotation simulator, playbook analysis, injury reports, and real-time matchup intelligence." />
+    <meta name="keywords" content="Toronto Raptors, NBA, scouting, analytics, game preview, rotation simulator, injury report" />
+    <meta property="og:title" content="Raptors Intel | Game Day Scouting" />
+    <meta property="og:description" content="The ultimate Raptors fan scouting dashboard. Deep analytics, rotation simulator, and matchup intelligence." />
+    <meta property="og:type" content="website" />
+    <link rel="icon" href="https://cdn.nba.com/logos/nba/1610612761/primary/L/logo.svg" type="image/svg+xml" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -1766,6 +1772,19 @@ function App() {
           </div>
         </div>
       </main>
+      <footer className="flex-shrink-0 border-t border-cmd-border bg-cmd-surface/50 backdrop-blur py-3">
+        <div className="w-full max-w-[98%] mx-auto px-4 flex items-center justify-between text-xs text-slate-500">
+          <div className="flex items-center gap-2">
+            <span className="font-bold text-raptors-red">RAPTORS INTEL</span>
+            <span className="text-slate-600">v5.0</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <span>Built for Raptors fans 🦖</span>
+            <span className="text-slate-600">|</span>
+            <span>Not affiliated with the NBA or Toronto Raptors</span>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
