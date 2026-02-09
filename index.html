@@ -2258,15 +2258,6 @@ function App() {
             <PaceChart />
             <PotgPrediction roster={RAPTORS_ROSTER} />
             {selectedGame && <AllTimeRecord opponentName={selectedGame.opponent} />}
-            {currentOpponent && <DefensiveFocus opponentRoster={currentOpponent.roster} />}
-            {currentOpponent && <KeyMatchups raptorsRoster={RAPTORS_ROSTER} opponentRoster={currentOpponent.roster} />}
-            <MinutesDistribution />
-            {currentOpponent && <ThreePointComparison raptorsStats={RAPTORS_TEAM_STATS} opponentStats={currentOpponent.teamStats} />}
-            <GameDayChecklist game={selectedGame} />
-            {currentOpponent && <TurnoverBattle raptorsStats={RAPTORS_TEAM_STATS} opponentStats={currentOpponent.teamStats} />}
-            <BenchPoints />
-            <FastBreakPoints />
-            <PaintPoints />
           </div>
         </div>
       </main>
