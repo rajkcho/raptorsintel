@@ -7462,10 +7462,10 @@ const useOddsApi = (teamName = 'Toronto Raptors') => {
   const [lastFetch, setLastFetch] = React.useState(null);
   const [remaining, setRemaining] = React.useState(null);
 
-  const apiKey = React.useMemo(() => localStorage.getItem('odds_api_key') || '', []);
+  const apiKey = React.useMemo(() => localStorage.getItem('odds_api_key') || '6003b56a55f985a7f9822045510c9e7d', []);
 
   const fetchOdds = React.useCallback(async () => {
-    const key = localStorage.getItem('odds_api_key');
+    const key = localStorage.getItem('odds_api_key') || '6003b56a55f985a7f9822045510c9e7d';
     if (!key) { setError('No API key set'); return; }
     setLoading(true);
     setError(null);
@@ -7517,11 +7517,11 @@ const useOddsApi = (teamName = 'Toronto Raptors') => {
     setLoading(false);
   }, [teamName]);
 
-  // Auto-fetch on mount if key exists, then every 5 min
+  // Auto-fetch on mount, then every 5 min
   React.useEffect(() => {
-    if (localStorage.getItem('odds_api_key')) fetchOdds();
+    fetchOdds();
     const interval = setInterval(() => {
-      if (localStorage.getItem('odds_api_key')) fetchOdds();
+      fetchOdds();
     }, 5 * 60 * 1000);
     return () => clearInterval(interval);
   }, [fetchOdds]);
