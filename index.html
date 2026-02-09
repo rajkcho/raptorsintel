@@ -4528,67 +4528,6 @@ const ExportButton = ({ game, isDark = true }) => {
   );
 };
 
-// ============================================================
-// COUNTDOWN TIMER
-// ============================================================
-const GameCountdown = ({ game, isDark = true }) => {
-  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, mins: 0, secs: 0 });
-  
-  useEffect(() => {
-    if (!game || game.status !== 'upcoming') return;
-    
-    const calculateTime = () => {
-      const gameDate = new Date(`${game.date} 2026 ${game.time} EST`);
-      const now = new Date();
-      const diff = gameDate - now;
-      
-      if (diff <= 0) {
-        setTimeLeft({ days: 0, hours: 0, mins: 0, secs: 0 });
-        return;
-      }
-      
-      setTimeLeft({
-        days: Math.floor(diff / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-        mins: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
-        secs: Math.floor((diff % (1000 * 60)) / 1000)
-      });
-    };
-    
-    calculateTime();
-    const interval = setInterval(calculateTime, 1000);
-    return () => clearInterval(interval);
-  }, [game]);
-
-  if (!game || game.status !== 'upcoming') return null;
-
-  const TimeBox = ({ value, label }) => (
-    <div className={`text-center px-2 py-1 ${isDark ? 'bg-cmd-bg' : 'bg-light-card'} rounded-lg`}>
-      <div className={`text-lg font-mono font-black ${isDark ? 'text-white' : 'text-slate-800'}`}>{String(value).padStart(2, '0')}</div>
-      <div className={`text-[8px] uppercase font-bold ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{label}</div>
-    </div>
-  );
-
-  return (
-    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
-      <div className="flex items-center justify-between mb-3">
-        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
-          <Clock className="w-3 h-3 text-raptors-red" /> Time to Tip-Off
-        </h3>
-      </div>
-      <div className="flex justify-center gap-2">
-        {timeLeft.days > 0 && <TimeBox value={timeLeft.days} label="Days" />}
-        <TimeBox value={timeLeft.hours} label="Hrs" />
-        <TimeBox value={timeLeft.mins} label="Min" />
-        <TimeBox value={timeLeft.secs} label="Sec" />
-      </div>
-      <div className={`text-center mt-2 text-[10px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
-        {game.date} • {game.time}
-      </div>
-    </div>
-  );
-};
-
 // Win Streak Celebration - ENHANCED
 const StreakCelebration = ({ streak, isDark = true }) => {
   if (!streak || !streak.startsWith('W')) return null;
