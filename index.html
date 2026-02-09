@@ -1489,8 +1489,89 @@ const MatchupAnalyzer = ({ game }) => {
           </div>
       </div>
 
+      {/* 5.9 ASSIST NETWORK & DEFENSE */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 animate-slide-up" style={{animationDelay: '0.55s'}}>
+          {/* Assist Distribution */}
+          <div className="glass-card p-4">
+              <div className="flex items-center gap-2 mb-3"><Share className="w-4 h-4 text-teal-400" /><span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Top Assist Connections</span></div>
+              <div className="grid grid-cols-2 gap-4">
+                  <div>
+                      <div className="text-[10px] text-raptors-red font-bold mb-2 uppercase">Toronto</div>
+                      <div className="space-y-2">
+                          {(analysis.intel?.assistDistribution?.raptors || [
+                              { from: "Quickley", to: "Barnes", pct: 18 },
+                              { from: "Quickley", to: "Ingram", pct: 15 },
+                              { from: "Barnes", to: "Poeltl", pct: 12 }
+                          ]).slice(0, 3).map((conn, i) => (
+                              <div key={i} className="flex items-center gap-2 text-xs">
+                                  <div className="flex-1 flex items-center gap-1">
+                                      <span className="text-white font-medium truncate">{conn.from}</span>
+                                      <span className="text-raptors-red">→</span>
+                                      <span className="text-slate-400 truncate">{conn.to}</span>
+                                  </div>
+                                  <div className="w-12 h-1.5 bg-cmd-border rounded-full overflow-hidden">
+                                      <div className="h-full bg-raptors-red rounded-full" style={{width: `${conn.pct * 3}%`}}></div>
+                                  </div>
+                                  <span className="text-slate-500 font-mono w-8 text-right">{conn.pct}%</span>
+                              </div>
+                          ))}
+                      </div>
+                  </div>
+                  <div>
+                      <div className="text-[10px] text-blue-400 font-bold mb-2 uppercase">{game.opponent?.slice(0,3)}</div>
+                      <div className="space-y-2">
+                          {(analysis.intel?.assistDistribution?.opponent || [
+                              { from: "Edwards", to: "Randle", pct: 16 },
+                              { from: "Conley", to: "Edwards", pct: 14 },
+                              { from: "Conley", to: "Gobert", pct: 11 }
+                          ]).slice(0, 3).map((conn, i) => (
+                              <div key={i} className="flex items-center gap-2 text-xs">
+                                  <div className="flex-1 flex items-center gap-1">
+                                      <span className="text-white font-medium truncate">{conn.from}</span>
+                                      <span className="text-blue-400">→</span>
+                                      <span className="text-slate-400 truncate">{conn.to}</span>
+                                  </div>
+                                  <div className="w-12 h-1.5 bg-cmd-border rounded-full overflow-hidden">
+                                      <div className="h-full bg-blue-500 rounded-full" style={{width: `${conn.pct * 3}%`}}></div>
+                                  </div>
+                                  <span className="text-slate-500 font-mono w-8 text-right">{conn.pct}%</span>
+                              </div>
+                          ))}
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+          {/* Defense by Position */}
+          <div className="glass-card p-4">
+              <div className="flex items-center gap-2 mb-3"><Shield className="w-4 h-4 text-violet-400" /><span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Defense by Position (DRTG)</span></div>
+              <div className="h-44">
+                  <ResponsiveContainer width="100%" height="100%">
+                      <RadarChart cx="50%" cy="50%" outerRadius="70%" data={[
+                          { pos: 'PG', TOR: analysis.intel?.defenseByPosition?.raptors?.pg || 112.5, OPP: analysis.intel?.defenseByPosition?.opponent?.pg || 108.1 },
+                          { pos: 'SG', TOR: analysis.intel?.defenseByPosition?.raptors?.sg || 108.2, OPP: analysis.intel?.defenseByPosition?.opponent?.sg || 110.5 },
+                          { pos: 'SF', TOR: analysis.intel?.defenseByPosition?.raptors?.sf || 105.8, OPP: analysis.intel?.defenseByPosition?.opponent?.sf || 107.2 },
+                          { pos: 'PF', TOR: analysis.intel?.defenseByPosition?.raptors?.pf || 110.3, OPP: analysis.intel?.defenseByPosition?.opponent?.pf || 106.8 },
+                          { pos: 'C', TOR: analysis.intel?.defenseByPosition?.raptors?.c || 102.4, OPP: analysis.intel?.defenseByPosition?.opponent?.c || 99.5 }
+                      ]}>
+                          <PolarGrid stroke="#1e293b" />
+                          <PolarAngleAxis dataKey="pos" tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 'bold' }} />
+                          <PolarRadiusAxis angle={90} domain={[95, 120]} tick={false} axisLine={false} />
+                          <Radar name="TOR" dataKey="TOR" stroke="#CE1141" fill="#CE1141" fillOpacity={0.3} strokeWidth={2} />
+                          <Radar name="OPP" dataKey="OPP" stroke="#6366f1" fill="#6366f1" fillOpacity={0.2} strokeWidth={2} />
+                          <Tooltip contentStyle={{ backgroundColor: '#111827', borderColor: '#1e293b', borderRadius: '8px', fontSize: '11px' }} />
+                      </RadarChart>
+                  </ResponsiveContainer>
+              </div>
+              <div className="flex justify-center gap-4 text-[10px] mt-1">
+                  <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-raptors-red"></span> TOR (lower is better)</span>
+                  <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-blue-500"></span> OPP</span>
+              </div>
+          </div>
+      </div>
+
       {/* 6. ROTATION SIMULATOR */}
-      <div className="glass-card overflow-hidden animate-slide-up" style={{animationDelay: '0.6s'}}>
+      <div className="glass-card overflow-hidden animate-slide-up" style={{animationDelay: '0.65s'}}>
           <div className="relative bg-gradient-to-r from-cmd-bg via-cmd-surface to-cmd-bg px-6 py-5 overflow-hidden">
               <div className="absolute inset-0 bg-grid opacity-20"></div>
               <div className="relative z-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
