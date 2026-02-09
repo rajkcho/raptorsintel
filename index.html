@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Raptors Intel</title>
+    <title>Raptors Intel — Game Day Command Center</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -15,6 +15,7 @@
                 black: '#000000',
                 silver: '#A1A1A4',
                 purple: '#3E2680',
+                gold: '#B4975A',
               },
               cmd: {
                 bg: '#0a0e17',
@@ -26,9 +27,8 @@
             },
             animation: {
               'slide-up': 'slide-up 0.6s ease-out both',
-              'slide-up-1': 'slide-up 0.6s ease-out 0.15s both',
-              'slide-up-2': 'slide-up 0.6s ease-out 0.3s both',
-              'slide-up-3': 'slide-up 0.6s ease-out 0.45s both',
+              'slide-down': 'slide-down 0.4s ease-out both',
+              'slide-left': 'slide-left 0.5s ease-out both',
               'glow-pulse': 'glow-pulse 2s ease-in-out infinite',
               'shimmer': 'shimmer 2s linear infinite',
               'float': 'float 6s ease-in-out infinite',
@@ -37,184 +37,79 @@
               'ring-fill': 'ring-fill 1.5s ease-out both',
               'border-glow': 'border-glow 3s ease-in-out infinite',
               'text-reveal': 'text-reveal 0.8s ease-out both',
+              'ticker': 'ticker 30s linear infinite',
+              'pulse-live': 'pulse-live 1.5s ease-in-out infinite',
+              'countdown': 'countdown 1s ease-in-out',
+              'score-pop': 'score-pop 0.3s ease-out',
             }
           }
         }
       }
     </script>
     <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
       body {
         background-color: #0a0e17;
         color: #e2e8f0;
+        font-family: 'Inter', sans-serif;
       }
-      ::-webkit-scrollbar {
-        width: 6px;
-        height: 6px;
-      }
-      ::-webkit-scrollbar-track {
-        background: #111827;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #334155;
-        border-radius: 4px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #CE1141;
-      }
+      .font-mono { font-family: 'JetBrains Mono', monospace; }
+      ::-webkit-scrollbar { width: 6px; height: 6px; }
+      ::-webkit-scrollbar-track { background: #111827; }
+      ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+      ::-webkit-scrollbar-thumb:hover { background: #CE1141; }
+      .scrollbar-hide::-webkit-scrollbar { display: none; }
+      .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 
-      /* ---- Keyframe Animations ---- */
-      @keyframes fade-in {
-        from { opacity: 0; transform: translateY(8px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
+      @keyframes slide-up { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+      @keyframes slide-down { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+      @keyframes slide-left { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+      @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
       .animate-fade-in { animation: fade-in 0.3s ease-out; }
-
-      @keyframes slide-up {
-        from { opacity: 0; transform: translateY(30px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
       @keyframes glow-pulse {
         0%, 100% { box-shadow: 0 0 15px rgba(206,17,65,0.3), 0 0 30px rgba(206,17,65,0.1); }
         50% { box-shadow: 0 0 25px rgba(206,17,65,0.5), 0 0 50px rgba(206,17,65,0.2); }
       }
-      @keyframes shimmer {
-        0% { background-position: -200% 0; }
-        100% { background-position: 200% 0; }
-      }
-      @keyframes float {
-        0%, 100% { transform: translateY(0px) rotate(0deg); }
-        50% { transform: translateY(-10px) rotate(2deg); }
-      }
-      @keyframes gradient-shift {
-        0% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
-      }
-      @keyframes bar-grow {
-        from { transform: scaleX(0); }
-        to { transform: scaleX(1); }
-      }
-      @keyframes ring-fill {
-        from { stroke-dashoffset: 283; }
-      }
-      @keyframes border-glow {
-        0%, 100% { border-color: rgba(206,17,65,0.3); }
-        50% { border-color: rgba(206,17,65,0.7); }
-      }
-      @keyframes text-reveal {
-        from { opacity: 0; clip-path: inset(0 100% 0 0); }
-        to { opacity: 1; clip-path: inset(0 0 0 0); }
-      }
-      @keyframes pulse-dot {
-        0%, 100% { opacity: 1; transform: scale(1); }
-        50% { opacity: 0.5; transform: scale(1.5); }
-      }
-      @keyframes drive {
-        0% { transform: translate(0, 0); }
-        50% { transform: translate(10px, -15px); }
-        100% { transform: translate(20px, -20px); }
-      }
-      @keyframes screen-anim {
-        0% { transform: translate(0, 0); opacity: 0; }
-        20% { opacity: 1; }
-        80% { opacity: 1; }
-        100% { transform: translate(5px, -5px); opacity: 0; }
-      }
-      @keyframes pass {
-        0% { stroke-dashoffset: 100; opacity: 0; }
-        20% { opacity: 1; }
-        100% { stroke-dashoffset: 0; opacity: 1; }
-      }
-      @keyframes pulse-svg {
-        0%, 100% { r: 1.5; opacity: 1; }
-        50% { r: 2.5; opacity: 0.5; }
-      }
-      @keyframes spin-glow {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-      }
+      @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+      @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
+      @keyframes gradient-shift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+      @keyframes bar-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+      @keyframes ring-fill { from { stroke-dashoffset: 283; } }
+      @keyframes border-glow { 0%, 100% { border-color: rgba(206,17,65,0.3); } 50% { border-color: rgba(206,17,65,0.7); } }
+      @keyframes text-reveal { from { opacity: 0; clip-path: inset(0 100% 0 0); } to { opacity: 1; clip-path: inset(0 0 0 0); } }
+      @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+      @keyframes pulse-live { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+      @keyframes pulse-dot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.5); } }
+      @keyframes countdown { 0% { transform: scale(1.1); } 100% { transform: scale(1); } }
+      @keyframes score-pop { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+      @keyframes drive { 0% { transform: translate(0, 0); } 50% { transform: translate(10px, -15px); } 100% { transform: translate(20px, -20px); } }
+      @keyframes screen-anim { 0% { transform: translate(0, 0); opacity: 0; } 20% { opacity: 1; } 80% { opacity: 1; } 100% { transform: translate(5px, -5px); opacity: 0; } }
+      @keyframes pass { 0% { stroke-dashoffset: 100; opacity: 0; } 20% { opacity: 1; } 100% { stroke-dashoffset: 0; opacity: 1; } }
+      @keyframes pulse-svg { 0%, 100% { r: 1.5; opacity: 1; } 50% { r: 2.5; opacity: 0.5; } }
 
-      /* ---- Utility Classes ---- */
-      .glass-card {
-        background: rgba(17, 24, 39, 0.7);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        border: 1px solid rgba(30, 41, 59, 0.8);
-        border-radius: 1rem;
-      }
-      .gradient-border {
-        position: relative;
-        border: none;
-      }
+      .glass-card { background: rgba(17, 24, 39, 0.7); backdrop-filter: blur(16px); border: 1px solid rgba(30, 41, 59, 0.8); border-radius: 1rem; }
+      .glass-card-sm { background: rgba(17, 24, 39, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(30, 41, 59, 0.6); border-radius: 0.75rem; }
+      .gradient-border { position: relative; border: none; }
       .gradient-border::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        border-radius: inherit;
-        padding: 1.5px;
-        background: linear-gradient(135deg, #CE1141, #3E2680, #CE1141, #3E2680);
-        background-size: 300% 300%;
+        content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1.5px;
+        background: linear-gradient(135deg, #CE1141, #3E2680, #CE1141, #3E2680); background-size: 300% 300%;
         animation: gradient-shift 4s ease infinite;
         -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-        -webkit-mask-composite: xor;
-        mask-composite: exclude;
-        pointer-events: none;
-        z-index: 1;
+        -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; z-index: 1;
       }
-      .card-3d {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        transform-style: preserve-3d;
-        perspective: 800px;
-      }
-      .card-3d:hover {
-        transform: rotateX(-3deg) rotateY(3deg) translateY(-4px);
-        box-shadow: 0 20px 40px rgba(206,17,65,0.15), 0 0 20px rgba(206,17,65,0.1);
-      }
-      .neon-text {
-        text-shadow: 0 0 10px rgba(206,17,65,0.5), 0 0 20px rgba(206,17,65,0.3), 0 0 40px rgba(206,17,65,0.1);
-      }
-      .neon-text-subtle {
-        text-shadow: 0 0 8px rgba(206,17,65,0.3), 0 0 16px rgba(206,17,65,0.1);
-      }
-      .hover-lift {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-      }
-      .hover-lift:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 24px rgba(0,0,0,0.4), 0 0 12px rgba(206,17,65,0.1);
-      }
-      .bg-grid {
-        background-image:
-          linear-gradient(rgba(206,17,65,0.03) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(206,17,65,0.03) 1px, transparent 1px);
-        background-size: 40px 40px;
-      }
-      .shimmer-bg {
-        background: linear-gradient(90deg, transparent, rgba(206,17,65,0.08), transparent);
-        background-size: 200% 100%;
-        animation: shimmer 2s linear infinite;
-      }
-      .btn-ripple {
-        position: relative;
-        overflow: hidden;
-      }
-      .btn-ripple::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: radial-gradient(circle at var(--ripple-x, 50%) var(--ripple-y, 50%), rgba(206,17,65,0.3), transparent 70%);
-        opacity: 0;
-        transition: opacity 0.3s;
-      }
-      .btn-ripple:active::after {
-        opacity: 1;
-      }
-      .glow-border {
-        box-shadow: 0 0 15px rgba(206,17,65,0.2), inset 0 0 15px rgba(206,17,65,0.05);
-      }
-      .win-ring-glow {
-        filter: drop-shadow(0 0 8px rgba(206,17,65,0.5));
-      }
+      .card-3d { transition: transform 0.3s ease, box-shadow 0.3s ease; transform-style: preserve-3d; perspective: 800px; }
+      .card-3d:hover { transform: rotateX(-3deg) rotateY(3deg) translateY(-4px); box-shadow: 0 20px 40px rgba(206,17,65,0.15), 0 0 20px rgba(206,17,65,0.1); }
+      .neon-text { text-shadow: 0 0 10px rgba(206,17,65,0.5), 0 0 20px rgba(206,17,65,0.3), 0 0 40px rgba(206,17,65,0.1); }
+      .neon-text-subtle { text-shadow: 0 0 8px rgba(206,17,65,0.3), 0 0 16px rgba(206,17,65,0.1); }
+      .hover-lift { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+      .hover-lift:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0,0,0,0.4), 0 0 12px rgba(206,17,65,0.1); }
+      .bg-grid { background-image: linear-gradient(rgba(206,17,65,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(206,17,65,0.03) 1px, transparent 1px); background-size: 40px 40px; }
+      .shimmer-bg { background: linear-gradient(90deg, transparent, rgba(206,17,65,0.08), transparent); background-size: 200% 100%; animation: shimmer 2s linear infinite; }
+      .btn-glow { transition: all 0.3s ease; }
+      .btn-glow:hover { box-shadow: 0 0 20px rgba(206,17,65,0.4), 0 0 40px rgba(206,17,65,0.2); }
+      .win-ring-glow { filter: drop-shadow(0 0 8px rgba(206,17,65,0.5)); }
+      .stat-highlight { background: linear-gradient(135deg, rgba(206,17,65,0.1) 0%, rgba(62,38,128,0.1) 100%); }
+      .ticker-wrapper { mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent); -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent); }
     </style>
   </head>
   <body>
@@ -230,847 +125,179 @@
 
     <script type="text/babel" data-type="module">
 // ============================================================
-// TYPES (just used as documentation, no runtime TypeScript)
-// ============================================================
-
-// ============================================================
-// DATA SERVICE
+// DATA
 // ============================================================
 const fmt = (num) => Number(num.toFixed(1));
 
 const RAPTORS_ROSTER = [
-  // --- STARTERS ---
-  {
-    id: "1630567", name: "Scottie Barnes", position: "PF", number: "4",
-    seasonStats: { ppg: 19.4, rpg: 8.4, apg: 5.6, spg: 1.3, bpg: 1.6, oreb: 2.4, dreb: 6.0, fgPct: 50.3, threePtPct: 30.6, ftPct: 81.3, plusMinus: 3.2, turnovers: 2.7 },
-    vsOpponentStats: { ppg: 21.5, rpg: 9.0, apg: 6.2, spg: 1.5, bpg: 1.8, oreb: 2.6, dreb: 6.4, fgPct: 51.0, threePtPct: 33.0, ftPct: 83.0, plusMinus: 4.0, turnovers: 2.5 },
-    advanced: { per: 21.8, ts: 57.2, usg: 26.5, ortg: 116.0, drtg: 108.5 },
-    analysis: "The franchise cornerstone. Elite two-way force with All-NBA upside."
-  },
-  {
-    id: "1629628", name: "RJ Barrett", position: "SF", number: "9",
-    seasonStats: { ppg: 18.6, rpg: 5.2, apg: 3.5, spg: 0.8, bpg: 0.2, oreb: 1.0, dreb: 4.2, fgPct: 47.9, threePtPct: 33.8, ftPct: 70.1, plusMinus: 1.5, turnovers: 1.6 },
-    vsOpponentStats: { ppg: 20.5, rpg: 5.8, apg: 4.0, spg: 1.0, bpg: 0.3, oreb: 1.1, dreb: 4.7, fgPct: 50.0, threePtPct: 36.0, ftPct: 73.0, plusMinus: 2.5, turnovers: 1.4 },
-    advanced: { per: 17.5, ts: 54.8, usg: 24.0, ortg: 113.0, drtg: 112.5 },
-    analysis: "Aggressive downhill scorer with improved playmaking."
-  },
-  {
-    id: "1630193", name: "Immanuel Quickley", position: "PG", number: "5",
-    seasonStats: { ppg: 16.9, rpg: 4.5, apg: 6.1, spg: 1.3, bpg: 0.1, oreb: 0.6, dreb: 3.9, fgPct: 44.3, threePtPct: 37.9, ftPct: 80.1, plusMinus: 2.0, turnovers: 1.7 },
-    vsOpponentStats: { ppg: 18.0, rpg: 5.0, apg: 7.0, spg: 1.5, bpg: 0.2, oreb: 0.7, dreb: 4.3, fgPct: 45.0, threePtPct: 39.0, ftPct: 82.0, plusMinus: 3.0, turnovers: 1.5 },
-    advanced: { per: 18.2, ts: 57.5, usg: 24.5, ortg: 115.5, drtg: 111.0 },
-    analysis: "Primary playmaker and floor general. Lethal three-point shooting off the dribble."
-  },
-  {
-    id: "1627742", name: "Brandon Ingram", position: "SF", number: "3",
-    seasonStats: { ppg: 21.9, rpg: 5.9, apg: 3.7, spg: 0.8, bpg: 0.8, oreb: 0.6, dreb: 5.3, fgPct: 47.0, threePtPct: 35.8, ftPct: 83.6, plusMinus: 2.8, turnovers: 2.6 },
-    vsOpponentStats: { ppg: 23.5, rpg: 6.2, apg: 4.0, spg: 0.9, bpg: 0.9, oreb: 0.7, dreb: 5.5, fgPct: 48.5, threePtPct: 37.0, ftPct: 85.0, plusMinus: 3.5, turnovers: 2.3 },
-    advanced: { per: 19.5, ts: 57.0, usg: 27.0, ortg: 115.0, drtg: 112.0 },
-    analysis: "Leading scorer and midrange assassin."
-  },
-  {
-    id: "1627751", name: "Jakob Poeltl", position: "C", number: "19",
-    seasonStats: { ppg: 9.7, rpg: 7.7, apg: 2.1, spg: 0.8, bpg: 0.5, oreb: 2.8, dreb: 4.9, fgPct: 69.3, threePtPct: 0.0, ftPct: 59.6, plusMinus: 3.5, turnovers: 1.6 },
-    vsOpponentStats: { ppg: 10.5, rpg: 8.5, apg: 2.5, spg: 0.9, bpg: 0.8, oreb: 3.2, dreb: 5.3, fgPct: 71.0, threePtPct: 0.0, ftPct: 62.0, plusMinus: 4.0, turnovers: 1.4 },
-    advanced: { per: 20.5, ts: 65.0, usg: 14.5, ortg: 125.0, drtg: 107.0 },
-    analysis: "Elite rim protector and screen setter."
-  },
-  // --- BENCH ---
-  {
-    id: "1630572", name: "Sandro Mamukelashvili", position: "C", number: "54",
-    seasonStats: { ppg: 11.3, rpg: 5.1, apg: 2.0, spg: 0.7, bpg: 0.6, oreb: 1.5, dreb: 3.6, fgPct: 52.6, threePtPct: 37.4, ftPct: 75.5, plusMinus: 1.8, turnovers: 0.9 },
-    vsOpponentStats: { ppg: 12.0, rpg: 5.5, apg: 2.2, spg: 0.8, bpg: 0.7, oreb: 1.6, dreb: 3.9, fgPct: 54.0, threePtPct: 39.0, ftPct: 77.0, plusMinus: 2.5, turnovers: 0.8 },
-    advanced: { per: 17.0, ts: 60.5, usg: 17.5, ortg: 118.0, drtg: 111.0 },
-    analysis: "Breakout stretch-five off the bench."
-  },
-  {
-    id: "1642347", name: "Jamal Shead", position: "PG", number: "23",
-    seasonStats: { ppg: 7.0, rpg: 1.9, apg: 5.5, spg: 1.0, bpg: 0.1, oreb: 0.3, dreb: 1.6, fgPct: 37.0, threePtPct: 33.0, ftPct: 76.7, plusMinus: 0.5, turnovers: 1.3 },
-    vsOpponentStats: { ppg: 7.5, rpg: 2.2, apg: 6.0, spg: 1.2, bpg: 0.2, oreb: 0.4, dreb: 1.8, fgPct: 38.5, threePtPct: 34.0, ftPct: 78.0, plusMinus: 1.0, turnovers: 1.1 },
-    advanced: { per: 12.5, ts: 50.0, usg: 16.0, ortg: 107.0, drtg: 108.5 },
-    analysis: "Tenacious defensive guard."
-  },
-  {
-    id: "1642867", name: "Collin Murray-Boyles", position: "PF", number: "12",
-    seasonStats: { ppg: 7.7, rpg: 5.1, apg: 2.1, spg: 0.9, bpg: 0.8, oreb: 1.8, dreb: 3.3, fgPct: 53.4, threePtPct: 34.1, ftPct: 64.4, plusMinus: 0.8, turnovers: 1.2 },
-    vsOpponentStats: { ppg: 8.5, rpg: 5.5, apg: 2.3, spg: 1.0, bpg: 0.9, oreb: 2.0, dreb: 3.5, fgPct: 55.0, threePtPct: 36.0, ftPct: 66.0, plusMinus: 1.5, turnovers: 1.0 },
-    advanced: { per: 15.0, ts: 56.5, usg: 14.0, ortg: 114.0, drtg: 109.0 },
-    analysis: "2025 lottery pick making an immediate impact."
-  },
-  {
-    id: "1642266", name: "Ja'Kobe Walter", position: "SG", number: "14",
-    seasonStats: { ppg: 6.2, rpg: 2.1, apg: 0.9, spg: 0.9, bpg: 0.1, oreb: 0.3, dreb: 1.8, fgPct: 42.6, threePtPct: 34.6, ftPct: 80.0, plusMinus: -0.5, turnovers: 0.5 },
-    vsOpponentStats: { ppg: 7.0, rpg: 2.5, apg: 1.2, spg: 1.0, bpg: 0.2, oreb: 0.4, dreb: 2.1, fgPct: 44.0, threePtPct: 36.0, ftPct: 82.0, plusMinus: 0.0, turnovers: 0.4 },
-    advanced: { per: 10.5, ts: 54.0, usg: 13.5, ortg: 109.0, drtg: 112.0 },
-    analysis: "Developing two-way wing with shooting upside."
-  },
-  {
-    id: "1641711", name: "Gradey Dick", position: "SG", number: "1",
-    seasonStats: { ppg: 6.5, rpg: 2.2, apg: 0.7, spg: 0.6, bpg: 0.1, oreb: 0.3, dreb: 1.9, fgPct: 42.0, threePtPct: 31.3, ftPct: 86.2, plusMinus: -1.5, turnovers: 0.5 },
-    vsOpponentStats: { ppg: 7.0, rpg: 2.5, apg: 1.0, spg: 0.7, bpg: 0.1, oreb: 0.3, dreb: 2.2, fgPct: 44.0, threePtPct: 34.0, ftPct: 88.0, plusMinus: -0.5, turnovers: 0.4 },
-    advanced: { per: 9.5, ts: 53.0, usg: 12.0, ortg: 108.0, drtg: 114.0 },
-    analysis: "Sharpshooting wing with deep range."
-  },
-  {
-    id: "1631218", name: "Trayce Jackson-Davis", position: "C", number: "32",
-    seasonStats: { ppg: 4.2, rpg: 3.1, apg: 0.5, spg: 0.3, bpg: 0.6, oreb: 1.2, dreb: 1.9, fgPct: 58.8, threePtPct: 0.0, ftPct: 60.0, plusMinus: -0.5, turnovers: 0.6 },
-    vsOpponentStats: { ppg: 4.5, rpg: 3.5, apg: 0.6, spg: 0.3, bpg: 0.7, oreb: 1.3, dreb: 2.2, fgPct: 60.0, threePtPct: 0.0, ftPct: 62.0, plusMinus: 0.0, turnovers: 0.5 },
-    advanced: { per: 12.0, ts: 58.0, usg: 10.0, ortg: 112.0, drtg: 110.0 },
-    analysis: "Acquired from Warriors at trade deadline. Athletic rim-running big."
-  },
-  {
-    id: "1642367", name: "Jonathan Mogbo", position: "PF", number: "2",
-    seasonStats: { ppg: 1.4, rpg: 1.8, apg: 0.5, spg: 0.1, bpg: 0.2, oreb: 0.6, dreb: 1.2, fgPct: 50.0, threePtPct: 0.0, ftPct: 40.0, plusMinus: -1.5, turnovers: 0.3 },
-    vsOpponentStats: { ppg: 1.5, rpg: 2.0, apg: 0.6, spg: 0.2, bpg: 0.3, oreb: 0.7, dreb: 1.3, fgPct: 52.0, threePtPct: 0.0, ftPct: 45.0, plusMinus: -1.0, turnovers: 0.3 },
-    advanced: { per: 7.0, ts: 47.0, usg: 8.0, ortg: 98.0, drtg: 110.0 },
-    analysis: "High-motor developmental forward."
-  },
-  {
-    id: "1642419", name: "Jamison Battle", position: "SF", number: "77",
-    seasonStats: { ppg: 3.3, rpg: 1.4, apg: 0.4, spg: 0.1, bpg: 0.1, oreb: 0.2, dreb: 1.2, fgPct: 53.6, threePtPct: 44.9, ftPct: 66.7, plusMinus: 0.5, turnovers: 0.4 },
-    vsOpponentStats: { ppg: 3.5, rpg: 1.5, apg: 0.5, spg: 0.2, bpg: 0.1, oreb: 0.2, dreb: 1.3, fgPct: 55.0, threePtPct: 46.0, ftPct: 70.0, plusMinus: 1.0, turnovers: 0.3 },
-    advanced: { per: 11.0, ts: 62.0, usg: 9.0, ortg: 120.0, drtg: 113.0 },
-    analysis: "Sharpshooter off the bench."
-  },
-  {
-    id: "202066", name: "Garrett Temple", position: "SG", number: "17",
-    seasonStats: { ppg: 0.3, rpg: 0.3, apg: 0.3, spg: 0.2, bpg: 0.1, oreb: 0.1, dreb: 0.2, fgPct: 14.3, threePtPct: 20.0, ftPct: 50.0, plusMinus: -0.5, turnovers: 0.2 },
-    vsOpponentStats: { ppg: 0.5, rpg: 0.5, apg: 0.3, spg: 0.2, bpg: 0.1, oreb: 0.1, dreb: 0.4, fgPct: 15.0, threePtPct: 20.0, ftPct: 50.0, plusMinus: 0.0, turnovers: 0.2 },
-    advanced: { per: 3.0, ts: 30.0, usg: 5.0, ortg: 90.0, drtg: 112.0 },
-    analysis: "Veteran mentor and locker room leader."
-  },
-  // --- TWO-WAY PLAYERS ---
-  {
-    id: "1630639", name: "A.J. Lawson", position: "SG", number: "0",
-    seasonStats: { ppg: 2.5, rpg: 1.2, apg: 0.5, spg: 0.3, bpg: 0.1, oreb: 0.2, dreb: 1.0, fgPct: 42.0, threePtPct: 30.0, ftPct: 75.0, plusMinus: -1.0, turnovers: 0.4 },
-    vsOpponentStats: { ppg: 3.0, rpg: 1.5, apg: 0.6, spg: 0.4, bpg: 0.1, oreb: 0.3, dreb: 1.2, fgPct: 44.0, threePtPct: 32.0, ftPct: 77.0, plusMinus: -0.5, turnovers: 0.3 },
-    advanced: { per: 6.0, ts: 48.0, usg: 8.0, ortg: 100.0, drtg: 113.0 },
-    analysis: "Athletic two-way wing shuttling between NBA and G League."
-  },
-  {
-    id: "1642918", name: "Alijah Martin", position: "SG", number: "55",
-    seasonStats: { ppg: 2.0, rpg: 1.0, apg: 0.4, spg: 0.3, bpg: 0.1, oreb: 0.1, dreb: 0.9, fgPct: 40.0, threePtPct: 28.0, ftPct: 72.0, plusMinus: -1.5, turnovers: 0.3 },
-    vsOpponentStats: { ppg: 2.5, rpg: 1.2, apg: 0.5, spg: 0.3, bpg: 0.1, oreb: 0.2, dreb: 1.0, fgPct: 42.0, threePtPct: 30.0, ftPct: 74.0, plusMinus: -1.0, turnovers: 0.3 },
-    advanced: { per: 5.5, ts: 46.0, usg: 7.5, ortg: 98.0, drtg: 114.0 },
-    analysis: "2025 second-round pick out of Florida. Developing guard with defensive energy."
-  },
-  {
-    id: "1642935", name: "Chucky Hepburn", position: "PG", number: "24",
-    seasonStats: { ppg: 1.8, rpg: 0.8, apg: 1.2, spg: 0.2, bpg: 0.0, oreb: 0.1, dreb: 0.7, fgPct: 38.0, threePtPct: 30.0, ftPct: 78.0, plusMinus: -1.2, turnovers: 0.5 },
-    vsOpponentStats: { ppg: 2.0, rpg: 1.0, apg: 1.5, spg: 0.3, bpg: 0.0, oreb: 0.1, dreb: 0.9, fgPct: 40.0, threePtPct: 32.0, ftPct: 80.0, plusMinus: -0.8, turnovers: 0.4 },
-    advanced: { per: 5.0, ts: 45.0, usg: 7.0, ortg: 96.0, drtg: 115.0 },
-    analysis: "Two-way point guard developing his craft in the G League."
-  },
-  // --- TRADE DEADLINE ACQUISITIONS ---
-  {
-    id: "101108", name: "Chris Paul", position: "PG", number: "3",
-    seasonStats: { ppg: 2.9, rpg: 1.8, apg: 3.3, spg: 0.6, bpg: 0.0, oreb: 0.2, dreb: 1.6, fgPct: 37.5, threePtPct: 30.0, ftPct: 75.0, plusMinus: -1.5, turnovers: 1.0 },
-    vsOpponentStats: { ppg: 3.2, rpg: 2.0, apg: 3.5, spg: 0.7, bpg: 0.0, oreb: 0.2, dreb: 1.8, fgPct: 39.0, threePtPct: 32.0, ftPct: 77.0, plusMinus: -1.0, turnovers: 0.9 },
-    advanced: { per: 8.5, ts: 45.0, usg: 14.0, ortg: 100.0, drtg: 112.0 },
-    analysis: "Acquired from Clippers at trade deadline. Future Hall of Famer providing veteran leadership."
-  }
+  { id: "1630567", name: "Scottie Barnes", position: "PF", number: "4", seasonStats: { ppg: 19.4, rpg: 8.4, apg: 5.6, spg: 1.3, bpg: 1.6, fgPct: 50.3, threePtPct: 30.6, ftPct: 81.3, plusMinus: 3.2, turnovers: 2.7 }, advanced: { per: 21.8, ts: 57.2, usg: 26.5, ortg: 116.0, drtg: 108.5 }, analysis: "Franchise cornerstone. Elite two-way force with All-NBA upside." },
+  { id: "1629628", name: "RJ Barrett", position: "SF", number: "9", seasonStats: { ppg: 18.6, rpg: 5.2, apg: 3.5, spg: 0.8, bpg: 0.2, fgPct: 47.9, threePtPct: 33.8, ftPct: 70.1, plusMinus: 1.5, turnovers: 1.6 }, advanced: { per: 17.5, ts: 54.8, usg: 24.0, ortg: 113.0, drtg: 112.5 }, analysis: "Aggressive downhill scorer with improved playmaking." },
+  { id: "1630193", name: "Immanuel Quickley", position: "PG", number: "5", seasonStats: { ppg: 16.9, rpg: 4.5, apg: 6.1, spg: 1.3, bpg: 0.1, fgPct: 44.3, threePtPct: 37.9, ftPct: 80.1, plusMinus: 2.0, turnovers: 1.7 }, advanced: { per: 18.2, ts: 57.5, usg: 24.5, ortg: 115.5, drtg: 111.0 }, analysis: "Primary playmaker with lethal three-point shooting." },
+  { id: "1627742", name: "Brandon Ingram", position: "SF", number: "3", seasonStats: { ppg: 21.9, rpg: 5.9, apg: 3.7, spg: 0.8, bpg: 0.8, fgPct: 47.0, threePtPct: 35.8, ftPct: 83.6, plusMinus: 2.8, turnovers: 2.6 }, advanced: { per: 19.5, ts: 57.0, usg: 27.0, ortg: 115.0, drtg: 112.0 }, analysis: "Leading scorer and midrange assassin." },
+  { id: "1627751", name: "Jakob Poeltl", position: "C", number: "19", seasonStats: { ppg: 9.7, rpg: 7.7, apg: 2.1, spg: 0.8, bpg: 0.5, fgPct: 69.3, threePtPct: 0.0, ftPct: 59.6, plusMinus: 3.5, turnovers: 1.6 }, advanced: { per: 20.5, ts: 65.0, usg: 14.5, ortg: 125.0, drtg: 107.0 }, analysis: "Elite rim protector and screen setter." },
+  { id: "1630572", name: "Sandro Mamukelashvili", position: "C", number: "54", seasonStats: { ppg: 11.3, rpg: 5.1, apg: 2.0, spg: 0.7, bpg: 0.6, fgPct: 52.6, threePtPct: 37.4, ftPct: 75.5, plusMinus: 1.8, turnovers: 0.9 }, advanced: { per: 17.0, ts: 60.5, usg: 17.5, ortg: 118.0, drtg: 111.0 }, analysis: "Breakout stretch-five off the bench." },
+  { id: "1642347", name: "Jamal Shead", position: "PG", number: "23", seasonStats: { ppg: 7.0, rpg: 1.9, apg: 5.5, spg: 1.0, bpg: 0.1, fgPct: 37.0, threePtPct: 33.0, ftPct: 76.7, plusMinus: 0.5, turnovers: 1.3 }, advanced: { per: 12.5, ts: 50.0, usg: 16.0, ortg: 107.0, drtg: 108.5 }, analysis: "Tenacious defensive guard." },
+  { id: "1642867", name: "Collin Murray-Boyles", position: "PF", number: "12", seasonStats: { ppg: 7.7, rpg: 5.1, apg: 2.1, spg: 0.9, bpg: 0.8, fgPct: 53.4, threePtPct: 34.1, ftPct: 64.4, plusMinus: 0.8, turnovers: 1.2 }, advanced: { per: 15.0, ts: 56.5, usg: 14.0, ortg: 114.0, drtg: 109.0 }, analysis: "2025 lottery pick making immediate impact." },
+  { id: "1642266", name: "Ja'Kobe Walter", position: "SG", number: "14", seasonStats: { ppg: 6.2, rpg: 2.1, apg: 0.9, spg: 0.9, bpg: 0.1, fgPct: 42.6, threePtPct: 34.6, ftPct: 80.0, plusMinus: -0.5, turnovers: 0.5 }, advanced: { per: 10.5, ts: 54.0, usg: 13.5, ortg: 109.0, drtg: 112.0 }, analysis: "Developing two-way wing with shooting upside." },
+  { id: "1641711", name: "Gradey Dick", position: "SG", number: "1", seasonStats: { ppg: 6.5, rpg: 2.2, apg: 0.7, spg: 0.6, bpg: 0.1, fgPct: 42.0, threePtPct: 31.3, ftPct: 86.2, plusMinus: -1.5, turnovers: 0.5 }, advanced: { per: 9.5, ts: 53.0, usg: 12.0, ortg: 108.0, drtg: 114.0 }, analysis: "Sharpshooting wing with deep range." },
+  { id: "1631218", name: "Trayce Jackson-Davis", position: "C", number: "32", seasonStats: { ppg: 4.2, rpg: 3.1, apg: 0.5, spg: 0.3, bpg: 0.6, fgPct: 58.8, threePtPct: 0.0, ftPct: 60.0, plusMinus: -0.5, turnovers: 0.6 }, advanced: { per: 12.0, ts: 58.0, usg: 10.0, ortg: 112.0, drtg: 110.0 }, analysis: "Athletic rim-running big from Warriors." },
+  { id: "101108", name: "Chris Paul", position: "PG", number: "3", seasonStats: { ppg: 2.9, rpg: 1.8, apg: 3.3, spg: 0.6, bpg: 0.0, fgPct: 37.5, threePtPct: 30.0, ftPct: 75.0, plusMinus: -1.5, turnovers: 1.0 }, advanced: { per: 8.5, ts: 45.0, usg: 14.0, ortg: 100.0, drtg: 112.0 }, analysis: "Future Hall of Famer providing veteran leadership." },
+];
+
+// Eastern Conference Standings
+const STANDINGS = {
+  east: [
+    { rank: 1, team: "Cavaliers", abbr: "CLE", id: "1610612739", wins: 42, losses: 12, pct: ".778", gb: "-", streak: "W3", l10: "8-2" },
+    { rank: 2, team: "Celtics", abbr: "BOS", id: "1610612738", wins: 38, losses: 17, pct: ".691", gb: "4.5", streak: "W1", l10: "6-4" },
+    { rank: 3, team: "Knicks", abbr: "NYK", id: "1610612752", wins: 36, losses: 19, pct: ".655", gb: "6.5", streak: "W4", l10: "7-3" },
+    { rank: 4, team: "Bucks", abbr: "MIL", id: "1610612749", wins: 32, losses: 22, pct: ".593", gb: "10", streak: "L1", l10: "5-5" },
+    { rank: 5, team: "Magic", abbr: "ORL", id: "1610612753", wins: 30, losses: 25, pct: ".545", gb: "12.5", streak: "L2", l10: "4-6" },
+    { rank: 6, team: "Pacers", abbr: "IND", id: "1610612754", wins: 29, losses: 26, pct: ".527", gb: "13.5", streak: "W2", l10: "6-4" },
+    { rank: 7, team: "Heat", abbr: "MIA", id: "1610612748", wins: 27, losses: 27, pct: ".500", gb: "15", streak: "L1", l10: "5-5" },
+    { rank: 8, team: "Hawks", abbr: "ATL", id: "1610612737", wins: 26, losses: 29, pct: ".473", gb: "16.5", streak: "W1", l10: "4-6" },
+    { rank: 9, team: "Bulls", abbr: "CHI", id: "1610612741", wins: 24, losses: 30, pct: ".444", gb: "18", streak: "L3", l10: "3-7" },
+    { rank: 10, team: "Raptors", abbr: "TOR", id: "1610612761", wins: 23, losses: 32, pct: ".418", gb: "19.5", streak: "W4", l10: "7-3", highlight: true },
+    { rank: 11, team: "76ers", abbr: "PHI", id: "1610612755", wins: 22, losses: 33, pct: ".400", gb: "20.5", streak: "L2", l10: "4-6" },
+    { rank: 12, team: "Pistons", abbr: "DET", id: "1610612765", wins: 21, losses: 33, pct: ".389", gb: "21", streak: "W1", l10: "5-5" },
+    { rank: 13, team: "Nets", abbr: "BKN", id: "1610612751", wins: 19, losses: 35, pct: ".352", gb: "23", streak: "L4", l10: "2-8" },
+    { rank: 14, team: "Hornets", abbr: "CHA", id: "1610612766", wins: 14, losses: 40, pct: ".259", gb: "28", streak: "L1", l10: "3-7" },
+    { rank: 15, team: "Wizards", abbr: "WAS", id: "1610612764", wins: 10, losses: 44, pct: ".185", gb: "32", streak: "L6", l10: "1-9" },
+  ],
+  west: [
+    { rank: 1, team: "Thunder", abbr: "OKC", id: "1610612760", wins: 42, losses: 11, pct: ".792", gb: "-", streak: "W5", l10: "9-1" },
+    { rank: 2, team: "Rockets", abbr: "HOU", id: "1610612745", wins: 37, losses: 17, pct: ".685", gb: "5.5", streak: "W2", l10: "7-3" },
+    { rank: 3, team: "Grizzlies", abbr: "MEM", id: "1610612763", wins: 35, losses: 20, pct: ".636", gb: "8", streak: "L1", l10: "6-4" },
+    { rank: 4, team: "Lakers", abbr: "LAL", id: "1610612747", wins: 33, losses: 21, pct: ".611", gb: "9.5", streak: "W1", l10: "5-5" },
+    { rank: 5, team: "Warriors", abbr: "GSW", id: "1610612744", wins: 31, losses: 23, pct: ".574", gb: "11.5", streak: "W3", l10: "6-4" },
+  ]
+};
+
+// Raptors Team Stats
+const RAPTORS_TEAM_STATS = {
+  record: { wins: 23, losses: 32 },
+  ppg: 111.8, oppPpg: 114.2, pace: 101.3,
+  fgPct: 46.2, threePct: 35.1, ftPct: 76.8,
+  rebPg: 44.2, astPg: 26.5, stlPg: 8.2, blkPg: 5.1, tovPg: 14.8,
+  offRtg: 112.5, defRtg: 115.8, netRtg: -3.3,
+  last10: ['W', 'W', 'L', 'W', 'W', 'L', 'L', 'W', 'L', 'L'],
+  homeRecord: "14-12", awayRecord: "9-20",
+};
+
+// Live Scores Ticker Data
+const LIVE_SCORES = [
+  { home: "Celtics", away: "Heat", homeScore: 108, awayScore: 102, status: "Final", homeId: "1610612738", awayId: "1610612748" },
+  { home: "Lakers", away: "Clippers", homeScore: 95, awayScore: 92, quarter: "Q4", time: "2:34", homeId: "1610612747", awayId: "1610612746" },
+  { home: "Warriors", away: "Kings", homeScore: 78, awayScore: 81, quarter: "Q3", time: "5:12", homeId: "1610612744", awayId: "1610612758" },
+  { home: "Bucks", away: "Bulls", homeScore: 0, awayScore: 0, status: "7:30 PM", homeId: "1610612749", awayId: "1610612741" },
+  { home: "Nets", away: "Knicks", homeScore: 0, awayScore: 0, status: "8:00 PM", homeId: "1610612751", awayId: "1610612752" },
+  { home: "Thunder", away: "Nuggets", homeScore: 0, awayScore: 0, status: "9:30 PM", homeId: "1610612760", awayId: "1610612743" },
 ];
 
 const OPPONENT_DATA = {
-  "Timberwolves": {
-    id: "1610612750",
-    roster: [
-       { id: "1630162", name: "Anthony Edwards", position: "G", number: "5", seasonStats: { ppg: 28.1, rpg: 5.8, apg: 5.2 } },
-       { id: "203944", name: "Julius Randle", position: "F", number: "30", seasonStats: { ppg: 21.6, rpg: 9.4, apg: 4.8 } },
-       { id: "203497", name: "Rudy Gobert", position: "C", number: "27", seasonStats: { ppg: 10.9, rpg: 12.5, apg: 1.2, bpg: 2.1 } },
-       { id: "1630183", name: "Jaden McDaniels", position: "F", number: "3", seasonStats: { ppg: 10.2, rpg: 3.5, apg: 1.4 } },
-       { id: "1642265", name: "Rob Dillingham", position: "G", number: "4", seasonStats: { ppg: 8.5, rpg: 1.5, apg: 4.0 } },
-       { id: "1629675", name: "Naz Reid", position: "C-F", number: "11", seasonStats: { ppg: 13.8, rpg: 5.5, apg: 1.5 } },
-       { id: "1628978", name: "Donte DiVincenzo", position: "G", number: "0", seasonStats: { ppg: 9.8, rpg: 3.4, apg: 3.1 } },
-       { id: "1629638", name: "Nickeil Alexander-Walker", position: "G", number: "9", seasonStats: { ppg: 9.2, rpg: 2.2, apg: 2.5 } }
-    ],
-    tendencies: ["Elite Rim Protection", "Explosive Scoring", "Physical Defense"],
-    playbook: [
-      { id: "p1", name: "Ant Iso", type: "offense", description: "Edwards isolation from top.", diagramType: "iso", execution: ["Clear out side", "Edwards attacks downhill", "Kick out if help comes"], raptorsCounter: "Gap help, wall up at rim." },
-      { id: "p2", name: "Double Drag", type: "offense", description: "Gobert/Randle screen for Ant.", diagramType: "pnr", execution: ["Dillingham/Ant ball handler", "Two bigs set high screens", "One rolls, one pops"], raptorsCounter: "Navigate screens, drop big." },
-      { id: "p3", name: "Horns Twist", type: "offense", description: "Complex screen action for shooters.", diagramType: "horns", execution: ["Bigs at elbows", "First screen for ball", "Second screen for first big"], raptorsCounter: "Switch the twist action." },
-      { id: "p4", name: "Spain PnR", type: "offense", description: "Stack pick and roll.", diagramType: "pnr", execution: ["High ball screen", "Shooter back screens the roller's man", "Shooter pops"], raptorsCounter: "Communication is key, switch low." },
-      { id: "p5", name: "Exit Screen", type: "offense", description: "Corner shooter action.", diagramType: "zone", execution: ["Drive baseline", "Screen for corner man", "Drift to wing"], raptorsCounter: "Stay attached to corner." }
-    ]
-  },
-  "Pelicans": {
-    id: "1610612740",
-    roster: [
-       { id: "1629627", name: "Zion Williamson", position: "F", number: "1" },
-       { id: "1627742", name: "Brandon Ingram", position: "F", number: "14" },
-       { id: "203468", name: "CJ McCollum", position: "G", number: "3" },
-       { id: "1627749", name: "Dejounte Murray", position: "G", number: "5" },
-       { id: "1630529", name: "Herbert Jones", position: "F", number: "5" },
-       { id: "1630530", name: "Trey Murphy III", position: "F", number: "25" },
-       { id: "1630221", name: "Jose Alvarado", position: "G", number: "15" },
-       { id: "1631103", name: "Yves Missi", position: "C", number: "21" }
-    ],
-    tendencies: ["Paint Dominance", "Length on Defense", "Mid-Range Scoring"],
-    playbook: [
-      { id: "p1", name: "Zion Point", type: "offense", description: "Zion initiates from top of key.", diagramType: "iso", execution: ["Zion brings ball up", "Shooters space corners", "Zion attacks downhill"], raptorsCounter: "Build a wall, force kickouts." },
-      { id: "p2", name: "Elbow Split", type: "offense", description: "Ingram post action.", diagramType: "horns", execution: ["Entry to elbow", "Guard cuts off", "Hand off option"], raptorsCounter: "Deny the entry pass." }
-    ]
-  },
-  "Celtics": {
-    id: "1610612738",
-    roster: [
-       { id: "1628369", name: "Jayson Tatum", position: "F", number: "0", seasonStats: { ppg: 27.5, rpg: 8.5, apg: 5.0 } },
-       { id: "1627759", name: "Jaylen Brown", position: "G-F", number: "7", seasonStats: { ppg: 23.0, rpg: 5.5, apg: 3.5 } },
-       { id: "202696", name: "Nikola Vucevic", position: "C", number: "9", seasonStats: { ppg: 18.0, rpg: 10.5, apg: 3.5 } },
-       { id: "1628401", name: "Derrick White", position: "G", number: "9", seasonStats: { ppg: 15.5, rpg: 4.0, apg: 5.0 } },
-       { id: "1630174", name: "Payton Pritchard", position: "G", number: "11", seasonStats: { ppg: 14.0, rpg: 2.0, apg: 3.0 } },
-       { id: "201143", name: "Al Horford", position: "C-F", number: "42", seasonStats: { ppg: 8.5, rpg: 5.5, apg: 2.5 } },
-       { id: "1628382", name: "Sam Hauser", position: "F", number: "30", seasonStats: { ppg: 7.0, rpg: 3.0, apg: 1.0 } },
-       { id: "1629674", name: "Neemias Queta", position: "C", number: "88", seasonStats: { ppg: 4.0, rpg: 4.0, apg: 0.5 } }
-    ],
-    tendencies: ["High Volume 3PT", "Switch Everything Defense", "Tatum-Brown Iso"],
-    playbook: [
-      { id: "p1", name: "5-Out Spacing", type: "offense", description: "All 5 players on perimeter.", diagramType: "iso", execution: ["Tatum isolation top of key", "Vucevic lifts to high post", "Corners stay wide"], raptorsCounter: "Stay home on shooters, force tough 2s." },
-      { id: "p2", name: "Vooch High Post", type: "offense", description: "Vucevic facilitates from elbow.", diagramType: "horns", execution: ["Entry to Vucevic at elbow", "Cutters off baseline screens", "Vucevic faces up or dishes"], raptorsCounter: "Deny the elbow entry, crowd cutters." },
-      { id: "p3", name: "Ghost Screen", type: "offense", description: "Fake screen to pop.", diagramType: "pnr", execution: ["Guard sprints to set screen", "Slips before contact", "Flares to 3pt line"], raptorsCounter: "Switch communication." }
-    ]
-  },
   "Bulls": {
     id: "1610612741",
+    teamStats: { ppg: 108.5, oppPpg: 112.3, pace: 99.8, fgPct: 45.8, threePct: 34.2, offRtg: 110.2, defRtg: 114.5, netRtg: -4.3 },
+    recentForm: ['L', 'L', 'L', 'W', 'L', 'W', 'L', 'L', 'W', 'L'],
     roster: [
        { id: "203897", name: "Zach LaVine", position: "G", number: "8", seasonStats: { ppg: 22.0, rpg: 4.5, apg: 4.0 } },
        { id: "1629014", name: "Anfernee Simons", position: "G", number: "1", seasonStats: { ppg: 22.5, rpg: 3.0, apg: 5.0 } },
        { id: "1630581", name: "Josh Giddey", position: "G", number: "3", seasonStats: { ppg: 12.5, rpg: 6.5, apg: 6.0 } },
        { id: "1631093", name: "Jaden Ivey", position: "G", number: "23", seasonStats: { ppg: 15.5, rpg: 3.5, apg: 4.0 } },
        { id: "1630172", name: "Patrick Williams", position: "F", number: "44", seasonStats: { ppg: 10.0, rpg: 3.5, apg: 1.8 } },
-       { id: "1629012", name: "Collin Sexton", position: "G", number: "2", seasonStats: { ppg: 15.0, rpg: 2.5, apg: 4.0 } },
-       { id: "1630245", name: "Ayo Dosunmu", position: "G", number: "12", seasonStats: { ppg: 9.0, rpg: 3.0, apg: 4.0 } },
-       { id: "1631259", name: "Julian Phillips", position: "F", number: "8", seasonStats: { ppg: 4.0, rpg: 2.5, apg: 1.0 } }
     ],
-    injuries: [
-       { player: "Patrick Williams", status: "Questionable", details: "Right foot soreness — game-time decision", team: "opponent" }
-    ],
+    injuries: [{ player: "Patrick Williams", status: "Questionable", details: "Right foot soreness" }],
     tendencies: ["Guard-Heavy Scoring", "Transition Offense", "Backcourt Depth"],
+    bettingLines: { spread: "TOR -3.5", overUnder: 222.5, moneyline: { tor: -155, opp: +135 } },
+    h2h: { torWins: 2, oppWins: 1, lastMeeting: "TOR 118-105 (Jan 12)" },
     playbook: [
       { id: "p1", name: "LaVine Iso", type: "offense", description: "LaVine isolation from wing.", diagramType: "iso", execution: ["Clear out right side", "LaVine attacks off dribble", "Kick to Simons in corner"], raptorsCounter: "Force LaVine left, no clean looks." },
-      { id: "p2", name: "Simons PnR", type: "offense", description: "Simons pick and roll from top of key.", diagramType: "pnr", execution: ["Simons calls for screen", "Williams sets and pops", "Simons pulls from deep or drives"], raptorsCounter: "Go over screens, contest the pull-up 3." },
-      { id: "p3", name: "Giddey PnR", type: "offense", description: "Giddey pick and roll playmaking.", diagramType: "pnr", execution: ["Giddey initiates high PnR", "Williams or Phillips sets screen", "Giddey reads the defense"], raptorsCounter: "Go under screens, contest the pop." },
-      { id: "p4", name: "Ivey Downhill", type: "offense", description: "Ivey attacks in transition.", diagramType: "iso", execution: ["Outlet to Ivey", "Ivey pushes in open court", "Finishes at rim or finds shooter"], raptorsCounter: "Match Ivey's speed, get back early." }
+      { id: "p2", name: "Simons PnR", type: "offense", description: "Simons pick and roll from top.", diagramType: "pnr", execution: ["Simons calls for screen", "Williams sets and pops", "Simons pulls from deep"], raptorsCounter: "Go over screens, contest the pull-up 3." },
     ]
   },
   "Pacers": {
     id: "1610612754",
+    teamStats: { ppg: 115.2, oppPpg: 117.8, pace: 103.5, fgPct: 48.1, threePct: 36.5, offRtg: 114.8, defRtg: 118.2, netRtg: -3.4 },
+    recentForm: ['W', 'W', 'L', 'L', 'W', 'W', 'L', 'W', 'L', 'L'],
     roster: [
-       { id: "1630169", name: "Tyrese Haliburton", position: "G", number: "0", seasonStats: { ppg: 20.5, rpg: 3.5, apg: 10.5 } },
+       { id: "1630169", name: "Tyrese Haliburton", position: "G", number: "0", seasonStats: { ppg: 20.5, rpg: 3.5, apg: 10.5 }, injured: true },
        { id: "1627783", name: "Pascal Siakam", position: "F", number: "43", seasonStats: { ppg: 21.5, rpg: 7.0, apg: 3.8 } },
        { id: "1631097", name: "Bennedict Mathurin", position: "G", number: "00", seasonStats: { ppg: 16.0, rpg: 4.0, apg: 2.0 } },
        { id: "1631111", name: "Andrew Nembhard", position: "G", number: "2", seasonStats: { ppg: 11.0, rpg: 3.0, apg: 5.5 } },
        { id: "1630168", name: "Obi Toppin", position: "F", number: "1", seasonStats: { ppg: 10.5, rpg: 4.5, apg: 1.5 } },
-       { id: "1630187", name: "Aaron Nesmith", position: "F", number: "23", seasonStats: { ppg: 8.5, rpg: 3.5, apg: 1.2 } },
-       { id: "1641712", name: "Jarace Walker", position: "F", number: "5", seasonStats: { ppg: 5.5, rpg: 4.0, apg: 1.0 } },
-       { id: "204456", name: "T.J. McConnell", position: "G", number: "9", seasonStats: { ppg: 6.5, rpg: 2.5, apg: 4.5 } }
     ],
-    injuries: [
-       { player: "Tyrese Haliburton", status: "Out", details: "Torn Achilles — out for the season", team: "opponent" }
-    ],
-    tendencies: ["NBA's Fastest Pace", "Drive & Kick", "Switch-Heavy Defense"],
+    injuries: [{ player: "Tyrese Haliburton", status: "Out", details: "Torn Achilles — season" }],
+    tendencies: ["NBA's Fastest Pace", "Drive & Kick", "Switch Defense"],
+    bettingLines: { spread: "TOR -1.5", overUnder: 228.5, moneyline: { tor: -120, opp: +100 } },
+    h2h: { torWins: 1, oppWins: 1, lastMeeting: "IND 122-118 OT (Dec 8)" },
     playbook: [
-      { id: "p1", name: "Nembhard PnR", type: "offense", description: "Nembhard pick and roll as primary ball handler.", diagramType: "pnr", execution: ["Nembhard calls for screen", "Toppin sets and rolls hard", "Nembhard drives or kicks"], raptorsCounter: "ICE the screen, stay attached." },
-      { id: "p2", name: "Siakam Post", type: "offense", description: "Siakam posts up from block.", diagramType: "iso", execution: ["Entry to Siakam on block", "Shooters space out", "Siakam spins baseline"], raptorsCounter: "Front the post, dig from weak side." },
-      { id: "p3", name: "Transition Push", type: "offense", description: "Fast break in under 7 seconds.", diagramType: "zone", execution: ["Toppin outlets to Nembhard", "Wings sprint lanes", "Attack before defense sets"], raptorsCounter: "Get back! No transition 3s." }
+      { id: "p1", name: "Siakam Post", type: "offense", description: "Siakam posts up from block.", diagramType: "iso", execution: ["Entry to Siakam on block", "Shooters space out", "Siakam spins baseline"], raptorsCounter: "Front the post, dig from weak side." },
     ]
   },
   "Pistons": {
     id: "1610612765",
+    teamStats: { ppg: 109.8, oppPpg: 113.2, pace: 100.2, fgPct: 45.5, threePct: 33.8, offRtg: 109.5, defRtg: 113.8, netRtg: -4.3 },
+    recentForm: ['W', 'L', 'L', 'W', 'W', 'L', 'L', 'L', 'W', 'L'],
     roster: [
        { id: "1630595", name: "Cade Cunningham", position: "G", number: "2", seasonStats: { ppg: 24.5, rpg: 6.5, apg: 9.5 } },
-       { id: "1628989", name: "Kevin Huerter", position: "G", number: "9", seasonStats: { ppg: 10.0, rpg: 3.0, apg: 2.5 } },
        { id: "1631105", name: "Jalen Duren", position: "C", number: "0", seasonStats: { ppg: 13.5, rpg: 10.5, apg: 2.0 } },
        { id: "203939", name: "Tobias Harris", position: "F", number: "12", seasonStats: { ppg: 11.5, rpg: 5.5, apg: 2.5 } },
-       { id: "1630191", name: "Isaiah Stewart", position: "C", number: "28", seasonStats: { ppg: 8.0, rpg: 6.5, apg: 1.5 } },
-       { id: "203501", name: "Tim Hardaway Jr.", position: "G", number: "10", seasonStats: { ppg: 10.5, rpg: 2.0, apg: 1.5 } },
+       { id: "1641713", name: "Ausar Thompson", position: "F", number: "9", seasonStats: { ppg: 8.0, rpg: 5.0, apg: 1.5 } },
        { id: "1629066", name: "Malik Beasley", position: "G", number: "5", seasonStats: { ppg: 9.0, rpg: 2.5, apg: 1.5 } },
-       { id: "1641713", name: "Ausar Thompson", position: "F", number: "9", seasonStats: { ppg: 8.0, rpg: 5.0, apg: 1.5 } }
     ],
-    tendencies: ["Cade-Centric Offense", "Shooting Improvement", "Young & Athletic"],
+    injuries: [],
+    tendencies: ["Cade-Centric Offense", "Young & Athletic", "Rebounding"],
+    bettingLines: { spread: "TOR -5.5", overUnder: 218.5, moneyline: { tor: -210, opp: +175 } },
+    h2h: { torWins: 2, oppWins: 0, lastMeeting: "TOR 112-98 (Nov 15)" },
     playbook: [
       { id: "p1", name: "Cade PnR", type: "offense", description: "Cunningham pick and roll.", diagramType: "pnr", execution: ["Cade brings ball up", "Duren sets screen", "Cade reads — drive or kick"], raptorsCounter: "Trap Cade high, rotate quickly." },
-      { id: "p2", name: "Huerter Catch & Shoot", type: "offense", description: "Huerter relocates off screens.", diagramType: "zone", execution: ["Cade drives to draw help", "Huerter relocates to wing", "Kick-out for open three"], raptorsCounter: "Stay attached to Huerter on rotations." }
     ]
   },
-  "Bucks": {
-    id: "1610612749",
-    roster: [
-       { id: "203507", name: "Giannis Antetokounmpo", position: "F", number: "34", seasonStats: { ppg: 31.5, rpg: 12.0, apg: 6.5 } },
-       { id: "1628398", name: "Kyle Kuzma", position: "F", number: "33", seasonStats: { ppg: 16.0, rpg: 6.0, apg: 2.5 } },
-       { id: "1626167", name: "Myles Turner", position: "C", number: "1", seasonStats: { ppg: 16.5, rpg: 7.0, apg: 1.5, bpg: 2.0 } },
-       { id: "201572", name: "Brook Lopez", position: "C", number: "11", seasonStats: { ppg: 12.5, rpg: 5.0, apg: 1.5, bpg: 2.5 } },
-       { id: "1626171", name: "Bobby Portis", position: "F", number: "9", seasonStats: { ppg: 13.5, rpg: 7.5, apg: 1.5 } },
-       { id: "1630175", name: "Cole Anthony", position: "G", number: "50", seasonStats: { ppg: 10.5, rpg: 4.0, apg: 4.5 } },
-       { id: "1631260", name: "AJ Green", position: "G", number: "20", seasonStats: { ppg: 7.0, rpg: 1.5, apg: 1.0 } },
-       { id: "1631098", name: "MarJon Beauchamp", position: "G-F", number: "3", seasonStats: { ppg: 5.5, rpg: 2.5, apg: 1.0 } }
-    ],
-    tendencies: ["Giannis Drive & Kick", "Elite Rim Protection", "Retooled Roster"],
-    playbook: [
-      { id: "p1", name: "Giannis Freight Train", type: "offense", description: "Giannis attacks from top of key.", diagramType: "iso", execution: ["Giannis catches at top", "Euro-step or spin move", "Kick to corner shooters if help"], raptorsCounter: "Build a wall. Do NOT foul." },
-      { id: "p2", name: "Kuzma Wing Iso", type: "offense", description: "Kuzma isolation from wing.", diagramType: "iso", execution: ["Kuzma catches on wing", "Faces up mid-post", "Attacks baseline or fades"], raptorsCounter: "Force tough mid-range, no clean drives." },
-      { id: "p3", name: "Giannis Post", type: "offense", description: "Giannis deep post-up.", diagramType: "horns", execution: ["Entry to Giannis on block", "Shooters on weak side", "Giannis faces up and drives"], raptorsCounter: "Front the post, double on catch." }
-    ]
-  },
-  "Thunder": {
-    id: "1610612760",
-    roster: [
-       { id: "1628983", name: "Shai Gilgeous-Alexander", position: "G", number: "2", seasonStats: { ppg: 32.5, rpg: 5.5, apg: 6.5 } },
-       { id: "1631114", name: "Jalen Williams", position: "F", number: "8", seasonStats: { ppg: 21.0, rpg: 5.5, apg: 5.0 } },
-       { id: "1631096", name: "Chet Holmgren", position: "C", number: "7", seasonStats: { ppg: 16.5, rpg: 7.5, apg: 2.5, bpg: 2.5 } },
-       { id: "1629652", name: "Luguentz Dort", position: "G", number: "5", seasonStats: { ppg: 10.5, rpg: 4.0, apg: 1.5 } },
-       { id: "1627936", name: "Alex Caruso", position: "G", number: "6", seasonStats: { ppg: 6.5, rpg: 3.5, apg: 3.5, spg: 1.5 } },
-       { id: "1628392", name: "Isaiah Hartenstein", position: "C", number: "55", seasonStats: { ppg: 8.0, rpg: 8.5, apg: 2.5 } },
-       { id: "1630598", name: "Aaron Wiggins", position: "G-F", number: "21", seasonStats: { ppg: 8.5, rpg: 3.0, apg: 1.5 } },
-       { id: "1642267", name: "Jared McCain", position: "G", number: "1", seasonStats: { ppg: 12.0, rpg: 2.5, apg: 3.0 } }
-    ],
-    injuries: [
-       { player: "Shai Gilgeous-Alexander", status: "Questionable", details: "Abdominal strain — game-time decision", team: "opponent" }
-    ],
-    tendencies: ["SGA Iso Machine", "Elite Team Defense", "Versatile Lineups"],
-    playbook: [
-      { id: "p1", name: "SGA Iso", type: "offense", description: "Shai isolates from either wing.", diagramType: "iso", execution: ["Clear one side", "SGA attacks off dribble", "Mid-range or floater finish"], raptorsCounter: "No clean iso looks. Force help." },
-      { id: "p2", name: "Chet Pop PnR", type: "offense", description: "Holmgren pick-and-pop.", diagramType: "pnr", execution: ["SGA or JWill ball-handle", "Chet sets and pops to 3", "Shooter relocates weak side"], raptorsCounter: "Recover to Chet on pop, contest." },
-      { id: "p3", name: "McCain DHO", type: "offense", description: "Dribble handoff for McCain on wing.", diagramType: "horns", execution: ["JWill at elbow", "Handoff to McCain", "McCain attacks or pulls up three"], raptorsCounter: "Switch the handoff, contest the shot." }
-    ]
-  },
-  "Spurs": {
-    id: "1610612759",
-    roster: [
-       { id: "1641705", name: "Victor Wembanyama", position: "C", number: "1", seasonStats: { ppg: 25.0, rpg: 10.5, apg: 3.5, bpg: 3.5 } },
-       { id: "1630170", name: "Devin Vassell", position: "G", number: "24", seasonStats: { ppg: 17.5, rpg: 3.5, apg: 4.0 } },
-       { id: "1642262", name: "Stephon Castle", position: "G", number: "5", seasonStats: { ppg: 10.0, rpg: 3.0, apg: 4.0 } },
-       { id: "1631106", name: "Jeremy Sochan", position: "F", number: "10", seasonStats: { ppg: 12.0, rpg: 7.0, apg: 3.5 } },
-       { id: "1629640", name: "Keldon Johnson", position: "F", number: "3", seasonStats: { ppg: 12.5, rpg: 4.0, apg: 2.5 } },
-       { id: "1630200", name: "Tre Jones", position: "G", number: "33", seasonStats: { ppg: 8.5, rpg: 2.5, apg: 5.5 } },
-       { id: "1628380", name: "Zach Collins", position: "C", number: "23", seasonStats: { ppg: 8.0, rpg: 5.5, apg: 2.0 } },
-       { id: "203084", name: "Harrison Barnes", position: "F", number: "40", seasonStats: { ppg: 8.0, rpg: 4.0, apg: 1.5 } }
-    ],
-    tendencies: ["Wemby Rim Protection", "Pace & Space", "Development Focus"],
-    playbook: [
-      { id: "p1", name: "Wemby Block Party", type: "offense", description: "Wembanyama as roll man.", diagramType: "pnr", execution: ["Guard initiates PnR", "Wemby rolls hard to rim", "Lob or pop to three"], raptorsCounter: "Don't leave Wemby alone at the rim." },
-      { id: "p2", name: "Vassell DHO", type: "offense", description: "Dribble handoff action for Vassell.", diagramType: "horns", execution: ["Wemby at elbow", "Handoff to Vassell", "Vassell attacks or pulls up"], raptorsCounter: "Switch the handoff cleanly." },
-      { id: "p3", name: "Castle Drive", type: "offense", description: "Castle attacks off the dribble.", diagramType: "iso", execution: ["Castle brings ball up", "Wemby clears to dunker spot", "Castle drives or kicks to shooters"], raptorsCounter: "Stay in front, no easy drives." }
-    ]
-  },
-  "Wizards": {
-    id: "1610612764",
-    roster: [
-       { id: "1629027", name: "Trae Young", position: "G", number: "11", seasonStats: { ppg: 26.0, rpg: 3.0, apg: 10.5 } },
-       { id: "203076", name: "Anthony Davis", position: "F-C", number: "3", seasonStats: { ppg: 24.5, rpg: 12.0, apg: 3.5, bpg: 2.0 } },
-       { id: "1629673", name: "Jordan Poole", position: "G", number: "13", seasonStats: { ppg: 17.5, rpg: 2.5, apg: 5.5 } },
-       { id: "1641706", name: "Bilal Coulibaly", position: "F", number: "0", seasonStats: { ppg: 9.0, rpg: 4.5, apg: 2.5 } },
-       { id: "202685", name: "Jonas Valanciunas", position: "C", number: "17", seasonStats: { ppg: 8.0, rpg: 7.5, apg: 1.5 } },
-       { id: "1627763", name: "Malcolm Brogdon", position: "G", number: "7", seasonStats: { ppg: 9.5, rpg: 3.0, apg: 4.0 } },
-       { id: "1642260", name: "Alex Sarr", position: "C-F", number: "20", seasonStats: { ppg: 8.0, rpg: 6.0, apg: 1.5 } },
-       { id: "1642274", name: "Bub Carrington", position: "G", number: "2", seasonStats: { ppg: 7.5, rpg: 3.0, apg: 3.5 } }
-    ],
-    tendencies: ["Trae-AD Pick & Roll", "Elite Playmaking", "Rim Protection"],
-    playbook: [
-      { id: "p1", name: "Trae-AD PnR", type: "offense", description: "Trae Young and Anthony Davis pick and roll.", diagramType: "pnr", execution: ["Trae brings ball up", "AD sets screen and rolls hard", "Trae lobs to AD or pulls up three"], raptorsCounter: "Blitz Trae, rotate to AD quickly." },
-      { id: "p2", name: "Poole Party", type: "offense", description: "Jordan Poole in isolation.", diagramType: "iso", execution: ["Poole brings ball up", "Clear out wing", "Poole attacks or pulls up three"], raptorsCounter: "Stay disciplined, no fouls on pump fakes." },
-      { id: "p3", name: "AD Post", type: "offense", description: "Anthony Davis deep post-up.", diagramType: "horns", execution: ["Entry to AD on block", "Shooters space perimeter", "AD faces up or hooks"], raptorsCounter: "Front the post, send early help." }
-    ]
-  },
-  "Clippers": {
-    id: "1610612746",
-    roster: [
-       { id: "202695", name: "Kawhi Leonard", position: "F", number: "2", seasonStats: { ppg: 23.5, rpg: 6.0, apg: 3.5 } },
-       { id: "1629636", name: "Darius Garland", position: "G", number: "10", seasonStats: { ppg: 21.0, rpg: 3.0, apg: 8.0 } },
-       { id: "1627826", name: "Ivica Zubac", position: "C", number: "40", seasonStats: { ppg: 11.5, rpg: 9.5, apg: 2.0 } },
-       { id: "1627741", name: "Norman Powell", position: "G", number: "24", seasonStats: { ppg: 16.0, rpg: 3.0, apg: 2.0 } },
-       { id: "1629611", name: "Terance Mann", position: "G-F", number: "14", seasonStats: { ppg: 8.5, rpg: 4.0, apg: 2.5 } },
-       { id: "1630538", name: "Bones Hyland", position: "G", number: "3", seasonStats: { ppg: 7.0, rpg: 2.0, apg: 2.5 } },
-       { id: "1629599", name: "Amir Coffey", position: "G-F", number: "7", seasonStats: { ppg: 5.5, rpg: 2.0, apg: 1.0 } },
-       { id: "1627739", name: "Kris Dunn", position: "G", number: "32", seasonStats: { ppg: 4.0, rpg: 2.0, apg: 3.0, spg: 1.0 } }
-    ],
-    tendencies: ["Kawhi Iso", "Garland Pick & Roll", "Switchable Defense"],
-    playbook: [
-      { id: "p1", name: "Kawhi Iso", type: "offense", description: "Leonard isolation from wing.", diagramType: "iso", execution: ["Clear side for Kawhi", "Kawhi faces up mid-post", "Attacks baseline or fades"], raptorsCounter: "Make Kawhi work for every touch." },
-      { id: "p2", name: "Garland PnR", type: "offense", description: "Garland creates from top of key.", diagramType: "pnr", execution: ["Garland PnR with Zubac", "Garland attacks switch", "Floater or lob to Zubac"], raptorsCounter: "Stay on Garland's hip, no space." }
-    ]
-  },
-  "Lakers": {
-    id: "1610612747",
-    roster: [
-       { id: "2544", name: "LeBron James", position: "F", number: "23", seasonStats: { ppg: 25.0, rpg: 7.5, apg: 8.0 } },
-       { id: "1630559", name: "Austin Reaves", position: "G", number: "15", seasonStats: { ppg: 17.5, rpg: 4.5, apg: 5.5 } },
-       { id: "1629060", name: "Rui Hachimura", position: "F", number: "28", seasonStats: { ppg: 12.0, rpg: 5.5, apg: 1.5 } },
-       { id: "1642259", name: "Dalton Knecht", position: "G", number: "4", seasonStats: { ppg: 9.5, rpg: 3.0, apg: 1.5 } },
-       { id: "1629637", name: "Jaxson Hayes", position: "C", number: "11", seasonStats: { ppg: 8.0, rpg: 5.0, apg: 0.8 } },
-       { id: "1629020", name: "Jarred Vanderbilt", position: "F", number: "2", seasonStats: { ppg: 5.5, rpg: 5.0, apg: 1.5 } },
-       { id: "1629216", name: "Gabe Vincent", position: "G", number: "7", seasonStats: { ppg: 7.5, rpg: 2.0, apg: 3.0 } },
-       { id: "1631108", name: "Max Christie", position: "G", number: "10", seasonStats: { ppg: 5.5, rpg: 2.0, apg: 1.0 } }
-    ],
-    tendencies: ["LeBron Transition", "Reaves as Lead Guard", "Youth Movement"],
-    playbook: [
-      { id: "p1", name: "LeBron Drive", type: "offense", description: "LeBron attacks from top.", diagramType: "iso", execution: ["LeBron at top of key", "Hayes clears to dunker spot", "LeBron drives or kicks to shooters"], raptorsCounter: "Wall up at the rim, rotate to shooters." },
-      { id: "p2", name: "Reaves PnR", type: "offense", description: "Reaves-Hayes pick and roll.", diagramType: "pnr", execution: ["Reaves initiates PnR", "Hayes rolls hard to rim", "Reaves reads the defense"], raptorsCounter: "Switch and recover." },
-      { id: "p3", name: "Knecht Catch & Shoot", type: "offense", description: "Knecht spotting up off movement.", diagramType: "zone", execution: ["LeBron drives to draw help", "Knecht relocates to corner", "Kick-out for open three"], raptorsCounter: "Stay attached to Knecht on closeouts." }
-    ]
-  },
-  "Warriors": {
-    id: "1610612744",
-    roster: [
-       { id: "201939", name: "Stephen Curry", position: "G", number: "30", seasonStats: { ppg: 26.5, rpg: 5.0, apg: 6.5 } },
-       { id: "203952", name: "Andrew Wiggins", position: "F", number: "22", seasonStats: { ppg: 14.5, rpg: 4.5, apg: 2.0 } },
-       { id: "203110", name: "Draymond Green", position: "F", number: "23", seasonStats: { ppg: 8.5, rpg: 6.0, apg: 5.5 } },
-       { id: "204001", name: "Kristaps Porzingis", position: "C-F", number: "6", seasonStats: { ppg: 20.0, rpg: 7.0, apg: 2.0, bpg: 1.9 } },
-       { id: "1641722", name: "Brandin Podziemski", position: "G", number: "2", seasonStats: { ppg: 9.5, rpg: 4.5, apg: 3.5 } },
-       { id: "1626172", name: "Kevon Looney", position: "C", number: "5", seasonStats: { ppg: 5.5, rpg: 7.0, apg: 2.0 } },
-       { id: "1630541", name: "Moses Moody", position: "G", number: "4", seasonStats: { ppg: 7.0, rpg: 3.0, apg: 1.0 } },
-       { id: "1627780", name: "Gary Payton II", position: "G", number: "0", seasonStats: { ppg: 5.0, rpg: 2.5, apg: 1.5, spg: 1.0 } }
-    ],
-    tendencies: ["Curry Off-Ball Movement", "Porzingis Stretch-5", "Switch Everything"],
-    playbook: [
-      { id: "p1", name: "Curry Gravity", type: "offense", description: "Off-ball screens to free Curry.", diagramType: "zone", execution: ["Curry runs off double screen", "Draymond at top reads", "Curry catches and shoots or drives"], raptorsCounter: "Chase Curry over every screen." },
-      { id: "p2", name: "KP Pop PnR", type: "offense", description: "Porzingis pick-and-pop from high.", diagramType: "pnr", execution: ["Curry calls for screen", "Porzingis sets and pops to three", "Curry drives or kicks to KP"], raptorsCounter: "Recover to KP on the pop, contest." },
-      { id: "p3", name: "Draymond Short Roll", type: "offense", description: "Draymond as facilitator from short roll.", diagramType: "pnr", execution: ["Guard brings ball up", "Draymond sets screen and short rolls", "Finds cutters or shooters"], raptorsCounter: "Stunt at Draymond, recover to shooters." }
-    ]
-  },
-  "Kings": {
-    id: "1610612758",
-    roster: [
-       { id: "1628368", name: "De'Aaron Fox", position: "G", number: "5", seasonStats: { ppg: 26.5, rpg: 4.5, apg: 6.5 } },
-       { id: "1627734", name: "Domantas Sabonis", position: "F-C", number: "10", seasonStats: { ppg: 19.5, rpg: 13.5, apg: 7.5 } },
-       { id: "201942", name: "DeMar DeRozan", position: "G-F", number: "10", seasonStats: { ppg: 18.5, rpg: 4.0, apg: 4.5 } },
-       { id: "1631099", name: "Keegan Murray", position: "F", number: "13", seasonStats: { ppg: 14.5, rpg: 4.5, apg: 2.0 } },
-       { id: "1628370", name: "Malik Monk", position: "G", number: "0", seasonStats: { ppg: 15.0, rpg: 2.5, apg: 4.5 } },
-       { id: "1629631", name: "De'Andre Hunter", position: "F", number: "12", seasonStats: { ppg: 11.0, rpg: 4.0, apg: 1.5 } },
-       { id: "1626168", name: "Trey Lyles", position: "F", number: "41", seasonStats: { ppg: 7.0, rpg: 4.5, apg: 1.0 } },
-       { id: "1631117", name: "Keon Ellis", position: "G", number: "23", seasonStats: { ppg: 5.0, rpg: 2.5, apg: 1.0, spg: 1.0 } }
-    ],
-    tendencies: ["Elite Passing Big", "Pace & Space", "Mid-Range Heavy"],
-    playbook: [
-      { id: "p1", name: "Fox Fast", type: "offense", description: "Fox in transition attack.", diagramType: "iso", execution: ["Sabonis outlets to Fox", "Fox pushes in transition", "Finishes at rim or finds trailer"], raptorsCounter: "Get back! Match Fox's speed." },
-      { id: "p2", name: "Sabonis Elbow", type: "offense", description: "Sabonis facilitates from elbow.", diagramType: "horns", execution: ["Entry to Sabonis at elbow", "Cutters off baseline", "Sabonis finds open man"], raptorsCounter: "Deny elbow entry, jump passing lanes." }
-    ]
-  },
-  "Trail Blazers": {
-    id: "1610612757",
-    roster: [
-       { id: "201950", name: "Jrue Holiday", position: "G", number: "4", seasonStats: { ppg: 12.5, rpg: 5.5, apg: 4.5 } },
-       { id: "203924", name: "Jerami Grant", position: "F", number: "9", seasonStats: { ppg: 18.5, rpg: 4.5, apg: 2.5 } },
-       { id: "1629028", name: "Deandre Ayton", position: "C", number: "2", seasonStats: { ppg: 16.0, rpg: 10.5, apg: 2.0 } },
-       { id: "1631101", name: "Shaedon Sharpe", position: "G", number: "17", seasonStats: { ppg: 14.0, rpg: 3.5, apg: 2.0 } },
-       { id: "1641710", name: "Scoot Henderson", position: "G", number: "0", seasonStats: { ppg: 10.0, rpg: 3.0, apg: 5.0 } },
-       { id: "1630166", name: "Deni Avdija", position: "F", number: "8", seasonStats: { ppg: 10.0, rpg: 5.5, apg: 3.5 } },
-       { id: "1629057", name: "Robert Williams III", position: "C", number: "44", seasonStats: { ppg: 5.5, rpg: 5.0, apg: 1.0, bpg: 1.5 } },
-       { id: "1641717", name: "Toumani Camara", position: "F", number: "33", seasonStats: { ppg: 7.0, rpg: 4.0, apg: 1.5 } }
-    ],
-    tendencies: ["Veteran Leadership", "Rim Running", "Defensive Identity"],
-    playbook: [
-      { id: "p1", name: "Holiday PnR", type: "offense", description: "Jrue Holiday pick and roll.", diagramType: "pnr", execution: ["Holiday at top of key", "Ayton sets screen", "Holiday drives or dishes"], raptorsCounter: "Go over screens, stay attached to Holiday." },
-      { id: "p2", name: "Grant Iso", type: "offense", description: "Grant isolation from mid-post.", diagramType: "iso", execution: ["Grant catches at elbow", "Faces up and attacks", "Mid-range pull-up or drive"], raptorsCounter: "Force Grant into tough mid-range." }
-    ]
-  },
-  "Knicks": {
-    id: "1610612752",
-    roster: [
-       { id: "1628973", name: "Jalen Brunson", position: "G", number: "11", seasonStats: { ppg: 28.5, rpg: 3.5, apg: 7.5 } },
-       { id: "1626157", name: "Karl-Anthony Towns", position: "C", number: "32", seasonStats: { ppg: 25.0, rpg: 11.5, apg: 3.0 } },
-       { id: "1628969", name: "Mikal Bridges", position: "F", number: "25", seasonStats: { ppg: 17.5, rpg: 4.0, apg: 3.0 } },
-       { id: "1628384", name: "OG Anunoby", position: "F", number: "8", seasonStats: { ppg: 14.5, rpg: 4.5, apg: 2.0, spg: 1.5 } },
-       { id: "1628404", name: "Josh Hart", position: "G", number: "3", seasonStats: { ppg: 10.0, rpg: 8.5, apg: 4.5 } },
-       { id: "1630540", name: "Miles McBride", position: "G", number: "2", seasonStats: { ppg: 7.5, rpg: 2.5, apg: 2.5 } },
-       { id: "1629011", name: "Mitchell Robinson", position: "C", number: "23", seasonStats: { ppg: 6.0, rpg: 8.0, apg: 0.5, bpg: 1.5 } },
-       { id: "1626166", name: "Cameron Payne", position: "G", number: "1", seasonStats: { ppg: 5.0, rpg: 1.5, apg: 3.0 } }
-    ],
-    tendencies: ["Brunson Iso", "Physicality", "Rebounding Dominance"],
-    playbook: [
-      { id: "p1", name: "Brunson Cook", type: "offense", description: "Brunson iso from mid-range.", diagramType: "iso", execution: ["Brunson brings ball up", "Screen to switch", "Brunson cooks in mid-range"], raptorsCounter: "No switches — stay attached." },
-      { id: "p2", name: "KAT Pop", type: "offense", description: "Towns as stretch-five.", diagramType: "pnr", execution: ["PnR with Towns", "Towns pops to three", "Brunson drives or kicks"], raptorsCounter: "Recover to Towns, no open 3s." },
-      { id: "p3", name: "OG Corner", type: "offense", description: "OG Anunoby corner action.", diagramType: "zone", execution: ["Drive and kick to OG", "OG spots up corner three", "Cuts if defense closes"], raptorsCounter: "Stay glued to OG in corners." }
-    ]
-  },
-  "Magic": {
-    id: "1610612753",
-    roster: [
-       { id: "1631094", name: "Paolo Banchero", position: "F", number: "5", seasonStats: { ppg: 23.0, rpg: 7.0, apg: 5.5 } },
-       { id: "1630532", name: "Franz Wagner", position: "F", number: "22", seasonStats: { ppg: 21.0, rpg: 5.5, apg: 5.5 } },
-       { id: "1630591", name: "Jalen Suggs", position: "G", number: "4", seasonStats: { ppg: 12.5, rpg: 3.5, apg: 4.0, spg: 1.5 } },
-       { id: "1628976", name: "Wendell Carter Jr.", position: "C", number: "34", seasonStats: { ppg: 10.0, rpg: 7.5, apg: 2.5 } },
-       { id: "1641709", name: "Anthony Black", position: "G", number: "7", seasonStats: { ppg: 5.5, rpg: 3.0, apg: 3.0 } },
-       { id: "1628371", name: "Jonathan Isaac", position: "F", number: "1", seasonStats: { ppg: 6.0, rpg: 4.5, apg: 1.0, bpg: 1.5 } },
-       { id: "1629021", name: "Moritz Wagner", position: "C", number: "21", seasonStats: { ppg: 8.0, rpg: 4.0, apg: 1.5 } },
-       { id: "1641711", name: "Jett Howard", position: "G", number: "13", seasonStats: { ppg: 4.5, rpg: 2.0, apg: 1.0 } }
-    ],
-    tendencies: ["Length & Defense", "Paolo & Franz Two-Man Game", "Transition Play"],
-    playbook: [
-      { id: "p1", name: "Paolo Power", type: "offense", description: "Banchero attacks from top.", diagramType: "iso", execution: ["Paolo catches at top", "Drives left or right", "Kick to shooters if wall forms"], raptorsCounter: "Force Paolo into tough finish." },
-      { id: "p2", name: "Franz PnR", type: "offense", description: "Wagner pick and roll.", diagramType: "pnr", execution: ["Franz calls for screen", "WCJ sets and rolls", "Franz drives or pulls up"], raptorsCounter: "Drop coverage, protect the rim." }
-    ]
-  },
-  "Jazz": {
-    id: "1610612762",
-    roster: [
-       { id: "1628374", name: "Lauri Markkanen", position: "F", number: "23", seasonStats: { ppg: 23.0, rpg: 8.0, apg: 2.0 } },
-       { id: "1628991", name: "Jaren Jackson Jr.", position: "F-C", number: "13", seasonStats: { ppg: 22.0, rpg: 6.5, apg: 2.0, bpg: 2.5 } },
-       { id: "203903", name: "Jordan Clarkson", position: "G", number: "00", seasonStats: { ppg: 16.0, rpg: 3.0, apg: 4.0 } },
-       { id: "1628381", name: "John Collins", position: "F", number: "20", seasonStats: { ppg: 13.0, rpg: 6.5, apg: 1.5 } },
-       { id: "1631107", name: "Walker Kessler", position: "C", number: "24", seasonStats: { ppg: 8.5, rpg: 7.5, apg: 0.5, bpg: 2.0 } },
-       { id: "1641718", name: "Keyonte George", position: "G", number: "3", seasonStats: { ppg: 12.5, rpg: 2.5, apg: 4.5 } },
-       { id: "1631100", name: "Ochai Agbaji", position: "G", number: "30", seasonStats: { ppg: 6.5, rpg: 2.5, apg: 1.0 } },
-       { id: "1629655", name: "Daniel Gafford", position: "C", number: "21", seasonStats: { ppg: 5.5, rpg: 4.5, apg: 0.5, bpg: 1.5 } }
-    ],
-    tendencies: ["Markkanen Scoring", "Frontcourt Power", "Rim Protection"],
-    playbook: [
-      { id: "p1", name: "Lauri Iso", type: "offense", description: "Markkanen isolation at elbow.", diagramType: "iso", execution: ["Entry to Lauri at elbow", "Face-up jumper or drive", "Kick to Clarkson on wing"], raptorsCounter: "Crowd the elbow, force tough shots." },
-      { id: "p2", name: "JJJ PnR", type: "offense", description: "Jaren Jackson Jr. pick and roll.", diagramType: "pnr", execution: ["George initiates PnR", "JJJ sets and rolls or pops", "JJJ finishes at rim or hits mid-range"], raptorsCounter: "Recover to JJJ, contest the pop." }
-    ]
-  }
 };
 
-const GENERIC_ROSTER = [
-    { id: "player1", name: "Star Point Guard", position: "G", number: "1" },
-    { id: "player2", name: "Shooting Guard", position: "G", number: "2" },
-    { id: "player3", name: "Small Forward", position: "F", number: "3" },
-    { id: "player4", name: "Power Forward", position: "F", number: "4" },
-    { id: "player5", name: "Center", position: "C", number: "5" },
-    { id: "player6", name: "Sixth Man", position: "G", number: "6" },
-    { id: "player7", name: "Wing Defender", position: "F", number: "7" },
-    { id: "player8", name: "Backup Big", position: "C", number: "8" },
+// Schedule
+const SCHEDULE = [
+  { id: "g52", date: "Feb 4", opponent: "Timberwolves", opponentId: "1610612750", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "completed", result: "L 126-128", channel: "TSN" },
+  { id: "g53", date: "Feb 5", opponent: "Bulls", opponentId: "1610612741", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "upcoming", channel: "Sportsnet ONE" },
+  { id: "g54", date: "Feb 8", opponent: "Pacers", opponentId: "1610612754", isHome: true, time: "3:00 PM", venue: "Scotiabank Arena", status: "upcoming", channel: "Sportsnet" },
+  { id: "g55", date: "Feb 11", opponent: "Pistons", opponentId: "1610612765", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "upcoming", channel: "TSN" },
+  { id: "g56", date: "Feb 19", opponent: "Bulls", opponentId: "1610612741", isHome: false, time: "8:00 PM", venue: "United Center", status: "upcoming", channel: "Sportsnet" },
+  { id: "g57", date: "Feb 22", opponent: "Bucks", opponentId: "1610612749", isHome: false, time: "3:30 PM", venue: "Fiserv Forum", status: "upcoming", channel: "ABC/TSN" },
 ];
 
 // ============================================================
-// LIVE ROSTER AUTO-UPDATE SYSTEM
+// REACT COMPONENTS
 // ============================================================
-const ROSTER_CACHE_KEY = 'raptors_intel_rosters_v2';
-const CACHE_TTL = 6 * 60 * 60 * 1000; // 6 hours
+const { useState, useEffect, useRef, useMemo } = React;
+const { Brain, Trophy, Activity, Shield, Zap, RotateCcw, ChevronRight, ChevronDown, ChevronUp, LayoutTemplate, MessageSquare, AlertTriangle, TrendingUp, TrendingDown, Radio, Users, Heart, Share, MessageCircle, RefreshCcw, BarChart3, ArrowUpDown, Swords, Info, Calendar, LayoutDashboard, X, Target, Award, Clock, Tv, DollarSign, Flame, Timer, MapPin, Play, Pause } = LucideReact;
+const { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, LineChart, Line, AreaChart, Area, PieChart, Pie, Cell } = Recharts;
 
-const parseNbaRoster = (data) => {
-  try {
-    const rs = data.resultSets && data.resultSets[0];
-    if (!rs) return null;
-    const h = rs.headers;
-    const rows = rs.rowSet;
-    const idx = (name) => h.indexOf(name);
-    return rows.map(row => ({
-      id: String(row[idx('PLAYER_ID')]),
-      name: row[idx('PLAYER')],
-      position: row[idx('POSITION')] || 'F',
-      number: String(row[idx('NUM')] || '0'),
-    })).filter(p => p.name && p.id);
-  } catch (e) { return null; }
-};
-
-const fetchLiveRosterForTeam = async (teamId) => {
-  const nbaUrl = `https://stats.nba.com/stats/commonteamroster?LeagueID=00&Season=2025-26&TeamID=${teamId}`;
-  const proxies = [
-    (url) => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
-    (url) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
-  ];
-  // Try direct first
-  try {
-    const resp = await fetch(nbaUrl, { headers: { 'Accept': 'application/json' }, signal: AbortSignal.timeout(4000) });
-    if (resp.ok) { const d = await resp.json(); const r = parseNbaRoster(d); if (r && r.length > 0) return r; }
-  } catch (e) {}
-  // Try proxies
-  for (const proxy of proxies) {
-    try {
-      const resp = await fetch(proxy(nbaUrl), { signal: AbortSignal.timeout(6000) });
-      if (!resp.ok) continue;
-      const wrapper = await resp.json();
-      const contents = typeof wrapper.contents === 'string' ? JSON.parse(wrapper.contents) : wrapper;
-      const r = parseNbaRoster(contents);
-      if (r && r.length > 0) return r;
-    } catch (e) { continue; }
-  }
-  return null;
-};
-
-const getLiveRoster = async (teamId, teamName) => {
-  try {
-    const cache = JSON.parse(localStorage.getItem(ROSTER_CACHE_KEY) || '{}');
-    const cached = cache[teamId];
-    if (cached && Date.now() - cached.ts < CACHE_TTL) {
-      return { roster: cached.roster, source: 'cache', updated: new Date(cached.ts).toLocaleString() };
-    }
-  } catch (e) {}
-  const roster = await fetchLiveRosterForTeam(teamId);
-  if (roster && roster.length > 0) {
-    try {
-      const cache = JSON.parse(localStorage.getItem(ROSTER_CACHE_KEY) || '{}');
-      cache[teamId] = { roster, ts: Date.now() };
-      localStorage.setItem(ROSTER_CACHE_KEY, JSON.stringify(cache));
-    } catch (e) {}
-    return { roster, source: 'live', updated: new Date().toLocaleString() };
-  }
-  return null;
-};
-
-// Opponent-specific trade deadline news for social feed
-const DEADLINE_NEWS = {
-  "Bulls": [
-    { headline: "Bulls acquire Anfernee Simons, Jaden Ivey, Collin Sexton in deadline overhaul", source: "Shams Charania (ESPN)", sentiment: "neutral", time: "6h" },
-    { headline: "Nikola Vucevic traded to Celtics — Chicago pivots to guard-heavy roster", source: "Chris Haynes (TNT)", sentiment: "neutral", time: "8h" },
-  ],
-  "Pacers": [
-    { headline: "Tyrese Haliburton out for season with torn Achilles — Nembhard takes over as starter", source: "Shams Charania (ESPN)", sentiment: "negative", time: "2w" },
-    { headline: "Myles Turner signs with Bucks in free agency — Pacers reshape frontcourt", source: "Chris Haynes (TNT)", sentiment: "negative", time: "4mo" },
-  ],
-  "Pistons": [
-    { headline: "Pistons trade Jaden Ivey to Bulls, acquire Kevin Huerter for backcourt shooting", source: "Shams Charania (ESPN)", sentiment: "neutral", time: "6h" },
-  ],
-  "Bucks": [
-    { headline: "Damian Lillard waived after torn Achilles — Bucks completely retool roster", source: "Shams Charania (ESPN)", sentiment: "negative", time: "3mo" },
-    { headline: "Milwaukee adds Kyle Kuzma, Myles Turner, Cole Anthony in aggressive rebuild", source: "Chris Haynes (TNT)", sentiment: "positive", time: "6h" },
-  ],
-  "Thunder": [
-    { headline: "Thunder acquire Jared McCain from 76ers to bolster backcourt depth", source: "Shams Charania (ESPN)", sentiment: "positive", time: "6h" },
-    { headline: "SGA questionable with abdominal strain — JWill ready to carry the load", source: "Chris Haynes (TNT)", sentiment: "negative", time: "1d" },
-  ],
-  "Spurs": [
-    { headline: "Stephon Castle emerging as Wembanyama's backcourt partner in San Antonio", source: "Doug Smith (Toronto Star)", sentiment: "neutral", time: "1d" },
-  ],
-  "Wizards": [
-    { headline: "Wizards land Trae Young and Anthony Davis — Washington suddenly a contender", source: "Shams Charania (ESPN)", sentiment: "positive", time: "4w" },
-    { headline: "AD and Trae Young PnR already looking lethal in Washington's new offense", source: "Chris Haynes (TNT)", sentiment: "positive", time: "2d" },
-  ],
-  "Clippers": [
-    { headline: "James Harden traded to Cavaliers — Clippers get Darius Garland in return", source: "Shams Charania (ESPN)", sentiment: "neutral", time: "6h" },
-    { headline: "Kawhi-Garland duo debuts as Clippers enter new era", source: "Chris Haynes (TNT)", sentiment: "positive", time: "1d" },
-  ],
-  "Lakers": [
-    { headline: "Lakers trade Anthony Davis in blockbuster 8-player deal involving Mavericks and Wizards", source: "Shams Charania (ESPN)", sentiment: "negative", time: "6h" },
-    { headline: "LeBron James now leads a young Lakers core with Reaves and Knecht", source: "Chris Haynes (TNT)", sentiment: "neutral", time: "3h" },
-  ],
-  "Warriors": [
-    { headline: "Warriors trade Kuminga to Hawks, land Kristaps Porzingis to pair with Curry", source: "Shams Charania (ESPN)", sentiment: "positive", time: "6h" },
-    { headline: "Curry-Porzingis pick-and-pop could be the league's deadliest combo", source: "Chris Haynes (TNT)", sentiment: "positive", time: "2h" },
-  ],
-  "Kings": [
-    { headline: "Kings acquire De'Andre Hunter from Hawks to replace Kevin Huerter on the wing", source: "Shams Charania (ESPN)", sentiment: "neutral", time: "6h" },
-  ],
-  "Trail Blazers": [
-    { headline: "Blazers land Jrue Holiday from Celtics — veteran leadership for young core", source: "Shams Charania (ESPN)", sentiment: "positive", time: "6h" },
-    { headline: "Anfernee Simons headed to Bulls as part of 3-team deal", source: "Chris Haynes (TNT)", sentiment: "neutral", time: "8h" },
-  ],
-  "Celtics": [
-    { headline: "Celtics trade Porzingis and Holiday, acquire Nikola Vucevic as new center", source: "Shams Charania (ESPN)", sentiment: "neutral", time: "6h" },
-    { headline: "Boston pivots after losing two starters — Vucevic brings veteran scoring", source: "Chris Haynes (TNT)", sentiment: "neutral", time: "4h" },
-  ],
-  "Jazz": [
-    { headline: "Jazz acquire Jaren Jackson Jr. from Grizzlies — frontcourt power with Markkanen", source: "Shams Charania (ESPN)", sentiment: "positive", time: "6h" },
-    { headline: "Collin Sexton traded in 3-team deal — Jazz pivot to JJJ era", source: "Chris Haynes (TNT)", sentiment: "neutral", time: "8h" },
-  ],
-  "Magic": [
-    { headline: "Cole Anthony and Gary Harris traded to Bucks — Magic go all in on youth", source: "Shams Charania (ESPN)", sentiment: "neutral", time: "6h" },
-  ],
-  "Knicks": [
-    { headline: "Knicks stand pat at deadline — Brunson-Towns-OG core stays intact", source: "Chris Haynes (TNT)", sentiment: "positive", time: "6h" },
-  ],
-  "Timberwolves": [
-    { headline: "Wolves trade Mike Conley — Rob Dillingham takes over as starting PG", source: "Shams Charania (ESPN)", sentiment: "neutral", time: "6h" },
-  ],
-};
-
-const generateStats = (seed, multiplier = 1) => {
-    return {
-        ppg: fmt((10 + Math.random() * 15) * multiplier),
-        rpg: fmt((2 + Math.random() * 8) * multiplier),
-        apg: fmt((1 + Math.random() * 7) * multiplier),
-        spg: fmt(Math.random() * 2),
-        bpg: fmt(Math.random() * 1.5),
-        oreb: 1.2, dreb: 4.5,
-        fgPct: fmt(45 + Math.random() * 10),
-        threePtPct: fmt(32 + Math.random() * 10),
-        ftPct: fmt(70 + Math.random() * 20),
-        plusMinus: fmt((Math.random() * 10) - 5),
-        turnovers: fmt(2.1)
-    };
-};
-
-const enrichRoster = (simpleRoster) => {
-    return simpleRoster.map(p => {
-        const baseStats = p.seasonStats ? {
-            ...generateStats(1),
-            ...p.seasonStats,
-            ppg: fmt(p.seasonStats.ppg || 10),
-            rpg: fmt(p.seasonStats.rpg || 3),
-            apg: fmt(p.seasonStats.apg || 2)
-        } : generateStats(1);
-        return {
-            ...p,
-            seasonStats: baseStats,
-            vsOpponentStats: generateStats(1.1),
-            advanced: {
-                per: fmt(15 + Math.random() * 10),
-                ts: fmt(55 + Math.random() * 10),
-                usg: fmt(20 + Math.random() * 10),
-                ortg: fmt(110 + Math.random() * 10),
-                drtg: fmt(110 + Math.random() * 10),
-            },
-            analysis: "Key rotation player. Watch for aggressive drives."
-        };
-    });
-};
-
-const fetchRaptorsSchedule = async () => {
-  const games = [
-    { id: "g43", date: "Jan 16", opponent: "Clippers", opponentId: "1610612746", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "completed", result: "L 117-121 OT" },
-    { id: "g44", date: "Jan 18", opponent: "Lakers", opponentId: "1610612747", isHome: false, time: "10:30 PM", venue: "Crypto.com Arena", status: "completed", result: "L 93-110" },
-    { id: "g45", date: "Jan 20", opponent: "Warriors", opponentId: "1610612744", isHome: false, time: "10:00 PM", venue: "Chase Center", status: "completed", result: "W 145-127" },
-    { id: "g46", date: "Jan 21", opponent: "Kings", opponentId: "1610612758", isHome: false, time: "10:00 PM", venue: "Golden 1 Center", status: "completed", result: "W 122-109" },
-    { id: "g47", date: "Jan 23", opponent: "Trail Blazers", opponentId: "1610612757", isHome: false, time: "10:00 PM", venue: "Moda Center", status: "completed", result: "W 110-98" },
-    { id: "g48", date: "Jan 25", opponent: "Thunder", opponentId: "1610612760", isHome: false, time: "8:00 PM", venue: "Paycom Center", status: "completed", result: "W 103-101" },
-    { id: "g49", date: "Jan 28", opponent: "Knicks", opponentId: "1610612752", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "completed", result: "L 92-119" },
-    { id: "g50", date: "Jan 30", opponent: "Magic", opponentId: "1610612753", isHome: false, time: "7:00 PM", venue: "Kia Center", status: "completed", result: "L 120-130" },
-    { id: "g51", date: "Feb 1", opponent: "Jazz", opponentId: "1610612762", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "completed", result: "W 107-100" },
-    { id: "g52", date: "Feb 4", opponent: "Timberwolves", opponentId: "1610612750", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "completed", result: "L 126-128" },
-    { id: "g53", date: "Feb 5", opponent: "Bulls", opponentId: "1610612741", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "upcoming" },
-    { id: "g54", date: "Feb 8", opponent: "Pacers", opponentId: "1610612754", isHome: true, time: "3:00 PM", venue: "Scotiabank Arena", status: "upcoming" },
-    { id: "g55", date: "Feb 11", opponent: "Pistons", opponentId: "1610612765", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "upcoming" },
-    { id: "g56", date: "Feb 19", opponent: "Bulls", opponentId: "1610612741", isHome: false, time: "8:00 PM", venue: "United Center", status: "upcoming" },
-    { id: "g57", date: "Feb 22", opponent: "Bucks", opponentId: "1610612749", isHome: false, time: "3:30 PM", venue: "Fiserv Forum", status: "upcoming" },
-    { id: "g58", date: "Feb 24", opponent: "Thunder", opponentId: "1610612760", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "upcoming" },
-    { id: "g59", date: "Feb 25", opponent: "Spurs", opponentId: "1610612759", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "upcoming" },
-    { id: "g60", date: "Feb 28", opponent: "Wizards", opponentId: "1610612764", isHome: false, time: "7:00 PM", venue: "Capital One Arena", status: "upcoming" },
-  ];
-  return { games, sources: [] };
-};
-
-const analyzeGameMatchup = async (opponent) => {
-  await new Promise(resolve => setTimeout(resolve, 600));
-  let opponentData = OPPONENT_DATA[opponent];
-  if (!opponentData) {
-      const key = Object.keys(OPPONENT_DATA).find(k => k.includes(opponent) || opponent.includes(k));
-      if (key) { opponentData = OPPONENT_DATA[key]; }
-      else {
-          opponentData = { id: "0", roster: GENERIC_ROSTER, tendencies: ["Balanced Attack", "Man-to-Man", "Pace and Space"],
-              playbook: [
-                   { id: "gen1", name: "High PnR", type: "offense", description: "Standard pick and roll action.", diagramType: "pnr", execution: ["Guard calls for screen", "Big sets solid pick", "Read the defense"], raptorsCounter: "Standard drop coverage." },
-                   { id: "gen2", name: "Horns", type: "offense", description: "Two bigs at the elbows.", diagramType: "horns", execution: ["Entry pass to elbow", "Corner cut", "High low action"], raptorsCounter: "Crowd the elbows." },
-                   { id: "gen3", name: "Iso", type: "offense", description: "Clear out for best player.", diagramType: "iso", execution: ["1-4 flat", "Isolation at top", "Drive and kick"], raptorsCounter: "Help early." },
-                   { id: "gen4", name: "Spain PnR", type: "offense", description: "Stack pick and roll.", diagramType: "pnr", execution: ["High ball screen", "Back screen for roller", "Pop"], raptorsCounter: "Switch everything." },
-              ]
-          };
-      }
-  }
-
-  // Try live roster update from NBA API
-  let rosterSource = 'static';
-  let rosterUpdated = 'Built-in (Feb 5, 2026)';
-  if (opponentData.id && opponentData.id !== "0") {
-    try {
-      const liveResult = await getLiveRoster(opponentData.id, opponent);
-      if (liveResult && liveResult.roster && liveResult.roster.length > 0) {
-        opponentData = { ...opponentData, roster: liveResult.roster.slice(0, 15) };
-        rosterSource = liveResult.source;
-        rosterUpdated = liveResult.updated;
-        console.log(`[Raptors Intel] ${opponent} roster: ${rosterSource} (${liveResult.roster.length} players, updated ${rosterUpdated})`);
-      }
-    } catch (e) {
-      console.log(`[Raptors Intel] Live roster fetch failed for ${opponent}, using static data`);
-    }
-  }
-
-  const opponentRoster = enrichRoster(opponentData.roster);
-  const raptorsRoster = RAPTORS_ROSTER;
-  const starPlayer = opponentRoster[0].name;
-
-  // Build opponent-specific social chatter
-  const deadlineNews = DEADLINE_NEWS[opponent] || [];
-  const raptorsNews = [
-    { headline: "Raptors acquire Chris Paul in blockbuster 3-team deadline deal", source: "Shams Charania (ESPN)", sentiment: "positive", time: "6h" },
-    { headline: "Trayce Jackson-Davis headed to Toronto for 2nd-round pick", source: "Chris Haynes (TNT)", sentiment: "neutral", time: "7h" },
-    { headline: `Raptors post-deadline roster update: CP3 and TJD cleared vs ${opponent}`, source: "Doug Smith (Toronto Star)", sentiment: "positive", time: "2h" },
-  ];
-  const contextNews = [
-    { headline: `${opponent} heading to Scotiabank Arena — Raptors preparing post-deadline gameplan`, source: "Blake Murphy (Sportsnet)", sentiment: "positive", time: "1h" },
-  ];
-  // Merge: opponent deadline news + raptors news + context, max 5
-  const allChatter = [...deadlineNews, ...raptorsNews, ...contextNews].slice(0, 5);
-
-  const analysis = {
-    summary: `The Raptors face the ${opponent} in a key post-trade-deadline matchup. Toronto must focus on containing ${starPlayer}. The ${opponent} have been relying on their ${opponentData.tendencies[0].toLowerCase()}, requiring disciplined defensive rotation.`,
-    winProbability: Math.floor(40 + Math.random() * 20),
-    raptorsRoster, opponentRoster,
-    rosterMeta: { source: rosterSource, updated: rosterUpdated },
-    lineupPresets: [
-        { name: "Starters", description: "Main rotation", playerIds: opponentRoster.slice(0,5).map(p => p.id), netRating: 4.5, ortg: 115.2, drtg: 110.7 },
-        { name: "Second Unit", description: "Bench mob", playerIds: opponentRoster.slice(5,10).map(p => p.id), netRating: -1.2, ortg: 105.0, drtg: 106.2 },
-        { name: "Speed Unit", description: "Small ball lineup", playerIds: [opponentRoster[0].id, opponentRoster[4].id, opponentRoster[6]?.id, opponentRoster[7]?.id, opponentRoster[8]?.id].filter(Boolean), netRating: 2.1, ortg: 118.0, drtg: 115.9 }
-    ],
-    playbook: opponentData.playbook || [],
-    scoutingReport: {
-        offensiveTendencies: opponentData.tendencies,
-        defensiveSchemes: ["Drop Coverage", "Switch 1-4", "Zone on BLOBs"],
-        xFactor: opponentRoster[2].name,
-        keysToVictory: [`Limit ${opponentRoster[0].name} in transition`, "Win the rebounding battle", "Generate 15+ deflections", `Force ${opponentRoster[1].name} to drive left`]
-    },
-    intel: {
-        injuries: [
-            { player: "Jakob Poeltl", status: "Out", details: "Lower back soreness — re-evaluated in 2 weeks", team: "raptors" },
-            { player: "RJ Barrett", status: "Questionable", details: "Left ankle sprain — game-time decision", team: "raptors" },
-            { player: "Scottie Barnes", status: "Available", details: "Healthy — full practice participant", team: "raptors" },
-            { player: "Chris Paul", status: "Available", details: "Cleared to play — joined team post-deadline", team: "raptors" },
-            { player: "Trayce Jackson-Davis", status: "Available", details: "Cleared to play — acquired from Warriors", team: "raptors" },
-            ...(opponentData.injuries || [])
-        ],
-        socialChatter: allChatter
-    }
-  };
-  return { analysis, sources: [] };
-};
-
-// ============================================================
-// LUCIDE ICONS - extract from global
-// ============================================================
-const {
-  Brain, Trophy, Activity, Shield, Zap, RotateCcw, ChevronRight, LayoutTemplate,
-  MessageSquare, AlertTriangle, TrendingUp, Radio, Users, Heart, Share,
-  MessageCircle, MoveVertical, RefreshCcw, BarChart3, ArrowUpDown, Swords, Info,
-  Calendar, LayoutDashboard, X, Target, Award
-} = LucideReact;
-
-// ============================================================
-// RECHARTS - extract from global
-// ============================================================
-const {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
-  RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar
-} = Recharts;
-
-const { useState, useEffect, useRef, useCallback } = React;
-
-// ============================================================
-// MICRO-COMPONENTS
-// ============================================================
-const AnimatedCounter = ({ value, decimals = 1, duration = 1200, prefix = '', suffix = '' }) => {
+// Animated Counter
+const AnimatedCounter = ({ value, decimals = 1, prefix = '', suffix = '' }) => {
   const [display, setDisplay] = useState(0);
-  const ref = useRef(null);
   useEffect(() => {
     const target = Number(value) || 0;
     let start = null;
     const step = (ts) => {
       if (!start) start = ts;
-      const progress = Math.min((ts - start) / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setDisplay(eased * target);
-      if (progress < 1) ref.current = requestAnimationFrame(step);
+      const progress = Math.min((ts - start) / 1200, 1);
+      setDisplay((1 - Math.pow(1 - progress, 3)) * target);
+      if (progress < 1) requestAnimationFrame(step);
     };
-    ref.current = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(ref.current);
-  }, [value, duration]);
-  return React.createElement('span', null, prefix + display.toFixed(decimals) + suffix);
+    requestAnimationFrame(step);
+  }, [value]);
+  return <span>{prefix}{display.toFixed(decimals)}{suffix}</span>;
 };
 
+// Win Probability Ring
 const WinProbRing = ({ value, size = 100 }) => {
-  const r = 40;
-  const circ = 2 * Math.PI * r;
+  const r = 40, circ = 2 * Math.PI * r;
   const offset = circ - (circ * (value || 0)) / 100;
   return (
     <div className="relative win-ring-glow" style={{ width: size, height: size }}>
       <svg viewBox="0 0 100 100" className="w-full h-full -rotate-90">
         <circle cx="50" cy="50" r={r} fill="none" stroke="rgba(206,17,65,0.15)" strokeWidth="6" />
-        <circle cx="50" cy="50" r={r} fill="none" stroke="url(#ringGrad)" strokeWidth="6" strokeLinecap="round" strokeDasharray={circ} strokeDashoffset={offset} className="animate-ring-fill" style={{ animation: 'ring-fill 1.5s ease-out both' }} />
-        <defs>
-          <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#CE1141" />
-            <stop offset="100%" stopColor="#3E2680" />
-          </linearGradient>
-        </defs>
+        <circle cx="50" cy="50" r={r} fill="none" stroke="url(#ringGrad)" strokeWidth="6" strokeLinecap="round" strokeDasharray={circ} strokeDashoffset={offset} className="animate-ring-fill" />
+        <defs><linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stopColor="#CE1141" /><stop offset="100%" stopColor="#3E2680" /></linearGradient></defs>
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <div className="text-2xl font-black text-white neon-text"><AnimatedCounter value={value} decimals={0} suffix="%" /></div>
@@ -1080,678 +307,586 @@ const WinProbRing = ({ value, size = 100 }) => {
   );
 };
 
-const GlowDivider = () => (
-  <div className="h-px w-full bg-gradient-to-r from-transparent via-raptors-red/40 to-transparent my-2"></div>
-);
-
-// ============================================================
-// COURT DIAGRAM
-// ============================================================
-const getDiagram = (type) => {
-    switch(type) {
-        case 'pnr':
-            return (
-                <g>
-                   <circle cx="50" cy="50" r="1.5" fill="#CE1141" style={{animation: 'drive 3s infinite'}} />
-                   <path d="M50 50 Q 60 40 70 30" fill="none" stroke="#CE1141" strokeWidth="0.5" markerEnd="url(#arrowhead)" strokeDasharray="2,1" opacity="0.5" />
-                   <circle cx="55" cy="45" r="1.5" fill="#94a3b8" style={{animation: 'screen-anim 3s infinite 1s'}} />
-                   <line x1="55" y1="45" x2="60" y2="40" stroke="#94a3b8" strokeWidth="1" strokeLinecap="round" opacity="0.5" />
-                   <text x="45" y="55" fontSize="2" fill="#94a3b8">PG</text>
-                   <text x="52" y="44" fontSize="2" fill="#94a3b8">C</text>
-                </g>
-            );
-        case 'horns':
-             return (
-                <g>
-                    <circle cx="70" cy="20" r="1.5" fill="#94a3b8" />
-                    <circle cx="70" cy="40" r="1.5" fill="#94a3b8" />
-                    <circle cx="60" cy="30" r="1.5" fill="#CE1141" />
-                    <path d="M60 30 L 70 20" fill="none" stroke="#CE1141" strokeWidth="0.5" strokeDasharray="1,1" style={{animation: 'pass 2s infinite'}} />
-                    <path d="M60 30 L 70 40" fill="none" stroke="#CE1141" strokeWidth="0.5" strokeDasharray="1,1" style={{animation: 'pass 2s infinite 1s'}} />
-                </g>
-             );
-        case 'zone':
-             return (
-                <g>
-                    <circle cx="75" cy="20" r="1.5" fill="#6366f1" opacity="0.7" style={{animation: 'pulse-svg 2s infinite'}} />
-                    <circle cx="75" cy="40" r="1.5" fill="#6366f1" opacity="0.7" style={{animation: 'pulse-svg 2s infinite 0.5s'}} />
-                    <circle cx="85" cy="15" r="1.5" fill="#6366f1" opacity="0.7" style={{animation: 'pulse-svg 2s infinite 1s'}} />
-                    <circle cx="85" cy="30" r="1.5" fill="#6366f1" opacity="0.7" style={{animation: 'pulse-svg 2s infinite 1.5s'}} />
-                    <circle cx="85" cy="45" r="1.5" fill="#6366f1" opacity="0.7" style={{animation: 'pulse-svg 2s infinite 2s'}} />
-                </g>
-             );
-        default:
-            return (
-                <g>
-                    <path d="M60 10 Q 75 30 85 30" fill="none" stroke="#CE1141" strokeWidth="0.8" markerEnd="url(#arrowhead)" strokeDasharray="2,1" style={{animation: 'pass 3s infinite'}} />
-                    <circle cx="60" cy="10" r="1.5" fill="#CE1141" style={{animation: 'pulse-svg 1s infinite'}} />
-                    <text x="55" y="10" fontSize="3" fill="#94a3b8">ISO</text>
-                </g>
-            );
-    }
+// Live Scores Ticker
+const LiveScoresTicker = () => {
+  const tickerContent = useMemo(() => (
+    LIVE_SCORES.map((game, i) => (
+      <div key={i} className="flex items-center gap-3 px-4 py-1 border-r border-cmd-border/50 shrink-0">
+        <div className="flex items-center gap-1.5">
+          <img src={`https://cdn.nba.com/logos/nba/${game.awayId}/primary/L/logo.svg`} className="w-4 h-4" alt="" />
+          <span className="text-xs font-semibold text-slate-300">{game.away}</span>
+          <span className="text-xs font-mono font-bold text-white">{game.awayScore || '-'}</span>
+        </div>
+        <div className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${game.quarter ? 'bg-green-500/20 text-green-400 animate-pulse-live' : game.status === 'Final' ? 'bg-slate-500/20 text-slate-400' : 'bg-blue-500/20 text-blue-400'}`}>
+          {game.quarter ? `${game.quarter} ${game.time}` : game.status}
+        </div>
+        <div className="flex items-center gap-1.5">
+          <span className="text-xs font-mono font-bold text-white">{game.homeScore || '-'}</span>
+          <span className="text-xs font-semibold text-slate-300">{game.home}</span>
+          <img src={`https://cdn.nba.com/logos/nba/${game.homeId}/primary/L/logo.svg`} className="w-4 h-4" alt="" />
+        </div>
+      </div>
+    ))
+  ), []);
+  
+  return (
+    <div className="bg-cmd-surface/80 border-b border-cmd-border overflow-hidden ticker-wrapper">
+      <div className="flex items-center">
+        <div className="bg-raptors-red px-3 py-1.5 text-xs font-bold text-white uppercase tracking-wide shrink-0 z-10">
+          <span className="animate-pulse-live">●</span> NBA Scores
+        </div>
+        <div className="flex animate-ticker">{tickerContent}{tickerContent}</div>
+      </div>
+    </div>
+  );
 };
 
-const PlayOverlay = ({ play }) => (
-    <g key={play.id}>
-        <defs>
-            <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-              <polygon points="0 0, 10 3.5, 0 7" fill="#CE1141" />
-            </marker>
-        </defs>
-        {getDiagram(play.diagramType)}
-    </g>
-);
-
-const CourtDiagram = ({ play }) => (
-    <div className="relative w-full pt-[60%] bg-[#0f1520] rounded-xl overflow-hidden border border-cmd-border shadow-lg">
-      <div className="absolute inset-0">
-          <svg viewBox="0 0 100 60" className="w-full h-full" preserveAspectRatio="none">
-             <rect x="0" y="0" width="100" height="60" fill="#0f1520" />
-             <rect x="0" y="22" width="12" height="16" fill="#CE1141" fillOpacity="0.08" />
-             <rect x="88" y="22" width="12" height="16" fill="#3E2680" fillOpacity="0.08" />
-             <circle cx="50" cy="30" r="8" fill="none" stroke="rgba(206,17,65,0.25)" strokeWidth="0.5" />
-             <path d="M50 0 V60" stroke="rgba(206,17,65,0.15)" strokeWidth="0.2" />
-             <rect x="0" y="22" width="12" height="16" fill="none" stroke="rgba(206,17,65,0.4)" strokeWidth="0.5" />
-             <circle cx="12" cy="30" r="4" fill="none" stroke="rgba(206,17,65,0.4)" strokeWidth="0.5" />
-             <path d="M0 10 A 15 15 0 0 1 15 50" fill="none" stroke="rgba(206,17,65,0.2)" strokeWidth="0.5" strokeDasharray="1,1" />
-             <rect x="88" y="22" width="12" height="16" fill="none" stroke="rgba(62,38,128,0.4)" strokeWidth="0.5" />
-             <circle cx="88" cy="30" r="4" fill="none" stroke="rgba(62,38,128,0.4)" strokeWidth="0.5" />
-             {play && <PlayOverlay play={play} />}
-          </svg>
-      </div>
-      <div className="absolute top-2 left-2 bg-cmd-surface/90 backdrop-blur text-slate-300 border border-cmd-border px-3 py-1 rounded text-[10px] font-mono font-bold uppercase z-10">
-         {play ? play.name : 'Tactical Board'}
-      </div>
+// Countdown Timer
+const CountdownTimer = ({ targetDate }) => {
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, mins: 0, secs: 0 });
+  
+  useEffect(() => {
+    const target = new Date(targetDate);
+    const update = () => {
+      const now = new Date();
+      const diff = target - now;
+      if (diff > 0) {
+        setTimeLeft({
+          days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
+          mins: Math.floor((diff / (1000 * 60)) % 60),
+          secs: Math.floor((diff / 1000) % 60),
+        });
+      }
+    };
+    update();
+    const interval = setInterval(update, 1000);
+    return () => clearInterval(interval);
+  }, [targetDate]);
+  
+  return (
+    <div className="flex items-center gap-2">
+      {[
+        { val: timeLeft.days, label: 'D' },
+        { val: timeLeft.hours, label: 'H' },
+        { val: timeLeft.mins, label: 'M' },
+        { val: timeLeft.secs, label: 'S' },
+      ].map((item, i) => (
+        <div key={i} className="text-center">
+          <div className="bg-cmd-bg border border-cmd-border rounded-lg px-2 py-1 min-w-[36px]">
+            <span className="text-lg font-mono font-bold text-white">{String(item.val).padStart(2, '0')}</span>
+          </div>
+          <span className="text-[9px] text-slate-500 font-bold">{item.label}</span>
+        </div>
+      ))}
     </div>
-);
+  );
+};
 
-// ============================================================
-// PLAYER DEEP DIVE
-// ============================================================
-const StatBox = ({ label, value, sub, color }) => (
-    <div className="bg-cmd-bg/50 p-3 rounded-lg border border-cmd-border hover:border-raptors-red/30 hover:shadow-lg hover:shadow-raptors-red/5 transition-all">
-        <div className="text-[10px] text-slate-500 uppercase font-bold">{label}</div>
-        <div className={`text-xl font-mono font-bold ${color || 'text-white'}`}>{value !== undefined ? <AnimatedCounter value={Number(String(value).replace('%','')) || 0} decimals={1} suffix={String(value).includes('%') ? '%' : ''} /> : '-'}</div>
-        {sub && <div className="text-[10px] text-slate-500 mt-1">{sub}</div>}
+// Standings Widget
+const StandingsWidget = ({ standings, expanded, onToggle }) => {
+  const displayStandings = expanded ? standings : standings.slice(0, 10);
+  return (
+    <div className="glass-card overflow-hidden">
+      <div className="px-4 py-3 border-b border-cmd-border bg-gradient-to-r from-raptors-red/10 to-transparent flex items-center justify-between">
+        <h3 className="text-sm font-bold text-white flex items-center gap-2"><Trophy className="w-4 h-4 text-raptors-gold" /> Eastern Conference</h3>
+        <button onClick={onToggle} className="text-[10px] text-slate-400 hover:text-white transition flex items-center gap-1">
+          {expanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+          {expanded ? 'Less' : 'More'}
+        </button>
+      </div>
+      <div className="divide-y divide-cmd-border/50">
+        <div className="grid grid-cols-12 gap-1 px-3 py-1.5 text-[9px] font-bold text-slate-500 uppercase bg-cmd-bg/50">
+          <div className="col-span-1">#</div>
+          <div className="col-span-5">Team</div>
+          <div className="col-span-2 text-center">W-L</div>
+          <div className="col-span-2 text-center">GB</div>
+          <div className="col-span-2 text-center">L10</div>
+        </div>
+        {displayStandings.map((team) => (
+          <div key={team.abbr} className={`grid grid-cols-12 gap-1 px-3 py-2 items-center transition-colors ${team.highlight ? 'bg-raptors-red/10 border-l-2 border-l-raptors-red' : 'hover:bg-cmd-card/50'}`}>
+            <div className="col-span-1 text-xs font-mono text-slate-400">{team.rank}</div>
+            <div className="col-span-5 flex items-center gap-2">
+              <img src={`https://cdn.nba.com/logos/nba/${team.id}/primary/L/logo.svg`} className="w-5 h-5" alt="" />
+              <span className={`text-xs font-semibold truncate ${team.highlight ? 'text-raptors-red' : 'text-slate-200'}`}>{team.team}</span>
+            </div>
+            <div className="col-span-2 text-center text-xs font-mono text-slate-300">{team.wins}-{team.losses}</div>
+            <div className="col-span-2 text-center text-xs font-mono text-slate-400">{team.gb}</div>
+            <div className="col-span-2 text-center text-xs font-mono text-slate-400">{team.l10}</div>
+          </div>
+        ))}
+      </div>
+      {!expanded && (
+        <div className="px-3 py-2 bg-cmd-bg/30 border-t border-cmd-border/50">
+          <div className="text-[10px] text-slate-500 text-center">Play-In: 7-10 • Playoffs: 1-6</div>
+        </div>
+      )}
     </div>
+  );
+};
+
+// Recent Form Display
+const RecentForm = ({ form, teamName }) => (
+  <div className="flex items-center gap-1">
+    <span className="text-[10px] text-slate-500 mr-1">L10:</span>
+    {form.slice(-10).map((result, i) => (
+      <div key={i} className={`w-4 h-4 rounded text-[9px] font-bold flex items-center justify-center ${result === 'W' ? 'bg-green-500/20 text-green-400 border border-green-500/30' : 'bg-red-500/20 text-red-400 border border-red-500/30'}`}>
+        {result}
+      </div>
+    ))}
+  </div>
 );
 
-const PlayerDeepDive = ({ player, opponentName, onClose }) => {
-  const s = player.seasonStats || {};
-  const v = player.vsOpponentStats || {};
-  const a = player.advanced || {};
-  const radarData = [
-    { subject: 'PTS', A: s.ppg || 0, fullMark: 30 },
-    { subject: 'REB', A: s.rpg || 0, fullMark: 15 },
-    { subject: 'AST', A: s.apg || 0, fullMark: 12 },
-    { subject: 'PER', A: a.per || 0, fullMark: 30 },
-    { subject: 'USG', A: a.usg || 0, fullMark: 40 },
-    { subject: 'TS%', A: (a.ts || 0), fullMark: 100 },
+// Team Stats Comparison
+const TeamStatsComparison = ({ raptors, opponent, opponentName }) => {
+  const stats = [
+    { label: 'PPG', rap: raptors.ppg, opp: opponent.ppg, higher: true },
+    { label: 'Opp PPG', rap: raptors.oppPpg, opp: opponent.oppPpg, higher: false },
+    { label: 'Pace', rap: raptors.pace, opp: opponent.pace, higher: null },
+    { label: 'FG%', rap: raptors.fgPct, opp: opponent.fgPct, higher: true },
+    { label: '3P%', rap: raptors.threePct, opp: opponent.threePct, higher: true },
+    { label: 'Off Rtg', rap: raptors.offRtg, opp: opponent.offRtg, higher: true },
+    { label: 'Def Rtg', rap: raptors.defRtg, opp: opponent.defRtg, higher: false },
+    { label: 'Net Rtg', rap: raptors.netRtg, opp: opponent.netRtg, higher: true },
   ];
+  
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
-      <div className="bg-cmd-surface w-full max-w-5xl rounded-3xl overflow-hidden border border-raptors-red/20 shadow-2xl shadow-raptors-red/10 flex flex-col max-h-[90vh]">
-        <div className="relative h-48 bg-cmd-bg overflow-hidden flex-shrink-0">
-             <div className="absolute inset-0 bg-gradient-to-r from-cmd-bg via-cmd-surface to-raptors-red/20"></div>
-             <img src={`https://cdn.nba.com/headshots/nba/latest/1040x760/${player.id}.png`} className="absolute bottom-0 right-10 h-[120%] object-contain" style={{filter: 'drop-shadow(0 0 20px rgba(206,17,65,0.4))'}} alt={player.name} />
-             <div className="absolute top-0 left-0 p-8">
-                 <button onClick={onClose} className="mb-4 text-slate-500 hover:text-raptors-red flex items-center gap-2 transition-colors"><X className="w-5 h-5" /> Close Scouting Report</button>
-                 <h2 className="text-5xl font-black text-white uppercase italic tracking-tighter neon-text">{player.name}</h2>
-                 <div className="flex gap-4 mt-2 text-xl font-mono text-slate-400"><span>#{player.number}</span><span>|</span><span>{player.position}</span></div>
-             </div>
-        </div>
-        <div className="p-8 overflow-y-auto custom-scrollbar">
-           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-               <div className="space-y-6">
-                   <h3 className="flex items-center gap-2 text-raptors-red font-bold uppercase tracking-widest border-b border-cmd-border pb-2"><Activity className="w-4 h-4" /> Season Averages</h3>
-                   <div className="grid grid-cols-2 gap-4">
-                       <StatBox label="PPG" value={s.ppg} />
-                       <StatBox label="RPG" value={s.rpg} sub={`${s.oreb || 0} Off / ${s.dreb || 0} Def`} />
-                       <StatBox label="APG" value={s.apg} />
-                       <StatBox label="+/-" value={s.plusMinus} color={s.plusMinus > 0 ? 'text-green-400' : 'text-red-400'} />
-                       <StatBox label="FG%" value={`${s.fgPct}%`} />
-                       <StatBox label="3P%" value={`${s.threePtPct}%`} />
-                   </div>
-                   <div className="bg-cmd-bg/50 p-4 rounded-xl border border-cmd-border">
-                       <div className="text-xs text-slate-500 uppercase mb-2 font-bold">Efficiency Metrics</div>
-                       <div className="flex justify-between items-center text-sm mb-1"><span className="text-slate-400">PER</span><span className="font-bold text-white">{a.per}</span></div>
-                       <div className="w-full bg-cmd-border h-1.5 rounded-full overflow-hidden"><div className="bg-raptors-red h-full rounded-full shadow-lg shadow-raptors-red/30" style={{width: `${(a.per/35)*100}%`, animation: 'bar-grow 1s ease-out both', transformOrigin: 'left'}}></div></div>
-                       <div className="flex justify-between items-center text-sm mt-3 mb-1"><span className="text-slate-400">True Shooting</span><span className="font-bold text-white">{a.ts}%</span></div>
-                       <div className="w-full bg-cmd-border h-1.5 rounded-full overflow-hidden"><div className="bg-blue-500 h-full rounded-full shadow-lg shadow-blue-500/30" style={{width: `${a.ts}%`, animation: 'bar-grow 1s ease-out 0.2s both', transformOrigin: 'left'}}></div></div>
-                   </div>
-               </div>
-               <div className="space-y-6">
-                   <h3 className="flex items-center gap-2 text-blue-400 font-bold uppercase tracking-widest border-b border-cmd-border pb-2"><Target className="w-4 h-4" /> VS {opponentName}</h3>
-                   <div className="bg-blue-500/5 border border-blue-500/20 p-6 rounded-2xl">
-                       <div className="text-center mb-6"><div className="text-4xl font-black text-white mb-1 neon-text-subtle">{v.ppg || '-'}</div><div className="text-xs text-blue-400 uppercase font-bold">Points vs {opponentName}</div></div>
-                       <div className="space-y-4">
-                           <div className="flex justify-between items-center p-3 bg-cmd-bg/50 rounded-lg border border-cmd-border"><span className="text-slate-400 text-sm font-medium">Rebounds</span><span className="font-mono font-bold text-white">{v.rpg || '-'}</span></div>
-                           <div className="flex justify-between items-center p-3 bg-cmd-bg/50 rounded-lg border border-cmd-border"><span className="text-slate-400 text-sm font-medium">Assists</span><span className="font-mono font-bold text-white">{v.apg || '-'}</span></div>
-                           <div className="flex justify-between items-center p-3 bg-cmd-bg/50 rounded-lg border border-cmd-border"><span className="text-slate-400 text-sm font-medium">Turnovers</span><span className="font-mono font-bold text-white">{v.turnovers || '-'}</span></div>
-                       </div>
-                   </div>
-                   <div className="bg-cmd-bg/50 p-4 rounded-xl border border-cmd-border"><p className="text-sm text-slate-400 italic leading-relaxed">"{player.analysis || `Key player for the rotation against ${opponentName}.`}"</p></div>
-               </div>
-               <div className="space-y-6">
-                   <h3 className="flex items-center gap-2 text-white font-bold uppercase tracking-widest border-b border-cmd-border pb-2"><TrendingUp className="w-4 h-4" /> Impact Profile</h3>
-                   <div className="h-64 w-full">
-                       <ResponsiveContainer width="100%" height="100%">
-                           <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData}>
-                               <PolarGrid stroke="#1e293b" />
-                               <PolarAngleAxis dataKey="subject" tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 'bold' }} />
-                               <PolarRadiusAxis angle={30} domain={[0, 'auto']} tick={false} axisLine={false} />
-                               <Radar name={player.name} dataKey="A" stroke="#3E2680" fill="#CE1141" fillOpacity={0.5} />
-                               <Tooltip contentStyle={{ backgroundColor: '#111827', borderColor: '#1e293b', borderRadius: '8px', boxShadow: '0 4px 20px rgba(206,17,65,0.2)', color: '#e2e8f0' }} itemStyle={{ color: '#e2e8f0', fontWeight: 'bold' }} />
-                           </RadarChart>
-                       </ResponsiveContainer>
-                   </div>
-               </div>
-           </div>
-        </div>
+    <div className="glass-card overflow-hidden">
+      <div className="px-4 py-3 border-b border-cmd-border bg-gradient-to-r from-raptors-red/10 via-transparent to-blue-500/10">
+        <h3 className="text-sm font-bold text-white flex items-center gap-2"><BarChart3 className="w-4 h-4 text-slate-400" /> Team Stats Comparison</h3>
       </div>
-    </div>
-  );
-};
-
-// ============================================================
-// SCHEDULE LIST
-// ============================================================
-const ScheduleList = ({ games, onSelectGame, selectedGameId }) => {
-  const formatDate = (dateStr) => {
-    try { const d = new Date(dateStr); if (!isNaN(d.getTime())) return { month: d.toLocaleString('en-US', { month: 'short' }).toUpperCase(), day: d.getDate().toString() }; } catch(e) {}
-    const parts = dateStr.trim().split(' ');
-    if (parts.length >= 2) return { month: parts[0].slice(0, 3).toUpperCase(), day: parts[1].replace(/[^0-9]/g, '') || '?' };
-    return { month: 'GAME', day: '' };
-  };
-  return (
-    <div className="glass-card overflow-hidden h-full flex flex-col">
-      <div className="p-3 border-b border-cmd-border bg-gradient-to-r from-raptors-red/10 to-transparent sticky top-0 z-10">
-        <h2 className="text-sm font-bold text-slate-200 flex items-center gap-2 uppercase tracking-tight"><Calendar className="text-raptors-red w-4 h-4" /> 25-26 Schedule</h2>
-      </div>
-      <div className="overflow-y-auto flex-1 divide-y divide-cmd-border">
-        {games.length === 0 ? (<div className="p-4 text-center text-slate-500 text-xs animate-pulse">Loading...</div>) : (
-          games.map((game) => {
-            const { month, day } = formatDate(game.date);
-            const isSelected = selectedGameId === game.id;
+      <div className="p-4">
+        <div className="grid grid-cols-3 gap-2 mb-3 text-center">
+          <div className="flex items-center gap-2">
+            <img src="https://cdn.nba.com/logos/nba/1610612761/primary/L/logo.svg" className="w-6 h-6" alt="" />
+            <span className="text-xs font-bold text-raptors-red">TOR</span>
+          </div>
+          <div className="text-[10px] font-bold text-slate-500 uppercase">Stat</div>
+          <div className="flex items-center gap-2 justify-end">
+            <span className="text-xs font-bold text-blue-400">{opponentName?.slice(0,3).toUpperCase()}</span>
+          </div>
+        </div>
+        <div className="space-y-2">
+          {stats.map((stat, i) => {
+            const rapWins = stat.higher === null ? false : stat.higher ? stat.rap > stat.opp : stat.rap < stat.opp;
+            const oppWins = stat.higher === null ? false : stat.higher ? stat.opp > stat.rap : stat.opp < stat.rap;
             return (
-            <div key={game.id} onClick={() => onSelectGame(game)} className={`px-3 py-2 cursor-pointer transition-all hover:bg-cmd-card/50 group relative ${isSelected ? 'bg-raptors-red/5' : ''}`}>
-              {isSelected && <div className="absolute left-0 top-0 bottom-0 w-1 bg-raptors-red shadow-lg shadow-raptors-red/50"></div>}
-              <div className="flex items-center gap-2">
-                 <div className="flex-shrink-0 w-8 text-center"><div className="text-[9px] uppercase font-bold text-slate-500 leading-none">{month}</div><div className="text-sm font-black text-slate-200 leading-none mt-0.5">{day}</div></div>
-                 <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-1.5 mb-0.5">
-                        <span className={`text-[10px] font-bold uppercase ${game.isHome ? 'text-slate-500' : 'text-slate-400'}`}>{game.isHome ? 'VS' : '@'}</span>
-                        <div className="flex items-center gap-1.5 min-w-0">
-                             {game.opponentId ? (<img src={`https://cdn.nba.com/logos/nba/${game.opponentId}/primary/L/logo.svg`} className="w-4 h-4 object-contain" alt={game.opponent} />) : (<div className="w-4 h-4 rounded-full bg-cmd-border"></div>)}
-                             <span className="font-bold text-slate-200 text-xs truncate leading-none">{game.opponent}</span>
-                        </div>
-                    </div>
-                 </div>
-                 <div className="text-right">
-                    {game.status === 'completed' && game.result ? (<div className={`text-[10px] font-bold ${game.result.startsWith('W') ? 'text-green-400' : 'text-red-400'}`} style={game.result.startsWith('W') ? {textShadow: '0 0 6px rgba(74,222,128,0.3)'} : {textShadow: '0 0 6px rgba(248,113,113,0.3)'}}>{game.result}</div>
-                    ) : game.status === 'live' ? (<div className="text-[9px] bg-raptors-red text-white px-1.5 py-0.5 rounded shadow-lg shadow-raptors-red/40" style={{animation: 'glow-pulse 2s ease-in-out infinite'}}>LIVE</div>
-                    ) : (<div className="text-[9px] text-raptors-red/80 bg-raptors-red/10 border border-raptors-red/20 px-1.5 py-0.5 rounded">UP</div>)}
-                 </div>
+              <div key={i} className="grid grid-cols-3 gap-2 items-center">
+                <div className={`text-sm font-mono font-bold text-right ${rapWins ? 'text-green-400' : 'text-slate-300'}`}>{stat.rap.toFixed(1)}</div>
+                <div className="text-[10px] font-medium text-slate-500 text-center">{stat.label}</div>
+                <div className={`text-sm font-mono font-bold text-left ${oppWins ? 'text-green-400' : 'text-slate-300'}`}>{stat.opp.toFixed(1)}</div>
               </div>
-            </div>
             );
-          })
-        )}
+          })}
+        </div>
       </div>
     </div>
   );
 };
 
-// ============================================================
-// SUB-COMPONENTS FOR MATCHUP ANALYZER
-// ============================================================
-const PlayerCard = ({ player, onClick, onDeepDive, isOpponent, isSelected }) => {
-    const [imgError, setImgError] = useState(false);
-    return (
-        <div className={`card-3d group relative rounded-xl overflow-hidden transition-all duration-300 cursor-pointer ${isSelected ? 'ring-2 ring-raptors-red scale-105 z-20 shadow-xl shadow-raptors-red/20' : 'hover-lift'} bg-cmd-card border border-cmd-border h-40 flex flex-col justify-end`} onClick={onClick}>
-            <div className="absolute inset-0 bg-gradient-to-t from-cmd-bg via-transparent to-transparent opacity-95"></div>
-            {!imgError ? (<img src={`https://cdn.nba.com/headshots/nba/latest/1040x760/${player.id}.png`} onError={() => setImgError(true)} className={`absolute top-0 left-1/2 -translate-x-1/2 w-[140%] max-w-none object-cover object-top h-full ${isOpponent ? 'grayscale-[0.3]' : ''}`} alt={player.name} />
-            ) : (<div className={`absolute inset-0 flex flex-col items-center justify-center opacity-20 ${isOpponent ? 'text-blue-500' : 'text-raptors-red'}`}><div className="text-4xl font-black">{player.number}</div></div>)}
-            <button onClick={(e) => { e.stopPropagation(); onDeepDive(); }} className="absolute top-1 right-1 z-30 p-1.5 rounded-full bg-cmd-surface/50 hover:bg-raptors-red text-white opacity-0 group-hover:opacity-100 transition-all backdrop-blur-sm" title="View Analytics"><ChevronRight className="w-3 h-3" /></button>
-            <div className="relative z-20 p-2 pointer-events-none">
-                <div className={`text-[9px] font-black uppercase tracking-wider mb-0.5 ${isOpponent ? 'text-blue-400' : 'text-raptors-red'}`}>{player.position} • #{player.number}</div>
-                <div className="text-white font-bold leading-tight text-xs mb-1 truncate">{player.name.split(' ').slice(1).join(' ')}</div>
-                <div className="flex justify-between items-end border-t border-white/10 pt-1">
-                    <div className="text-[9px] text-slate-400">PER {Number(player.advanced?.per || 0).toFixed(1)}</div>
-                    <div className="text-[9px] font-mono font-bold text-white neon-text-subtle">{Number(player.seasonStats?.ppg || 0).toFixed(1)} PPG</div>
-                </div>
-            </div>
-            {isSelected && (<div className="absolute inset-0 bg-raptors-red/20 z-10 flex items-center justify-center backdrop-blur-[2px]"><div className="bg-cmd-surface text-raptors-red px-2 py-1 rounded text-[10px] font-bold shadow-lg shadow-raptors-red/30 uppercase border border-raptors-red/30">Select Swap</div></div>)}
-        </div>
-    );
-};
-
-const BenchCard = ({ player, onClick, isOpponent, isHighlighted }) => {
-    const [imgError, setImgError] = useState(false);
-    return (
-        <div onClick={onClick} className={`flex-shrink-0 w-16 h-20 rounded-lg overflow-hidden relative cursor-pointer group transition-all bg-cmd-card border ${isHighlighted ? 'ring-2 ring-raptors-red/50 border-raptors-red/30 shadow-lg shadow-raptors-red/10' : 'border-cmd-border hover:ring-2 hover:ring-raptors-red/30 hover:border-raptors-red/20'}`} style={isHighlighted ? {animation: 'border-glow 2s ease-in-out infinite'} : {}}>
-             {!imgError ? (<img src={`https://cdn.nba.com/headshots/nba/latest/1040x760/${player.id}.png`} onError={() => setImgError(true)} className={`w-full h-full object-cover object-top ${isOpponent ? 'grayscale-[0.3]' : ''}`} alt={player.name} />) : (<div className="w-full h-full flex items-center justify-center text-xs font-bold text-slate-500">{player.number}</div>)}
-            <div className="absolute bottom-0 inset-x-0 bg-cmd-bg/90 backdrop-blur-sm p-0.5 text-center">
-                <div className="text-[8px] text-white font-bold truncate">{player.name.split(' ').pop()}</div>
-                <div className="text-[7px] text-slate-400 font-mono">{Number(player.seasonStats?.ppg || 0).toFixed(1)}</div>
-            </div>
-        </div>
-    );
-};
-
-const ComparisonRow = ({ label, raptorsVal, opponentVal, higherIsBetter }) => {
-    const raptorsWins = higherIsBetter ? raptorsVal > opponentVal : raptorsVal < opponentVal;
-    const opponentWins = higherIsBetter ? opponentVal > raptorsVal : opponentVal < raptorsVal;
-    const tied = Math.abs(raptorsVal - opponentVal) < 0.05;
-    const pct = Math.min(100, Math.max(5, (raptorsVal / (raptorsVal + opponentVal || 1)) * 100));
-    return (
-        <div className="flex items-center gap-3">
-            <div className={`flex-1 text-right font-mono text-sm font-bold transition-colors ${tied ? 'text-slate-400' : raptorsWins ? 'text-green-400' : 'text-slate-500'}`} style={raptorsWins && !tied ? {textShadow: '0 0 8px rgba(74,222,128,0.3)'} : {}}>{raptorsVal.toFixed(1)}</div>
-            <div className="flex-shrink-0 w-24">
-                <div className="relative h-2 bg-cmd-border rounded-full overflow-hidden"><div className="absolute left-0 top-0 h-full bg-gradient-to-r from-raptors-red to-raptors-purple rounded-full" style={{ width: `${pct}%`, animation: 'bar-grow 1s ease-out both', transformOrigin: 'left' }} /></div>
-                <div className="text-[9px] text-slate-500 text-center mt-1 font-medium">{label}</div>
-            </div>
-            <div className={`flex-1 text-left font-mono text-sm font-bold transition-colors ${tied ? 'text-slate-400' : opponentWins ? 'text-green-400' : 'text-slate-500'}`} style={opponentWins && !tied ? {textShadow: '0 0 8px rgba(74,222,128,0.3)'} : {}}>{opponentVal.toFixed(1)}</div>
-        </div>
-    );
-};
-
-// ============================================================
-// MATCHUP ANALYZER (MAIN COMPONENT)
-// ============================================================
-const MatchupAnalyzer = ({ game }) => {
-  const [analysis, setAnalysis] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [activeRaptorsLineup, setActiveRaptorsLineup] = useState([]);
-  const [activeOpponentLineup, setActiveOpponentLineup] = useState([]);
-  const [raptorsBench, setRaptorsBench] = useState([]);
-  const [opponentBench, setOpponentBench] = useState([]);
-  const [selectedSlot, setSelectedSlot] = useState(null);
-  const [selectedPlay, setSelectedPlay] = useState(null);
-  const [selectedPlayerForDeepDive, setSelectedPlayerForDeepDive] = useState(null);
-
-  useEffect(() => {
-    let mounted = true;
-    const fetchAnalysis = async () => {
-      setLoading(true); setAnalysis(null);
-      const result = await analyzeGameMatchup(game.opponent);
-      if (mounted && result.analysis) {
-        setAnalysis(result.analysis);
-        const raptors = result.analysis.raptorsRoster || [];
-        const opponents = result.analysis.opponentRoster || [];
-        const rapStarters = raptors.slice(0, 5);
-        const oppStarters = opponents.slice(0, 5);
-        setActiveRaptorsLineup(rapStarters);
-        setActiveOpponentLineup(oppStarters);
-        setRaptorsBench(raptors.filter(p => !rapStarters.find(s => s.id === p.id)));
-        setOpponentBench(opponents.filter(p => !oppStarters.find(s => s.id === p.id)));
-        if (result.analysis.playbook?.length > 0) setSelectedPlay(result.analysis.playbook[0]);
-        setLoading(false);
-      }
-    };
-    fetchAnalysis();
-    return () => { mounted = false; };
-  }, [game]);
-
-  const handleBenchClick = (player, team) => {
-      if (selectedSlot && selectedSlot.team === team) {
-          if (team === 'raptors') {
-              const currentActive = activeRaptorsLineup[selectedSlot.index];
-              const newActive = [...activeRaptorsLineup];
-              newActive[selectedSlot.index] = player;
-              setActiveRaptorsLineup(newActive);
-              setRaptorsBench(prev => [...prev.filter(p => p.id !== player.id), currentActive]);
-          } else {
-              const currentActive = activeOpponentLineup[selectedSlot.index];
-              const newActive = [...activeOpponentLineup];
-              newActive[selectedSlot.index] = player;
-              setActiveOpponentLineup(newActive);
-              setOpponentBench(prev => [...prev.filter(p => p.id !== player.id), currentActive]);
-          }
-          setSelectedSlot(null);
-      }
-  };
-
-  const applyRaptorsPreset = (presetName) => {
-      if (!analysis) return;
-      const allRaptors = analysis.raptorsRoster || [];
-      let newActive = [];
-      if (presetName === 'starters') { newActive = allRaptors.slice(0, 5); }
-      else if (presetName === 'second') { newActive = allRaptors.slice(5, 10); if (newActive.length < 5) { newActive = [...newActive, ...allRaptors.filter(p => !newActive.includes(p)).slice(0, 5 - newActive.length)]; } }
-      else if (presetName === 'speed') { newActive = [...allRaptors].filter(p => p.position.includes('G') || p.position.includes('SF')).slice(0, 5); if (newActive.length < 5) { newActive = [...newActive, ...allRaptors.filter(p => !newActive.includes(p)).slice(0, 5 - newActive.length)]; } }
-      else if (presetName === 'big') { newActive = [...allRaptors].filter(p => p.position.includes('C') || p.position.includes('PF') || p.position.includes('F')).slice(0, 5); if (newActive.length < 5) { newActive = [...newActive, ...allRaptors.filter(p => !newActive.includes(p)).slice(0, 5 - newActive.length)]; } }
-      if (newActive.length < 5) newActive = allRaptors.slice(0, 5);
-      setActiveRaptorsLineup(newActive.slice(0, 5));
-      setRaptorsBench(allRaptors.filter(p => !newActive.find(a => a.id === p.id)));
-      setSelectedSlot(null);
-  };
-
-  const applyPreset = (presetName) => {
-      if (!analysis || !analysis.lineupPresets) return;
-      const allOpponents = analysis.opponentRoster || [];
-      let newActive = [];
-      const preset = analysis.lineupPresets.find(p => p.name.toLowerCase().includes(presetName.toLowerCase()));
-      if (preset && preset.playerIds && preset.playerIds.length > 0) newActive = allOpponents.filter(p => preset.playerIds.includes(p.id));
-      if (newActive.length < 5) {
-          if (presetName === 'bench' || presetName === 'second') newActive = allOpponents.slice(5, 10);
-          else if (presetName === 'speed') newActive = [...allOpponents].filter(p => p.position.includes('G') || p.position.includes('F')).slice(0,5);
-          else newActive = allOpponents.slice(0, 5);
-      }
-      if (newActive.length < 5) { newActive = [...newActive, ...allOpponents.filter(p => !newActive.includes(p)).slice(0, 5 - newActive.length)]; }
-      setActiveOpponentLineup(newActive.slice(0, 5));
-      setOpponentBench(allOpponents.filter(p => !newActive.find(a => a.id === p.id)));
-  };
-
-  const calculateAggregates = (players) => {
-    if (!players.length) return { ortg: 0, drtg: 0, per: 0, net: 0 };
-    const avg = (key, subKey) => players.reduce((sum, p) => sum + (p[key]?.[subKey] || 0), 0) / players.length;
-    const ortg = avg('advanced', 'ortg');
-    const drtg = avg('advanced', 'drtg');
-    return { ortg, drtg, per: avg('advanced', 'per'), net: ortg - drtg };
-  };
-
-  const raptorsAgg = calculateAggregates(activeRaptorsLineup);
-  const opponentAgg = calculateAggregates(activeOpponentLineup);
-
-  if (loading) return (
-    <div className="h-full flex flex-col items-center justify-center space-y-6 p-12">
-       <div className="relative w-24 h-24">
-         <div className="absolute inset-0 rounded-full border-4 border-raptors-red/20"></div>
-         <div className="absolute inset-0 rounded-full border-4 border-raptors-red border-t-transparent animate-spin"></div>
-         <div className="absolute inset-2 rounded-full" style={{background: 'radial-gradient(circle, rgba(206,17,65,0.15) 0%, transparent 70%)'}}></div>
-       </div>
-       <div className="text-center">
-         <h2 className="text-xl font-bold text-white uppercase tracking-wider neon-text">Scouting {game.opponent}...</h2>
-         <p className="text-slate-500 mt-2">Gathering injury reports, film study, and social sentiment.</p>
-         <div className="mt-4 w-48 h-1 mx-auto rounded-full overflow-hidden bg-cmd-border"><div className="h-full shimmer-bg bg-raptors-red/20 w-full"></div></div>
-       </div>
-    </div>
-  );
-
-  if (!analysis) return <div className="p-8 text-center text-slate-500">Select a game to begin scouting.</div>;
-
+// Betting Lines Card
+const BettingLinesCard = ({ lines, raptorsName = "TOR", opponentName }) => {
+  if (!lines) return null;
   return (
-    <div className="space-y-6 pb-20 animate-fade-in relative">
-      {/* 1. MATCHUP HEADER */}
-      <div className="glass-card gradient-border p-8 relative overflow-hidden animate-slide-up">
-         <div className="absolute inset-0 bg-grid opacity-30"></div>
-         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full" style={{background: 'radial-gradient(circle, rgba(206,17,65,0.08) 0%, transparent 70%)'}}></div>
-         <div className="absolute top-0 right-0 p-4 opacity-[0.04] animate-float"><img src={`https://cdn.nba.com/logos/nba/${game.opponentId}/primary/L/logo.svg`} className="w-64 h-64" alt="logo" /></div>
-         <div className="relative z-10 flex flex-col md:flex-row gap-8">
-             <div className="flex-1">
-                <div className="flex items-center gap-3 mb-2 flex-wrap"><span className="bg-raptors-red/20 text-raptors-red border border-raptors-red/30 px-2 py-0.5 rounded text-xs font-bold uppercase">Game Prep</span><span className="text-slate-500 text-sm font-mono">{game.date} &bull; {game.venue}</span>{analysis.rosterMeta && <span className={`text-[10px] px-2 py-0.5 rounded font-mono font-bold ${analysis.rosterMeta.source === 'live' ? 'bg-green-500/10 text-green-400 border border-green-500/20' : analysis.rosterMeta.source === 'cache' ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' : 'bg-slate-500/10 text-slate-400 border border-slate-500/20'}`}>ROSTER: {analysis.rosterMeta.source === 'live' ? 'LIVE' : analysis.rosterMeta.source === 'cache' ? 'CACHED' : 'STATIC'} ({analysis.rosterMeta.updated})</span>}</div>
-                <h1 className="text-4xl md:text-6xl font-black text-white italic uppercase tracking-tighter mb-4 neon-text" style={{animation: 'text-reveal 0.8s ease-out both'}}>Raptors vs {game.opponent}</h1>
-                <p className="text-lg text-slate-400 max-w-2xl leading-relaxed border-l-4 border-raptors-red/50 pl-4">{analysis.summary}</p>
-             </div>
-             <div className="flex gap-4 items-end">
-                <WinProbRing value={analysis.winProbability} size={100} />
-                <div className="h-12 w-px bg-cmd-border"></div>
-                <div className="text-center"><div className="text-4xl font-black text-white neon-text-subtle"><AnimatedCounter value={raptorsAgg.per} /></div><div className="text-xs text-slate-500 uppercase font-bold">TOR PER</div></div>
-                <div className="h-12 w-px bg-cmd-border"></div>
-                <div className="text-center"><div className="text-4xl font-black text-white"><AnimatedCounter value={opponentAgg.per} /></div><div className="text-xs text-slate-500 uppercase font-bold">OPP PER</div></div>
-             </div>
-         </div>
+    <div className="glass-card overflow-hidden">
+      <div className="px-4 py-3 border-b border-cmd-border bg-gradient-to-r from-yellow-500/10 to-transparent">
+        <h3 className="text-sm font-bold text-white flex items-center gap-2"><DollarSign className="w-4 h-4 text-yellow-500" /> Betting Lines</h3>
       </div>
-
-      {/* 2. STRATEGIC GAME PLAN */}
-      <div className="glass-card p-6 animate-slide-up" style={{animationDelay: '0.15s'}}>
-          <div className="flex items-center gap-3 mb-6 pb-4 border-b border-cmd-border"><Brain className="w-6 h-6 text-raptors-red" /><h2 className="text-2xl font-bold text-white">Strategic Game Plan</h2></div>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              <div className="space-y-6">
-                 <div><div className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Offensive Profile</div><div className="flex flex-wrap gap-2">{analysis.scoutingReport.offensiveTendencies.map((t, i) => (<span key={i} className="bg-raptors-red/10 text-raptors-red/90 text-sm px-3 py-1.5 rounded-full font-medium border border-raptors-red/20 hover:bg-raptors-red/20 hover:shadow-lg hover:shadow-raptors-red/10 transition-all cursor-default">{t}</span>))}</div></div>
-                 <div><div className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3">Defensive Schemes</div><div className="flex flex-wrap gap-2">{analysis.scoutingReport.defensiveSchemes.map((t, i) => (<span key={i} className="bg-blue-500/10 text-blue-400 text-sm px-3 py-1.5 rounded-full font-medium border border-blue-500/20 hover:bg-blue-500/20 transition-all cursor-default">{t}</span>))}</div></div>
-              </div>
-              <div className="bg-cmd-bg/50 rounded-xl p-5 border border-cmd-border">
-                  <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2"><Zap className="w-4 h-4 text-yellow-500 fill-yellow-500" /> Keys to Victory</h3>
-                  <ul className="space-y-4">{analysis.scoutingReport.keysToVictory.map((key, i) => (<li key={i} className="flex gap-3 text-sm text-slate-300" style={{animation: `slide-up 0.4s ease-out ${0.1 * i}s both`}}><span className="flex-shrink-0 w-6 h-6 rounded-full bg-raptors-red/20 text-raptors-red border border-raptors-red/30 flex items-center justify-center font-bold text-xs shadow-lg shadow-raptors-red/10">{i+1}</span><span className="pt-0.5 font-medium leading-snug">{key}</span></li>))}</ul>
-              </div>
-              <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-cmd-surface to-cmd-bg p-6 text-white flex flex-col justify-center animate-glow-pulse border border-raptors-red/10">
-                  <div className="absolute top-0 right-0 p-4 opacity-10 animate-float"><Activity className="w-32 h-32" /></div>
-                  <div className="relative z-10"><div className="text-xs font-bold text-raptors-red uppercase tracking-widest mb-2">X-Factor Matchup</div><div className="text-3xl font-black italic mb-2 neon-text">{analysis.scoutingReport.xFactor}</div><p className="text-slate-400 text-sm leading-relaxed">"Controlling this player's impact is crucial for the defensive rotation scheme."</p></div>
-              </div>
+      <div className="p-4 grid grid-cols-3 gap-4">
+        <div className="text-center">
+          <div className="text-[10px] text-slate-500 uppercase font-bold mb-1">Spread</div>
+          <div className="text-lg font-mono font-bold text-white">{lines.spread}</div>
+        </div>
+        <div className="text-center border-x border-cmd-border">
+          <div className="text-[10px] text-slate-500 uppercase font-bold mb-1">O/U</div>
+          <div className="text-lg font-mono font-bold text-white">{lines.overUnder}</div>
+        </div>
+        <div className="text-center">
+          <div className="text-[10px] text-slate-500 uppercase font-bold mb-1">Moneyline</div>
+          <div className="flex justify-center gap-2 text-sm font-mono font-bold">
+            <span className="text-raptors-red">{lines.moneyline.tor > 0 ? '+' : ''}{lines.moneyline.tor}</span>
+            <span className="text-slate-500">/</span>
+            <span className="text-blue-400">{lines.moneyline.opp > 0 ? '+' : ''}{lines.moneyline.opp}</span>
           </div>
+        </div>
       </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-slide-up" style={{animationDelay: '0.3s'}}>
-          {/* 3. MEDIA & INTEL */}
-          <div className="glass-card overflow-hidden flex flex-col">
-              <div className="bg-cmd-bg/50 px-6 py-4 border-b border-cmd-border flex items-center justify-between"><h2 className="text-lg font-bold text-white flex items-center gap-2"><Radio className="text-raptors-red w-5 h-5" /> Media Row & Medical</h2></div>
-              <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6 flex-1">
-                  <div>
-                      <div className="flex items-center gap-2 mb-4"><AlertTriangle className="text-orange-500 w-4 h-4" /><span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Injury Report</span></div>
-                      <div className="space-y-3">
-                          {analysis.intel?.injuries?.length > 0 ? analysis.intel.injuries.map((inj, i) => (
-                              <div key={i} className={`flex items-start gap-3 bg-cmd-bg/50 p-3 rounded-lg border transition-all ${inj.status === 'Out' ? 'border-l-2 border-l-red-500 border-red-500/20' : inj.status === 'Active' ? 'border-l-2 border-l-green-500 border-green-500/20' : 'border-l-2 border-l-yellow-500 border-yellow-500/20'}`}>
-                                  {inj.status === 'Out' && <div className="absolute -top-1 -right-1 z-10"></div>}
-                                  <div className={`mt-1 w-1.5 h-1.5 rounded-full flex-shrink-0 ${inj.status === 'Out' ? 'bg-red-500' : inj.status === 'Active' ? 'bg-green-500' : 'bg-yellow-500'}`} style={inj.status === 'Out' ? {animation: 'pulse-dot 1.5s ease-in-out infinite'} : {}}></div>
-                                  <div><div className="flex items-center gap-2 flex-wrap"><span className="text-sm font-bold text-white">{inj.player}</span>{inj.status === 'Out' && <span className="text-[8px] px-1.5 py-0.5 rounded bg-red-500/20 text-red-400 border border-red-500/30 font-black uppercase tracking-wider">BREAKING</span>}<span className={`text-[10px] px-1.5 rounded uppercase font-bold ${inj.status === 'Out' ? 'bg-red-500/20 text-red-400' : inj.status === 'Active' ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'}`}>{inj.status}</span></div><div className="text-xs text-slate-500 mt-1">{inj.details}</div></div>
-                              </div>
-                          )) : (<div className="text-slate-500 text-sm italic">No significant injuries reported.</div>)}
-                      </div>
-                  </div>
-                  <div>
-                      <div className="flex items-center gap-2 mb-4"><MessageSquare className="text-blue-400 w-4 h-4" /><span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Social Feed</span></div>
-                      <div className="space-y-4">
-                          {analysis.intel?.socialChatter?.map((item, i) => {
-                              const isRaptors = item.source.toLowerCase().includes('raptors') || item.source.toLowerCase().includes('republic');
-                              const isOpponentSrc = item.source.toLowerCase().includes(game.opponent.toLowerCase());
-                              let avatar = 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
-                              if (item.source.toLowerCase().includes('espn')) avatar = 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/ESPN_logo.svg/1200px-ESPN_logo.svg.png';
-                              if (item.source.toLowerCase().includes('sportsnet')) avatar = 'https://cdn.nba.com/logos/nba/1610612761/primary/L/logo.svg';
-                              if (item.source.toLowerCase().includes('toronto star')) avatar = 'https://cdn.nba.com/logos/nba/1610612761/primary/L/logo.svg';
-                              if (isRaptors) avatar = 'https://cdn.nba.com/logos/nba/1610612761/primary/L/logo.svg';
-                              if (isOpponentSrc && game.opponentId) avatar = `https://cdn.nba.com/logos/nba/${game.opponentId}/primary/L/logo.svg`;
-                              const sentimentColor = item.sentiment === 'positive' ? 'border-l-green-500' : item.sentiment === 'negative' ? 'border-l-red-500' : 'border-l-blue-500';
-                              return (
-                                <div key={i} className={`bg-cmd-bg/50 border border-cmd-border border-l-2 ${sentimentColor} rounded-xl p-4 hover-lift`}>
-                                    <div className="flex gap-3">
-                                        <div className="flex-shrink-0"><img src={avatar} onError={(e) => e.currentTarget.src = 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'} alt="avatar" className="w-10 h-10 rounded-full object-contain border border-cmd-border bg-cmd-surface p-1" /></div>
-                                        <div className="flex-1 min-w-0"><div className="flex items-center justify-between"><span className="text-sm font-bold text-white truncate">{item.source}</span><span className="text-xs text-slate-500">{item.time || '2h'}</span></div><p className="text-sm text-slate-300 mt-1 leading-snug">{item.headline}</p></div>
-                                    </div>
-                                </div>
-                              );
-                          })}
-                      </div>
-                  </div>
-              </div>
-          </div>
-
-          {/* 4. TACTICAL PLAYBOOK */}
-          <div className="glass-card flex flex-col overflow-hidden">
-             <div className="bg-cmd-bg/50 px-6 py-4 border-b border-cmd-border flex items-center justify-between"><h3 className="text-lg font-bold text-white flex items-center gap-2"><LayoutTemplate className="text-orange-500 w-5 h-5" /> Interactive Playbook</h3></div>
-             <div className="flex flex-col md:flex-row h-auto md:h-[450px]">
-                 <div className="w-full md:w-3/5 bg-cmd-bg/30 p-4 md:p-8 flex flex-col justify-center items-center">
-                     <div className="rounded-lg overflow-hidden border-2 border-cmd-border shadow-xl shadow-raptors-red/5 w-full max-w-lg aspect-[1.6]"><CourtDiagram play={selectedPlay} /></div>
-                 </div>
-                 <div className="w-full md:w-2/5 flex flex-col border-l border-cmd-border bg-cmd-surface/50 overflow-hidden">
-                     <div className="p-4 border-b border-cmd-border bg-cmd-bg/30 flex-shrink-0">
-                        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
-                            {analysis.playbook?.map((play) => (<button key={play.id} onClick={() => setSelectedPlay(play)} className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-bold transition-all border ${selectedPlay?.id === play.id ? 'bg-raptors-red text-white border-raptors-red shadow-lg shadow-raptors-red/30' : 'bg-cmd-surface text-slate-400 border-cmd-border hover:border-raptors-red/30 hover:text-white'}`}>{play.name}</button>))}
-                        </div>
-                     </div>
-                     <div className="flex-1 p-6 overflow-y-auto custom-scrollbar">
-                         {selectedPlay ? (
-                             <div className="space-y-6">
-                                <div><div className="flex items-center justify-between mb-3"><h4 className="font-black text-xl text-white uppercase italic tracking-tighter">{selectedPlay.name}</h4><span className="text-[10px] font-bold bg-cmd-bg text-slate-400 border border-cmd-border px-2 py-1 rounded uppercase">{selectedPlay.diagramType}</span></div><p className="text-sm text-slate-400 leading-snug">{selectedPlay.description}</p></div>
-                                <div><div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Execution Steps</div><div className="space-y-3 relative pl-2"><div className="absolute left-[11px] top-2 bottom-2 w-px bg-raptors-red/20"></div>{selectedPlay.execution?.map((step, i) => (<div key={i} className="flex gap-3 relative" style={{animation: `slide-up 0.4s ease-out ${0.1 * i}s both`}}><div className="w-6 h-6 rounded-full bg-cmd-surface border-2 border-raptors-red/30 flex items-center justify-center text-[10px] font-bold text-raptors-red flex-shrink-0 z-10">{i+1}</div><p className="text-sm text-slate-300 pt-0.5">{step}</p></div>))}</div></div>
-                                <div className="bg-raptors-red/5 border border-raptors-red/20 p-4 rounded-xl mt-4" style={{animation: 'border-glow 3s ease-in-out infinite'}}><div className="flex items-center gap-1.5 mb-2"><Shield className="w-4 h-4 text-raptors-red" /><span className="text-xs font-bold text-raptors-red uppercase tracking-widest">Defensive Key</span></div><p className="text-sm text-white font-bold leading-relaxed">{selectedPlay.raptorsCounter}</p></div>
-                             </div>
-                         ) : (<div className="flex flex-col items-center justify-center h-full text-slate-500 space-y-2"><Activity className="w-8 h-8 opacity-20" /><span className="text-sm font-medium">Select a play to view details</span></div>)}
-                     </div>
-                 </div>
-             </div>
-          </div>
-      </div>
-
-      {/* 5. ROTATION SIMULATOR */}
-      <div className="glass-card overflow-hidden animate-slide-up" style={{animationDelay: '0.45s'}}>
-          <div className="relative bg-gradient-to-r from-cmd-bg via-cmd-surface to-cmd-bg px-6 py-5 overflow-hidden">
-              <div className="absolute inset-0 bg-grid opacity-20"></div>
-              <div className="relative z-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                  <div>
-                      <h2 className="text-2xl font-black text-white flex items-center gap-3 uppercase tracking-tight"><div className="bg-raptors-red p-2 rounded-lg shadow-lg shadow-raptors-red/30"><Activity className="w-5 h-5 text-white" /></div>Rotation Simulator</h2>
-                      <p className="text-slate-500 text-xs mt-1 ml-12">Click a player on court, then click a bench player to swap</p>
-                  </div>
-                  <div className="flex items-center gap-3 ml-12 sm:ml-0">
-                      <div className={`px-4 py-2 rounded-lg text-center ${(raptorsAgg.net - opponentAgg.net) >= 0 ? 'bg-green-500/10 border border-green-500/30' : 'bg-red-500/10 border border-red-500/30'}`}>
-                          <div className={`text-xl font-black font-mono ${(raptorsAgg.net - opponentAgg.net) >= 0 ? 'text-green-400' : 'text-red-400'}`} style={(raptorsAgg.net - opponentAgg.net) >= 0 ? {textShadow: '0 0 10px rgba(74,222,128,0.3)'} : {textShadow: '0 0 10px rgba(248,113,113,0.3)'}}>{(raptorsAgg.net - opponentAgg.net) > 0 ? '+' : ''}{(raptorsAgg.net - opponentAgg.net).toFixed(1)}</div>
-                          <div className="text-[9px] text-slate-500 uppercase font-bold tracking-wider">Edge</div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-          <div className="p-6 space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                  <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Raptors Presets</div>
-                  <div className="flex gap-1.5 bg-cmd-bg p-1 rounded-lg border border-cmd-border">
-                       <button onClick={() => applyRaptorsPreset('starters')} className="btn-ripple flex-1 px-3 py-2 text-xs font-bold text-slate-300 hover:bg-cmd-card hover:text-white rounded transition-all flex items-center justify-center gap-1.5"><Users className="w-3 h-3" /> Starters</button>
-                       <button onClick={() => applyRaptorsPreset('second')} className="btn-ripple flex-1 px-3 py-2 text-xs font-bold text-slate-300 hover:bg-cmd-card hover:text-white rounded transition-all flex items-center justify-center gap-1.5"><RefreshCcw className="w-3 h-3" /> 2nd Unit</button>
-                       <button onClick={() => applyRaptorsPreset('speed')} className="btn-ripple flex-1 px-3 py-2 text-xs font-bold text-slate-300 hover:bg-cmd-card hover:text-white rounded transition-all flex items-center justify-center gap-1.5"><Zap className="w-3 h-3" /> Speed</button>
-                       <button onClick={() => applyRaptorsPreset('big')} className="btn-ripple flex-1 px-3 py-2 text-xs font-bold text-slate-300 hover:bg-cmd-card hover:text-white rounded transition-all flex items-center justify-center gap-1.5"><Shield className="w-3 h-3" /> Big</button>
-                  </div>
-              </div>
-              <div>
-                  <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">{game.opponent} Presets</div>
-                  <div className="flex gap-1.5 bg-cmd-bg p-1 rounded-lg border border-cmd-border">
-                       <button onClick={() => applyPreset('starters')} className="btn-ripple flex-1 px-3 py-2 text-xs font-bold text-slate-300 hover:bg-cmd-card hover:text-white rounded transition-all flex items-center justify-center gap-1.5"><Users className="w-3 h-3" /> Starters</button>
-                       <button onClick={() => applyPreset('second')} className="btn-ripple flex-1 px-3 py-2 text-xs font-bold text-slate-300 hover:bg-cmd-card hover:text-white rounded transition-all flex items-center justify-center gap-1.5"><RefreshCcw className="w-3 h-3" /> 2nd Unit</button>
-                       <button onClick={() => applyPreset('speed')} className="btn-ripple flex-1 px-3 py-2 text-xs font-bold text-slate-300 hover:bg-cmd-card hover:text-white rounded transition-all flex items-center justify-center gap-1.5"><Zap className="w-3 h-3" /> Speed</button>
-                  </div>
-              </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative">
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 hidden md:block"><div className="bg-raptors-red p-2.5 rounded-full border-2 border-raptors-red/50 shadow-xl shadow-raptors-red/20 animate-glow-pulse"><Swords className="w-4 h-4 text-white" /></div></div>
-                <div className="bg-gradient-to-br from-raptors-red/5 to-cmd-surface/50 rounded-xl p-4 border border-raptors-red/10">
-                    <div className="flex justify-between items-end mb-4 pb-2 border-b-2 border-raptors-red/50">
-                        <div className="flex items-center gap-2"><img src="https://cdn.nba.com/logos/nba/1610612761/primary/L/logo.svg" className="w-6 h-6" alt="TOR" /><h3 className="text-raptors-red font-black uppercase text-sm tracking-wider neon-text-subtle">TORONTO</h3></div>
-                        <div className="flex items-center gap-3">
-                            <div className="text-[10px] font-mono text-slate-500">ORTG <span className="font-bold text-white">{raptorsAgg.ortg.toFixed(1)}</span></div>
-                            <div className="text-[10px] font-mono text-slate-500">DRTG <span className="font-bold text-white">{raptorsAgg.drtg.toFixed(1)}</span></div>
-                            <div className={`text-xs font-mono font-bold px-2 py-0.5 rounded ${raptorsAgg.net >= 0 ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'}`}>NET {raptorsAgg.net > 0 ? '+' : ''}{raptorsAgg.net.toFixed(1)}</div>
-                        </div>
-                    </div>
-                    <div className="grid grid-cols-5 gap-2">{activeRaptorsLineup.map((player, idx) => (<PlayerCard key={player.id} player={player} onClick={() => setSelectedSlot(selectedSlot?.team === 'raptors' && selectedSlot?.index === idx ? null : { team: 'raptors', index: idx })} onDeepDive={() => setSelectedPlayerForDeepDive(player)} isSelected={selectedSlot?.team === 'raptors' && selectedSlot?.index === idx} />))}</div>
-                    <div className="mt-4 pt-3 border-t border-raptors-red/10">
-                         <div className="flex items-center justify-between mb-2"><div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Bench ({raptorsBench.length})</div>{selectedSlot?.team === 'raptors' && <div className="text-[10px] font-bold text-raptors-red animate-pulse uppercase neon-text-subtle">Click to swap in</div>}</div>
-                         <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">{raptorsBench.map(player => (<BenchCard key={player.id} player={player} onClick={() => handleBenchClick(player, 'raptors')} isHighlighted={selectedSlot?.team === 'raptors'} />))}</div>
-                    </div>
-                </div>
-                <div className="bg-gradient-to-br from-blue-500/5 to-cmd-surface/50 rounded-xl p-4 border border-blue-500/10">
-                    <div className="flex justify-between items-end mb-4 pb-2 border-b-2 border-blue-500/50">
-                        <div className="flex items-center gap-2">{game.opponentId && <img src={`https://cdn.nba.com/logos/nba/${game.opponentId}/primary/L/logo.svg`} className="w-6 h-6" alt={game.opponent} />}<h3 className="text-blue-400 font-black uppercase text-sm tracking-wider">{game.opponent}</h3></div>
-                        <div className="flex items-center gap-3">
-                            <div className="text-[10px] font-mono text-slate-500">ORTG <span className="font-bold text-white">{opponentAgg.ortg.toFixed(1)}</span></div>
-                            <div className="text-[10px] font-mono text-slate-500">DRTG <span className="font-bold text-white">{opponentAgg.drtg.toFixed(1)}</span></div>
-                            <div className={`text-xs font-mono font-bold px-2 py-0.5 rounded ${opponentAgg.net >= 0 ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'}`}>NET {opponentAgg.net > 0 ? '+' : ''}{opponentAgg.net.toFixed(1)}</div>
-                        </div>
-                    </div>
-                    <div className="grid grid-cols-5 gap-2">{activeOpponentLineup.map((player, idx) => (<PlayerCard key={player.id} player={player} onClick={() => setSelectedSlot(selectedSlot?.team === 'opponent' && selectedSlot?.index === idx ? null : { team: 'opponent', index: idx })} onDeepDive={() => setSelectedPlayerForDeepDive(player)} isOpponent isSelected={selectedSlot?.team === 'opponent' && selectedSlot?.index === idx} />))}</div>
-                    <div className="mt-4 pt-3 border-t border-blue-500/10">
-                         <div className="flex items-center justify-between mb-2"><div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Bench ({opponentBench.length})</div>{selectedSlot?.team === 'opponent' && <div className="text-[10px] font-bold text-blue-400 animate-pulse uppercase">Click to swap in</div>}</div>
-                         <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">{opponentBench.map(player => (<BenchCard key={player.id} player={player} onClick={() => handleBenchClick(player, 'opponent')} isOpponent isHighlighted={selectedSlot?.team === 'opponent'} />))}</div>
-                    </div>
-                </div>
-          </div>
-          <div className="bg-cmd-bg/50 rounded-xl border border-cmd-border overflow-hidden">
-              <div className="bg-cmd-surface/50 px-5 py-3 border-b border-cmd-border flex items-center gap-2"><BarChart3 className="w-4 h-4 text-slate-400" /><h3 className="text-sm font-bold text-slate-200 uppercase tracking-wider">Lineup Analytics Comparison</h3></div>
-              <div className="p-5">
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                      <div className="bg-cmd-surface/50 rounded-lg border border-cmd-border p-4">
-                          <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Rating Comparison</div>
-                          <div className="h-52">
-                              <ResponsiveContainer width="100%" height="100%">
-                                  <BarChart data={[
-                                      { name: 'ORTG', Raptors: Number(raptorsAgg.ortg.toFixed(1)), Opponent: Number(opponentAgg.ortg.toFixed(1)) },
-                                      { name: 'DRTG', Raptors: Number(raptorsAgg.drtg.toFixed(1)), Opponent: Number(opponentAgg.drtg.toFixed(1)) },
-                                      { name: 'PER', Raptors: Number(raptorsAgg.per.toFixed(1)), Opponent: Number(opponentAgg.per.toFixed(1)) },
-                                      { name: 'NET', Raptors: Number(raptorsAgg.net.toFixed(1)), Opponent: Number(opponentAgg.net.toFixed(1)) },
-                                  ]} barGap={2} barCategoryGap="20%">
-                                      <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                                      <XAxis dataKey="name" tick={{ fontSize: 11, fontWeight: 600, fill: '#94a3b8' }} />
-                                      <YAxis tick={{ fontSize: 10, fill: '#64748b' }} domain={['auto', 'auto']} />
-                                      <Tooltip contentStyle={{ backgroundColor: '#111827', borderColor: '#1e293b', borderRadius: '8px', boxShadow: '0 4px 20px rgba(206,17,65,0.15)', fontSize: '12px', color: '#e2e8f0' }} itemStyle={{ color: '#e2e8f0' }} />
-                                      <Legend wrapperStyle={{ fontSize: '11px', fontWeight: 600, color: '#94a3b8' }} />
-                                      <Bar dataKey="Raptors" fill="#CE1141" radius={[4, 4, 0, 0]} />
-                                      <Bar dataKey="Opponent" fill="#6366f1" radius={[4, 4, 0, 0]} />
-                                  </BarChart>
-                              </ResponsiveContainer>
-                          </div>
-                      </div>
-                      <div className="bg-cmd-surface/50 rounded-lg border border-cmd-border p-4">
-                          <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Head-to-Head Breakdown</div>
-                          <div className="space-y-3">
-                              <ComparisonRow label="Offensive Rating" raptorsVal={raptorsAgg.ortg} opponentVal={opponentAgg.ortg} higherIsBetter={true} />
-                              <ComparisonRow label="Defensive Rating" raptorsVal={raptorsAgg.drtg} opponentVal={opponentAgg.drtg} higherIsBetter={false} />
-                              <ComparisonRow label="Net Rating" raptorsVal={raptorsAgg.net} opponentVal={opponentAgg.net} higherIsBetter={true} />
-                              <ComparisonRow label="Avg PER" raptorsVal={raptorsAgg.per} opponentVal={opponentAgg.per} higherIsBetter={true} />
-                              <ComparisonRow label="Combined PPG" raptorsVal={activeRaptorsLineup.reduce((s, p) => s + (p.seasonStats?.ppg || 0), 0)} opponentVal={activeOpponentLineup.reduce((s, p) => s + (p.seasonStats?.ppg || 0), 0)} higherIsBetter={true} />
-                              <ComparisonRow label="Combined RPG" raptorsVal={activeRaptorsLineup.reduce((s, p) => s + (p.seasonStats?.rpg || 0), 0)} opponentVal={activeOpponentLineup.reduce((s, p) => s + (p.seasonStats?.rpg || 0), 0)} higherIsBetter={true} />
-                              <ComparisonRow label="Combined APG" raptorsVal={activeRaptorsLineup.reduce((s, p) => s + (p.seasonStats?.apg || 0), 0)} opponentVal={activeOpponentLineup.reduce((s, p) => s + (p.seasonStats?.apg || 0), 0)} higherIsBetter={true} />
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-          </div>
-      </div>
-
-      {selectedPlayerForDeepDive && (<PlayerDeepDive player={selectedPlayerForDeepDive} opponentName={game.opponent} onClose={() => setSelectedPlayerForDeepDive(null)} />)}
     </div>
   );
 };
 
-// ============================================================
-// APP (ROOT)
-// ============================================================
+// Head to Head Card
+const HeadToHeadCard = ({ h2h, opponentName }) => {
+  if (!h2h) return null;
+  const total = h2h.torWins + h2h.oppWins;
+  const torPct = total > 0 ? (h2h.torWins / total) * 100 : 50;
+  return (
+    <div className="glass-card overflow-hidden">
+      <div className="px-4 py-3 border-b border-cmd-border bg-gradient-to-r from-raptors-red/10 via-transparent to-blue-500/10">
+        <h3 className="text-sm font-bold text-white flex items-center gap-2"><Swords className="w-4 h-4 text-slate-400" /> Season Series</h3>
+      </div>
+      <div className="p-4">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <img src="https://cdn.nba.com/logos/nba/1610612761/primary/L/logo.svg" className="w-8 h-8" alt="" />
+            <div>
+              <div className="text-2xl font-black text-raptors-red">{h2h.torWins}</div>
+              <div className="text-[10px] text-slate-500">WINS</div>
+            </div>
+          </div>
+          <div className="text-slate-500 text-xl font-bold">-</div>
+          <div className="flex items-center gap-2">
+            <div className="text-right">
+              <div className="text-2xl font-black text-blue-400">{h2h.oppWins}</div>
+              <div className="text-[10px] text-slate-500">WINS</div>
+            </div>
+          </div>
+        </div>
+        <div className="h-2 bg-cmd-border rounded-full overflow-hidden mb-3">
+          <div className="h-full bg-gradient-to-r from-raptors-red to-raptors-purple rounded-full transition-all" style={{ width: `${torPct}%` }} />
+        </div>
+        <div className="text-[10px] text-slate-500 text-center">Last: {h2h.lastMeeting}</div>
+      </div>
+    </div>
+  );
+};
+
+// Schedule Card
+const ScheduleCard = ({ games, selectedGame, onSelectGame }) => (
+  <div className="glass-card overflow-hidden h-full flex flex-col">
+    <div className="px-4 py-3 border-b border-cmd-border bg-gradient-to-r from-raptors-red/10 to-transparent">
+      <h3 className="text-sm font-bold text-white flex items-center gap-2"><Calendar className="w-4 h-4 text-raptors-red" /> Schedule</h3>
+    </div>
+    <div className="flex-1 overflow-y-auto divide-y divide-cmd-border/50">
+      {games.map((game) => {
+        const isSelected = selectedGame?.id === game.id;
+        return (
+          <div key={game.id} onClick={() => onSelectGame(game)} className={`px-3 py-2.5 cursor-pointer transition-all ${isSelected ? 'bg-raptors-red/10 border-l-2 border-l-raptors-red' : 'hover:bg-cmd-card/50'}`}>
+            <div className="flex items-center justify-between mb-1">
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-bold text-slate-500">{game.isHome ? 'VS' : '@'}</span>
+                <img src={`https://cdn.nba.com/logos/nba/${game.opponentId}/primary/L/logo.svg`} className="w-5 h-5" alt="" />
+                <span className="text-xs font-bold text-slate-200">{game.opponent}</span>
+              </div>
+              {game.status === 'completed' ? (
+                <span className={`text-[10px] font-bold ${game.result?.startsWith('W') ? 'text-green-400' : 'text-red-400'}`}>{game.result?.split(' ')[0]}</span>
+              ) : (
+                <span className="text-[9px] px-1.5 py-0.5 rounded bg-raptors-red/20 text-raptors-red border border-raptors-red/30">UP</span>
+              )}
+            </div>
+            <div className="flex items-center justify-between text-[10px] text-slate-500">
+              <span>{game.date} • {game.time}</span>
+              <span className="flex items-center gap-1"><Tv className="w-3 h-3" />{game.channel}</span>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+);
+
+// Player Card Mini
+const PlayerCardMini = ({ player, onClick }) => {
+  const [imgError, setImgError] = useState(false);
+  return (
+    <div onClick={onClick} className="group relative bg-cmd-card border border-cmd-border rounded-lg overflow-hidden cursor-pointer hover:border-raptors-red/30 transition-all hover-lift h-32">
+      <div className="absolute inset-0 bg-gradient-to-t from-cmd-bg via-transparent to-transparent" />
+      {!imgError ? (
+        <img src={`https://cdn.nba.com/headshots/nba/latest/1040x760/${player.id}.png`} onError={() => setImgError(true)} className="absolute inset-0 w-full h-full object-cover object-top" alt="" />
+      ) : (
+        <div className="absolute inset-0 flex items-center justify-center text-2xl font-black text-slate-600">{player.number}</div>
+      )}
+      <div className="absolute bottom-0 inset-x-0 p-2 bg-gradient-to-t from-cmd-bg to-transparent">
+        <div className="text-[9px] font-bold text-raptors-red uppercase">{player.position} #{player.number}</div>
+        <div className="text-xs font-bold text-white truncate">{player.name.split(' ').slice(-1)[0]}</div>
+        <div className="text-[10px] font-mono text-slate-400">{player.seasonStats.ppg} PPG</div>
+      </div>
+    </div>
+  );
+};
+
+// Injury Report
+const InjuryReport = ({ injuries }) => (
+  <div className="space-y-2">
+    {injuries.map((inj, i) => (
+      <div key={i} className={`flex items-start gap-2 p-2 rounded-lg border-l-2 ${inj.status === 'Out' ? 'bg-red-500/5 border-l-red-500' : inj.status === 'Questionable' ? 'bg-yellow-500/5 border-l-yellow-500' : 'bg-green-500/5 border-l-green-500'}`}>
+        <div className={`w-1.5 h-1.5 rounded-full mt-1.5 ${inj.status === 'Out' ? 'bg-red-500' : inj.status === 'Questionable' ? 'bg-yellow-500' : 'bg-green-500'}`} />
+        <div>
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-bold text-white">{inj.player}</span>
+            <span className={`text-[9px] px-1.5 py-0.5 rounded font-bold uppercase ${inj.status === 'Out' ? 'bg-red-500/20 text-red-400' : inj.status === 'Questionable' ? 'bg-yellow-500/20 text-yellow-400' : 'bg-green-500/20 text-green-400'}`}>{inj.status}</span>
+          </div>
+          <div className="text-xs text-slate-500">{inj.details}</div>
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
+// Court Diagram
+const CourtDiagram = ({ play }) => {
+  const getDiagram = (type) => {
+    switch(type) {
+      case 'pnr': return (<g><circle cx="50" cy="50" r="1.5" fill="#CE1141" style={{animation: 'drive 3s infinite'}} /><path d="M50 50 Q 60 40 70 30" fill="none" stroke="#CE1141" strokeWidth="0.5" strokeDasharray="2,1" opacity="0.5" /><circle cx="55" cy="45" r="1.5" fill="#94a3b8" style={{animation: 'screen-anim 3s infinite 1s'}} /></g>);
+      case 'horns': return (<g><circle cx="70" cy="20" r="1.5" fill="#94a3b8" /><circle cx="70" cy="40" r="1.5" fill="#94a3b8" /><circle cx="60" cy="30" r="1.5" fill="#CE1141" /><path d="M60 30 L 70 20" fill="none" stroke="#CE1141" strokeWidth="0.5" strokeDasharray="1,1" style={{animation: 'pass 2s infinite'}} /></g>);
+      default: return (<g><path d="M60 10 Q 75 30 85 30" fill="none" stroke="#CE1141" strokeWidth="0.8" strokeDasharray="2,1" style={{animation: 'pass 3s infinite'}} /><circle cx="60" cy="10" r="1.5" fill="#CE1141" style={{animation: 'pulse-svg 1s infinite'}} /></g>);
+    }
+  };
+  
+  return (
+    <div className="relative w-full pt-[60%] bg-[#0f1520] rounded-xl overflow-hidden border border-cmd-border">
+      <div className="absolute inset-0">
+        <svg viewBox="0 0 100 60" className="w-full h-full" preserveAspectRatio="none">
+          <rect x="0" y="0" width="100" height="60" fill="#0f1520" />
+          <rect x="0" y="22" width="12" height="16" fill="#CE1141" fillOpacity="0.08" />
+          <rect x="88" y="22" width="12" height="16" fill="#3E2680" fillOpacity="0.08" />
+          <circle cx="50" cy="30" r="8" fill="none" stroke="rgba(206,17,65,0.25)" strokeWidth="0.5" />
+          <path d="M50 0 V60" stroke="rgba(206,17,65,0.15)" strokeWidth="0.2" />
+          <rect x="0" y="22" width="12" height="16" fill="none" stroke="rgba(206,17,65,0.4)" strokeWidth="0.5" />
+          <circle cx="12" cy="30" r="4" fill="none" stroke="rgba(206,17,65,0.4)" strokeWidth="0.5" />
+          <rect x="88" y="22" width="12" height="16" fill="none" stroke="rgba(62,38,128,0.4)" strokeWidth="0.5" />
+          <circle cx="88" cy="30" r="4" fill="none" stroke="rgba(62,38,128,0.4)" strokeWidth="0.5" />
+          {play && getDiagram(play.diagramType)}
+        </svg>
+      </div>
+      <div className="absolute top-2 left-2 bg-cmd-surface/90 backdrop-blur px-2 py-1 rounded text-[9px] font-mono font-bold text-slate-300 uppercase">
+        {play?.name || 'Tactical Board'}
+      </div>
+    </div>
+  );
+};
+
+// Main Matchup View
+const MatchupView = ({ game, raptorsStats, opponentData }) => {
+  const [selectedPlay, setSelectedPlay] = useState(opponentData?.playbook?.[0] || null);
+  const winProb = 45 + Math.floor(Math.random() * 20);
+  
+  if (!opponentData) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-raptors-red/20 border-t-raptors-red rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-slate-400">Loading matchup data...</p>
+        </div>
+      </div>
+    );
+  }
+  
+  return (
+    <div className="space-y-6 animate-fade-in">
+      {/* Hero Header */}
+      <div className="glass-card gradient-border p-6 relative overflow-hidden">
+        <div className="absolute inset-0 bg-grid opacity-30" />
+        <div className="absolute top-0 right-0 p-4 opacity-5">
+          <img src={`https://cdn.nba.com/logos/nba/${game.opponentId}/primary/L/logo.svg`} className="w-48 h-48" alt="" />
+        </div>
+        <div className="relative z-10">
+          <div className="flex flex-wrap items-center gap-2 mb-3">
+            <span className="bg-raptors-red/20 text-raptors-red border border-raptors-red/30 px-2 py-0.5 rounded text-[10px] font-bold uppercase">Game Preview</span>
+            <span className="text-slate-500 text-xs">{game.date} • {game.time} ET</span>
+            <span className="flex items-center gap-1 text-xs text-slate-400"><MapPin className="w-3 h-3" />{game.venue}</span>
+            <span className="flex items-center gap-1 text-xs text-blue-400"><Tv className="w-3 h-3" />{game.channel}</span>
+          </div>
+          
+          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+            <div>
+              <h1 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tight mb-2">
+                <span className="text-raptors-red neon-text">Raptors</span> vs {game.opponent}
+              </h1>
+              <div className="flex items-center gap-4 text-sm">
+                <RecentForm form={raptorsStats.last10} teamName="TOR" />
+                <span className="text-slate-500">vs</span>
+                <RecentForm form={opponentData.recentForm} teamName={game.opponent} />
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-6">
+              <WinProbRing value={winProb} size={90} />
+              <div className="hidden md:block">
+                <div className="text-[10px] text-slate-500 uppercase font-bold mb-1">Countdown</div>
+                <CountdownTimer targetDate="2026-02-05T19:30:00-05:00" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {/* Quick Stats Grid */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <BettingLinesCard lines={opponentData.bettingLines} opponentName={game.opponent} />
+        <HeadToHeadCard h2h={opponentData.h2h} opponentName={game.opponent} />
+      </div>
+      
+      {/* Main Content Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Left Column - Stats */}
+        <div className="space-y-6">
+          <TeamStatsComparison raptors={raptorsStats} opponent={opponentData.teamStats} opponentName={game.opponent} />
+        </div>
+        
+        {/* Center Column - Playbook */}
+        <div className="lg:col-span-2 space-y-6">
+          <div className="glass-card overflow-hidden">
+            <div className="px-4 py-3 border-b border-cmd-border bg-gradient-to-r from-orange-500/10 to-transparent flex items-center justify-between">
+              <h3 className="text-sm font-bold text-white flex items-center gap-2"><LayoutTemplate className="w-4 h-4 text-orange-500" /> Opponent Playbook</h3>
+              <div className="flex gap-2">
+                {opponentData.playbook?.map((play) => (
+                  <button key={play.id} onClick={() => setSelectedPlay(play)} className={`px-3 py-1 rounded text-xs font-bold transition-all ${selectedPlay?.id === play.id ? 'bg-raptors-red text-white' : 'bg-cmd-surface text-slate-400 hover:text-white border border-cmd-border'}`}>
+                    {play.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
+              <div className="p-6 flex items-center justify-center bg-cmd-bg/30">
+                <div className="w-full max-w-sm"><CourtDiagram play={selectedPlay} /></div>
+              </div>
+              <div className="p-6 border-l border-cmd-border">
+                {selectedPlay && (
+                  <div className="space-y-4">
+                    <div>
+                      <h4 className="text-lg font-black text-white uppercase">{selectedPlay.name}</h4>
+                      <p className="text-sm text-slate-400">{selectedPlay.description}</p>
+                    </div>
+                    <div>
+                      <div className="text-[10px] font-bold text-slate-500 uppercase mb-2">Execution</div>
+                      <ol className="space-y-2">
+                        {selectedPlay.execution?.map((step, i) => (
+                          <li key={i} className="flex gap-2 text-sm text-slate-300">
+                            <span className="w-5 h-5 rounded-full bg-raptors-red/20 text-raptors-red text-[10px] font-bold flex items-center justify-center shrink-0">{i+1}</span>
+                            {step}
+                          </li>
+                        ))}
+                      </ol>
+                    </div>
+                    <div className="bg-raptors-red/5 border border-raptors-red/20 rounded-lg p-3">
+                      <div className="flex items-center gap-1 text-[10px] font-bold text-raptors-red uppercase mb-1"><Shield className="w-3 h-3" /> Counter</div>
+                      <p className="text-sm text-white font-medium">{selectedPlay.raptorsCounter}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+          
+          {/* Injury & Intel Row */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="glass-card overflow-hidden">
+              <div className="px-4 py-3 border-b border-cmd-border bg-gradient-to-r from-orange-500/10 to-transparent">
+                <h3 className="text-sm font-bold text-white flex items-center gap-2"><AlertTriangle className="w-4 h-4 text-orange-500" /> Injury Report</h3>
+              </div>
+              <div className="p-4">
+                <InjuryReport injuries={[
+                  { player: "Jakob Poeltl", status: "Out", details: "Lower back — re-eval in 2 weeks" },
+                  { player: "RJ Barrett", status: "Questionable", details: "Left ankle sprain" },
+                  ...(opponentData.injuries || [])
+                ]} />
+              </div>
+            </div>
+            
+            <div className="glass-card overflow-hidden">
+              <div className="px-4 py-3 border-b border-cmd-border bg-gradient-to-r from-blue-500/10 to-transparent">
+                <h3 className="text-sm font-bold text-white flex items-center gap-2"><Zap className="w-4 h-4 text-blue-400" /> Keys to Victory</h3>
+              </div>
+              <div className="p-4 space-y-3">
+                {['Limit transition opportunities', `Contain ${opponentData.roster?.[0]?.name || 'star player'}`, 'Win the rebounding battle', 'Force turnovers'].map((key, i) => (
+                  <div key={i} className="flex gap-2 text-sm text-slate-300">
+                    <span className="w-5 h-5 rounded-full bg-raptors-red/20 text-raptors-red text-[10px] font-bold flex items-center justify-center shrink-0">{i+1}</span>
+                    {key}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          
+          {/* Rosters */}
+          <div className="glass-card overflow-hidden">
+            <div className="px-4 py-3 border-b border-cmd-border">
+              <h3 className="text-sm font-bold text-white flex items-center gap-2"><Users className="w-4 h-4 text-slate-400" /> Starting Lineups</h3>
+            </div>
+            <div className="p-4">
+              <div className="grid grid-cols-2 gap-6">
+                <div>
+                  <div className="flex items-center gap-2 mb-3">
+                    <img src="https://cdn.nba.com/logos/nba/1610612761/primary/L/logo.svg" className="w-5 h-5" alt="" />
+                    <span className="text-xs font-bold text-raptors-red uppercase">Raptors</span>
+                  </div>
+                  <div className="grid grid-cols-5 gap-2">
+                    {RAPTORS_ROSTER.slice(0, 5).map(player => (
+                      <PlayerCardMini key={player.id} player={player} />
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <div className="flex items-center gap-2 mb-3">
+                    <img src={`https://cdn.nba.com/logos/nba/${game.opponentId}/primary/L/logo.svg`} className="w-5 h-5" alt="" />
+                    <span className="text-xs font-bold text-blue-400 uppercase">{game.opponent}</span>
+                  </div>
+                  <div className="grid grid-cols-5 gap-2">
+                    {(opponentData.roster || []).slice(0, 5).map((player, i) => (
+                      <PlayerCardMini key={player.id || i} player={player} />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// App Root
 function App() {
-  const [games, setGames] = useState([]);
-  const [selectedGame, setSelectedGame] = useState(null);
-  const [loadingSchedule, setLoadingSchedule] = useState(true);
-
-  useEffect(() => {
-    const init = async () => {
-      const { games: fetchedGames } = await fetchRaptorsSchedule();
-      setGames(fetchedGames);
-      const nextGame = fetchedGames.find(g => g.status === 'upcoming');
-      if (nextGame) setSelectedGame(nextGame);
-      else if (fetchedGames.length > 0) setSelectedGame(fetchedGames[0]);
-      setLoadingSchedule(false);
-    };
-    init();
-  }, []);
-
+  const [selectedGame, setSelectedGame] = useState(SCHEDULE.find(g => g.status === 'upcoming') || SCHEDULE[0]);
+  const [expandedStandings, setExpandedStandings] = useState(false);
+  
+  const currentOpponent = OPPONENT_DATA[selectedGame?.opponent] || null;
+  
   return (
-    <div className="min-h-screen bg-cmd-bg bg-grid text-slate-200 font-sans selection:bg-raptors-red selection:text-white flex flex-col h-screen overflow-hidden">
-      <nav className="border-b border-cmd-border bg-cmd-surface/90 backdrop-blur-xl flex-shrink-0 z-30 relative">
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-raptors-red/50 to-transparent"></div>
-        <div className="w-full max-w-[98%] mx-auto px-4 h-16 flex items-center justify-between">
+    <div className="min-h-screen bg-cmd-bg text-slate-200 flex flex-col">
+      {/* Live Scores Ticker */}
+      <LiveScoresTicker />
+      
+      {/* Header */}
+      <nav className="border-b border-cmd-border bg-cmd-surface/90 backdrop-blur-xl sticky top-0 z-30">
+        <div className="max-w-[1600px] mx-auto px-4 h-14 flex items-center justify-between">
           <div className="flex items-center gap-3">
-             <div className="w-10 h-10 bg-cmd-bg rounded-full flex items-center justify-center p-1 border border-raptors-red/30 shadow-lg shadow-raptors-red/10 animate-glow-pulse">
-               <img src="https://cdn.nba.com/logos/nba/1610612761/primary/L/logo.svg" alt="Raptors Logo" className="w-full h-full object-contain" />
-             </div>
-             <span className="text-xl font-bold tracking-tight text-white">RAPTORS <span className="text-raptors-red neon-text-subtle">INTEL</span></span>
+            <div className="w-9 h-9 bg-cmd-bg rounded-full flex items-center justify-center p-1 border border-raptors-red/30 animate-glow-pulse">
+              <img src="https://cdn.nba.com/logos/nba/1610612761/primary/L/logo.svg" alt="Raptors" className="w-full h-full object-contain" />
+            </div>
+            <div>
+              <span className="text-lg font-bold tracking-tight text-white">RAPTORS <span className="text-raptors-red neon-text-subtle">INTEL</span></span>
+              <div className="text-[9px] text-slate-500 -mt-0.5">Command Center v3.0</div>
+            </div>
           </div>
-          <div className="flex items-center gap-3">
-            <button onClick={() => { localStorage.removeItem(ROSTER_CACHE_KEY); if (selectedGame) { setSelectedGame({...selectedGame}); } }} className="text-[10px] text-slate-400 hover:text-raptors-red font-mono font-bold bg-cmd-bg border border-cmd-border hover:border-raptors-red/30 px-3 py-1.5 rounded-full transition-all flex items-center gap-1.5" title="Clear cached roster data and refresh from NBA API"><RefreshCcw className="w-3 h-3" /> Refresh Rosters</button>
-            <div className="text-xs text-slate-500 font-mono font-bold bg-raptors-red/10 border border-raptors-red/20 px-3 py-1 rounded-full">COACH'S DASHBOARD v2.2</div>
+          <div className="flex items-center gap-4">
+            <div className="hidden md:flex items-center gap-2 text-xs">
+              <span className="text-slate-500">Record:</span>
+              <span className="font-bold text-white">{RAPTORS_TEAM_STATS.record.wins}-{RAPTORS_TEAM_STATS.record.losses}</span>
+              <span className="text-slate-600">|</span>
+              <span className="text-slate-500">Streak:</span>
+              <span className="font-bold text-green-400">W4</span>
+            </div>
+            <button className="text-[10px] text-slate-400 hover:text-raptors-red font-mono font-bold bg-cmd-bg border border-cmd-border hover:border-raptors-red/30 px-3 py-1.5 rounded transition-all flex items-center gap-1.5">
+              <RefreshCcw className="w-3 h-3" /> Refresh
+            </button>
           </div>
         </div>
       </nav>
-      <main className="flex-1 overflow-hidden w-full max-w-[98%] mx-auto px-4 py-4">
-        <div className="grid grid-cols-12 gap-4 h-full">
-          <div className="col-span-12 lg:col-span-2 h-full overflow-hidden"><ScheduleList games={games} onSelectGame={setSelectedGame} selectedGameId={selectedGame?.id} /></div>
-          <div className="col-span-12 lg:col-span-10 h-full overflow-y-auto custom-scrollbar pb-10">
-            {loadingSchedule ? (
-              <div className="h-full flex flex-col items-center justify-center glass-card">
-                <div className="relative w-10 h-10 mb-4"><div className="absolute inset-0 rounded-full border-4 border-raptors-red/20"></div><div className="absolute inset-0 rounded-full border-4 border-raptors-red border-t-transparent animate-spin"></div></div>
-                <p className="text-slate-400 font-medium">Loading Season Data...</p>
-              </div>
-            ) : selectedGame ? (
-              <MatchupAnalyzer game={selectedGame} />
-            ) : (
-              <div className="h-full flex flex-col items-center justify-center glass-card text-slate-500"><LayoutDashboard className="w-12 h-12 mb-4 opacity-30" /><p>Select a game from the calendar to open the scouting report.</p></div>
-            )}
+      
+      {/* Main Content */}
+      <main className="flex-1 max-w-[1600px] mx-auto w-full px-4 py-4">
+        <div className="grid grid-cols-12 gap-4">
+          {/* Left Sidebar */}
+          <div className="col-span-12 lg:col-span-2 space-y-4">
+            <ScheduleCard games={SCHEDULE} selectedGame={selectedGame} onSelectGame={setSelectedGame} />
+            <StandingsWidget standings={STANDINGS.east} expanded={expandedStandings} onToggle={() => setExpandedStandings(!expandedStandings)} />
+          </div>
+          
+          {/* Main Content */}
+          <div className="col-span-12 lg:col-span-10 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 120px)' }}>
+            <MatchupView game={selectedGame} raptorsStats={RAPTORS_TEAM_STATS} opponentData={currentOpponent} />
           </div>
         </div>
       </main>
@@ -1759,11 +894,8 @@ function App() {
   );
 }
 
-// ============================================================
-// RENDER
-// ============================================================
-const rootElement = document.getElementById('root');
-const root = ReactDOM.createRoot(rootElement);
+// Render
+const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<App />);
     </script>
   </body>
