@@ -1728,6 +1728,42 @@ const TurnoverBattle = ({ raptorsStats, opponentStats }) => {
   );
 };
 
+// Fast Break Points
+const FastBreakPoints = () => (
+  <div className="glass-card-sm p-4">
+    <div className="text-[10px] text-slate-500 uppercase font-bold mb-3 flex items-center gap-1">
+      <Zap className="w-3 h-3 text-yellow-500" /> Fast Break
+    </div>
+    <div className="grid grid-cols-2 gap-4 text-center">
+      <div>
+        <div className="text-xl font-mono font-bold text-yellow-400">14.2</div>
+        <div className="text-[9px] text-slate-500">TOR FB PPG</div>
+      </div>
+      <div>
+        <div className="text-xl font-mono font-bold text-slate-400">12.8</div>
+        <div className="text-[9px] text-slate-500">OPP FB PPG</div>
+      </div>
+    </div>
+  </div>
+);
+
+// Paint Points
+const PaintPoints = () => (
+  <div className="glass-card-sm p-4">
+    <div className="text-[10px] text-slate-500 uppercase font-bold mb-3">Points in Paint</div>
+    <div className="grid grid-cols-2 gap-4 text-center">
+      <div>
+        <div className="text-xl font-mono font-bold text-raptors-red">48.5</div>
+        <div className="text-[9px] text-slate-500">TOR PITP</div>
+      </div>
+      <div>
+        <div className="text-xl font-mono font-bold text-slate-400">46.2</div>
+        <div className="text-[9px] text-slate-500">OPP PITP</div>
+      </div>
+    </div>
+  </div>
+);
+
 // Bench Points
 const BenchPoints = () => (
   <div className="glass-card-sm p-4">
@@ -2229,6 +2265,8 @@ function App() {
             <GameDayChecklist game={selectedGame} />
             {currentOpponent && <TurnoverBattle raptorsStats={RAPTORS_TEAM_STATS} opponentStats={currentOpponent.teamStats} />}
             <BenchPoints />
+            <FastBreakPoints />
+            <PaintPoints />
           </div>
         </div>
       </main>
