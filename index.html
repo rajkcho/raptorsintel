@@ -1339,20 +1339,48 @@ const PlayerDeepDive = ({ player, opponentName, onClose }) => {
 // SCHEDULE LIST
 // ============================================================
 const ScheduleList = ({ games, onSelectGame, selectedGameId, isDark = true }) => {
+  const [filter, setFilter] = useState('all'); // 'all', 'home', 'away', 'upcoming'
+  
   const formatDate = (dateStr) => {
     try { const d = new Date(dateStr); if (!isNaN(d.getTime())) return { month: d.toLocaleString('en-US', { month: 'short' }).toUpperCase(), day: d.getDate().toString() }; } catch(e) {}
     const parts = dateStr.trim().split(' ');
     if (parts.length >= 2) return { month: parts[0].slice(0, 3).toUpperCase(), day: parts[1].replace(/[^0-9]/g, '') || '?' };
     return { month: 'GAME', day: '' };
   };
+
+  const filteredGames = games.filter(g => {
+    if (filter === 'home') return g.isHome;
+    if (filter === 'away') return !g.isHome;
+    if (filter === 'upcoming') return g.status === 'upcoming';
+    return true;
+  });
+
   return (
-    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} overflow-hidden h-full flex flex-col`}>
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} overflow-hidden flex flex-col`} style={{maxHeight: '400px'}}>
       <div className={`p-3 border-b ${isDark ? 'border-cmd-border' : 'border-light-border'} bg-gradient-to-r from-raptors-red/10 to-transparent sticky top-0 z-10`}>
-        <h2 className={`text-sm font-bold ${isDark ? 'text-slate-200' : 'text-slate-800'} flex items-center gap-2 uppercase tracking-tight`}><Calendar className="text-raptors-red w-4 h-4" /> 25-26 Schedule</h2>
+        <h2 className={`text-sm font-bold ${isDark ? 'text-slate-200' : 'text-slate-800'} flex items-center gap-2 uppercase tracking-tight mb-2`}><Calendar className="text-raptors-red w-4 h-4" /> 25-26 Schedule</h2>
+        <div className="flex gap-1">
+          {[
+            { key: 'all', label: 'All' },
+            { key: 'upcoming', label: 'Next' },
+            { key: 'home', label: 'Home' },
+            { key: 'away', label: 'Away' },
+          ].map(f => (
+            <button
+              key={f.key}
+              onClick={() => setFilter(f.key)}
+              className={`flex-1 text-[9px] py-1 rounded font-bold transition-all ${filter === f.key 
+                ? 'bg-raptors-red text-white' 
+                : isDark ? 'bg-cmd-bg text-slate-400 hover:text-white' : 'bg-light-card text-slate-500 hover:text-slate-800'}`}
+            >
+              {f.label}
+            </button>
+          ))}
+        </div>
       </div>
       <div className={`overflow-y-auto flex-1 divide-y ${isDark ? 'divide-cmd-border' : 'divide-light-border'}`}>
-        {games.length === 0 ? (<div className="p-4 text-center text-slate-500 text-xs animate-pulse">Loading...</div>) : (
-          games.map((game) => {
+        {filteredGames.length === 0 ? (<div className="p-4 text-center text-slate-500 text-xs">No games found</div>) : (
+          filteredGames.map((game) => {
             const { month, day } = formatDate(game.date);
             const isSelected = selectedGameId === game.id;
             return (
@@ -2393,7 +2421,7 @@ function App() {
         <div className="w-full max-w-[98%] mx-auto px-4 flex items-center justify-between text-xs text-slate-500">
           <div className="flex items-center gap-2">
             <span className="font-bold text-raptors-red">RAPTORS INTEL</span>
-            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v5.2</span>
+            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v5.6</span>
           </div>
           <div className="hidden md:flex items-center gap-4">
             <span>Built for Raptors fans 🦖</span>
