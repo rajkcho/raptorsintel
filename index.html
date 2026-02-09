@@ -3676,6 +3676,174 @@ const QuickStatsGrid = ({ isDark = true }) => {
   );
 };
 
+// Mood Meter Widget
+const MoodMeterWidget = ({ isDark = true }) => {
+  const [mood, setMood] = useState(70); // 0-100 scale
+  
+  const getMoodEmoji = () => {
+    if (mood >= 80) return '🔥';
+    if (mood >= 60) return '😊';
+    if (mood >= 40) return '😐';
+    return '😢';
+  };
+  
+  const getMoodLabel = () => {
+    if (mood >= 80) return 'HYPED';
+    if (mood >= 60) return 'Optimistic';
+    if (mood >= 40) return 'Neutral';
+    return 'Worried';
+  };
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <Heart className="w-3 h-3 text-pink-400" /> Fan Mood
+        </h3>
+        <span className="text-2xl">{getMoodEmoji()}</span>
+      </div>
+      
+      <div className="text-center mb-3">
+        <div className={`text-lg font-black ${mood >= 60 ? 'text-green-400' : mood >= 40 ? 'text-yellow-400' : 'text-red-400'}`}>
+          {getMoodLabel()}
+        </div>
+      </div>
+      
+      <div className={`h-3 rounded-full overflow-hidden ${isDark ? 'bg-cmd-border' : 'bg-light-border'}`}>
+        <div 
+          className="h-full rounded-full progress-fill"
+          style={{
+            width: `${mood}%`,
+            background: mood >= 60 ? 'linear-gradient(90deg, #22c55e, #4ade80)' : mood >= 40 ? 'linear-gradient(90deg, #eab308, #facc15)' : 'linear-gradient(90deg, #ef4444, #f87171)'
+          }}
+        />
+      </div>
+    </div>
+  );
+};
+
+// Trivia Widget
+const TriviaWidget = ({ isDark = true }) => {
+  const [revealed, setRevealed] = useState(false);
+  const trivia = {
+    question: "Who scored the most points in Raptors franchise history?",
+    answer: "DeMar DeRozan (13,296 pts)"
+  };
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <Brain className="w-3 h-3 text-purple-400" /> Trivia
+        </h3>
+        <span className="text-lg">🧠</span>
+      </div>
+      
+      <div className={`text-[11px] ${isDark ? 'text-slate-300' : 'text-slate-600'} mb-3`}>
+        {trivia.question}
+      </div>
+      
+      {revealed ? (
+        <div className={`p-2 rounded-lg text-center ${isDark ? 'bg-green-500/10' : 'bg-green-500/5'}`}>
+          <span className="text-[10px] font-bold text-green-400">{trivia.answer}</span>
+        </div>
+      ) : (
+        <button
+          onClick={() => setRevealed(true)}
+          className={`w-full py-2 rounded-lg text-xs font-bold transition-all ${
+            isDark ? 'bg-cmd-bg hover:bg-cmd-card text-white' : 'bg-light-card hover:bg-slate-200 text-slate-800'
+          }`}
+        >
+          Reveal Answer
+        </button>
+      )}
+    </div>
+  );
+};
+
+// Sound Toggle Widget
+const SoundWidget = ({ isDark = true }) => {
+  const [enabled, setEnabled] = useState(false);
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-3`}>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Volume2 className={`w-4 h-4 ${enabled ? 'text-raptors-red' : isDark ? 'text-slate-500' : 'text-slate-400'}`} />
+          <span className={`text-[10px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Game Sounds</span>
+        </div>
+        <button
+          onClick={() => setEnabled(!enabled)}
+          className={`w-8 h-4 rounded-full transition-colors ${enabled ? 'bg-raptors-red' : isDark ? 'bg-cmd-border' : 'bg-light-border'}`}
+        >
+          <div className={`w-3 h-3 bg-white rounded-full transition-transform ${enabled ? 'translate-x-4' : 'translate-x-0.5'}`} />
+        </button>
+      </div>
+    </div>
+  );
+};
+
+// Weather Game Impact Widget
+const WeatherImpactWidget = ({ isDark = true }) => {
+  const weather = ARENA_DATA.weather;
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          {weather.icon} Game Day Weather
+        </h3>
+      </div>
+      
+      <div className="flex items-center justify-between">
+        <div>
+          <div className={`text-2xl font-black ${isDark ? 'text-white' : 'text-slate-800'}`}>{weather.temp}°C</div>
+          <div className={`text-[10px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{weather.condition}</div>
+        </div>
+        <div className={`text-[10px] p-2 rounded-lg ${isDark ? 'bg-blue-500/10' : 'bg-blue-500/5'}`}>
+          <div className="text-blue-400 font-bold">Impact: Low</div>
+          <div className={isDark ? 'text-slate-500' : 'text-slate-400'}>Indoor game</div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Power Rankings Widget
+const PowerRankingsWidget = ({ isDark = true }) => {
+  const rankings = {
+    current: 18,
+    previous: 20,
+    high: 12,
+    low: 24
+  };
+  
+  const change = rankings.previous - rankings.current;
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <TrendingUp className="w-3 h-3 text-green-400" /> Power Rankings
+        </h3>
+      </div>
+      
+      <div className="text-center mb-3">
+        <div className="flex items-center justify-center gap-2">
+          <span className={`text-3xl font-black ${isDark ? 'text-white' : 'text-slate-800'}`}>#{rankings.current}</span>
+          {change > 0 && <span className="text-green-400 text-sm">↑{change}</span>}
+          {change < 0 && <span className="text-red-400 text-sm">↓{Math.abs(change)}</span>}
+        </div>
+      </div>
+      
+      <div className={`flex justify-between text-[10px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+        <div>High: <span className="text-green-400 font-bold">#{rankings.high}</span></div>
+        <div>Low: <span className="text-red-400 font-bold">#{rankings.low}</span></div>
+      </div>
+    </div>
+  );
+};
+
 // ============================================================
 // PARTICLE SYSTEM - Floating basketballs and geometric shapes
 // ============================================================
@@ -9623,6 +9791,11 @@ function App() {
             <MVPRaceWidget isDark={isDark} />
             <SeasonHighlightWidget isDark={isDark} />
             <QuickStatsGrid isDark={isDark} />
+            <MoodMeterWidget isDark={isDark} />
+            <TriviaWidget isDark={isDark} />
+            <PowerRankingsWidget isDark={isDark} />
+            <WeatherImpactWidget isDark={isDark} />
+            <SoundWidget isDark={isDark} />
             <LiveViewersWidget isDark={isDark} />
             <ArenaWidget isDark={isDark} />
           </div>
@@ -9646,7 +9819,7 @@ function App() {
         <div className="w-full max-w-[98%] mx-auto px-4 flex items-center justify-between text-xs text-slate-500">
           <div className="flex items-center gap-2">
             <span className="font-bold text-raptors-red neon-flicker">RAPTORS INTEL</span>
-            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v9.1</span>
+            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v9.2</span>
           </div>
           <div className="hidden md:flex items-center gap-4">
             <span>Built for Raptors fans 🦖</span>
