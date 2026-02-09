@@ -3180,6 +3180,134 @@ const RankPosition = ({ rank, total = 30, label = 'Rank', isDark = true }) => {
   );
 };
 
+// Countdown Timer with Style
+const StyledCountdown = ({ targetDate, label, isDark = true }) => {
+  const [time, setTime] = useState({ d: 0, h: 0, m: 0, s: 0 });
+  
+  useEffect(() => {
+    const calc = () => {
+      const diff = new Date(targetDate) - new Date();
+      if (diff <= 0) return;
+      setTime({
+        d: Math.floor(diff / (1000 * 60 * 60 * 24)),
+        h: Math.floor((diff / (1000 * 60 * 60)) % 24),
+        m: Math.floor((diff / (1000 * 60)) % 60),
+        s: Math.floor((diff / 1000) % 60)
+      });
+    };
+    calc();
+    const interval = setInterval(calc, 1000);
+    return () => clearInterval(interval);
+  }, [targetDate]);
+  
+  const TimeBlock = ({ value, unit }) => (
+    <div className={`flex flex-col items-center p-2 rounded-lg ${isDark ? 'glass-premium' : 'bg-light-card'}`}>
+      <span className="text-xl font-black gradient-text">{String(value).padStart(2, '0')}</span>
+      <span className={`text-[8px] uppercase ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{unit}</span>
+    </div>
+  );
+  
+  return (
+    <div className="space-y-2">
+      {label && <div className={`text-center text-xs ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{label}</div>}
+      <div className="flex justify-center gap-2">
+        <TimeBlock value={time.d} unit="days" />
+        <TimeBlock value={time.h} unit="hrs" />
+        <TimeBlock value={time.m} unit="min" />
+        <TimeBlock value={time.s} unit="sec" />
+      </div>
+    </div>
+  );
+};
+
+// Interactive Toggle Switch
+const ToggleSwitch = ({ checked, onChange, label, isDark = true }) => (
+  <label className="flex items-center gap-2 cursor-pointer">
+    <div className="relative">
+      <input type="checkbox" className="sr-only" checked={checked} onChange={onChange} />
+      <div className={`w-10 h-5 rounded-full transition-colors ${checked ? 'gradient-raptors' : isDark ? 'bg-cmd-border' : 'bg-light-border'}`}>
+        <div className={`absolute w-4 h-4 bg-white rounded-full top-0.5 transition-transform ${checked ? 'translate-x-5' : 'translate-x-0.5'}`} 
+          style={{ boxShadow: checked ? '0 0 8px rgba(206,17,65,0.5)' : 'none' }}
+        />
+      </div>
+    </div>
+    {label && <span className={`text-xs ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{label}</span>}
+  </label>
+);
+
+// Floating Action Button
+const FloatingButton = ({ icon, onClick, isDark = true }) => (
+  <button
+    onClick={onClick}
+    className={`fixed bottom-20 right-4 lg:bottom-8 lg:right-8 w-14 h-14 rounded-full flex items-center justify-center z-40 transition-all hover:scale-110 elastic ${
+      isDark 
+        ? 'gradient-raptors shadow-lg shadow-raptors-red/30' 
+        : 'bg-raptors-red shadow-lg shadow-raptors-red/30'
+    }`}
+  >
+    <span className="text-white text-2xl">{icon}</span>
+  </button>
+);
+
+// Stat Comparison Card
+const StatComparisonCard = ({ stat1, stat2, label, isDark = true }) => (
+  <div className={`p-3 rounded-xl ${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg'}`}>
+    <div className={`text-center text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'} uppercase mb-2`}>{label}</div>
+    <div className="flex items-center justify-center gap-4">
+      <div className="text-center">
+        <div className="text-xl font-black text-raptors-red">{stat1.value}</div>
+        <div className={`text-[8px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{stat1.label}</div>
+      </div>
+      <div className={`text-xs ${isDark ? 'text-slate-600' : 'text-slate-300'}`}>vs</div>
+      <div className="text-center">
+        <div className={`text-xl font-black ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{stat2.value}</div>
+        <div className={`text-[8px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{stat2.label}</div>
+      </div>
+    </div>
+  </div>
+);
+
+// Animated Icon
+const AnimatedIcon = ({ icon: Icon, className = '', animate = 'none' }) => {
+  const animations = {
+    none: '',
+    bounce: 'icon-bounce',
+    pulse: 'animate-pulse',
+    spin: 'animate-spin',
+    float: 'float-subtle'
+  };
+  
+  return <Icon className={`${className} ${animations[animate]}`} />;
+};
+
+// Quick Action Button
+const QuickActionButton = ({ icon, label, onClick, isDark = true, active = false }) => (
+  <button
+    onClick={onClick}
+    className={`flex flex-col items-center gap-1 p-3 rounded-xl transition-all hover:scale-105 ${
+      active 
+        ? 'gradient-raptors text-white' 
+        : isDark 
+          ? 'glass-card hover:bg-cmd-card text-slate-400 hover:text-white' 
+          : 'bg-light-card hover:bg-slate-200 text-slate-500 hover:text-slate-800'
+    }`}
+  >
+    <span className="text-xl">{icon}</span>
+    <span className="text-[9px] font-medium">{label}</span>
+  </button>
+);
+
+// Section Divider
+const SectionDivider = ({ label, isDark = true }) => (
+  <div className="flex items-center gap-3 my-4">
+    <div className={`flex-1 h-px ${isDark ? 'bg-gradient-to-r from-transparent via-cmd-border to-transparent' : 'bg-gradient-to-r from-transparent via-light-border to-transparent'}`} />
+    {label && (
+      <span className={`text-[10px] font-bold uppercase tracking-widest ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{label}</span>
+    )}
+    <div className={`flex-1 h-px ${isDark ? 'bg-gradient-to-r from-transparent via-cmd-border to-transparent' : 'bg-gradient-to-r from-transparent via-light-border to-transparent'}`} />
+  </div>
+);
+
 // ============================================================
 // PARTICLE SYSTEM - Floating basketballs and geometric shapes
 // ============================================================
@@ -9143,7 +9271,7 @@ function App() {
         <div className="w-full max-w-[98%] mx-auto px-4 flex items-center justify-between text-xs text-slate-500">
           <div className="flex items-center gap-2">
             <span className="font-bold text-raptors-red neon-flicker">RAPTORS INTEL</span>
-            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v8.8</span>
+            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v8.9</span>
           </div>
           <div className="hidden md:flex items-center gap-4">
             <span>Built for Raptors fans 🦖</span>
