@@ -2471,6 +2471,72 @@ const OPPONENT_DATA = {
   }
 };
 
+// ===== DYNAMIC ROSTER FETCHING (ESPN API) =====
+const ESPN_TEAM_IDS = {
+  "Hawks":1,"Celtics":2,"Nets":17,"Hornets":30,"Bulls":4,"Cavaliers":5,"Mavericks":6,
+  "Nuggets":7,"Pistons":8,"Warriors":9,"Rockets":10,"Pacers":11,"Clippers":12,"Lakers":13,
+  "Grizzlies":29,"Heat":14,"Bucks":15,"Timberwolves":16,"Pelicans":3,"Knicks":18,
+  "Thunder":25,"Magic":19,"76ers":20,"Suns":21,"Trail Blazers":22,"Kings":23,"Spurs":24,
+  "Raptors":28,"Jazz":26,"Wizards":27
+};
+
+const _rosterCache = {};
+
+const fetchLiveRoster = async (teamName) => {
+  if (_rosterCache[teamName]) return _rosterCache[teamName];
+  const espnId = ESPN_TEAM_IDS[teamName];
+  if (!espnId) return null;
+  try {
+    const res = await fetch(`https://site.api.espn.com/apis/site/v2/sports/basketball/nba/teams/${espnId}/roster`);
+    if (!res.ok) return null;
+    const data = await res.json();
+    const roster = data.athletes.map(a => ({
+      id: a.id,
+      name: a.fullName,
+      position: a.position?.abbreviation || '',
+      number: a.jersey || '',
+      headshot: a.headshot?.href || '',
+      height: a.displayHeight || '',
+      weight: a.displayWeight || '',
+      age: a.age || 0,
+      _espnId: a.id
+    }));
+    _rosterCache[teamName] = roster;
+    // Also update OPPONENT_DATA if it exists
+    if (OPPONENT_DATA[teamName]) {
+      OPPONENT_DATA[teamName].roster = roster;
+    }
+    return roster;
+  } catch (e) {
+    console.warn('Roster fetch failed for', teamName, e);
+    return null;
+  }
+};
+
+// Hook to fetch roster dynamically
+const useLiveRoster = (teamName) => {
+  const [roster, setRoster] = React.useState(null);
+  const [loading, setLoading] = React.useState(false);
+  React.useEffect(() => {
+    if (!teamName) return;
+    setLoading(true);
+    fetchLiveRoster(teamName).then(r => {
+      if (r) setRoster(r);
+      setLoading(false);
+    });
+  }, [teamName]);
+  return { roster, loading };
+};
+
+// ESPN headshot URL helper
+const getHeadshot = (player) => {
+  if (player?.headshot) return player.headshot;
+  if (player?._espnId) return `https://a.espncdn.com/i/headshots/nba/players/full/${player._espnId}.png`;
+  // Fallback to NBA CDN with nba.com ID
+  if (player?.id && !String(player.id).startsWith('player')) return `https://cdn.nba.com/headshots/nba/latest/1040x760/${player.id}.png`;
+  return '';
+};
+
 const GENERIC_ROSTER = [
     { id: "player1", name: "Star Point Guard", position: "G", number: "1" },
     { id: "player2", name: "Shooting Guard", position: "G", number: "2" },
@@ -2548,7 +2614,9 @@ const fetchRaptorsSchedule = async () => {
 };
 
 const analyzeGameMatchup = async (opponent) => {
-  await new Promise(resolve => setTimeout(resolve, 800));
+  await new Promise(resolve => setTimeout(resolve, 300));
+  // Try to fetch live roster from ESPN
+  const liveRoster = await fetchLiveRoster(opponent);
   let opponentData = OPPONENT_DATA[opponent];
   if (!opponentData) {
       const key = Object.keys(OPPONENT_DATA).find(k => k.includes(opponent) || opponent.includes(k));
@@ -2564,7 +2632,9 @@ const analyzeGameMatchup = async (opponent) => {
           };
       }
   }
-  const opponentRoster = enrichRoster(opponentData.roster);
+  // Prefer live ESPN roster over hardcoded data
+  const baseRoster = liveRoster || opponentData.roster;
+  const opponentRoster = enrichRoster(baseRoster);
   const raptorsRoster = RAPTORS_ROSTER;
   const starPlayer = opponentRoster[0].name;
   const keyDefender = opponentRoster.length > 7 ? opponentRoster[7].name : "the bench";
@@ -5184,7 +5254,7 @@ const KeyMatchupsWidget = ({ opponent, isDark = true }) => {
         <div className="text-center flex-1">
           <div className="w-12 h-12 mx-auto rounded-full overflow-hidden bg-raptors-red/20 mb-2">
             <img 
-              src={`https://cdn.nba.com/headshots/nba/latest/1040x760/${raptorsStar.id}.png`} 
+              src={getHeadshot(raptorsStar)} 
               className="w-full h-full object-cover object-top"
               onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
               alt={raptorsStar.name}
@@ -5206,7 +5276,7 @@ const KeyMatchupsWidget = ({ opponent, isDark = true }) => {
         <div className="text-center flex-1">
           <div className="w-12 h-12 mx-auto rounded-full overflow-hidden bg-blue-500/20 mb-2">
             <img 
-              src={`https://cdn.nba.com/headshots/nba/latest/1040x760/${opponentStar.id}.png`} 
+              src={getHeadshot(opponentStar)} 
               className="w-full h-full object-cover object-top"
               onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
               alt={opponentStar.name}
@@ -5604,7 +5674,7 @@ const PlayerDeepDive = ({ player, opponentName, onClose, teamName = 'Raptors' })
         <div className="relative h-48 bg-cmd-bg overflow-hidden flex-shrink-0">
              <div className="absolute inset-0 bg-gradient-to-r from-cmd-bg via-cmd-surface to-raptors-red/20"></div>
              {!imgError ? (
-               <img src={`https://cdn.nba.com/headshots/nba/latest/1040x760/${player.id}.png`} onError={() => setImgError(true)} className="absolute bottom-0 right-10 h-[120%] object-contain" style={{filter: 'drop-shadow(0 0 20px rgba(206,17,65,0.4))'}} alt={player.name} />
+               <img src={getHeadshot(player)} onError={() => setImgError(true)} className="absolute bottom-0 right-10 h-[120%] object-contain" style={{filter: 'drop-shadow(0 0 20px rgba(206,17,65,0.4))'}} alt={player.name} />
              ) : (
                <div className="absolute bottom-0 right-10 h-[120%] w-48 flex flex-col items-center justify-center bg-gradient-to-br from-raptors-red/20 to-raptors-purple/30 rounded-full" style={{filter: 'drop-shadow(0 0 20px rgba(206,17,65,0.4))'}}>
                  <div className="text-6xl font-black text-raptors-red/80">{getInitials(player.name)}</div>
@@ -5815,7 +5885,7 @@ const PlayerCard = ({ player, onClick, onDeepDive, isOpponent, isSelected }) => 
     return (
         <div className={`card-3d group relative rounded-xl overflow-hidden transition-all duration-300 cursor-pointer ${isSelected ? 'ring-2 ring-raptors-red scale-105 z-20 shadow-xl shadow-raptors-red/20' : 'hover-lift'} bg-cmd-card border border-cmd-border h-40 flex flex-col justify-end`} onClick={onClick}>
             <div className="absolute inset-0 bg-gradient-to-t from-cmd-bg via-transparent to-transparent opacity-95"></div>
-            {!imgError ? (<img src={`https://cdn.nba.com/headshots/nba/latest/1040x760/${player.id}.png`} onError={() => setImgError(true)} className={`absolute top-0 left-1/2 -translate-x-1/2 w-[140%] max-w-none object-cover object-top h-full ${isOpponent ? 'grayscale-[0.3]' : ''}`} alt={player.name} />
+            {!imgError ? (<img src={getHeadshot(player)} onError={() => setImgError(true)} className={`absolute top-0 left-1/2 -translate-x-1/2 w-[140%] max-w-none object-cover object-top h-full ${isOpponent ? 'grayscale-[0.3]' : ''}`} alt={player.name} />
             ) : (
               <div className={`absolute inset-0 flex flex-col items-center justify-center ${isOpponent ? 'bg-gradient-to-br from-blue-900/50 to-blue-950/80' : 'bg-gradient-to-br from-raptors-red/20 to-raptors-purple/30'}`}>
                 <div className={`text-3xl font-black ${isOpponent ? 'text-blue-400' : 'text-raptors-red'} opacity-80`}>{getInitials(player.name)}</div>
@@ -5847,7 +5917,7 @@ const BenchCard = ({ player, onClick, isOpponent, isHighlighted }) => {
     };
     return (
         <div onClick={onClick} className={`flex-shrink-0 w-16 h-20 rounded-lg overflow-hidden relative cursor-pointer group transition-all bg-cmd-card border ${isHighlighted ? 'ring-2 ring-raptors-red/50 border-raptors-red/30 shadow-lg shadow-raptors-red/10' : 'border-cmd-border hover:ring-2 hover:ring-raptors-red/30 hover:border-raptors-red/20'}`} style={isHighlighted ? {animation: 'border-glow 2s ease-in-out infinite'} : {}}>
-             {!imgError ? (<img src={`https://cdn.nba.com/headshots/nba/latest/1040x760/${player.id}.png`} onError={() => setImgError(true)} className={`w-full h-full object-cover object-top ${isOpponent ? 'grayscale-[0.3]' : ''}`} alt={player.name} />) : (
+             {!imgError ? (<img src={getHeadshot(player)} onError={() => setImgError(true)} className={`w-full h-full object-cover object-top ${isOpponent ? 'grayscale-[0.3]' : ''}`} alt={player.name} />) : (
                <div className={`w-full h-full flex flex-col items-center justify-center ${isOpponent ? 'bg-gradient-to-br from-blue-900/30 to-blue-950/50' : 'bg-gradient-to-br from-raptors-red/10 to-raptors-purple/20'}`}>
                  <div className={`text-sm font-black ${isOpponent ? 'text-blue-400/70' : 'text-raptors-red/70'}`}>{getInitials(player.name)}</div>
                  <div className={`text-[9px] font-mono ${isOpponent ? 'text-blue-500/50' : 'text-raptors-red/50'}`}>#{player.number}</div>
