@@ -589,6 +589,29 @@ const analyzeGameMatchup = async (opponent) => {
         ],
         pace: { raptors: 101.2, opponent: 98.5, leagueAvg: 99.8 },
         homeSplits: { raptors: { home: "14-12", away: "9-20" }, opponent: { home: "18-8", away: "14-14" } },
+        rebounding: {
+            raptors: { oreb: 10.2, dreb: 33.5, total: 43.7, orebPct: 26.8 },
+            opponent: { oreb: 11.5, dreb: 34.2, total: 45.7, orebPct: 28.1 }
+        },
+        freeThrows: {
+            raptors: { ftPct: 78.5, ftaPerGame: 21.3, ftRate: 0.268 },
+            opponent: { ftPct: 76.2, ftaPerGame: 23.8, ftRate: 0.285 }
+        },
+        quarterScoring: {
+            raptors: { q1: 27.5, q2: 28.2, q3: 26.8, q4: 29.3 },
+            opponent: { q1: 28.1, q2: 27.5, q3: 28.9, q4: 27.2 }
+        },
+        seasonSeries: {
+            raptorsWins: 1, opponentWins: 1,
+            games: [
+                { date: "Nov 15", result: "W 112-105", topScorer: "Scottie Barnes - 28 pts" },
+                { date: "Jan 8", result: "L 98-115", topScorer: "RJ Barrett - 22 pts" }
+            ]
+        },
+        streaks: {
+            raptors: { current: "W4", home: "W2", away: "L1" },
+            opponent: { current: "W2", home: "W5", away: "L2" }
+        },
         socialChatter: [
             { headline: "Raptors acquire Chris Paul in blockbuster 3-team deadline deal", source: "Woj (ESPN)", sentiment: "positive" },
             { headline: "Trayce Jackson-Davis traded from Warriors to Raptors for 2nd-round pick", source: "Shams (Athletic)", sentiment: "neutral" },
@@ -1272,8 +1295,113 @@ const MatchupAnalyzer = ({ game }) => {
           </div>
       </div>
 
+      {/* 5.5 ADVANCED BATTLE METRICS */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 animate-slide-up" style={{animationDelay: '0.45s'}}>
+          {/* Rebounding Battle */}
+          <div className="glass-card p-4">
+              <div className="flex items-center gap-2 mb-3"><ArrowRightLeft className="w-4 h-4 text-cyan-400" /><span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Rebounding</span></div>
+              <div className="grid grid-cols-2 gap-3">
+                  <div className="text-center p-2 bg-raptors-red/10 rounded-lg border border-raptors-red/20">
+                      <div className="text-xl font-black text-white">{analysis.intel?.rebounding?.raptors?.total || 43.7}</div>
+                      <div className="text-[9px] text-slate-500 uppercase">TOR RPG</div>
+                      <div className="text-[10px] text-raptors-red mt-1">{analysis.intel?.rebounding?.raptors?.oreb || 10.2} OFF</div>
+                  </div>
+                  <div className="text-center p-2 bg-blue-500/10 rounded-lg border border-blue-500/20">
+                      <div className="text-xl font-black text-white">{analysis.intel?.rebounding?.opponent?.total || 45.7}</div>
+                      <div className="text-[9px] text-slate-500 uppercase">OPP RPG</div>
+                      <div className="text-[10px] text-blue-400 mt-1">{analysis.intel?.rebounding?.opponent?.oreb || 11.5} OFF</div>
+                  </div>
+              </div>
+              <div className="mt-3 pt-2 border-t border-cmd-border">
+                  <div className="flex justify-between text-[10px]">
+                      <span className="text-slate-500">OREB%</span>
+                      <span className="text-raptors-red font-bold">{analysis.intel?.rebounding?.raptors?.orebPct || 26.8}%</span>
+                      <span className="text-blue-400 font-bold">{analysis.intel?.rebounding?.opponent?.orebPct || 28.1}%</span>
+                  </div>
+              </div>
+          </div>
+
+          {/* Free Throw Battle */}
+          <div className="glass-card p-4">
+              <div className="flex items-center gap-2 mb-3"><Target className="w-4 h-4 text-yellow-400" /><span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Free Throws</span></div>
+              <div className="space-y-2">
+                  <div className="flex justify-between items-center p-2 bg-cmd-bg/50 rounded-lg">
+                      <span className="text-xs text-raptors-red font-bold">TOR</span>
+                      <div className="flex gap-3 text-xs">
+                          <span className="text-white font-mono">{analysis.intel?.freeThrows?.raptors?.ftPct || 78.5}%</span>
+                          <span className="text-slate-400">{analysis.intel?.freeThrows?.raptors?.ftaPerGame || 21.3} FTA</span>
+                      </div>
+                  </div>
+                  <div className="flex justify-between items-center p-2 bg-cmd-bg/50 rounded-lg">
+                      <span className="text-xs text-blue-400 font-bold">OPP</span>
+                      <div className="flex gap-3 text-xs">
+                          <span className="text-white font-mono">{analysis.intel?.freeThrows?.opponent?.ftPct || 76.2}%</span>
+                          <span className="text-slate-400">{analysis.intel?.freeThrows?.opponent?.ftaPerGame || 23.8} FTA</span>
+                      </div>
+                  </div>
+              </div>
+              <div className="mt-2 text-center">
+                  <span className="text-[9px] text-slate-500">FT Rate: TOR {((analysis.intel?.freeThrows?.raptors?.ftRate || 0.268) * 100).toFixed(1)}% | OPP {((analysis.intel?.freeThrows?.opponent?.ftRate || 0.285) * 100).toFixed(1)}%</span>
+              </div>
+          </div>
+
+          {/* Quarter Scoring */}
+          <div className="glass-card p-4">
+              <div className="flex items-center gap-2 mb-3"><Timer className="w-4 h-4 text-pink-400" /><span className="text-xs font-bold text-slate-500 uppercase tracking-wider">By Quarter</span></div>
+              <div className="space-y-1.5">
+                  {['Q1', 'Q2', 'Q3', 'Q4'].map((q, i) => {
+                      const qKey = q.toLowerCase();
+                      const torVal = analysis.intel?.quarterScoring?.raptors?.[qKey] || [27.5, 28.2, 26.8, 29.3][i];
+                      const oppVal = analysis.intel?.quarterScoring?.opponent?.[qKey] || [28.1, 27.5, 28.9, 27.2][i];
+                      const torWins = torVal > oppVal;
+                      return (
+                          <div key={q} className="flex items-center gap-2 text-xs">
+                              <span className="w-6 text-slate-500 font-bold">{q}</span>
+                              <div className="flex-1 flex items-center gap-1">
+                                  <span className={`font-mono ${torWins ? 'text-green-400' : 'text-slate-400'}`}>{torVal}</span>
+                                  <div className="flex-1 h-1.5 bg-cmd-border rounded-full overflow-hidden flex">
+                                      <div className="bg-raptors-red h-full" style={{width: `${(torVal / (torVal + oppVal)) * 100}%`}}></div>
+                                      <div className="bg-blue-500 h-full flex-1"></div>
+                                  </div>
+                                  <span className={`font-mono ${!torWins ? 'text-green-400' : 'text-slate-400'}`}>{oppVal}</span>
+                              </div>
+                          </div>
+                      );
+                  })}
+              </div>
+          </div>
+
+          {/* Season Series */}
+          <div className="glass-card p-4">
+              <div className="flex items-center gap-2 mb-3"><Trophy className="w-4 h-4 text-amber-400" /><span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Season Series</span></div>
+              <div className="text-center mb-3">
+                  <div className="flex justify-center items-center gap-4">
+                      <div>
+                          <div className="text-2xl font-black text-raptors-red">{analysis.intel?.seasonSeries?.raptorsWins || 1}</div>
+                          <div className="text-[9px] text-slate-500">TOR</div>
+                      </div>
+                      <span className="text-slate-600 text-xl">-</span>
+                      <div>
+                          <div className="text-2xl font-black text-blue-400">{analysis.intel?.seasonSeries?.opponentWins || 1}</div>
+                          <div className="text-[9px] text-slate-500">OPP</div>
+                      </div>
+                  </div>
+              </div>
+              <div className="space-y-1.5">
+                  {(analysis.intel?.seasonSeries?.games || [
+                      { date: "Nov 15", result: "W 112-105", topScorer: "Barnes - 28" },
+                      { date: "Jan 8", result: "L 98-115", topScorer: "Barrett - 22" }
+                  ]).map((g, i) => (
+                      <div key={i} className={`text-[10px] p-1.5 rounded ${g.result.startsWith('W') ? 'bg-green-500/10 text-green-400' : 'bg-red-500/10 text-red-400'}`}>
+                          <span className="font-bold">{g.date}:</span> {g.result}
+                      </div>
+                  ))}
+              </div>
+          </div>
+      </div>
+
       {/* 6. ROTATION SIMULATOR */}
-      <div className="glass-card overflow-hidden animate-slide-up" style={{animationDelay: '0.5s'}}>
+      <div className="glass-card overflow-hidden animate-slide-up" style={{animationDelay: '0.55s'}}>
           <div className="relative bg-gradient-to-r from-cmd-bg via-cmd-surface to-cmd-bg px-6 py-5 overflow-hidden">
               <div className="absolute inset-0 bg-grid opacity-20"></div>
               <div className="relative z-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
