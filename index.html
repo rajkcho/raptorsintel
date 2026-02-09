@@ -958,6 +958,236 @@
         opacity: 0.3;
         transition: 0s;
       }
+      
+      /* Animated Counter */
+      .counter-animate {
+        display: inline-block;
+        font-variant-numeric: tabular-nums;
+      }
+      
+      /* Premium Gradients */
+      .gradient-fire {
+        background: linear-gradient(135deg, #CE1141, #ff6b35, #f7b733);
+      }
+      .gradient-ice {
+        background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+      }
+      .gradient-gold {
+        background: linear-gradient(135deg, #f7b733, #fc4a1a, #f7b733);
+        background-size: 200% 200%;
+        animation: gradient-shift 3s ease infinite;
+      }
+      .gradient-raptors {
+        background: linear-gradient(135deg, #CE1141, #3E2680, #CE1141);
+        background-size: 200% 200%;
+        animation: gradient-shift 4s ease infinite;
+      }
+      
+      /* Spotlight Effect */
+      .spotlight {
+        position: relative;
+        overflow: hidden;
+      }
+      .spotlight::before {
+        content: '';
+        position: absolute;
+        width: 200px;
+        height: 200px;
+        background: radial-gradient(circle, rgba(206,17,65,0.15) 0%, transparent 70%);
+        top: var(--mouse-y, 50%);
+        left: var(--mouse-x, 50%);
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+        transition: opacity 0.3s;
+        opacity: 0;
+      }
+      .spotlight:hover::before {
+        opacity: 1;
+      }
+      
+      /* Stat Card Animation */
+      .stat-card-enter {
+        animation: stat-card-in 0.5s ease-out both;
+      }
+      @keyframes stat-card-in {
+        from {
+          opacity: 0;
+          transform: translateY(20px) scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+      
+      /* Pulsing Dot */
+      .pulse-dot {
+        position: relative;
+      }
+      .pulse-dot::before {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: inherit;
+        animation: pulse-dot-expand 1.5s ease-out infinite;
+      }
+      @keyframes pulse-dot-expand {
+        0% { transform: scale(1); opacity: 0.7; }
+        100% { transform: scale(2.5); opacity: 0; }
+      }
+      
+      /* Number Pop */
+      .number-pop {
+        animation: number-pop 0.3s ease-out;
+      }
+      @keyframes number-pop {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.2); }
+        100% { transform: scale(1); }
+      }
+      
+      /* Slide In */
+      .slide-in-left { animation: slide-in-left 0.4s ease-out both; }
+      .slide-in-right { animation: slide-in-right 0.4s ease-out both; }
+      @keyframes slide-in-left {
+        from { opacity: 0; transform: translateX(-20px); }
+        to { opacity: 1; transform: translateX(0); }
+      }
+      @keyframes slide-in-right {
+        from { opacity: 0; transform: translateX(20px); }
+        to { opacity: 1; transform: translateX(0); }
+      }
+      
+      /* Scale In */
+      .scale-in {
+        animation: scale-in 0.3s ease-out both;
+      }
+      @keyframes scale-in {
+        from { opacity: 0; transform: scale(0.9); }
+        to { opacity: 1; transform: scale(1); }
+      }
+      
+      /* Breathe Animation */
+      .breathe {
+        animation: breathe 4s ease-in-out infinite;
+      }
+      @keyframes breathe {
+        0%, 100% { transform: scale(1); opacity: 0.8; }
+        50% { transform: scale(1.05); opacity: 1; }
+      }
+      
+      /* Progress Bar Fill */
+      .progress-fill {
+        animation: progress-fill 1s ease-out both;
+        transform-origin: left;
+      }
+      @keyframes progress-fill {
+        from { transform: scaleX(0); }
+        to { transform: scaleX(1); }
+      }
+      
+      /* Icon Bounce */
+      .icon-bounce:hover {
+        animation: icon-bounce 0.5s ease;
+      }
+      @keyframes icon-bounce {
+        0%, 100% { transform: translateY(0); }
+        25% { transform: translateY(-5px); }
+        50% { transform: translateY(0); }
+        75% { transform: translateY(-3px); }
+      }
+      
+      /* Rotate In */
+      .rotate-in {
+        animation: rotate-in 0.5s ease-out both;
+      }
+      @keyframes rotate-in {
+        from { opacity: 0; transform: rotate(-10deg) scale(0.9); }
+        to { opacity: 1; transform: rotate(0) scale(1); }
+      }
+      
+      /* Flip Card */
+      .flip-card {
+        perspective: 1000px;
+      }
+      .flip-card-inner {
+        transition: transform 0.6s;
+        transform-style: preserve-3d;
+      }
+      .flip-card:hover .flip-card-inner {
+        transform: rotateY(180deg);
+      }
+      .flip-card-front, .flip-card-back {
+        backface-visibility: hidden;
+      }
+      .flip-card-back {
+        transform: rotateY(180deg);
+      }
+      
+      /* Elastic */
+      .elastic {
+        transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      }
+      .elastic:hover {
+        transform: scale(1.05);
+      }
+      
+      /* Morph Button */
+      .morph-btn {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .morph-btn:hover {
+        border-radius: 50px;
+        padding-left: 2rem;
+        padding-right: 2rem;
+      }
+      
+      /* Text Shimmer */
+      .text-shimmer {
+        background: linear-gradient(90deg, 
+          rgba(255,255,255,0.1) 0%, 
+          rgba(255,255,255,0.3) 50%, 
+          rgba(255,255,255,0.1) 100%);
+        background-size: 200% 100%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        animation: text-shimmer 2s linear infinite;
+      }
+      @keyframes text-shimmer {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+      }
+      
+      /* Loading Spinner */
+      .spinner-premium {
+        width: 40px;
+        height: 40px;
+        border: 3px solid rgba(206,17,65,0.1);
+        border-top-color: #CE1141;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+      
+      /* Custom Scrollbar Premium */
+      .custom-scrollbar-premium::-webkit-scrollbar {
+        width: 8px;
+      }
+      .custom-scrollbar-premium::-webkit-scrollbar-track {
+        background: rgba(17, 24, 39, 0.5);
+        border-radius: 4px;
+      }
+      .custom-scrollbar-premium::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, #CE1141, #3E2680);
+        border-radius: 4px;
+      }
+      .custom-scrollbar-premium::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(180deg, #ff1a4d, #5a3d9e);
+      }
       .hover-lift {
         transition: transform 0.3s ease, box-shadow 0.3s ease;
       }
@@ -2636,6 +2866,129 @@ const MagneticButton = ({ children, onClick, className = '', isDark = true }) =>
     >
       {children}
     </button>
+  );
+};
+
+// Spotlight Card
+const SpotlightCard = ({ children, className = '', isDark = true }) => {
+  const cardRef = useRef(null);
+  
+  const handleMouseMove = (e) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    cardRef.current.style.setProperty('--mouse-x', `${x}%`);
+    cardRef.current.style.setProperty('--mouse-y', `${y}%`);
+  };
+  
+  return (
+    <div 
+      ref={cardRef}
+      className={`spotlight ${className}`}
+      onMouseMove={handleMouseMove}
+    >
+      {children}
+    </div>
+  );
+};
+
+// Animated List Item
+const AnimatedListItem = ({ children, index = 0, className = '' }) => (
+  <div 
+    className={`stagger-item ${className}`}
+    style={{ animationDelay: `${index * 0.08}s` }}
+  >
+    {children}
+  </div>
+);
+
+// Glowing Number
+const GlowingNumber = ({ value, size = 'lg', color = 'red', animate = false }) => {
+  const sizeClasses = {
+    sm: 'text-lg',
+    md: 'text-2xl',
+    lg: 'text-4xl',
+    xl: 'text-6xl'
+  };
+  const colorClasses = {
+    red: 'text-raptors-red text-glow',
+    green: 'text-green-400',
+    gold: 'text-amber-400',
+    purple: 'text-purple-400'
+  };
+  
+  return (
+    <span className={`font-black ${sizeClasses[size]} ${colorClasses[color]} ${animate ? 'number-pop' : ''}`}>
+      {value}
+    </span>
+  );
+};
+
+// Animated Stat Bar
+const AnimatedStatBar = ({ value, max = 100, color = '#CE1141', label, showValue = true, delay = 0, isDark = true }) => {
+  const pct = (value / max) * 100;
+  
+  return (
+    <div className="space-y-1">
+      {label && (
+        <div className="flex justify-between text-[10px]">
+          <span className={isDark ? 'text-slate-400' : 'text-slate-500'}>{label}</span>
+          {showValue && <span className="font-bold" style={{ color }}>{value}</span>}
+        </div>
+      )}
+      <div className={`h-2 rounded-full overflow-hidden ${isDark ? 'bg-cmd-border' : 'bg-light-border'}`}>
+        <div 
+          className="h-full rounded-full progress-fill"
+          style={{ 
+            width: `${pct}%`, 
+            background: `linear-gradient(90deg, ${color}, ${color}88)`,
+            animationDelay: `${delay}s`,
+            boxShadow: `0 0 10px ${color}40`
+          }}
+        />
+      </div>
+    </div>
+  );
+};
+
+// Flip Stat Card
+const FlipStatCard = ({ front, back, isDark = true }) => (
+  <div className="flip-card h-20">
+    <div className="flip-card-inner relative w-full h-full">
+      <div className={`flip-card-front absolute inset-0 ${isDark ? 'glass-card' : 'bg-white border border-light-border rounded-2xl'} p-3 flex items-center justify-center`}>
+        {front}
+      </div>
+      <div className={`flip-card-back absolute inset-0 ${isDark ? 'glass-card' : 'bg-white border border-light-border rounded-2xl'} p-3 flex items-center justify-center`}>
+        {back}
+      </div>
+    </div>
+  </div>
+);
+
+// Premium Loading State
+const PremiumLoader = ({ text = 'Loading...', isDark = true }) => (
+  <div className="flex flex-col items-center justify-center gap-4 p-8">
+    <div className="spinner-premium" />
+    <div className={`text-sm ${isDark ? 'text-slate-400' : 'text-slate-500'} text-shimmer`}>{text}</div>
+  </div>
+);
+
+// Animated Badge
+const AnimatedBadge = ({ children, variant = 'default', pulse = false }) => {
+  const variants = {
+    default: 'bg-slate-500/20 text-slate-400',
+    success: 'bg-green-500/20 text-green-400',
+    warning: 'bg-amber-500/20 text-amber-400',
+    danger: 'bg-red-500/20 text-red-400',
+    info: 'bg-blue-500/20 text-blue-400',
+    raptors: 'gradient-raptors text-white'
+  };
+  
+  return (
+    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold scale-in ${variants[variant]} ${pulse ? 'breathe' : ''}`}>
+      {children}
+    </span>
   );
 };
 
@@ -8602,7 +8955,7 @@ function App() {
         <div className="w-full max-w-[98%] mx-auto px-4 flex items-center justify-between text-xs text-slate-500">
           <div className="flex items-center gap-2">
             <span className="font-bold text-raptors-red neon-flicker">RAPTORS INTEL</span>
-            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v8.6</span>
+            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v8.7</span>
           </div>
           <div className="hidden md:flex items-center gap-4">
             <span>Built for Raptors fans 🦖</span>
