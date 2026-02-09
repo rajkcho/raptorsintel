@@ -604,6 +604,156 @@ const BETTING_DATA = {
   moneyline: { raptors: -155, opponent: +135, raptorsPct: 62, opponentPct: 38 }
 };
 
+// 2025-26 NBA Salary Cap Info
+const NBA_SALARY_CAP = {
+  cap: 140588000,        // $140.588M
+  luxuryTax: 170814000,  // $170.814M
+  apron1: 178132000,     // First apron $178.132M
+  apron2: 188931000,     // Second apron $188.931M
+  minimum: 126529200,    // Minimum team salary
+};
+
+// Format salary for display
+const formatSalary = (amount) => {
+  if (!amount) return 'N/A';
+  if (amount >= 1000000) return `$${(amount / 1000000).toFixed(1)}M`;
+  if (amount >= 1000) return `$${(amount / 1000).toFixed(0)}K`;
+  return `$${amount.toLocaleString()}`;
+};
+
+// Team Salary Data (2025-26 season)
+const TEAM_SALARIES = {
+  "Raptors": {
+    total: 156800000,
+    capSpace: -16212000,
+    luxuryTaxBill: 0,
+    roster: {
+      "1630567": { salary: 28372000, years: 4, expiry: 2029, type: "Rookie Max Extension" }, // Scottie Barnes
+      "1629628": { salary: 25550000, years: 3, expiry: 2027, type: "Standard" }, // RJ Barrett
+      "1630193": { salary: 26900000, years: 4, expiry: 2029, type: "Extension" }, // Immanuel Quickley
+      "1627742": { salary: 36000000, years: 3, expiry: 2028, type: "Max" }, // Brandon Ingram
+      "1627751": { salary: 19500000, years: 2, expiry: 2027, type: "Standard" }, // Jakob Poeltl
+      "1630572": { salary: 2200000, years: 2, expiry: 2027, type: "Standard" }, // Sandro Mamukelashvili
+      "1642347": { salary: 3500000, years: 4, expiry: 2029, type: "Rookie" }, // Jamal Shead
+      "1642867": { salary: 5200000, years: 4, expiry: 2029, type: "Rookie" }, // Collin Murray-Boyles
+      "1642266": { salary: 4200000, years: 3, expiry: 2028, type: "Rookie" }, // Ja'Kobe Walter
+      "1641711": { salary: 4800000, years: 3, expiry: 2028, type: "Rookie" }, // Gradey Dick
+      "1631218": { salary: 2100000, years: 2, expiry: 2027, type: "Standard" }, // Trayce Jackson-Davis
+      "1642367": { salary: 1200000, years: 2, expiry: 2027, type: "Two-Way" }, // Jonathan Mogbo
+      "1642419": { salary: 1800000, years: 2, expiry: 2027, type: "Standard" }, // Jamison Battle
+      "202066": { salary: 2100000, years: 1, expiry: 2026, type: "Veteran Min" }, // Garrett Temple
+      "1630639": { salary: 580000, years: 1, expiry: 2026, type: "Two-Way" }, // A.J. Lawson
+      "1642918": { salary: 580000, years: 1, expiry: 2026, type: "Two-Way" }, // Alijah Martin
+      "1642935": { salary: 580000, years: 1, expiry: 2026, type: "Two-Way" }, // Chucky Hepburn
+      "101108": { salary: 11400000, years: 1, expiry: 2026, type: "Standard" }, // Chris Paul
+    }
+  },
+  "Pistons": {
+    total: 128500000,
+    capSpace: 12088000,
+    luxuryTaxBill: 0,
+    roster: {
+      "1630595": { salary: 13200000, years: 2, expiry: 2027, type: "Rookie Extension" }, // Cade Cunningham
+      "1630217": { salary: 8600000, years: 2, expiry: 2027, type: "Rookie" }, // Jaden Ivey
+      "1631105": { salary: 6000000, years: 3, expiry: 2028, type: "Rookie" }, // Jalen Duren
+      "1631223": { salary: 5800000, years: 3, expiry: 2028, type: "Rookie" }, // Ausar Thompson
+      "203082": { salary: 23500000, years: 2, expiry: 2027, type: "Standard" }, // Tobias Harris
+      "1628381": { salary: 6500000, years: 1, expiry: 2026, type: "Standard" }, // Malik Beasley
+      "203501": { salary: 16800000, years: 2, expiry: 2027, type: "Standard" }, // Tim Hardaway Jr.
+      "1631326": { salary: 5500000, years: 4, expiry: 2029, type: "Rookie" }, // Ron Holland
+    }
+  },
+  "Pacers": {
+    total: 175200000,
+    capSpace: -34612000,
+    luxuryTaxBill: 4400000,
+    roster: {
+      "1629029": { salary: 45000000, years: 4, expiry: 2029, type: "Max Extension" }, // Tyrese Haliburton
+      "1628988": { salary: 37900000, years: 3, expiry: 2028, type: "Max" }, // Pascal Siakam
+      "1631114": { salary: 8200000, years: 2, expiry: 2027, type: "Rookie" }, // Bennedict Mathurin
+      "203490": { salary: 19900000, years: 2, expiry: 2027, type: "Standard" }, // Myles Turner
+      "1629303": { salary: 8500000, years: 3, expiry: 2028, type: "Standard" }, // Andrew Nembhard
+      "1627763": { salary: 2100000, years: 1, expiry: 2026, type: "Veteran Min" }, // T.J. McConnell
+      "1627734": { salary: 13500000, years: 2, expiry: 2027, type: "Standard" }, // Obi Toppin
+      "1629659": { salary: 6400000, years: 3, expiry: 2028, type: "Standard" }, // Aaron Nesmith
+    }
+  },
+  "Bulls": {
+    total: 169800000,
+    capSpace: -29212000,
+    luxuryTaxBill: 0,
+    roster: {
+      "1627853": { salary: 43000000, years: 3, expiry: 2028, type: "Max" }, // Zach LaVine
+      "1628374": { salary: 18500000, years: 4, expiry: 2029, type: "Extension" }, // Coby White
+      "1630533": { salary: 8800000, years: 3, expiry: 2028, type: "Trade" }, // Josh Giddey
+      "203897": { salary: 20000000, years: 2, expiry: 2027, type: "Standard" }, // Nikola Vucevic
+      "1628990": { salary: 12900000, years: 3, expiry: 2028, type: "Extension" }, // Patrick Williams
+      "1630173": { salary: 7000000, years: 3, expiry: 2028, type: "Standard" }, // Ayo Dosunmu
+      "1631210": { salary: 5000000, years: 4, expiry: 2029, type: "Rookie" }, // Matas Buzelis
+      "1629655": { salary: 2100000, years: 1, expiry: 2026, type: "Standard" }, // Talen Horton-Tucker
+    }
+  },
+  "Bucks": {
+    total: 192500000,
+    capSpace: -51912000,
+    luxuryTaxBill: 48200000,
+    roster: {
+      "203507": { salary: 48800000, years: 3, expiry: 2028, type: "Supermax" }, // Giannis Antetokounmpo
+      "203114": { salary: 31700000, years: 2, expiry: 2027, type: "Standard" }, // Khris Middleton
+      "201572": { salary: 23000000, years: 2, expiry: 2027, type: "Standard" }, // Brook Lopez
+      "1627739": { salary: 4000000, years: 2, expiry: 2027, type: "Standard" }, // Taurean Prince
+      "1629022": { salary: 18200000, years: 2, expiry: 2027, type: "Trade" }, // Gary Trent Jr.
+      "1631100": { salary: 2000000, years: 3, expiry: 2028, type: "Standard" }, // AJ Green
+      "1630226": { salary: 9400000, years: 2, expiry: 2027, type: "Standard" }, // Pat Connaughton
+      "1628978": { salary: 10800000, years: 2, expiry: 2027, type: "Standard" }, // Bobby Portis
+    }
+  },
+  "Thunder": {
+    total: 165400000,
+    capSpace: -24812000,
+    luxuryTaxBill: 0,
+    roster: {
+      "1630532": { salary: 35000000, years: 5, expiry: 2030, type: "Designated Max" }, // Shai Gilgeous-Alexander
+      "1630581": { salary: 8000000, years: 2, expiry: 2027, type: "Rookie" }, // Jalen Williams
+      "1630549": { salary: 12100000, years: 3, expiry: 2028, type: "Rookie" }, // Chet Holmgren
+      "1629008": { salary: 15300000, years: 4, expiry: 2029, type: "Extension" }, // Lu Dort
+      "1630537": { salary: 3200000, years: 3, expiry: 2028, type: "Standard" }, // Isaiah Joe
+      "1628412": { salary: 4200000, years: 2, expiry: 2027, type: "Standard" }, // Kenrich Williams
+      "1629743": { salary: 29000000, years: 3, expiry: 2028, type: "Standard" }, // Isaiah Hartenstein
+      "1630585": { salary: 6000000, years: 3, expiry: 2028, type: "Standard" }, // Aaron Wiggins
+    }
+  },
+  "Spurs": {
+    total: 118900000,
+    capSpace: 21688000,
+    luxuryTaxBill: 0,
+    roster: {
+      "1641706": { salary: 12200000, years: 3, expiry: 2028, type: "Rookie" }, // Victor Wembanyama
+      "1631104": { salary: 7200000, years: 4, expiry: 2029, type: "Rookie" }, // Stephon Castle
+      "1628464": { salary: 18500000, years: 4, expiry: 2029, type: "Extension" }, // Devin Vassell
+      "1629649": { salary: 11000000, years: 3, expiry: 2028, type: "Extension" }, // Keldon Johnson
+      "1630537": { salary: 8500000, years: 3, expiry: 2028, type: "Rookie" }, // Jeremy Sochan
+      "201566": { salary: 18000000, years: 2, expiry: 2027, type: "Standard" }, // Harrison Barnes
+      "1628499": { salary: 2200000, years: 2, expiry: 2027, type: "Standard" }, // Julian Champagnie
+    }
+  },
+  "Wizards": {
+    total: 105600000,
+    capSpace: 34988000,
+    luxuryTaxBill: 0,
+    roster: {
+      "1630178": { salary: 28400000, years: 3, expiry: 2028, type: "Extension" }, // Jordan Poole
+      "1630217": { salary: 8500000, years: 3, expiry: 2028, type: "Extension" }, // Corey Kispert
+      "1629008": { salary: 23500000, years: 2, expiry: 2027, type: "Standard" }, // Kyle Kuzma
+      "1631097": { salary: 10900000, years: 4, expiry: 2029, type: "Rookie" }, // Alexandre Sarr
+      "1631101": { salary: 5500000, years: 3, expiry: 2028, type: "Rookie" }, // Bilal Coulibaly
+      "1629635": { salary: 7000000, years: 3, expiry: 2028, type: "Standard" }, // Deni Avdija
+      "1630206": { salary: 16800000, years: 2, expiry: 2027, type: "Standard" }, // Malcolm Brogdon
+      "1631107": { salary: 4500000, years: 3, expiry: 2028, type: "Rookie" }, // Johnny Davis
+    }
+  },
+};
+
 // Arena Data
 const ARENA_DATA = {
   name: "Scotiabank Arena",
@@ -2174,10 +2324,15 @@ const StatBox = ({ label, value, sub, color }) => (
     </div>
 );
 
-const PlayerDeepDive = ({ player, opponentName, onClose }) => {
+const PlayerDeepDive = ({ player, opponentName, onClose, teamName = 'Raptors' }) => {
   const s = player.seasonStats || {};
   const v = player.vsOpponentStats || {};
   const a = player.advanced || {};
+  
+  // Get salary info for this player
+  const teamSalaryData = TEAM_SALARIES[teamName] || TEAM_SALARIES['Raptors'];
+  const playerSalary = teamSalaryData?.roster?.[player.id] || null;
+  
   const radarData = [
     { subject: 'PTS', A: s.ppg || 0, fullMark: 30 },
     { subject: 'REB', A: s.rpg || 0, fullMark: 15 },
@@ -2196,6 +2351,14 @@ const PlayerDeepDive = ({ player, opponentName, onClose }) => {
                  <button onClick={onClose} className="mb-4 text-slate-500 hover:text-raptors-red flex items-center gap-2 transition-colors"><X className="w-5 h-5" /> Close Scouting Report</button>
                  <h2 className="text-5xl font-black text-white uppercase italic tracking-tighter neon-text">{player.name}</h2>
                  <div className="flex gap-4 mt-2 text-xl font-mono text-slate-400"><span>#{player.number}</span><span>|</span><span>{player.position}</span></div>
+                 {/* Salary Badge */}
+                 {playerSalary && (
+                   <div className="mt-3 inline-flex items-center gap-2 bg-green-500/10 border border-green-500/30 px-3 py-1.5 rounded-full">
+                     <span className="text-green-400 text-lg">💰</span>
+                     <span className="text-green-400 font-black text-lg">{formatSalary(playerSalary.salary)}</span>
+                     <span className="text-green-400/60 text-xs">/ year</span>
+                   </div>
+                 )}
              </div>
         </div>
         <div className="p-8 overflow-y-auto custom-scrollbar">
@@ -2229,6 +2392,52 @@ const PlayerDeepDive = ({ player, opponentName, onClose }) => {
                        </div>
                    </div>
                    <div className="bg-cmd-bg/50 p-4 rounded-xl border border-cmd-border"><p className="text-sm text-slate-400 italic leading-relaxed">"{player.analysis || `Key player for the rotation against ${opponentName}.`}"</p></div>
+                   
+                   {/* Contract Information */}
+                   {playerSalary && (
+                     <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/5 border border-green-500/20 p-4 rounded-xl">
+                       <div className="flex items-center gap-2 mb-3">
+                         <span className="text-lg">📋</span>
+                         <h4 className="text-xs font-bold text-green-400 uppercase tracking-widest">Contract Details</h4>
+                       </div>
+                       <div className="space-y-2">
+                         <div className="flex justify-between items-center p-2 bg-cmd-bg/50 rounded-lg">
+                           <span className="text-slate-400 text-sm">Annual Salary</span>
+                           <span className="font-mono font-black text-green-400 text-lg">{formatSalary(playerSalary.salary)}</span>
+                         </div>
+                         <div className="flex justify-between items-center p-2 bg-cmd-bg/50 rounded-lg">
+                           <span className="text-slate-400 text-sm">Contract Type</span>
+                           <span className="font-bold text-white text-sm">{playerSalary.type}</span>
+                         </div>
+                         <div className="flex justify-between items-center p-2 bg-cmd-bg/50 rounded-lg">
+                           <span className="text-slate-400 text-sm">Years Remaining</span>
+                           <span className="font-mono font-bold text-white">{playerSalary.years} yrs</span>
+                         </div>
+                         <div className="flex justify-between items-center p-2 bg-cmd-bg/50 rounded-lg">
+                           <span className="text-slate-400 text-sm">Expires</span>
+                           <span className="font-mono font-bold text-amber-400">{playerSalary.expiry}</span>
+                         </div>
+                         {/* Cost per stat */}
+                         <div className="mt-3 pt-3 border-t border-green-500/20">
+                           <div className="text-[10px] text-slate-500 uppercase mb-2">Cost Per Stat Point</div>
+                           <div className="grid grid-cols-3 gap-2 text-center">
+                             <div className="bg-cmd-bg/50 rounded-lg p-2">
+                               <div className="text-[9px] text-slate-500">$/PPG</div>
+                               <div className="text-xs font-mono font-bold text-white">{s.ppg ? formatSalary(Math.round(playerSalary.salary / s.ppg)) : 'N/A'}</div>
+                             </div>
+                             <div className="bg-cmd-bg/50 rounded-lg p-2">
+                               <div className="text-[9px] text-slate-500">$/RPG</div>
+                               <div className="text-xs font-mono font-bold text-white">{s.rpg ? formatSalary(Math.round(playerSalary.salary / s.rpg)) : 'N/A'}</div>
+                             </div>
+                             <div className="bg-cmd-bg/50 rounded-lg p-2">
+                               <div className="text-[9px] text-slate-500">$/APG</div>
+                               <div className="text-xs font-mono font-bold text-white">{s.apg ? formatSalary(Math.round(playerSalary.salary / s.apg)) : 'N/A'}</div>
+                             </div>
+                           </div>
+                         </div>
+                       </div>
+                     </div>
+                   )}
                </div>
                <div className="space-y-6">
                    <h3 className="flex items-center gap-2 text-white font-bold uppercase tracking-widest border-b border-cmd-border pb-2"><TrendingUp className="w-4 h-4" /> Impact Profile</h3>
@@ -3009,7 +3218,7 @@ const MatchupAnalyzer = ({ game }) => {
                             <div className={`text-xs font-mono font-bold px-2 py-0.5 rounded ${raptorsAgg.net >= 0 ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'}`}>NET {raptorsAgg.net > 0 ? '+' : ''}{raptorsAgg.net.toFixed(1)}</div>
                         </div>
                     </div>
-                    <div className="grid grid-cols-5 gap-2">{activeRaptorsLineup.map((player, idx) => (<PlayerCard key={player.id} player={player} onClick={() => setSelectedSlot(selectedSlot?.team === 'raptors' && selectedSlot?.index === idx ? null : { team: 'raptors', index: idx })} onDeepDive={() => setSelectedPlayerForDeepDive(player)} isSelected={selectedSlot?.team === 'raptors' && selectedSlot?.index === idx} />))}</div>
+                    <div className="grid grid-cols-5 gap-2">{activeRaptorsLineup.map((player, idx) => (<PlayerCard key={player.id} player={player} onClick={() => setSelectedSlot(selectedSlot?.team === 'raptors' && selectedSlot?.index === idx ? null : { team: 'raptors', index: idx })} onDeepDive={() => setSelectedPlayerForDeepDive({ player, team: 'Raptors' })} isSelected={selectedSlot?.team === 'raptors' && selectedSlot?.index === idx} />))}</div>
                     <div className="mt-4 pt-3 border-t border-raptors-red/10">
                          <div className="flex items-center justify-between mb-2"><div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Bench ({raptorsBench.length})</div>{selectedSlot?.team === 'raptors' && <div className="text-[10px] font-bold text-raptors-red animate-pulse uppercase neon-text-subtle">Click to swap in</div>}</div>
                          <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">{raptorsBench.map(player => (<BenchCard key={player.id} player={player} onClick={() => handleBenchClick(player, 'raptors')} isHighlighted={selectedSlot?.team === 'raptors'} />))}</div>
@@ -3024,7 +3233,7 @@ const MatchupAnalyzer = ({ game }) => {
                             <div className={`text-xs font-mono font-bold px-2 py-0.5 rounded ${opponentAgg.net >= 0 ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'}`}>NET {opponentAgg.net > 0 ? '+' : ''}{opponentAgg.net.toFixed(1)}</div>
                         </div>
                     </div>
-                    <div className="grid grid-cols-5 gap-2">{activeOpponentLineup.map((player, idx) => (<PlayerCard key={player.id} player={player} onClick={() => setSelectedSlot(selectedSlot?.team === 'opponent' && selectedSlot?.index === idx ? null : { team: 'opponent', index: idx })} onDeepDive={() => setSelectedPlayerForDeepDive(player)} isOpponent isSelected={selectedSlot?.team === 'opponent' && selectedSlot?.index === idx} />))}</div>
+                    <div className="grid grid-cols-5 gap-2">{activeOpponentLineup.map((player, idx) => (<PlayerCard key={player.id} player={player} onClick={() => setSelectedSlot(selectedSlot?.team === 'opponent' && selectedSlot?.index === idx ? null : { team: 'opponent', index: idx })} onDeepDive={() => setSelectedPlayerForDeepDive({ player, team: game.opponent })} isOpponent isSelected={selectedSlot?.team === 'opponent' && selectedSlot?.index === idx} />))}</div>
                     <div className="mt-4 pt-3 border-t border-blue-500/10">
                          <div className="flex items-center justify-between mb-2"><div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Bench ({opponentBench.length})</div>{selectedSlot?.team === 'opponent' && <div className="text-[10px] font-bold text-blue-400 animate-pulse uppercase">Click to swap in</div>}</div>
                          <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">{opponentBench.map(player => (<BenchCard key={player.id} player={player} onClick={() => handleBenchClick(player, 'opponent')} isOpponent isHighlighted={selectedSlot?.team === 'opponent'} />))}</div>
@@ -3074,7 +3283,7 @@ const MatchupAnalyzer = ({ game }) => {
           </div>
       </div>
 
-      {selectedPlayerForDeepDive && (<PlayerDeepDive player={selectedPlayerForDeepDive} opponentName={game.opponent} onClose={() => setSelectedPlayerForDeepDive(null)} />)}
+      {selectedPlayerForDeepDive && (<PlayerDeepDive player={selectedPlayerForDeepDive.player} opponentName={game.opponent} teamName={selectedPlayerForDeepDive.team} onClose={() => setSelectedPlayerForDeepDive(null)} />)}
     </div>
   );
 };
@@ -3272,6 +3481,113 @@ const FunFactsTicker = ({ isDark = true }) => {
           {FUN_FACTS[currentFact]}
         </span>
         <Sparkles className={`w-3 h-3 ${isDark ? 'text-yellow-400' : 'text-yellow-500'}`} />
+      </div>
+    </div>
+  );
+};
+
+// Team Salary Cap Widget
+const TeamSalaryWidget = ({ isDark = true, teamName = 'Raptors', opponentName }) => {
+  const [showOpponent, setShowOpponent] = useState(false);
+  const currentTeam = showOpponent && opponentName ? opponentName : teamName;
+  const salaryData = TEAM_SALARIES[currentTeam];
+  
+  if (!salaryData) return null;
+  
+  const capPct = (salaryData.total / NBA_SALARY_CAP.cap) * 100;
+  const taxPct = (salaryData.total / NBA_SALARY_CAP.luxuryTax) * 100;
+  const isOverCap = salaryData.total > NBA_SALARY_CAP.cap;
+  const isOverTax = salaryData.total > NBA_SALARY_CAP.luxuryTax;
+  
+  // Get top 5 paid players
+  const topPlayers = Object.entries(salaryData.roster)
+    .sort((a, b) => b[1].salary - a[1].salary)
+    .slice(0, 5);
+
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4 overflow-hidden`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <span className="text-green-400">💰</span> Team Salary
+        </h3>
+        {opponentName && TEAM_SALARIES[opponentName] && (
+          <button 
+            onClick={() => setShowOpponent(!showOpponent)}
+            className={`text-[9px] px-2 py-1 rounded ${isDark ? 'bg-cmd-bg hover:bg-cmd-card' : 'bg-light-card hover:bg-slate-200'} transition-colors`}
+          >
+            {showOpponent ? 'TOR' : opponentName.slice(0, 3).toUpperCase()}
+          </button>
+        )}
+      </div>
+      
+      {/* Total Salary */}
+      <div className={`text-center p-3 rounded-xl mb-3 ${isDark ? 'bg-gradient-to-br from-green-500/10 to-emerald-500/5 border border-green-500/20' : 'bg-green-50 border border-green-200'}`}>
+        <div className={`text-2xl font-black ${isDark ? 'text-green-400' : 'text-green-600'}`}>{formatSalary(salaryData.total)}</div>
+        <div className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'} uppercase`}>Total Payroll 2025-26</div>
+      </div>
+      
+      {/* Cap Situation */}
+      <div className="space-y-2 mb-3">
+        <div>
+          <div className="flex justify-between items-center text-[10px] mb-1">
+            <span className={isDark ? 'text-slate-400' : 'text-slate-500'}>Salary Cap ({formatSalary(NBA_SALARY_CAP.cap)})</span>
+            <span className={`font-bold ${isOverCap ? 'text-red-400' : 'text-green-400'}`}>{capPct.toFixed(0)}%</span>
+          </div>
+          <div className={`h-2 rounded-full overflow-hidden ${isDark ? 'bg-cmd-border' : 'bg-light-border'}`}>
+            <div 
+              className={`h-full rounded-full transition-all ${isOverCap ? 'bg-red-500' : 'bg-green-500'}`}
+              style={{width: `${Math.min(capPct, 100)}%`, boxShadow: isOverCap ? '0 0 10px rgba(239,68,68,0.5)' : '0 0 10px rgba(34,197,94,0.5)'}}
+            />
+          </div>
+        </div>
+        <div>
+          <div className="flex justify-between items-center text-[10px] mb-1">
+            <span className={isDark ? 'text-slate-400' : 'text-slate-500'}>Luxury Tax ({formatSalary(NBA_SALARY_CAP.luxuryTax)})</span>
+            <span className={`font-bold ${isOverTax ? 'text-amber-400' : 'text-slate-400'}`}>{taxPct.toFixed(0)}%</span>
+          </div>
+          <div className={`h-2 rounded-full overflow-hidden ${isDark ? 'bg-cmd-border' : 'bg-light-border'}`}>
+            <div 
+              className={`h-full rounded-full transition-all ${isOverTax ? 'bg-amber-500' : 'bg-slate-500'}`}
+              style={{width: `${Math.min(taxPct, 100)}%`}}
+            />
+          </div>
+        </div>
+      </div>
+      
+      {/* Cap Space / Tax Bill */}
+      <div className="grid grid-cols-2 gap-2 mb-3">
+        <div className={`text-center p-2 rounded-lg ${isDark ? 'bg-cmd-bg' : 'bg-light-card'}`}>
+          <div className={`text-sm font-mono font-bold ${salaryData.capSpace > 0 ? 'text-green-400' : 'text-red-400'}`}>
+            {salaryData.capSpace > 0 ? '+' : ''}{formatSalary(salaryData.capSpace)}
+          </div>
+          <div className={`text-[8px] ${isDark ? 'text-slate-500' : 'text-slate-400'} uppercase`}>Cap Space</div>
+        </div>
+        <div className={`text-center p-2 rounded-lg ${isDark ? 'bg-cmd-bg' : 'bg-light-card'}`}>
+          <div className={`text-sm font-mono font-bold ${salaryData.luxuryTaxBill > 0 ? 'text-amber-400' : 'text-green-400'}`}>
+            {formatSalary(salaryData.luxuryTaxBill)}
+          </div>
+          <div className={`text-[8px] ${isDark ? 'text-slate-500' : 'text-slate-400'} uppercase`}>Tax Bill</div>
+        </div>
+      </div>
+      
+      {/* Top Paid Players */}
+      <div className={`border-t ${isDark ? 'border-cmd-border' : 'border-light-border'} pt-3`}>
+        <div className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'} uppercase mb-2`}>Top 5 Contracts</div>
+        <div className="space-y-1.5">
+          {topPlayers.map(([playerId, contract], i) => {
+            // Try to find player name from roster
+            const raptorsPlayer = RAPTORS_ROSTER.find(p => p.id === playerId);
+            const playerName = raptorsPlayer?.name || `Player #${i + 1}`;
+            return (
+              <div key={playerId} className="flex items-center justify-between text-[10px]">
+                <span className={`truncate max-w-[60%] ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>
+                  {i + 1}. {playerName.split(' ').pop()}
+                </span>
+                <span className={`font-mono font-bold ${isDark ? 'text-green-400' : 'text-green-600'}`}>{formatSalary(contract.salary)}</span>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
@@ -3666,6 +3982,7 @@ function App() {
             <FanPollWidget isDark={isDark} />
             <ScheduleList games={games} onSelectGame={setSelectedGame} selectedGameId={selectedGame?.id} isDark={isDark} />
             <StandingsWidget isDark={isDark} />
+            <TeamSalaryWidget isDark={isDark} teamName="Raptors" opponentName={selectedGame?.opponent} />
             {selectedGame?.status === 'upcoming' && <BettingTrendsWidget isDark={isDark} game={selectedGame} />}
             <QuickCompareWidget isDark={isDark} />
             <HistoricalH2HWidget isDark={isDark} opponent={selectedGame?.opponent} />
