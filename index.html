@@ -95,6 +95,23 @@
         0% { background-position: -200% 0; }
         100% { background-position: 200% 0; }
       }
+      @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-5px); }
+      }
+      @keyframes confetti {
+        0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+        100% { transform: translateY(100px) rotate(720deg); opacity: 0; }
+      }
+      @keyframes pulse-glow {
+        0%, 100% { opacity: 0.5; }
+        50% { opacity: 1; }
+      }
+      @keyframes ticker-scroll {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+      }
+      .animate-bounce { animation: bounce 0.6s ease-in-out infinite; }
       @keyframes float {
         0%, 100% { transform: translateY(0px) rotate(0deg); }
         50% { transform: translateY(-10px) rotate(2deg); }
@@ -2188,6 +2205,47 @@ const StandingsWidget = ({ isDark = true }) => (
 // Theme Context
 const ThemeContext = React.createContext({ isDark: true, toggle: () => {} });
 
+// Scroll to Top Button
+const ScrollToTop = ({ isDark = true }) => {
+  const [isVisible, setIsVisible] = useState(false);
+  
+  useEffect(() => {
+    const toggleVisibility = () => {
+      const scrollContainer = document.querySelector('.custom-scrollbar');
+      if (scrollContainer && scrollContainer.scrollTop > 300) {
+        setIsVisible(true);
+      } else {
+        setIsVisible(false);
+      }
+    };
+    
+    const scrollContainer = document.querySelector('.custom-scrollbar');
+    if (scrollContainer) {
+      scrollContainer.addEventListener('scroll', toggleVisibility);
+      return () => scrollContainer.removeEventListener('scroll', toggleVisibility);
+    }
+  }, []);
+
+  const scrollToTop = () => {
+    const scrollContainer = document.querySelector('.custom-scrollbar');
+    if (scrollContainer) {
+      scrollContainer.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  if (!isVisible) return null;
+
+  return (
+    <button
+      onClick={scrollToTop}
+      className={`fixed bottom-20 right-4 z-40 p-3 rounded-full shadow-lg transition-all transform hover:scale-110 ${isDark ? 'bg-raptors-red text-white shadow-raptors-red/30' : 'bg-raptors-red text-white shadow-raptors-red/30'}`}
+      title="Scroll to top"
+    >
+      <ChevronUp className="w-5 h-5" />
+    </button>
+  );
+};
+
 // APP (ROOT)
 // ============================================================
 function App() {
@@ -2417,6 +2475,7 @@ function App() {
           </div>
         </div>
       </main>
+      <ScrollToTop isDark={isDark} />
       <footer className={`flex-shrink-0 border-t ${isDark ? 'border-cmd-border bg-cmd-surface/50' : 'border-light-border bg-white/50'} backdrop-blur py-3`}>
         <div className="w-full max-w-[98%] mx-auto px-4 flex items-center justify-between text-xs text-slate-500">
           <div className="flex items-center gap-2">
