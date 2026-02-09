@@ -621,6 +621,35 @@ const formatSalary = (amount) => {
   return `$${amount.toLocaleString()}`;
 };
 
+// Look up player name from any roster by ID
+const findPlayerName = (playerId, teamHint = null) => {
+  // Check Raptors roster first (will be defined later)
+  // This function will be called after RAPTORS_ROSTER is defined
+  if (typeof RAPTORS_ROSTER !== 'undefined') {
+    const raptorsPlayer = RAPTORS_ROSTER.find(p => p.id === playerId);
+    if (raptorsPlayer) return raptorsPlayer.name;
+  }
+  
+  // Check opponent rosters
+  if (typeof OPPONENT_DATA !== 'undefined') {
+    // If we have a team hint, check that team first
+    if (teamHint && OPPONENT_DATA[teamHint]?.roster) {
+      const player = OPPONENT_DATA[teamHint].roster.find(p => p.id === playerId);
+      if (player) return player.name;
+    }
+    // Check all opponent rosters
+    for (const teamName of Object.keys(OPPONENT_DATA)) {
+      const team = OPPONENT_DATA[teamName];
+      if (team.roster) {
+        const player = team.roster.find(p => p.id === playerId);
+        if (player) return player.name;
+      }
+    }
+  }
+  
+  return null;
+};
+
 // Team Salary Data (2025-26 season)
 const TEAM_SALARIES = {
   "Raptors": {
@@ -1344,7 +1373,8 @@ const fetchLiveStandings = async () => {
 };
 
 // Raptors Team Stats (will be updated from standings)
-const RAPTORS_STATS = { wins: 32, losses: 22, ppg: 114.1, oppPpg: 112.2, streak: "W2" };
+// Raptors Team Stats (Feb 2026 - post All-Star)
+const RAPTORS_STATS = { wins: 32, losses: 25, ppg: 113.8, oppPpg: 112.5, streak: "W3", lastUpdate: "Feb 9, 2026" };
 
 const OPPONENT_DATA = {
   "Pistons": {
@@ -1534,6 +1564,91 @@ const OPPONENT_DATA = {
     playbook: [
       { id: "p1", name: "Poole Party", type: "offense", description: "Poole isolation.", diagramType: "iso", execution: ["Poole at top", "Step-back 3 option", "Drive and kick"], raptorsCounter: "Force him left, contest everything." }
     ]
+  },
+  "Celtics": {
+    id: "1610612738",
+    roster: [
+       { id: "1628369", name: "Jayson Tatum", position: "F", number: "0", seasonStats: { ppg: 27.8, rpg: 8.5, apg: 5.2 } },
+       { id: "1627759", name: "Jaylen Brown", position: "G-F", number: "7", seasonStats: { ppg: 24.2, rpg: 5.8, apg: 4.0 } },
+       { id: "204001", name: "Kristaps Porzingis", position: "C", number: "8", seasonStats: { ppg: 20.5, rpg: 7.5, apg: 2.0, bpg: 2.0 } },
+       { id: "1628401", name: "Derrick White", position: "G", number: "9", seasonStats: { ppg: 15.8, rpg: 4.2, apg: 5.0 } },
+       { id: "201950", name: "Jrue Holiday", position: "G", number: "4", seasonStats: { ppg: 13.5, rpg: 5.0, apg: 4.8 } },
+       { id: "201143", name: "Al Horford", position: "C", number: "42", seasonStats: { ppg: 8.5, rpg: 6.2, apg: 2.8 } },
+       { id: "1630556", name: "Payton Pritchard", position: "G", number: "11", seasonStats: { ppg: 14.2, rpg: 2.5, apg: 3.0 } },
+       { id: "1628432", name: "Sam Hauser", position: "F", number: "30", seasonStats: { ppg: 9.2, rpg: 3.0, apg: 1.5 } }
+    ],
+    tendencies: ["Switching Defense", "Balanced Scoring", "3PT Heavy"],
+    playbook: [
+      { id: "p1", name: "Tatum ISO", type: "offense", description: "Tatum isolation play.", diagramType: "iso", execution: ["Clear side", "Tatum attacks from wing", "Step-back or drive"], raptorsCounter: "Force baseline, wall up at rim." }
+    ]
+  },
+  "Cavaliers": {
+    id: "1610612739",
+    roster: [
+       { id: "1629630", name: "Darius Garland", position: "G", number: "10", seasonStats: { ppg: 22.5, rpg: 2.8, apg: 8.0 } },
+       { id: "1629628", name: "Donovan Mitchell", position: "G", number: "45", seasonStats: { ppg: 26.5, rpg: 4.5, apg: 5.5 } },
+       { id: "1628386", name: "Jarrett Allen", position: "C", number: "31", seasonStats: { ppg: 14.2, rpg: 10.5, apg: 1.5, bpg: 1.5 } },
+       { id: "1628372", name: "Evan Mobley", position: "F-C", number: "4", seasonStats: { ppg: 18.5, rpg: 9.5, apg: 3.5, bpg: 1.2 } },
+       { id: "203953", name: "Max Strus", position: "G", number: "1", seasonStats: { ppg: 12.8, rpg: 3.2, apg: 2.5 } },
+       { id: "1629054", name: "Caris LeVert", position: "G-F", number: "3", seasonStats: { ppg: 11.5, rpg: 3.5, apg: 4.0 } },
+       { id: "1631096", name: "Sam Merrill", position: "G", number: "14", seasonStats: { ppg: 8.2, rpg: 2.0, apg: 1.8 } },
+       { id: "1628404", name: "Isaac Okoro", position: "F", number: "35", seasonStats: { ppg: 7.5, rpg: 2.8, apg: 1.5 } }
+    ],
+    tendencies: ["Twin Tower Lineup", "Elite Defense", "Mitchell-Garland PnR"],
+    playbook: [
+      { id: "p1", name: "Spida PnR", type: "offense", description: "Mitchell pick and roll.", diagramType: "pnr", execution: ["Mitchell at top", "Allen sets screen", "Roll or pop option"], raptorsCounter: "Blitz Mitchell, rotate to Allen." }
+    ]
+  },
+  "Knicks": {
+    id: "1610612752",
+    roster: [
+       { id: "1628373", name: "Jalen Brunson", position: "G", number: "11", seasonStats: { ppg: 28.5, rpg: 3.5, apg: 7.5 } },
+       { id: "1628952", name: "Mikal Bridges", position: "F", number: "25", seasonStats: { ppg: 18.5, rpg: 4.2, apg: 3.5 } },
+       { id: "1628449", name: "OG Anunoby", position: "F", number: "8", seasonStats: { ppg: 16.8, rpg: 5.5, apg: 2.0 } },
+       { id: "1629651", name: "Karl-Anthony Towns", position: "C", number: "32", seasonStats: { ppg: 25.2, rpg: 12.5, apg: 3.0 } },
+       { id: "203585", name: "Josh Hart", position: "G-F", number: "3", seasonStats: { ppg: 12.8, rpg: 8.5, apg: 5.0 } },
+       { id: "1629011", name: "Donte DiVincenzo", position: "G", number: "0", seasonStats: { ppg: 10.5, rpg: 3.2, apg: 2.8 } },
+       { id: "1628991", name: "Miles McBride", position: "G", number: "2", seasonStats: { ppg: 9.5, rpg: 2.2, apg: 3.5 } },
+       { id: "203935", name: "Precious Achiuwa", position: "F-C", number: "5", seasonStats: { ppg: 7.5, rpg: 5.8, apg: 1.2 } }
+    ],
+    tendencies: ["Brunson Isolation", "Defensive Versatility", "Motion Offense"],
+    playbook: [
+      { id: "p1", name: "Brunson ISO", type: "offense", description: "Brunson isolation.", diagramType: "iso", execution: ["Clear side", "Brunson attacks", "Mid-range or drive-kick"], raptorsCounter: "Force tough 2s, help on drives." }
+    ]
+  },
+  "Heat": {
+    id: "1610612748",
+    roster: [
+       { id: "1628389", name: "Bam Adebayo", position: "C", number: "13", seasonStats: { ppg: 17.5, rpg: 10.5, apg: 5.0 } },
+       { id: "202710", name: "Jimmy Butler", position: "F", number: "22", seasonStats: { ppg: 18.5, rpg: 5.2, apg: 4.8 } },
+       { id: "1629216", name: "Tyler Herro", position: "G", number: "14", seasonStats: { ppg: 22.8, rpg: 5.0, apg: 5.5 } },
+       { id: "1631102", name: "Jaime Jaquez Jr.", position: "F", number: "11", seasonStats: { ppg: 12.5, rpg: 4.5, apg: 2.8 } },
+       { id: "1629639", name: "Terry Rozier", position: "G", number: "2", seasonStats: { ppg: 14.8, rpg: 3.8, apg: 4.2 } },
+       { id: "1629634", name: "Nikola Jovic", position: "F", number: "5", seasonStats: { ppg: 9.5, rpg: 4.5, apg: 2.0 } },
+       { id: "203482", name: "Kevin Love", position: "F-C", number: "42", seasonStats: { ppg: 7.2, rpg: 5.5, apg: 1.8 } },
+       { id: "1627780", name: "Duncan Robinson", position: "F", number: "55", seasonStats: { ppg: 8.8, rpg: 2.5, apg: 1.5 } }
+    ],
+    tendencies: ["Heat Culture Defense", "Zone Defense", "Butler Takeover"],
+    playbook: [
+      { id: "p1", name: "Jimmy Buckets", type: "offense", description: "Butler isolation.", diagramType: "iso", execution: ["Post up or wing ISO", "Draw fouls", "Kick to shooters"], raptorsCounter: "No reach-ins, make him shoot." }
+    ]
+  },
+  "Magic": {
+    id: "1610612753",
+    roster: [
+       { id: "1630559", name: "Paolo Banchero", position: "F", number: "5", seasonStats: { ppg: 28.5, rpg: 8.8, apg: 5.5 } },
+       { id: "1630536", name: "Franz Wagner", position: "F", number: "22", seasonStats: { ppg: 24.2, rpg: 5.8, apg: 6.0 } },
+       { id: "1631094", name: "Jalen Suggs", position: "G", number: "4", seasonStats: { ppg: 15.8, rpg: 4.2, apg: 4.8 } },
+       { id: "1630544", name: "Wendell Carter Jr.", position: "C", number: "34", seasonStats: { ppg: 8.5, rpg: 7.5, apg: 2.5 } },
+       { id: "1629649", name: "Kentavious Caldwell-Pope", position: "G", number: "3", seasonStats: { ppg: 10.2, rpg: 2.5, apg: 1.8 } },
+       { id: "1631099", name: "Anthony Black", position: "G", number: "0", seasonStats: { ppg: 7.5, rpg: 3.2, apg: 3.5 } },
+       { id: "1629633", name: "Cole Anthony", position: "G", number: "50", seasonStats: { ppg: 11.2, rpg: 4.0, apg: 4.2 } },
+       { id: "1630579", name: "Jonathan Isaac", position: "F", number: "1", seasonStats: { ppg: 6.5, rpg: 4.5, apg: 0.8, bpg: 1.5 } }
+    ],
+    tendencies: ["Elite Length", "Transition Offense", "Switchable Defense"],
+    playbook: [
+      { id: "p1", name: "Paolo Post", type: "offense", description: "Banchero post-up.", diagramType: "iso", execution: ["Entry to block", "Paolo faces up", "Triple threat attack"], raptorsCounter: "Front the post, help weak side." }
+    ]
   }
 };
 
@@ -1600,7 +1715,7 @@ const fetchRaptorsSchedule = async () => {
     { id: "g49", date: "Jan 28", opponent: "Knicks", opponentId: "1610612752", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "completed", result: "L 92-119" },
     { id: "g50", date: "Jan 30", opponent: "Magic", opponentId: "1610612753", isHome: false, time: "7:00 PM", venue: "Kia Center", status: "completed", result: "L 120-130" },
     { id: "g51", date: "Feb 1", opponent: "Jazz", opponentId: "1610612762", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "completed", result: "W 107-100" },
-    { id: "g52", date: "Feb 4", opponent: "Timberwolves", opponentId: "1610612750", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "completed", result: "L 126-128" },
+    { id: "g52", date: "Feb 4", opponent: "Timberwolves", opponentId: "1610612750", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "completed", result: "W 131-128 OT" },
     { id: "g53", date: "Feb 5", opponent: "Bulls", opponentId: "1610612741", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "completed", result: "W 130-113" },
     { id: "g54", date: "Feb 8", opponent: "Pacers", opponentId: "1610612754", isHome: true, time: "3:00 PM", venue: "Scotiabank Arena", status: "completed", result: "W 130-123" },
     { id: "g55", date: "Feb 11", opponent: "Pistons", opponentId: "1610612765", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "upcoming" },
@@ -1739,7 +1854,7 @@ const {
   Calendar, LayoutDashboard, X, Target, Award, Bandage, Clock, Gavel, Home, Plane,
   ArrowRightLeft, Gauge, Timer, Sun, Moon, Bell, Download, ExternalLink, Flame,
   Snowflake, TrendingDown, Volume2, Printer, Copy, Twitter, Facebook, Send,
-  ChevronUp, ChevronDown, Search, Filter, Star, Sparkles, Eye, EyeOff
+  ChevronUp, ChevronDown, Search, Filter, Star, Sparkles, Eye, EyeOff, History
 } = LucideReact;
 
 // ============================================================
@@ -1751,7 +1866,47 @@ const {
   LineChart, Line, AreaChart, Area
 } = Recharts;
 
-const { useState, useEffect, useRef, useCallback, useMemo } = React;
+const { useState, useEffect, useRef, useCallback, useMemo, Component } = React;
+
+// ============================================================
+// ERROR BOUNDARY - Catches rendering errors
+// ============================================================
+class ErrorBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+  
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+  
+  componentDidCatch(error, errorInfo) {
+    console.error('Raptors Intel Error:', error, errorInfo);
+  }
+  
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-screen bg-cmd-bg flex items-center justify-center p-4">
+          <div className="glass-card p-8 max-w-md text-center">
+            <div className="text-6xl mb-4">🦖</div>
+            <h2 className="text-xl font-bold text-white mb-2">Something went wrong</h2>
+            <p className="text-slate-400 text-sm mb-4">The app encountered an error. Please refresh the page.</p>
+            <button 
+              onClick={() => window.location.reload()}
+              className="px-4 py-2 bg-raptors-red text-white rounded-lg font-bold hover:bg-raptors-red/80 transition-colors"
+            >
+              Refresh Page
+            </button>
+          </div>
+        </div>
+      );
+    }
+    
+    return this.props.children;
+  }
+}
 
 // ============================================================
 // PARTICLE SYSTEM - Floating basketballs and geometric shapes
@@ -2477,14 +2632,208 @@ const StreakCelebration = ({ streak, isDark = true }) => {
   );
 };
 
+// Recent Results Widget - Last 5 games
+const RecentResultsWidget = ({ games, isDark = true }) => {
+  // Get last 5 completed games
+  const recentGames = games
+    .filter(g => g.status === 'completed' && g.result)
+    .slice(-5)
+    .reverse();
+  
+  if (recentGames.length === 0) return null;
+  
+  return (
+    <div className={`${isDark ? 'premium-glass' : 'bg-white border border-light-border shadow-lg'} rounded-2xl p-4`}>
+      <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase mb-3`}>
+        <History className="w-3 h-3 text-raptors-red" /> Last 5 Games
+      </h3>
+      <div className="space-y-2">
+        {recentGames.map((game, i) => {
+          const isWin = game.result?.startsWith('W');
+          return (
+            <div key={i} className={`flex items-center justify-between p-2 rounded-lg ${isDark ? 'bg-cmd-bg' : 'bg-light-card'}`}>
+              <div className="flex items-center gap-2">
+                <span className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black ${
+                  isWin ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
+                }`}>
+                  {isWin ? 'W' : 'L'}
+                </span>
+                <div className="flex items-center gap-1.5">
+                  <img src={`https://cdn.nba.com/logos/nba/${game.opponentId}/primary/L/logo.svg`} className="w-4 h-4" alt="" />
+                  <span className={`text-[11px] font-medium ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>{game.opponent}</span>
+                </div>
+              </div>
+              <span className={`text-[10px] font-mono font-bold ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+                {game.result?.split(' ')[1] || game.result}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+      {/* Streak indicator */}
+      <div className={`mt-3 pt-3 border-t ${isDark ? 'border-cmd-border' : 'border-light-border'} flex items-center justify-center gap-1`}>
+        {recentGames.slice(0, 5).map((game, i) => {
+          const isWin = game.result?.startsWith('W');
+          return (
+            <span key={i} className={`w-5 h-5 rounded-full flex items-center justify-center text-[8px] font-black ${
+              isWin ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+            }`}>
+              {isWin ? 'W' : 'L'}
+            </span>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+// Season Progress Widget
+const SeasonProgress = ({ isDark = true }) => {
+  const totalGames = 82;
+  const gamesPlayed = RAPTORS_STATS.wins + RAPTORS_STATS.losses;
+  const gamesRemaining = totalGames - gamesPlayed;
+  const winPct = gamesPlayed > 0 ? ((RAPTORS_STATS.wins / gamesPlayed) * 100).toFixed(1) : 0;
+  const projectedWins = gamesPlayed > 0 ? Math.round((RAPTORS_STATS.wins / gamesPlayed) * totalGames) : 0;
+  const progressPct = (gamesPlayed / totalGames) * 100;
+  
+  return (
+    <div className={`${isDark ? 'premium-glass' : 'bg-white border border-light-border shadow-lg'} rounded-2xl p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <TrendingUp className="w-3 h-3 text-raptors-red" /> Season Progress
+        </h3>
+        <span className={`text-[10px] font-mono ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{gamesPlayed}/82</span>
+      </div>
+      
+      {/* Progress bar */}
+      <div className={`h-3 rounded-full overflow-hidden ${isDark ? 'bg-cmd-border' : 'bg-light-border'} mb-3`}>
+        <div 
+          className="h-full bg-gradient-to-r from-raptors-red to-raptors-purple rounded-full relative"
+          style={{width: `${progressPct}%`, transition: 'width 1s ease-out'}}
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer"></div>
+        </div>
+      </div>
+      
+      {/* Stats grid */}
+      <div className="grid grid-cols-3 gap-2 text-center">
+        <div className={`p-2 rounded-lg ${isDark ? 'bg-cmd-bg' : 'bg-light-card'}`}>
+          <div className={`text-lg font-black ${isDark ? 'text-green-400' : 'text-green-600'}`}>{RAPTORS_STATS.wins}</div>
+          <div className={`text-[8px] uppercase font-bold ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Wins</div>
+        </div>
+        <div className={`p-2 rounded-lg ${isDark ? 'bg-cmd-bg' : 'bg-light-card'}`}>
+          <div className={`text-lg font-black ${isDark ? 'text-red-400' : 'text-red-600'}`}>{RAPTORS_STATS.losses}</div>
+          <div className={`text-[8px] uppercase font-bold ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Losses</div>
+        </div>
+        <div className={`p-2 rounded-lg ${isDark ? 'bg-cmd-bg' : 'bg-light-card'}`}>
+          <div className={`text-lg font-black ${isDark ? 'text-white' : 'text-slate-800'}`}>{winPct}%</div>
+          <div className={`text-[8px] uppercase font-bold ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Win %</div>
+        </div>
+      </div>
+      
+      {/* Projected finish */}
+      <div className={`mt-3 pt-3 border-t ${isDark ? 'border-cmd-border' : 'border-light-border'} flex justify-between items-center`}>
+        <span className={`text-[10px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Projected Final</span>
+        <span className={`text-sm font-bold ${projectedWins >= 41 ? 'text-green-400' : 'text-amber-400'}`}>{projectedWins}-{totalGames - projectedWins}</span>
+      </div>
+    </div>
+  );
+};
+
+// Game Countdown Timer
+const GameCountdown = ({ game, isDark = true }) => {
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  const [isGameDay, setIsGameDay] = useState(false);
+  
+  useEffect(() => {
+    if (!game || game.status !== 'upcoming') return;
+    
+    const calculateTime = () => {
+      // Parse game date and time (assuming EST timezone)
+      const gameYear = new Date().getFullYear();
+      const dateParts = game.date.split(' '); // e.g., "Feb 11"
+      const month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'].indexOf(dateParts[0]);
+      const day = parseInt(dateParts[1]);
+      const timeParts = game.time.replace(' PM', '').replace(' AM', '').split(':');
+      let hour = parseInt(timeParts[0]);
+      if (game.time.includes('PM') && hour !== 12) hour += 12;
+      if (game.time.includes('AM') && hour === 12) hour = 0;
+      
+      const gameDate = new Date(gameYear, month, day, hour, parseInt(timeParts[1]) || 0);
+      const now = new Date();
+      const diff = gameDate - now;
+      
+      if (diff <= 0) {
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+        return;
+      }
+      
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      
+      setTimeLeft({ days, hours, minutes, seconds });
+      setIsGameDay(days === 0);
+    };
+    
+    calculateTime();
+    const timer = setInterval(calculateTime, 1000);
+    return () => clearInterval(timer);
+  }, [game]);
+  
+  if (!game || game.status !== 'upcoming') return null;
+  
+  return (
+    <div className={`${isDark ? 'premium-glass' : 'bg-white border border-light-border shadow-lg'} rounded-2xl p-4 relative overflow-hidden`}>
+      {isGameDay && (
+        <div className="absolute inset-0 bg-gradient-to-r from-raptors-red/10 via-transparent to-raptors-red/10" style={{animation: 'pulse 2s ease-in-out infinite'}}></div>
+      )}
+      <div className="relative z-10">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-full bg-raptors-red/20 flex items-center justify-center">
+              <Timer className={`w-4 h-4 ${isGameDay ? 'text-raptors-red animate-pulse' : 'text-raptors-red'}`} />
+            </div>
+            <div>
+              <div className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>
+                {isGameDay ? '🔥 GAME DAY!' : 'Next Game'}
+              </div>
+              <div className={`text-[10px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
+                vs {game.opponent} • {game.time}
+              </div>
+            </div>
+          </div>
+          {game.isHome ? (
+            <span className="text-[9px] font-bold uppercase bg-raptors-red/20 text-raptors-red px-2 py-1 rounded">HOME</span>
+          ) : (
+            <span className={`text-[9px] font-bold uppercase ${isDark ? 'bg-cmd-bg text-slate-400' : 'bg-light-card text-slate-500'} px-2 py-1 rounded`}>AWAY</span>
+          )}
+        </div>
+        <div className="grid grid-cols-4 gap-2 text-center">
+          {[
+            { label: 'Days', value: timeLeft.days },
+            { label: 'Hrs', value: timeLeft.hours },
+            { label: 'Min', value: timeLeft.minutes },
+            { label: 'Sec', value: timeLeft.seconds },
+          ].map((unit, i) => (
+            <div key={i} className={`p-2 rounded-lg ${isDark ? 'bg-cmd-bg' : 'bg-light-card'}`}>
+              <div className={`text-xl font-mono font-black ${isGameDay && i < 2 ? 'text-raptors-red' : isDark ? 'text-white' : 'text-slate-800'}`}>
+                {String(unit.value).padStart(2, '0')}
+              </div>
+              <div className={`text-[8px] uppercase font-bold ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{unit.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // Quick Stats Bar - ENHANCED
 const QuickStatsBar = ({ isDark = true }) => {
   const diff = RAPTORS_STATS.ppg - RAPTORS_STATS.oppPpg;
-  const stats = [
-    { label: 'PPG', value: RAPTORS_STATS.ppg, icon: '⚔️' },
-    { label: 'OPP PPG', value: RAPTORS_STATS.oppPpg, icon: '🛡️' },
-    { label: 'DIFF', value: Math.abs(diff).toFixed(1), isPositive: diff > 0, icon: diff > 0 ? '📈' : '📉' },
-  ];
+  const diffRounded = parseFloat(diff.toFixed(1));
   
   return (
     <div className={`${isDark ? 'premium-glass holo-card' : 'bg-white border border-light-border shadow-lg'} rounded-2xl p-4 relative overflow-hidden`}>
@@ -2492,23 +2841,34 @@ const QuickStatsBar = ({ isDark = true }) => {
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-raptors-red via-raptors-purple to-raptors-red"></div>
       
       <div className="flex items-center justify-between gap-2">
-        {stats.map((stat, i) => (
-          <div key={i} className={`text-center flex-1 py-2 rounded-lg transition-all hover:scale-105 ${isDark ? 'hover:bg-white/5' : 'hover:bg-slate-100'}`}>
-            <div className="text-sm mb-1">{stat.icon}</div>
-            <div className={`text-xl font-mono font-black ${
-              stat.isPositive !== undefined 
-                ? (stat.isPositive ? 'text-green-400' : 'text-red-400') 
-                : (isDark ? 'text-white' : 'text-slate-800')
-            }`} style={stat.isPositive ? {textShadow: '0 0 10px rgba(74, 222, 128, 0.3)'} : {}}>
-              <AnimatedStatNumber 
-                value={parseFloat(stat.value)} 
-                decimals={1}
-                prefix={stat.isPositive !== undefined ? (stat.isPositive ? '+' : '-') : ''}
-              />
-            </div>
-            <div className={`text-[9px] uppercase font-bold ${isDark ? 'text-slate-500' : 'text-slate-400'} tracking-wider`}>{stat.label}</div>
+        {/* PPG */}
+        <div className={`text-center flex-1 py-2 rounded-lg transition-all hover:scale-105 ${isDark ? 'hover:bg-white/5' : 'hover:bg-slate-100'}`}>
+          <div className="text-sm mb-1">⚔️</div>
+          <div className={`text-xl font-mono font-black ${isDark ? 'text-white' : 'text-slate-800'}`}>
+            {RAPTORS_STATS.ppg.toFixed(1)}
           </div>
-        ))}
+          <div className={`text-[9px] uppercase font-bold ${isDark ? 'text-slate-500' : 'text-slate-400'} tracking-wider`}>PPG</div>
+        </div>
+        
+        {/* OPP PPG */}
+        <div className={`text-center flex-1 py-2 rounded-lg transition-all hover:scale-105 ${isDark ? 'hover:bg-white/5' : 'hover:bg-slate-100'}`}>
+          <div className="text-sm mb-1">🛡️</div>
+          <div className={`text-xl font-mono font-black ${isDark ? 'text-white' : 'text-slate-800'}`}>
+            {RAPTORS_STATS.oppPpg.toFixed(1)}
+          </div>
+          <div className={`text-[9px] uppercase font-bold ${isDark ? 'text-slate-500' : 'text-slate-400'} tracking-wider`}>OPP PPG</div>
+        </div>
+        
+        {/* DIFF */}
+        <div className={`text-center flex-1 py-2 rounded-lg transition-all hover:scale-105 ${isDark ? 'hover:bg-white/5' : 'hover:bg-slate-100'}`}>
+          <div className="text-sm mb-1">{diffRounded >= 0 ? '📈' : '📉'}</div>
+          <div className={`text-xl font-mono font-black ${
+            diffRounded > 0 ? 'text-green-400' : diffRounded < 0 ? 'text-red-400' : (isDark ? 'text-slate-400' : 'text-slate-500')
+          }`} style={diffRounded > 0 ? {textShadow: '0 0 10px rgba(74, 222, 128, 0.3)'} : diffRounded < 0 ? {textShadow: '0 0 10px rgba(248, 113, 113, 0.3)'} : {}}>
+            {diffRounded > 0 ? '+' : ''}{diffRounded.toFixed(1)}
+          </div>
+          <div className={`text-[9px] uppercase font-bold ${isDark ? 'text-slate-500' : 'text-slate-400'} tracking-wider`}>DIFF</div>
+        </div>
       </div>
     </div>
   );
@@ -2657,6 +3017,7 @@ const StatBox = ({ label, value, sub, color }) => (
 );
 
 const PlayerDeepDive = ({ player, opponentName, onClose, teamName = 'Raptors' }) => {
+  const [imgError, setImgError] = useState(false);
   const s = player.seasonStats || {};
   const v = player.vsOpponentStats || {};
   const a = player.advanced || {};
@@ -2664,6 +3025,13 @@ const PlayerDeepDive = ({ player, opponentName, onClose, teamName = 'Raptors' })
   // Get salary info for this player
   const teamSalaryData = TEAM_SALARIES[teamName] || TEAM_SALARIES['Raptors'];
   const playerSalary = teamSalaryData?.roster?.[player.id] || null;
+  
+  // Get player initials for fallback
+  const getInitials = (name) => {
+    const parts = name.split(' ');
+    if (parts.length >= 2) return parts[0][0] + parts[parts.length - 1][0];
+    return name.slice(0, 2).toUpperCase();
+  };
   
   const radarData = [
     { subject: 'PTS', A: s.ppg || 0, fullMark: 30 },
@@ -2678,7 +3046,14 @@ const PlayerDeepDive = ({ player, opponentName, onClose, teamName = 'Raptors' })
       <div className="bg-cmd-surface w-full max-w-5xl rounded-3xl overflow-hidden border border-raptors-red/20 shadow-2xl shadow-raptors-red/10 flex flex-col max-h-[90vh]">
         <div className="relative h-48 bg-cmd-bg overflow-hidden flex-shrink-0">
              <div className="absolute inset-0 bg-gradient-to-r from-cmd-bg via-cmd-surface to-raptors-red/20"></div>
-             <img src={`https://cdn.nba.com/headshots/nba/latest/1040x760/${player.id}.png`} className="absolute bottom-0 right-10 h-[120%] object-contain" style={{filter: 'drop-shadow(0 0 20px rgba(206,17,65,0.4))'}} alt={player.name} />
+             {!imgError ? (
+               <img src={`https://cdn.nba.com/headshots/nba/latest/1040x760/${player.id}.png`} onError={() => setImgError(true)} className="absolute bottom-0 right-10 h-[120%] object-contain" style={{filter: 'drop-shadow(0 0 20px rgba(206,17,65,0.4))'}} alt={player.name} />
+             ) : (
+               <div className="absolute bottom-0 right-10 h-[120%] w-48 flex flex-col items-center justify-center bg-gradient-to-br from-raptors-red/20 to-raptors-purple/30 rounded-full" style={{filter: 'drop-shadow(0 0 20px rgba(206,17,65,0.4))'}}>
+                 <div className="text-6xl font-black text-raptors-red/80">{getInitials(player.name)}</div>
+                 <div className="text-2xl font-mono font-bold text-raptors-red/50">#{player.number}</div>
+               </div>
+             )}
              <div className="absolute top-0 left-0 p-8">
                  <button onClick={onClose} className="mb-4 text-slate-500 hover:text-raptors-red flex items-center gap-2 transition-colors"><X className="w-5 h-5" /> Close Scouting Report</button>
                  <h2 className="text-5xl font-black text-white uppercase italic tracking-tighter neon-text">{player.name}</h2>
@@ -2874,11 +3249,22 @@ const ScheduleList = ({ games, onSelectGame, selectedGameId, isDark = true }) =>
 // ============================================================
 const PlayerCard = ({ player, onClick, onDeepDive, isOpponent, isSelected }) => {
     const [imgError, setImgError] = useState(false);
+    // Get player initials for fallback
+    const getInitials = (name) => {
+      const parts = name.split(' ');
+      if (parts.length >= 2) return parts[0][0] + parts[parts.length - 1][0];
+      return name.slice(0, 2).toUpperCase();
+    };
     return (
         <div className={`card-3d group relative rounded-xl overflow-hidden transition-all duration-300 cursor-pointer ${isSelected ? 'ring-2 ring-raptors-red scale-105 z-20 shadow-xl shadow-raptors-red/20' : 'hover-lift'} bg-cmd-card border border-cmd-border h-40 flex flex-col justify-end`} onClick={onClick}>
             <div className="absolute inset-0 bg-gradient-to-t from-cmd-bg via-transparent to-transparent opacity-95"></div>
             {!imgError ? (<img src={`https://cdn.nba.com/headshots/nba/latest/1040x760/${player.id}.png`} onError={() => setImgError(true)} className={`absolute top-0 left-1/2 -translate-x-1/2 w-[140%] max-w-none object-cover object-top h-full ${isOpponent ? 'grayscale-[0.3]' : ''}`} alt={player.name} />
-            ) : (<div className={`absolute inset-0 flex flex-col items-center justify-center opacity-20 ${isOpponent ? 'text-blue-500' : 'text-raptors-red'}`}><div className="text-4xl font-black">{player.number}</div></div>)}
+            ) : (
+              <div className={`absolute inset-0 flex flex-col items-center justify-center ${isOpponent ? 'bg-gradient-to-br from-blue-900/50 to-blue-950/80' : 'bg-gradient-to-br from-raptors-red/20 to-raptors-purple/30'}`}>
+                <div className={`text-3xl font-black ${isOpponent ? 'text-blue-400' : 'text-raptors-red'} opacity-80`}>{getInitials(player.name)}</div>
+                <div className={`text-lg font-mono font-bold ${isOpponent ? 'text-blue-500/60' : 'text-raptors-red/60'}`}>#{player.number}</div>
+              </div>
+            )}
             <button onClick={(e) => { e.stopPropagation(); onDeepDive(); }} className="absolute top-1 right-1 z-30 p-1.5 rounded-full bg-cmd-surface/50 hover:bg-raptors-red text-white opacity-0 group-hover:opacity-100 transition-all backdrop-blur-sm" title="View Analytics"><ChevronRight className="w-3 h-3" /></button>
             {/* Form Indicator */}
             {player.form && <div className="absolute top-1 left-1 z-30"><FormIndicator form={player.form} /></div>}
@@ -2897,9 +3283,19 @@ const PlayerCard = ({ player, onClick, onDeepDive, isOpponent, isSelected }) => 
 
 const BenchCard = ({ player, onClick, isOpponent, isHighlighted }) => {
     const [imgError, setImgError] = useState(false);
+    const getInitials = (name) => {
+      const parts = name.split(' ');
+      if (parts.length >= 2) return parts[0][0] + parts[parts.length - 1][0];
+      return name.slice(0, 2).toUpperCase();
+    };
     return (
         <div onClick={onClick} className={`flex-shrink-0 w-16 h-20 rounded-lg overflow-hidden relative cursor-pointer group transition-all bg-cmd-card border ${isHighlighted ? 'ring-2 ring-raptors-red/50 border-raptors-red/30 shadow-lg shadow-raptors-red/10' : 'border-cmd-border hover:ring-2 hover:ring-raptors-red/30 hover:border-raptors-red/20'}`} style={isHighlighted ? {animation: 'border-glow 2s ease-in-out infinite'} : {}}>
-             {!imgError ? (<img src={`https://cdn.nba.com/headshots/nba/latest/1040x760/${player.id}.png`} onError={() => setImgError(true)} className={`w-full h-full object-cover object-top ${isOpponent ? 'grayscale-[0.3]' : ''}`} alt={player.name} />) : (<div className="w-full h-full flex items-center justify-center text-xs font-bold text-slate-500">{player.number}</div>)}
+             {!imgError ? (<img src={`https://cdn.nba.com/headshots/nba/latest/1040x760/${player.id}.png`} onError={() => setImgError(true)} className={`w-full h-full object-cover object-top ${isOpponent ? 'grayscale-[0.3]' : ''}`} alt={player.name} />) : (
+               <div className={`w-full h-full flex flex-col items-center justify-center ${isOpponent ? 'bg-gradient-to-br from-blue-900/30 to-blue-950/50' : 'bg-gradient-to-br from-raptors-red/10 to-raptors-purple/20'}`}>
+                 <div className={`text-sm font-black ${isOpponent ? 'text-blue-400/70' : 'text-raptors-red/70'}`}>{getInitials(player.name)}</div>
+                 <div className={`text-[9px] font-mono ${isOpponent ? 'text-blue-500/50' : 'text-raptors-red/50'}`}>#{player.number}</div>
+               </div>
+             )}
             <div className="absolute bottom-0 inset-x-0 bg-cmd-bg/90 backdrop-blur-sm p-0.5 text-center">
                 <div className="text-[8px] text-white font-bold truncate">{player.name.split(' ').pop()}</div>
                 <div className="text-[7px] text-slate-400 font-mono">{Number(player.seasonStats?.ppg || 0).toFixed(1)}</div>
@@ -3907,9 +4303,14 @@ const TeamSalaryWidget = ({ isDark = true, teamName = 'Raptors', opponentName })
         <div className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'} uppercase mb-2`}>Top 5 Contracts</div>
         <div className="space-y-1.5">
           {topPlayers.map(([playerId, contract], i) => {
-            // Try to find player name from roster
-            const raptorsPlayer = RAPTORS_ROSTER.find(p => p.id === playerId);
-            const playerName = raptorsPlayer?.name || `Player #${i + 1}`;
+            // Try to find player name using the helper function
+            let playerName = findPlayerName(playerId, currentTeam);
+            
+            // Fallback to contract type + salary tier
+            if (!playerName) {
+              const salaryTier = contract.salary > 30000000 ? 'Star' : contract.salary > 15000000 ? 'Starter' : 'Role';
+              playerName = `${salaryTier} Player`;
+            }
             return (
               <div key={playerId} className="flex items-center justify-between text-[10px]">
                 <span className={`truncate max-w-[60%] ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>
@@ -4309,8 +4710,10 @@ function App() {
         <div className="grid grid-cols-12 gap-4 h-full">
           <div className="col-span-12 lg:col-span-2 h-full overflow-y-auto space-y-4 pb-4">
             <QuickStatsBar isDark={isDark} />
+            <SeasonProgress isDark={isDark} />
             <StreakCelebration streak={RAPTORS_STATS.streak} isDark={isDark} />
             <GameCountdown game={selectedGame} isDark={isDark} />
+            <RecentResultsWidget games={games} isDark={isDark} />
             <FanPollWidget isDark={isDark} />
             <ScheduleList games={games} onSelectGame={setSelectedGame} selectedGameId={selectedGame?.id} isDark={isDark} />
             <StandingsWidget isDark={isDark} />
@@ -4340,7 +4743,7 @@ function App() {
         <div className="w-full max-w-[98%] mx-auto px-4 flex items-center justify-between text-xs text-slate-500">
           <div className="flex items-center gap-2">
             <span className="font-bold text-raptors-red neon-flicker">RAPTORS INTEL</span>
-            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v7.0</span>
+            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v7.2</span>
           </div>
           <div className="hidden md:flex items-center gap-4">
             <span>Built for Raptors fans 🦖</span>
@@ -4362,7 +4765,7 @@ function App() {
 // ============================================================
 const rootElement = document.getElementById('root');
 const root = ReactDOM.createRoot(rootElement);
-root.render(<App />);
+root.render(<ErrorBoundary><App /></ErrorBoundary>);
     </script>
   </body>
 </html>
