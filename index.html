@@ -5222,6 +5222,181 @@ const MilestonesWidget = ({ isDark = true }) => {
   );
 };
 
+// Division Rivals Widget
+const DivisionRivalsWidget = ({ isDark = true }) => {
+  const atlantic = [
+    { team: 'Celtics', record: '0-2', emoji: '☘️' },
+    { team: '76ers', record: '1-1', emoji: '🔔' },
+    { team: 'Nets', record: '2-1', emoji: '🌐' },
+    { team: 'Knicks', record: '1-2', emoji: '🗽' }
+  ];
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <Swords className="w-3 h-3 text-blue-400" /> Atlantic Division
+        </h3>
+      </div>
+      
+      <div className="space-y-2">
+        {atlantic.map((r, i) => (
+          <div key={i} className="flex items-center justify-between text-[10px]">
+            <span className="flex items-center gap-1">
+              <span>{r.emoji}</span>
+              <span className={isDark ? 'text-slate-300' : 'text-slate-600'}>{r.team}</span>
+            </span>
+            <span className={`font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>{r.record}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Signature Wins Widget
+const SignatureWinsWidget = ({ isDark = true }) => {
+  const wins = [
+    { vs: 'Thunder', date: 'Jan 12', score: '118-115', note: 'SGA held to 22' },
+    { vs: 'Bucks', date: 'Jan 28', score: '121-108', note: 'Scottie 35pts' },
+    { vs: 'Celtics', date: 'Feb 2', score: '112-105', note: 'Road upset' }
+  ];
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <Trophy className="w-3 h-3 text-yellow-400" /> Signature Wins
+        </h3>
+      </div>
+      
+      <div className="space-y-2">
+        {wins.map((w, i) => (
+          <div key={i} className={`p-2 rounded-lg ${isDark ? 'bg-green-500/10' : 'bg-green-500/5'}`}>
+            <div className="flex justify-between items-center">
+              <span className={`text-[10px] font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>vs {w.vs}</span>
+              <span className="text-[10px] text-green-400 font-bold">{w.score}</span>
+            </div>
+            <div className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{w.date} • {w.note}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// TV Schedule Widget
+const TVScheduleWidget = ({ isDark = true, game }) => {
+  if (!game || game.status !== 'upcoming') return null;
+  
+  const broadcast = {
+    canadian: ['TSN', 'TSN 4'],
+    us: game.opponent === 'Bulls' ? ['NBA TV'] : [],
+    streaming: ['NBA League Pass']
+  };
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <Radio className="w-3 h-3 text-blue-400" /> Where to Watch
+        </h3>
+      </div>
+      
+      <div className="space-y-2 text-[10px]">
+        {broadcast.canadian.length > 0 && (
+          <div className="flex items-center gap-2">
+            <span className={isDark ? 'text-slate-400' : 'text-slate-500'}>🇨🇦</span>
+            <span className={`font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>{broadcast.canadian.join(', ')}</span>
+          </div>
+        )}
+        {broadcast.us.length > 0 && (
+          <div className="flex items-center gap-2">
+            <span className={isDark ? 'text-slate-400' : 'text-slate-500'}>🇺🇸</span>
+            <span className={`font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>{broadcast.us.join(', ')}</span>
+          </div>
+        )}
+        <div className="flex items-center gap-2">
+          <span className={isDark ? 'text-slate-400' : 'text-slate-500'}>📱</span>
+          <span className={`font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>{broadcast.streaming.join(', ')}</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Game Day Checklist Widget
+const GameDayChecklistWidget = ({ isDark = true, game }) => {
+  const [checked, setChecked] = useState({});
+  
+  if (!game || game.status !== 'upcoming') return null;
+  
+  const items = [
+    { id: 'jersey', label: 'Wear Raptors gear', emoji: '👕' },
+    { id: 'snacks', label: 'Stock up on snacks', emoji: '🍿' },
+    { id: 'friends', label: 'Text the group chat', emoji: '📱' },
+    { id: 'predictions', label: 'Make your predictions', emoji: '🎯' }
+  ];
+  
+  const toggle = (id) => setChecked(prev => ({ ...prev, [id]: !prev[id] }));
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <LayoutTemplate className="w-3 h-3 text-green-400" /> Game Day Checklist
+        </h3>
+      </div>
+      
+      <div className="space-y-2">
+        {items.map((item) => (
+          <button
+            key={item.id}
+            onClick={() => toggle(item.id)}
+            className={`w-full flex items-center gap-2 p-2 rounded-lg text-[10px] transition-all ${
+              checked[item.id] 
+                ? `${isDark ? 'bg-green-500/20' : 'bg-green-500/10'} line-through opacity-60` 
+                : `${isDark ? 'bg-cmd-bg hover:bg-cmd-card' : 'bg-light-card hover:bg-slate-200'}`
+            }`}
+          >
+            <span>{checked[item.id] ? '✅' : item.emoji}</span>
+            <span className={isDark ? 'text-slate-300' : 'text-slate-600'}>{item.label}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Social Buzz Widget
+const SocialBuzzWidget = ({ isDark = true }) => {
+  const tweets = [
+    { user: '@RaptorsFan416', text: "Scottie is HIM! 🔥", likes: 234 },
+    { user: '@NorthSideBall', text: "Barnes for All-Star next year 💯", likes: 189 },
+    { user: '@WeTheNorthCrew', text: "6 game streak LFG! 🦖", likes: 156 }
+  ];
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <Twitter className="w-3 h-3 text-blue-400" /> Fan Buzz
+        </h3>
+      </div>
+      
+      <div className="space-y-2">
+        {tweets.map((t, i) => (
+          <div key={i} className={`p-2 rounded-lg ${isDark ? 'bg-cmd-bg' : 'bg-light-card'}`}>
+            <div className={`text-[9px] font-bold text-blue-400 mb-1`}>{t.user}</div>
+            <div className={`text-[10px] ${isDark ? 'text-slate-300' : 'text-slate-600'} mb-1`}>{t.text}</div>
+            <div className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>❤️ {t.likes}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 // Fun Facts Ticker
 const FunFactsTicker = ({ isDark = true }) => {
   const [currentFact, setCurrentFact] = useState(0);
@@ -5774,6 +5949,11 @@ function App() {
             <SeasonGradesWidget isDark={isDark} />
             <ScheduleStrengthWidget isDark={isDark} />
             <MilestonesWidget isDark={isDark} />
+            <DivisionRivalsWidget isDark={isDark} />
+            <SignatureWinsWidget isDark={isDark} />
+            {selectedGame?.status === 'upcoming' && <TVScheduleWidget isDark={isDark} game={selectedGame} />}
+            {selectedGame?.status === 'upcoming' && <GameDayChecklistWidget isDark={isDark} game={selectedGame} />}
+            <SocialBuzzWidget isDark={isDark} />
             <LiveViewersWidget isDark={isDark} />
             <ArenaWidget isDark={isDark} />
           </div>
@@ -5797,7 +5977,7 @@ function App() {
         <div className="w-full max-w-[98%] mx-auto px-4 flex items-center justify-between text-xs text-slate-500">
           <div className="flex items-center gap-2">
             <span className="font-bold text-raptors-red neon-flicker">RAPTORS INTEL</span>
-            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v7.7</span>
+            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v7.8</span>
           </div>
           <div className="hidden md:flex items-center gap-4">
             <span>Built for Raptors fans 🦖</span>
