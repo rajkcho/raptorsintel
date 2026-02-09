@@ -768,6 +768,12 @@ const MatchupView = ({ game, raptorsStats, opponentData }) => {
             </div>
           </div>
           
+          {/* Scouting & Video Row */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <ScoutingNotes opponentName={game.opponent} />
+            <VideoHighlights />
+          </div>
+          
           {/* Injury & Intel Row */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="glass-card overflow-hidden">
@@ -1247,6 +1253,130 @@ const AdvancedStatsPanel = ({ roster }) => {
   );
 };
 
+// News Headlines
+const NewsHeadlines = () => {
+  const headlines = [
+    { source: 'ESPN', title: 'Scottie Barnes continues All-Star push with dominant stretch', time: '2h', hot: true },
+    { source: 'The Athletic', title: 'Raptors front office evaluating trade deadline options', time: '4h' },
+    { source: 'Sportsnet', title: 'RJ Barrett returns to practice, expected to play vs Bulls', time: '5h' },
+    { source: 'TSN', title: 'Chris Paul bringing veteran leadership to young Raptors core', time: '8h' },
+  ];
+  
+  return (
+    <div className="glass-card overflow-hidden">
+      <div className="px-4 py-3 border-b border-cmd-border bg-gradient-to-r from-red-500/10 to-transparent">
+        <h3 className="text-sm font-bold text-white flex items-center gap-2"><Radio className="w-4 h-4 text-red-500" /> Latest News</h3>
+      </div>
+      <div className="divide-y divide-cmd-border/50">
+        {headlines.map((news, i) => (
+          <div key={i} className="px-4 py-3 hover:bg-cmd-card/30 transition-colors cursor-pointer group">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-[10px] font-bold text-slate-500 uppercase">{news.source}</span>
+              {news.hot && <span className="text-[9px] px-1.5 py-0.5 rounded bg-orange-500/20 text-orange-400 font-bold">HOT</span>}
+              <span className="text-[10px] text-slate-600">• {news.time}</span>
+            </div>
+            <p className="text-sm text-slate-300 group-hover:text-white transition-colors">{news.title}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Video Highlights Placeholder
+const VideoHighlights = () => (
+  <div className="glass-card overflow-hidden">
+    <div className="px-4 py-3 border-b border-cmd-border bg-gradient-to-r from-raptors-red/10 to-transparent">
+      <h3 className="text-sm font-bold text-white flex items-center gap-2"><Play className="w-4 h-4 text-raptors-red" /> Highlights</h3>
+    </div>
+    <div className="p-4 grid grid-cols-2 gap-3">
+      {[
+        { title: 'Barnes 28 PTS vs MIN', duration: '4:32' },
+        { title: 'Quickley game-winner', duration: '1:15' },
+        { title: 'Ingram debut highlights', duration: '3:45' },
+        { title: 'Top 10 plays of week', duration: '5:20' },
+      ].map((video, i) => (
+        <div key={i} className="relative rounded-lg overflow-hidden bg-cmd-bg border border-cmd-border group cursor-pointer hover:border-raptors-red/30 transition-all">
+          <div className="aspect-video bg-gradient-to-br from-cmd-surface to-cmd-bg flex items-center justify-center">
+            <div className="w-10 h-10 rounded-full bg-raptors-red/20 flex items-center justify-center group-hover:bg-raptors-red/40 transition-colors">
+              <Play className="w-5 h-5 text-raptors-red fill-raptors-red" />
+            </div>
+          </div>
+          <div className="p-2">
+            <div className="text-xs font-medium text-slate-300 truncate">{video.title}</div>
+            <div className="text-[10px] text-slate-500">{video.duration}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+// Scouting Notes
+const ScoutingNotes = ({ opponentName }) => (
+  <div className="glass-card overflow-hidden">
+    <div className="px-4 py-3 border-b border-cmd-border bg-gradient-to-r from-yellow-500/10 to-transparent">
+      <h3 className="text-sm font-bold text-white flex items-center gap-2"><Brain className="w-4 h-4 text-yellow-500" /> Scouting Notes</h3>
+    </div>
+    <div className="p-4 space-y-3">
+      <div className="bg-cmd-bg/50 rounded-lg p-3 border-l-2 border-l-raptors-red">
+        <div className="text-[10px] text-raptors-red font-bold uppercase mb-1">Offense</div>
+        <p className="text-xs text-slate-300">Push pace when possible. Barnes in the post against smaller defenders. Quickley catch-and-shoot from corners.</p>
+      </div>
+      <div className="bg-cmd-bg/50 rounded-lg p-3 border-l-2 border-l-blue-500">
+        <div className="text-[10px] text-blue-400 font-bold uppercase mb-1">Defense</div>
+        <p className="text-xs text-slate-300">ICE pick and rolls. No middle penetration. Contest all threes — {opponentName} shoots 35%+ from deep.</p>
+      </div>
+      <div className="bg-cmd-bg/50 rounded-lg p-3 border-l-2 border-l-green-500">
+        <div className="text-[10px] text-green-400 font-bold uppercase mb-1">Focus</div>
+        <p className="text-xs text-slate-300">Rebound. Limit turnovers to under 12. Get to the line 25+ times.</p>
+      </div>
+    </div>
+  </div>
+);
+
+// Momentum Tracker
+const MomentumTracker = () => {
+  const data = [
+    { game: 1, tor: -5 }, { game: 2, tor: -8 }, { game: 3, tor: 12 },
+    { game: 4, tor: 7 }, { game: 5, tor: -2 }, { game: 6, tor: -27 },
+    { game: 7, tor: 5 }, { game: 8, tor: -10 }, { game: 9, tor: 8 },
+    { game: 10, tor: -2 },
+  ];
+  
+  return (
+    <div className="glass-card overflow-hidden">
+      <div className="px-4 py-3 border-b border-cmd-border bg-gradient-to-r from-cyan-500/10 to-transparent">
+        <h3 className="text-sm font-bold text-white flex items-center gap-2"><TrendingUp className="w-4 h-4 text-cyan-400" /> Momentum (L10 Point Diff)</h3>
+      </div>
+      <div className="p-4 h-32">
+        <ResponsiveContainer width="100%" height="100%">
+          <AreaChart data={data}>
+            <defs>
+              <linearGradient id="colorTor" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#CE1141" stopOpacity={0.3}/>
+                <stop offset="95%" stopColor="#CE1141" stopOpacity={0}/>
+              </linearGradient>
+            </defs>
+            <XAxis dataKey="game" hide />
+            <YAxis hide domain={[-30, 30]} />
+            <Tooltip 
+              contentStyle={{ backgroundColor: '#111827', borderColor: '#1e293b', borderRadius: '8px', fontSize: '11px' }}
+              formatter={(value) => [value > 0 ? `+${value}` : value, 'Point Diff']}
+            />
+            <Area type="monotone" dataKey="tor" stroke="#CE1141" strokeWidth={2} fill="url(#colorTor)" />
+            <Line type="monotone" dataKey={() => 0} stroke="#334155" strokeDasharray="3 3" dot={false} />
+          </AreaChart>
+        </ResponsiveContainer>
+      </div>
+      <div className="px-4 pb-3 flex justify-between text-[10px] text-slate-500">
+        <span>10 games ago</span>
+        <span>Last game</span>
+      </div>
+    </div>
+  );
+};
+
 // Enhanced App with new components
 function App() {
   const [selectedGame, setSelectedGame] = useState(SCHEDULE.find(g => g.status === 'upcoming') || SCHEDULE[0]);
@@ -1312,6 +1442,7 @@ function App() {
             <ScheduleCard games={SCHEDULE} selectedGame={selectedGame} onSelectGame={setSelectedGame} />
             <StandingsWidget standings={STANDINGS.east} expanded={expandedStandings} onToggle={() => setExpandedStandings(!expandedStandings)} />
             <TopPerformers roster={RAPTORS_ROSTER} />
+            <MomentumTracker />
           </div>
           
           {/* Main Content */}
@@ -1332,6 +1463,7 @@ function App() {
             <RecentGamesLog />
             <AdvancedStatsPanel roster={RAPTORS_ROSTER} />
             <SocialFeed opponentName={selectedGame?.opponent} />
+            <NewsHeadlines />
           </div>
         </div>
       </main>
