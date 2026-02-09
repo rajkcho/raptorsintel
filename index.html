@@ -1521,6 +1521,58 @@ const SeasonProgress = () => {
   );
 };
 
+// Next 5 Games Preview
+const UpcomingGames = ({ games }) => (
+  <div className="glass-card overflow-hidden">
+    <div className="px-4 py-3 border-b border-cmd-border bg-gradient-to-r from-raptors-red/10 to-transparent">
+      <h3 className="text-sm font-bold text-white flex items-center gap-2"><Calendar className="w-4 h-4 text-raptors-red" /> Next 5 Games</h3>
+    </div>
+    <div className="divide-y divide-cmd-border/50">
+      {games.filter(g => g.status === 'upcoming').slice(0, 5).map((game, i) => (
+        <div key={i} className="px-4 py-2 flex items-center justify-between hover:bg-cmd-card/30 transition-colors">
+          <div className="flex items-center gap-2">
+            <span className="text-[10px] text-slate-500 w-10">{game.date}</span>
+            <span className="text-[10px] text-slate-400">{game.isHome ? 'vs' : '@'}</span>
+            <img src={`https://cdn.nba.com/logos/nba/${game.opponentId}/primary/L/logo.svg`} className="w-5 h-5" alt="" />
+            <span className="text-xs font-medium text-slate-300">{game.opponent}</span>
+          </div>
+          <span className="text-[10px] text-slate-500">{game.time}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+// Key Stat Deltas (vs League Avg)
+const StatDeltas = ({ stats }) => {
+  const leagueAvg = { ppg: 114.2, oppPpg: 114.2, pace: 100.0, fgPct: 47.5, threePct: 36.5 };
+  const deltas = [
+    { label: 'PPG', value: stats.ppg - leagueAvg.ppg, suffix: '' },
+    { label: 'Opp PPG', value: stats.oppPpg - leagueAvg.oppPpg, suffix: '', invert: true },
+    { label: 'FG%', value: stats.fgPct - leagueAvg.fgPct, suffix: '%' },
+    { label: '3P%', value: stats.threePct - leagueAvg.threePct, suffix: '%' },
+  ];
+  
+  return (
+    <div className="glass-card-sm p-4">
+      <div className="text-[10px] text-slate-500 uppercase font-bold mb-3">vs League Average</div>
+      <div className="grid grid-cols-4 gap-2">
+        {deltas.map((delta, i) => {
+          const isGood = delta.invert ? delta.value < 0 : delta.value > 0;
+          return (
+            <div key={i} className="text-center">
+              <div className={`text-lg font-mono font-bold ${isGood ? 'text-green-400' : 'text-red-400'}`}>
+                {delta.value > 0 ? '+' : ''}{delta.value.toFixed(1)}{delta.suffix}
+              </div>
+              <div className="text-[9px] text-slate-500">{delta.label}</div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
 // Pace of Play Chart
 const PaceChart = () => {
   const data = [
@@ -1760,6 +1812,7 @@ function App() {
       {/* Quick Stats Bar */}
       <div className="max-w-[1600px] mx-auto w-full px-4 py-2">
         <QuickStatsBar stats={RAPTORS_TEAM_STATS} />
+        <StatDeltas stats={RAPTORS_TEAM_STATS} />
       </div>
       
       <main className="flex-1 max-w-[1600px] mx-auto w-full px-4 py-4">
@@ -1774,6 +1827,7 @@ function App() {
             <TeamRankings />
             <ClutchStats />
             <SeasonProgress />
+            <UpcomingGames games={SCHEDULE} />
           </div>
           
           {/* Main Content */}
