@@ -6833,6 +6833,216 @@ const VenueStatsWidget = ({ isDark = true }) => {
   );
 };
 
+// Double-Double Tracker Widget
+const DoublDoubleWidget = ({ isDark = true }) => {
+  const ddLeaders = [
+    { name: 'Scottie Barnes', count: 18, type: 'PTS-REB' },
+    { name: 'Jakob Poeltl', count: 12, type: 'PTS-REB' },
+    { name: 'RJ Barrett', count: 5, type: 'PTS-AST' }
+  ];
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <Award className="w-3 h-3 text-amber-400" /> Double-Doubles
+        </h3>
+      </div>
+      
+      <div className="space-y-2">
+        {ddLeaders.map((p, i) => (
+          <div key={i} className="flex items-center justify-between text-[10px]">
+            <span className={isDark ? 'text-slate-300' : 'text-slate-600'}>{p.name.split(' ')[1]}</span>
+            <div className="flex items-center gap-2">
+              <span className={`px-1.5 py-0.5 rounded text-[8px] ${isDark ? 'bg-cmd-bg text-slate-400' : 'bg-light-card text-slate-500'}`}>{p.type}</span>
+              <span className="font-bold text-amber-400">{p.count}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Big Games Widget (30+ pt games)
+const BigGamesWidget = ({ isDark = true }) => {
+  const bigGames = [
+    { player: 'Scottie Barnes', games: 8, high: 38 },
+    { player: 'RJ Barrett', games: 4, high: 35 },
+    { player: 'Immanuel Quickley', games: 2, high: 32 }
+  ];
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <Flame className="w-3 h-3 text-orange-400" /> 30+ Point Games
+        </h3>
+      </div>
+      
+      <div className="space-y-2">
+        {bigGames.map((p, i) => (
+          <div key={i} className={`p-2 rounded-lg ${isDark ? 'bg-orange-500/10' : 'bg-orange-500/5'}`}>
+            <div className="flex justify-between items-center">
+              <span className={`text-[10px] font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>{p.player.split(' ')[1]}</span>
+              <span className="text-[10px] font-bold text-orange-400">{p.games}x</span>
+            </div>
+            <div className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Season high: {p.high} pts</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Record by Margin Widget
+const RecordByMarginWidget = ({ isDark = true }) => {
+  const margins = {
+    blowoutWins: { record: '8-0', margin: '+15' },
+    closeWins: { record: '8-8', margin: '1-5' },
+    closeLosses: { record: '6-10', margin: '1-5' },
+    blowoutLosses: { record: '0-12', margin: '-15' }
+  };
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <BarChart3 className="w-3 h-3 text-purple-400" /> By Margin
+        </h3>
+      </div>
+      
+      <div className="grid grid-cols-2 gap-2">
+        <div className={`p-2 rounded-lg text-center ${isDark ? 'bg-green-500/10' : 'bg-green-500/5'}`}>
+          <div className="text-xs font-black text-green-400">{margins.blowoutWins.record}</div>
+          <div className={`text-[8px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Blowout W</div>
+        </div>
+        <div className={`p-2 rounded-lg text-center ${isDark ? 'bg-yellow-500/10' : 'bg-yellow-500/5'}`}>
+          <div className="text-xs font-black text-yellow-400">{margins.closeWins.record}</div>
+          <div className={`text-[8px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Close W</div>
+        </div>
+        <div className={`p-2 rounded-lg text-center ${isDark ? 'bg-orange-500/10' : 'bg-orange-500/5'}`}>
+          <div className="text-xs font-black text-orange-400">{margins.closeLosses.record}</div>
+          <div className={`text-[8px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Close L</div>
+        </div>
+        <div className={`p-2 rounded-lg text-center ${isDark ? 'bg-red-500/10' : 'bg-red-500/5'}`}>
+          <div className="text-xs font-black text-red-400">{margins.blowoutLosses.record}</div>
+          <div className={`text-[8px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Blowout L</div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Half Performance Widget
+const HalfPerformanceWidget = ({ isDark = true }) => {
+  const halves = {
+    first: { ppg: 55.2, oppg: 54.8, margin: 0.4 },
+    second: { ppg: 56.3, oppg: 58.0, margin: -1.7 }
+  };
+  
+  const betterHalf = halves.first.margin > halves.second.margin ? '1st' : '2nd';
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <LayoutTemplate className="w-3 h-3 text-blue-400" /> Half Performance
+        </h3>
+        <span className={`text-[9px] px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400`}>{betterHalf} Half Team</span>
+      </div>
+      
+      <div className="grid grid-cols-2 gap-2">
+        <div className={`p-2 rounded-lg text-center ${halves.first.margin > 0 ? (isDark ? 'bg-green-500/10' : 'bg-green-500/5') : (isDark ? 'bg-cmd-bg' : 'bg-light-card')}`}>
+          <div className={`text-sm font-black ${halves.first.margin > 0 ? 'text-green-400' : isDark ? 'text-white' : 'text-slate-800'}`}>
+            {halves.first.margin > 0 ? '+' : ''}{halves.first.margin}
+          </div>
+          <div className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>1st Half</div>
+          <div className={`text-[8px] ${isDark ? 'text-slate-600' : 'text-slate-400'}`}>{halves.first.ppg} vs {halves.first.oppg}</div>
+        </div>
+        <div className={`p-2 rounded-lg text-center ${halves.second.margin > 0 ? (isDark ? 'bg-green-500/10' : 'bg-green-500/5') : (isDark ? 'bg-cmd-bg' : 'bg-light-card')}`}>
+          <div className={`text-sm font-black ${halves.second.margin > 0 ? 'text-green-400' : 'text-red-400'}`}>
+            {halves.second.margin > 0 ? '+' : ''}{halves.second.margin}
+          </div>
+          <div className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>2nd Half</div>
+          <div className={`text-[8px] ${isDark ? 'text-slate-600' : 'text-slate-400'}`}>{halves.second.ppg} vs {halves.second.oppg}</div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Travel Schedule Widget
+const TravelWidget = ({ isDark = true }) => {
+  const travel = {
+    totalMiles: 28500,
+    gamesOnRoad: 29,
+    longestTrip: '5 games (West Coast)',
+    nextTrip: '2 games'
+  };
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <Plane className="w-3 h-3 text-sky-400" /> Travel Log
+        </h3>
+      </div>
+      
+      <div className="text-center mb-3">
+        <div className={`text-xl font-black ${isDark ? 'text-white' : 'text-slate-800'}`}>{(travel.totalMiles / 1000).toFixed(1)}K</div>
+        <div className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'} uppercase`}>Miles Traveled</div>
+      </div>
+      
+      <div className={`space-y-1 text-[10px] ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>
+        <div className="flex justify-between">
+          <span>Road Games</span>
+          <span className="font-bold">{travel.gamesOnRoad}</span>
+        </div>
+        <div className="flex justify-between">
+          <span>Longest Trip</span>
+          <span className="font-bold">{travel.longestTrip}</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Starter vs Bench Widget
+const StarterVsBenchWidget = ({ isDark = true }) => {
+  const comparison = {
+    starters: { ppg: 72.8, plus: 2.5, mins: 168 },
+    bench: { ppg: 38.5, plus: -1.2, mins: 72 }
+  };
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <Users className="w-3 h-3 text-violet-400" /> Starters vs Bench
+        </h3>
+      </div>
+      
+      <div className="grid grid-cols-2 gap-2">
+        <div className={`p-2 rounded-lg text-center ${isDark ? 'bg-violet-500/10' : 'bg-violet-500/5'}`}>
+          <div className="text-xs font-bold text-violet-400 mb-1">Starters</div>
+          <div className={`text-lg font-black ${isDark ? 'text-white' : 'text-slate-800'}`}>{comparison.starters.ppg}</div>
+          <div className={`text-[9px] ${comparison.starters.plus > 0 ? 'text-green-400' : 'text-red-400'}`}>
+            +/-: {comparison.starters.plus > 0 ? '+' : ''}{comparison.starters.plus}
+          </div>
+        </div>
+        <div className={`p-2 rounded-lg text-center ${isDark ? 'bg-cmd-bg' : 'bg-light-card'}`}>
+          <div className={`text-xs font-bold ${isDark ? 'text-slate-400' : 'text-slate-500'} mb-1`}>Bench</div>
+          <div className={`text-lg font-black ${isDark ? 'text-white' : 'text-slate-800'}`}>{comparison.bench.ppg}</div>
+          <div className={`text-[9px] ${comparison.bench.plus > 0 ? 'text-green-400' : 'text-red-400'}`}>
+            +/-: {comparison.bench.plus > 0 ? '+' : ''}{comparison.bench.plus}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // Fun Facts Ticker
 const FunFactsTicker = ({ isDark = true }) => {
   const [currentFact, setCurrentFact] = useState(0);
@@ -7429,6 +7639,12 @@ function App() {
             <TeamAgeWidget isDark={isDark} />
             <ShotClockWidget isDark={isDark} />
             <VenueStatsWidget isDark={isDark} />
+            <DoublDoubleWidget isDark={isDark} />
+            <BigGamesWidget isDark={isDark} />
+            <RecordByMarginWidget isDark={isDark} />
+            <HalfPerformanceWidget isDark={isDark} />
+            <TravelWidget isDark={isDark} />
+            <StarterVsBenchWidget isDark={isDark} />
             <LiveViewersWidget isDark={isDark} />
             <ArenaWidget isDark={isDark} />
           </div>
@@ -7452,7 +7668,7 @@ function App() {
         <div className="w-full max-w-[98%] mx-auto px-4 flex items-center justify-between text-xs text-slate-500">
           <div className="flex items-center gap-2">
             <span className="font-bold text-raptors-red neon-flicker">RAPTORS INTEL</span>
-            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v8.3</span>
+            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v8.4</span>
           </div>
           <div className="hidden md:flex items-center gap-4">
             <span>Built for Raptors fans 🦖</span>
