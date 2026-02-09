@@ -1047,6 +1047,206 @@ const WeatherWidget = ({ venue }) => (
   </div>
 );
 
+// Shot Chart Visualization
+const ShotChart = ({ playerName }) => {
+  const zones = [
+    { id: 'paint', label: 'Paint', pct: 65, attempts: 8.2, x: 50, y: 75 },
+    { id: 'midLeft', label: 'Mid Left', pct: 42, attempts: 2.1, x: 20, y: 50 },
+    { id: 'midRight', label: 'Mid Right', pct: 48, attempts: 2.4, x: 80, y: 50 },
+    { id: 'topKey', label: 'Top Key', pct: 38, attempts: 1.8, x: 50, y: 35 },
+    { id: 'leftCorner', label: 'Left Corner 3', pct: 41, attempts: 1.5, x: 8, y: 85 },
+    { id: 'rightCorner', label: 'Right Corner 3', pct: 39, attempts: 1.3, x: 92, y: 85 },
+    { id: 'leftWing', label: 'Left Wing 3', pct: 35, attempts: 2.2, x: 15, y: 30 },
+    { id: 'rightWing', label: 'Right Wing 3', pct: 37, attempts: 2.0, x: 85, y: 30 },
+    { id: 'top3', label: 'Top 3', pct: 33, attempts: 1.9, x: 50, y: 15 },
+  ];
+  
+  const getColor = (pct) => {
+    if (pct >= 50) return 'rgba(34, 197, 94, 0.8)';
+    if (pct >= 40) return 'rgba(234, 179, 8, 0.8)';
+    if (pct >= 33) return 'rgba(249, 115, 22, 0.8)';
+    return 'rgba(239, 68, 68, 0.8)';
+  };
+  
+  return (
+    <div className="glass-card overflow-hidden">
+      <div className="px-4 py-3 border-b border-cmd-border bg-gradient-to-r from-green-500/10 to-transparent">
+        <h3 className="text-sm font-bold text-white flex items-center gap-2"><Target className="w-4 h-4 text-green-500" /> Shot Chart — {playerName}</h3>
+      </div>
+      <div className="p-4">
+        <div className="relative aspect-[1.2] bg-cmd-bg rounded-xl overflow-hidden border border-cmd-border">
+          {/* Court SVG */}
+          <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full">
+            {/* Court markings */}
+            <rect x="5" y="65" width="90" height="35" fill="none" stroke="rgba(206,17,65,0.2)" strokeWidth="0.5" />
+            <circle cx="50" cy="85" r="12" fill="none" stroke="rgba(206,17,65,0.2)" strokeWidth="0.5" />
+            <path d="M5 65 Q 50 0 95 65" fill="none" stroke="rgba(206,17,65,0.15)" strokeWidth="0.5" strokeDasharray="2,2" />
+            <rect x="30" y="70" width="40" height="30" fill="rgba(206,17,65,0.05)" stroke="rgba(206,17,65,0.2)" strokeWidth="0.5" />
+            
+            {/* Shot zones */}
+            {zones.map(zone => (
+              <g key={zone.id}>
+                <circle cx={zone.x} cy={zone.y} r={Math.sqrt(zone.attempts) * 3} fill={getColor(zone.pct)} opacity="0.7" className="cursor-pointer hover:opacity-100 transition-opacity">
+                  <title>{zone.label}: {zone.pct}% on {zone.attempts} FGA/g</title>
+                </circle>
+                <text x={zone.x} y={zone.y + 1} textAnchor="middle" fontSize="4" fill="white" fontWeight="bold">{zone.pct}%</text>
+              </g>
+            ))}
+          </svg>
+        </div>
+        <div className="flex justify-center gap-4 mt-3 text-[10px]">
+          <div className="flex items-center gap-1"><div className="w-3 h-3 rounded-full bg-green-500" />50%+</div>
+          <div className="flex items-center gap-1"><div className="w-3 h-3 rounded-full bg-yellow-500" />40-49%</div>
+          <div className="flex items-center gap-1"><div className="w-3 h-3 rounded-full bg-orange-500" />33-39%</div>
+          <div className="flex items-center gap-1"><div className="w-3 h-3 rounded-full bg-red-500" />&lt;33%</div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Player Comparison Tool
+const PlayerComparison = ({ raptorsRoster, opponentRoster, opponentName }) => {
+  const [rapPlayer, setRapPlayer] = useState(raptorsRoster[0]);
+  const [oppPlayer, setOppPlayer] = useState(opponentRoster?.[0]);
+  
+  if (!oppPlayer) return null;
+  
+  const stats = [
+    { label: 'PPG', rap: rapPlayer.seasonStats.ppg, opp: oppPlayer.seasonStats?.ppg || 0 },
+    { label: 'RPG', rap: rapPlayer.seasonStats.rpg, opp: oppPlayer.seasonStats?.rpg || 0 },
+    { label: 'APG', rap: rapPlayer.seasonStats.apg, opp: oppPlayer.seasonStats?.apg || 0 },
+    { label: 'FG%', rap: rapPlayer.seasonStats.fgPct, opp: oppPlayer.seasonStats?.fgPct || 45 },
+    { label: '3P%', rap: rapPlayer.seasonStats.threePtPct, opp: oppPlayer.seasonStats?.threePtPct || 35 },
+  ];
+  
+  return (
+    <div className="glass-card overflow-hidden">
+      <div className="px-4 py-3 border-b border-cmd-border bg-gradient-to-r from-raptors-red/10 via-transparent to-blue-500/10">
+        <h3 className="text-sm font-bold text-white flex items-center gap-2"><ArrowUpDown className="w-4 h-4 text-slate-400" /> Player Comparison</h3>
+      </div>
+      <div className="p-4">
+        <div className="grid grid-cols-2 gap-4 mb-4">
+          <select value={rapPlayer.id} onChange={(e) => setRapPlayer(raptorsRoster.find(p => p.id === e.target.value))} className="bg-cmd-bg border border-raptors-red/30 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-raptors-red">
+            {raptorsRoster.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+          </select>
+          <select value={oppPlayer.id} onChange={(e) => setOppPlayer(opponentRoster.find(p => p.id === e.target.value))} className="bg-cmd-bg border border-blue-500/30 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500">
+            {opponentRoster.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+          </select>
+        </div>
+        
+        <div className="flex items-center justify-between mb-6">
+          <div className="text-center">
+            <img src={`https://cdn.nba.com/headshots/nba/latest/1040x760/${rapPlayer.id}.png`} className="w-20 h-20 rounded-full object-cover bg-cmd-border mx-auto mb-2 border-2 border-raptors-red" alt="" />
+            <div className="text-sm font-bold text-white">{rapPlayer.name}</div>
+            <div className="text-[10px] text-raptors-red">{rapPlayer.position} #{rapPlayer.number}</div>
+          </div>
+          <div className="text-2xl text-slate-500 font-black">VS</div>
+          <div className="text-center">
+            <img src={`https://cdn.nba.com/headshots/nba/latest/1040x760/${oppPlayer.id}.png`} className="w-20 h-20 rounded-full object-cover bg-cmd-border mx-auto mb-2 border-2 border-blue-500" alt="" />
+            <div className="text-sm font-bold text-white">{oppPlayer.name}</div>
+            <div className="text-[10px] text-blue-400">{oppPlayer.position} #{oppPlayer.number}</div>
+          </div>
+        </div>
+        
+        <div className="space-y-3">
+          {stats.map((stat, i) => {
+            const total = stat.rap + stat.opp;
+            const rapPct = total > 0 ? (stat.rap / total) * 100 : 50;
+            const rapWins = stat.rap > stat.opp;
+            const oppWins = stat.opp > stat.rap;
+            return (
+              <div key={i}>
+                <div className="flex justify-between items-center mb-1">
+                  <span className={`text-sm font-mono font-bold ${rapWins ? 'text-green-400' : 'text-slate-400'}`}>{stat.rap.toFixed(1)}</span>
+                  <span className="text-[10px] text-slate-500 font-medium">{stat.label}</span>
+                  <span className={`text-sm font-mono font-bold ${oppWins ? 'text-green-400' : 'text-slate-400'}`}>{stat.opp.toFixed(1)}</span>
+                </div>
+                <div className="h-2 bg-cmd-border rounded-full overflow-hidden flex">
+                  <div className="bg-gradient-to-r from-raptors-red to-raptors-purple h-full" style={{ width: `${rapPct}%` }} />
+                  <div className="bg-blue-500 h-full" style={{ width: `${100 - rapPct}%` }} />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Recent Games Log
+const RecentGamesLog = () => {
+  const games = [
+    { date: 'Feb 4', opp: 'Timberwolves', oppId: '1610612750', result: 'L', score: '126-128', topScorer: 'Barnes 28', topReb: 'Barnes 10', topAst: 'Quickley 8' },
+    { date: 'Feb 1', opp: 'Jazz', oppId: '1610612762', result: 'W', score: '107-100', topScorer: 'Ingram 25', topReb: 'Poeltl 12', topAst: 'Barnes 7' },
+    { date: 'Jan 30', opp: 'Magic', oppId: '1610612753', result: 'L', score: '120-130', topScorer: 'Barrett 22', topReb: 'Barnes 8', topAst: 'Quickley 6' },
+    { date: 'Jan 28', opp: 'Knicks', oppId: '1610612752', result: 'L', score: '92-119', topScorer: 'Barnes 18', topReb: 'Barnes 9', topAst: 'Barnes 5' },
+    { date: 'Jan 25', opp: 'Thunder', oppId: '1610612760', result: 'W', score: '103-101', topScorer: 'Quickley 24', topReb: 'Barnes 11', topAst: 'Barnes 8' },
+  ];
+  
+  return (
+    <div className="glass-card overflow-hidden">
+      <div className="px-4 py-3 border-b border-cmd-border bg-gradient-to-r from-slate-500/10 to-transparent">
+        <h3 className="text-sm font-bold text-white flex items-center gap-2"><Clock className="w-4 h-4 text-slate-400" /> Recent Games</h3>
+      </div>
+      <div className="divide-y divide-cmd-border/50">
+        {games.map((game, i) => (
+          <div key={i} className="px-4 py-3 hover:bg-cmd-card/30 transition-colors">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-slate-500">{game.date}</span>
+                <img src={`https://cdn.nba.com/logos/nba/${game.oppId}/primary/L/logo.svg`} className="w-5 h-5" alt="" />
+                <span className="text-sm font-medium text-slate-300">{game.opp}</span>
+              </div>
+              <div className={`flex items-center gap-2 ${game.result === 'W' ? 'text-green-400' : 'text-red-400'}`}>
+                <span className="text-sm font-bold">{game.result}</span>
+                <span className="text-sm font-mono">{game.score}</span>
+              </div>
+            </div>
+            <div className="flex gap-4 text-[10px] text-slate-500">
+              <span><span className="text-raptors-red">PTS:</span> {game.topScorer}</span>
+              <span><span className="text-blue-400">REB:</span> {game.topReb}</span>
+              <span><span className="text-green-400">AST:</span> {game.topAst}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Advanced Stats Panel
+const AdvancedStatsPanel = ({ roster }) => {
+  const leaders = {
+    per: [...roster].sort((a, b) => (b.advanced?.per || 0) - (a.advanced?.per || 0))[0],
+    ts: [...roster].sort((a, b) => (b.advanced?.ts || 0) - (a.advanced?.ts || 0))[0],
+    usg: [...roster].sort((a, b) => (b.advanced?.usg || 0) - (a.advanced?.usg || 0))[0],
+  };
+  
+  return (
+    <div className="glass-card overflow-hidden">
+      <div className="px-4 py-3 border-b border-cmd-border bg-gradient-to-r from-purple-500/10 to-transparent">
+        <h3 className="text-sm font-bold text-white flex items-center gap-2"><Activity className="w-4 h-4 text-purple-400" /> Advanced Stats Leaders</h3>
+      </div>
+      <div className="p-4 grid grid-cols-3 gap-4">
+        {[
+          { label: 'PER', player: leaders.per, value: leaders.per?.advanced?.per },
+          { label: 'TS%', player: leaders.ts, value: leaders.ts?.advanced?.ts },
+          { label: 'USG%', player: leaders.usg, value: leaders.usg?.advanced?.usg },
+        ].map((stat, i) => (
+          <div key={i} className="text-center">
+            <img src={`https://cdn.nba.com/headshots/nba/latest/1040x760/${stat.player?.id}.png`} className="w-12 h-12 rounded-full object-cover bg-cmd-border mx-auto mb-2" alt="" />
+            <div className="text-xs font-medium text-slate-400 truncate">{stat.player?.name?.split(' ').pop()}</div>
+            <div className="text-lg font-mono font-bold text-white">{stat.value?.toFixed(1)}</div>
+            <div className="text-[9px] text-slate-500 uppercase">{stat.label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 // Enhanced App with new components
 function App() {
   const [selectedGame, setSelectedGame] = useState(SCHEDULE.find(g => g.status === 'upcoming') || SCHEDULE[0]);
@@ -1123,8 +1323,14 @@ function App() {
           <div className="col-span-12 lg:col-span-3 space-y-4">
             <WeatherWidget venue={selectedGame?.venue} />
             {currentOpponent && (
-              <PredictionBreakdown raptorsStats={RAPTORS_TEAM_STATS} opponentStats={currentOpponent.teamStats} winProb={winProb} />
+              <>
+                <PredictionBreakdown raptorsStats={RAPTORS_TEAM_STATS} opponentStats={currentOpponent.teamStats} winProb={winProb} />
+                <PlayerComparison raptorsRoster={RAPTORS_ROSTER} opponentRoster={currentOpponent.roster || []} opponentName={selectedGame?.opponent} />
+              </>
             )}
+            <ShotChart playerName="Scottie Barnes" />
+            <RecentGamesLog />
+            <AdvancedStatsPanel roster={RAPTORS_ROSTER} />
             <SocialFeed opponentName={selectedGame?.opponent} />
           </div>
         </div>
