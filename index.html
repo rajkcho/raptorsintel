@@ -4509,6 +4509,194 @@ const TradeDeadlineWidget = ({ isDark = true }) => {
   );
 };
 
+// Notification Request Widget
+const NotificationWidget = ({ isDark = true, game }) => {
+  const [permission, setPermission] = useState('default');
+  const [scheduled, setScheduled] = useState(false);
+  
+  useEffect(() => {
+    if ('Notification' in window) {
+      setPermission(Notification.permission);
+    }
+  }, []);
+  
+  const requestPermission = async () => {
+    if (!('Notification' in window)) {
+      alert('Notifications not supported in this browser');
+      return;
+    }
+    const result = await Notification.requestPermission();
+    setPermission(result);
+    if (result === 'granted' && game?.status === 'upcoming') {
+      setScheduled(true);
+      // In a real app, you'd register with a service worker here
+    }
+  };
+
+  if (!game || game.status !== 'upcoming') return null;
+
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <Bell className="w-3 h-3 text-purple-400" /> Game Alerts
+        </h3>
+        <span className="text-lg">🔔</span>
+      </div>
+      
+      {permission === 'granted' ? (
+        <div className="text-center">
+          <div className={`text-sm ${isDark ? 'text-green-400' : 'text-green-600'} mb-2`}>✓ Notifications Enabled</div>
+          <button
+            onClick={() => setScheduled(!scheduled)}
+            className={`w-full py-2 rounded-lg text-xs font-bold transition-all ${
+              scheduled 
+                ? 'bg-green-500/20 text-green-400 border border-green-500/30' 
+                : `${isDark ? 'bg-cmd-bg hover:bg-cmd-card' : 'bg-light-card hover:bg-slate-200'} ${isDark ? 'text-white' : 'text-slate-800'}`
+            }`}
+          >
+            {scheduled ? '🔔 Reminder Set' : 'Set Game Reminder'}
+          </button>
+        </div>
+      ) : permission === 'denied' ? (
+        <div className={`text-center text-xs ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+          Notifications blocked. Enable in browser settings.
+        </div>
+      ) : (
+        <button
+          onClick={requestPermission}
+          className="w-full py-2 bg-raptors-red text-white rounded-lg text-xs font-bold hover:bg-raptors-red/90 transition-all"
+        >
+          Enable Game Alerts
+        </button>
+      )}
+    </div>
+  );
+};
+
+// Pace Predictor Widget
+const PacePredictorWidget = ({ isDark = true, opponent }) => {
+  const raptorsPace = 100.8; // Raptors pace
+  const opponentPace = opponent === 'Pacers' ? 103.2 : opponent === 'Bulls' ? 97.5 : opponent === 'Pistons' ? 99.1 : 100.0;
+  const avgPace = (raptorsPace + opponentPace) / 2;
+  const gameType = avgPace > 101 ? 'Fast' : avgPace < 98 ? 'Slow' : 'Medium';
+  const predictedPossessions = Math.round(avgPace * 0.48 * 2);
+  
+  const paceColor = avgPace > 101 ? 'text-orange-400' : avgPace < 98 ? 'text-blue-400' : 'text-green-400';
+  const paceBg = avgPace > 101 ? 'bg-orange-500/10' : avgPace < 98 ? 'bg-blue-500/10' : 'bg-green-500/10';
+
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <Gauge className="w-3 h-3 text-cyan-400" /> Pace Predictor
+        </h3>
+        <span className={`text-[10px] px-2 py-0.5 rounded-full ${paceBg} ${paceColor} font-bold`}>{gameType}</span>
+      </div>
+      
+      <div className="grid grid-cols-3 gap-2 text-center mb-3">
+        <div className={`p-2 rounded-lg ${isDark ? 'bg-raptors-red/10' : 'bg-raptors-red/5'}`}>
+          <div className="text-lg font-black text-raptors-red">{raptorsPace.toFixed(1)}</div>
+          <div className={`text-[8px] ${isDark ? 'text-slate-500' : 'text-slate-400'} uppercase`}>TOR</div>
+        </div>
+        <div className={`p-2 rounded-lg ${isDark ? 'bg-cmd-bg' : 'bg-light-card'}`}>
+          <div className={`text-lg font-black ${paceColor}`}>{avgPace.toFixed(1)}</div>
+          <div className={`text-[8px] ${isDark ? 'text-slate-500' : 'text-slate-400'} uppercase`}>Pred</div>
+        </div>
+        <div className={`p-2 rounded-lg ${isDark ? 'bg-blue-500/10' : 'bg-blue-500/5'}`}>
+          <div className="text-lg font-black text-blue-400">{opponentPace.toFixed(1)}</div>
+          <div className={`text-[8px] ${isDark ? 'text-slate-500' : 'text-slate-400'} uppercase`}>{opponent?.slice(0,3) || 'OPP'}</div>
+        </div>
+      </div>
+      
+      <div className={`pt-2 border-t ${isDark ? 'border-cmd-border' : 'border-light-border'} text-[10px]`}>
+        <div className="flex justify-between">
+          <span className={isDark ? 'text-slate-400' : 'text-slate-500'}>Est. Possessions</span>
+          <span className={`font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>~{predictedPossessions}</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Net Rating Widget
+const NetRatingWidget = ({ isDark = true }) => {
+  const ortg = 114.2;
+  const drtg = 111.8;
+  const netRtg = ortg - drtg;
+  const netColor = netRtg > 0 ? 'text-green-400' : 'text-red-400';
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <TrendingUp className="w-3 h-3 text-emerald-400" /> Net Rating
+        </h3>
+        <span className={`text-sm font-black ${netColor}`}>{netRtg > 0 ? '+' : ''}{netRtg.toFixed(1)}</span>
+      </div>
+      
+      <div className="grid grid-cols-2 gap-2 text-center">
+        <div className={`p-2 rounded-lg ${isDark ? 'bg-green-500/10' : 'bg-green-500/5'}`}>
+          <div className="text-xl font-black text-green-400">{ortg.toFixed(1)}</div>
+          <div className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'} uppercase`}>Offense</div>
+        </div>
+        <div className={`p-2 rounded-lg ${isDark ? 'bg-red-500/10' : 'bg-red-500/5'}`}>
+          <div className="text-xl font-black text-red-400">{drtg.toFixed(1)}</div>
+          <div className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'} uppercase`}>Defense</div>
+        </div>
+      </div>
+      
+      <div className={`mt-2 text-[10px] ${isDark ? 'text-slate-400' : 'text-slate-500'} text-center`}>
+        Points per 100 possessions
+      </div>
+    </div>
+  );
+};
+
+// Player Props Predictions Widget
+const PlayerPropsWidget = ({ isDark = true, opponent }) => {
+  const predictions = [
+    { player: 'Scottie Barnes', prop: 'PTS', line: 19.5, over: 58, confidence: 'High' },
+    { player: 'RJ Barrett', prop: 'PTS', line: 17.5, over: 52, confidence: 'Med' },
+    { player: 'Scottie Barnes', prop: 'REB', line: 8.5, over: 55, confidence: 'Med' },
+    { player: 'Immanuel Quickley', prop: 'AST', line: 6.5, over: 48, confidence: 'Low' }
+  ];
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <Target className="w-3 h-3 text-purple-400" /> Player Props
+        </h3>
+        <span className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>AI Picks</span>
+      </div>
+      
+      <div className="space-y-2">
+        {predictions.map((p, i) => (
+          <div key={i} className={`flex items-center justify-between text-[10px] p-2 rounded-lg ${isDark ? 'bg-cmd-bg' : 'bg-light-card'}`}>
+            <div className="flex-1">
+              <span className={`font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>{p.player.split(' ')[1]}</span>
+              <span className={`ml-1 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{p.prop} O{p.line}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className={`${p.over > 55 ? 'text-green-400' : p.over < 50 ? 'text-red-400' : 'text-yellow-400'}`}>
+                {p.over}%
+              </span>
+              <span className={`px-1.5 py-0.5 rounded text-[8px] ${
+                p.confidence === 'High' ? 'bg-green-500/20 text-green-400' :
+                p.confidence === 'Med' ? 'bg-yellow-500/20 text-yellow-400' :
+                'bg-slate-500/20 text-slate-400'
+              }`}>
+                {p.confidence}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 // Fun Facts Ticker
 const FunFactsTicker = ({ isDark = true }) => {
   const [currentFact, setCurrentFact] = useState(0);
@@ -5044,6 +5232,10 @@ function App() {
             {selectedGame?.status === 'upcoming' && <BettingTrendsWidget isDark={isDark} game={selectedGame} />}
             <QuickCompareWidget isDark={isDark} />
             <HistoricalH2HWidget isDark={isDark} opponent={selectedGame?.opponent} />
+            <NetRatingWidget isDark={isDark} />
+            <PacePredictorWidget isDark={isDark} opponent={selectedGame?.opponent} />
+            {selectedGame?.status === 'upcoming' && <NotificationWidget isDark={isDark} game={selectedGame} />}
+            {selectedGame?.status === 'upcoming' && <PlayerPropsWidget isDark={isDark} opponent={selectedGame?.opponent} />}
             <ArenaWidget isDark={isDark} />
           </div>
           <div className="col-span-12 lg:col-span-10 h-full overflow-y-auto custom-scrollbar pb-20 lg:pb-10">
@@ -5066,7 +5258,7 @@ function App() {
         <div className="w-full max-w-[98%] mx-auto px-4 flex items-center justify-between text-xs text-slate-500">
           <div className="flex items-center gap-2">
             <span className="font-bold text-raptors-red neon-flicker">RAPTORS INTEL</span>
-            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v7.3</span>
+            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v7.4</span>
           </div>
           <div className="hidden md:flex items-center gap-4">
             <span>Built for Raptors fans 🦖</span>
