@@ -13,6 +13,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
+        darkMode: 'class',
         theme: {
           extend: {
             colors: {
@@ -28,6 +29,13 @@
                 card: '#1a1f2e',
                 border: '#1e293b',
                 'border-light': '#334155',
+              },
+              light: {
+                bg: '#f8fafc',
+                surface: '#ffffff',
+                card: '#f1f5f9',
+                border: '#e2e8f0',
+                'border-light': '#cbd5e1',
               }
             },
             animation: {
@@ -785,7 +793,9 @@ const {
   MessageSquare, AlertTriangle, TrendingUp, Radio, Users, Heart, Share,
   MessageCircle, MoveVertical, RefreshCcw, BarChart3, ArrowUpDown, Swords, Info,
   Calendar, LayoutDashboard, X, Target, Award, Bandage, Clock, Gavel, Home, Plane,
-  ArrowRightLeft, Gauge, Timer
+  ArrowRightLeft, Gauge, Timer, Sun, Moon, Bell, Download, ExternalLink, Flame,
+  Snowflake, TrendingDown, Volume2, Printer, Copy, Twitter, Facebook, Send,
+  ChevronUp, ChevronDown, Search, Filter, Star, Sparkles, Eye, EyeOff
 } = LucideReact;
 
 // ============================================================
@@ -1021,7 +1031,7 @@ const PlayerDeepDive = ({ player, opponentName, onClose }) => {
 // ============================================================
 // SCHEDULE LIST
 // ============================================================
-const ScheduleList = ({ games, onSelectGame, selectedGameId }) => {
+const ScheduleList = ({ games, onSelectGame, selectedGameId, isDark = true }) => {
   const formatDate = (dateStr) => {
     try { const d = new Date(dateStr); if (!isNaN(d.getTime())) return { month: d.toLocaleString('en-US', { month: 'short' }).toUpperCase(), day: d.getDate().toString() }; } catch(e) {}
     const parts = dateStr.trim().split(' ');
@@ -1029,31 +1039,31 @@ const ScheduleList = ({ games, onSelectGame, selectedGameId }) => {
     return { month: 'GAME', day: '' };
   };
   return (
-    <div className="glass-card overflow-hidden h-full flex flex-col">
-      <div className="p-3 border-b border-cmd-border bg-gradient-to-r from-raptors-red/10 to-transparent sticky top-0 z-10">
-        <h2 className="text-sm font-bold text-slate-200 flex items-center gap-2 uppercase tracking-tight"><Calendar className="text-raptors-red w-4 h-4" /> 25-26 Schedule</h2>
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} overflow-hidden h-full flex flex-col`}>
+      <div className={`p-3 border-b ${isDark ? 'border-cmd-border' : 'border-light-border'} bg-gradient-to-r from-raptors-red/10 to-transparent sticky top-0 z-10`}>
+        <h2 className={`text-sm font-bold ${isDark ? 'text-slate-200' : 'text-slate-800'} flex items-center gap-2 uppercase tracking-tight`}><Calendar className="text-raptors-red w-4 h-4" /> 25-26 Schedule</h2>
       </div>
-      <div className="overflow-y-auto flex-1 divide-y divide-cmd-border">
+      <div className={`overflow-y-auto flex-1 divide-y ${isDark ? 'divide-cmd-border' : 'divide-light-border'}`}>
         {games.length === 0 ? (<div className="p-4 text-center text-slate-500 text-xs animate-pulse">Loading...</div>) : (
           games.map((game) => {
             const { month, day } = formatDate(game.date);
             const isSelected = selectedGameId === game.id;
             return (
-            <div key={game.id} onClick={() => onSelectGame(game)} className={`px-3 py-2 cursor-pointer transition-all hover:bg-cmd-card/50 group relative ${isSelected ? 'bg-raptors-red/5' : ''}`}>
+            <div key={game.id} onClick={() => onSelectGame(game)} className={`px-3 py-2 cursor-pointer transition-all ${isDark ? 'hover:bg-cmd-card/50' : 'hover:bg-slate-50'} group relative ${isSelected ? 'bg-raptors-red/5' : ''}`}>
               {isSelected && <div className="absolute left-0 top-0 bottom-0 w-1 bg-raptors-red shadow-lg shadow-raptors-red/50"></div>}
               <div className="flex items-center gap-2">
-                 <div className="flex-shrink-0 w-8 text-center"><div className="text-[9px] uppercase font-bold text-slate-500 leading-none">{month}</div><div className="text-sm font-black text-slate-200 leading-none mt-0.5">{day}</div></div>
+                 <div className="flex-shrink-0 w-8 text-center"><div className="text-[9px] uppercase font-bold text-slate-500 leading-none">{month}</div><div className={`text-sm font-black ${isDark ? 'text-slate-200' : 'text-slate-800'} leading-none mt-0.5`}>{day}</div></div>
                  <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5 mb-0.5">
                         <span className={`text-[10px] font-bold uppercase ${game.isHome ? 'text-slate-500' : 'text-slate-400'}`}>{game.isHome ? 'VS' : '@'}</span>
                         <div className="flex items-center gap-1.5 min-w-0">
-                             {game.opponentId ? (<img src={`https://cdn.nba.com/logos/nba/${game.opponentId}/primary/L/logo.svg`} className="w-4 h-4 object-contain" alt={game.opponent} />) : (<div className="w-4 h-4 rounded-full bg-cmd-border"></div>)}
-                             <span className="font-bold text-slate-200 text-xs truncate leading-none">{game.opponent}</span>
+                             {game.opponentId ? (<img src={`https://cdn.nba.com/logos/nba/${game.opponentId}/primary/L/logo.svg`} className="w-4 h-4 object-contain" alt={game.opponent} />) : (<div className={`w-4 h-4 rounded-full ${isDark ? 'bg-cmd-border' : 'bg-light-border'}`}></div>)}
+                             <span className={`font-bold ${isDark ? 'text-slate-200' : 'text-slate-700'} text-xs truncate leading-none`}>{game.opponent}</span>
                         </div>
                     </div>
                  </div>
                  <div className="text-right">
-                    {game.status === 'completed' && game.result ? (<div className={`text-[10px] font-bold ${game.result.startsWith('W') ? 'text-green-400' : 'text-red-400'}`} style={game.result.startsWith('W') ? {textShadow: '0 0 6px rgba(74,222,128,0.3)'} : {textShadow: '0 0 6px rgba(248,113,113,0.3)'}}>{game.result}</div>
+                    {game.status === 'completed' && game.result ? (<div className={`text-[10px] font-bold ${game.result.startsWith('W') ? 'text-green-500' : 'text-red-500'}`} style={game.result.startsWith('W') ? {textShadow: isDark ? '0 0 6px rgba(74,222,128,0.3)' : 'none'} : {textShadow: isDark ? '0 0 6px rgba(248,113,113,0.3)' : 'none'}}>{game.result}</div>
                     ) : game.status === 'live' ? (<div className="text-[9px] bg-raptors-red text-white px-1.5 py-0.5 rounded shadow-lg shadow-raptors-red/40" style={{animation: 'glow-pulse 2s ease-in-out infinite'}}>LIVE</div>
                     ) : (<div className="text-[9px] text-raptors-red/80 bg-raptors-red/10 border border-raptors-red/20 px-1.5 py-0.5 rounded">UP</div>)}
                  </div>
@@ -1818,25 +1828,28 @@ const MatchupAnalyzer = ({ game }) => {
 
 // ============================================================
 // Standings Widget
-const StandingsWidget = () => (
-  <div className="glass-card overflow-hidden mt-4">
-    <div className="px-3 py-2 border-b border-cmd-border bg-gradient-to-r from-raptors-red/10 to-transparent">
-      <h3 className="text-xs font-bold text-white flex items-center gap-2"><Trophy className="w-3 h-3 text-yellow-500" /> East Standings</h3>
+const StandingsWidget = ({ isDark = true }) => (
+  <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} overflow-hidden mt-4`}>
+    <div className={`px-3 py-2 border-b ${isDark ? 'border-cmd-border' : 'border-light-border'} bg-gradient-to-r from-raptors-red/10 to-transparent`}>
+      <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2`}><Trophy className="w-3 h-3 text-yellow-500" /> East Standings</h3>
     </div>
-    <div className="divide-y divide-cmd-border/50 max-h-64 overflow-y-auto">
+    <div className={`divide-y ${isDark ? 'divide-cmd-border/50' : 'divide-light-border'} max-h-64 overflow-y-auto`}>
       {STANDINGS_EAST.map((team) => (
         <div key={team.abbr} className={`flex items-center justify-between px-3 py-1.5 text-xs ${team.highlight ? 'bg-raptors-red/10' : ''}`}>
           <div className="flex items-center gap-2">
             <span className="text-slate-500 w-4">{team.rank}</span>
             <img src={`https://cdn.nba.com/logos/nba/${team.id}/primary/L/logo.svg`} className="w-4 h-4" alt="" />
-            <span className={team.highlight ? 'text-raptors-red font-bold' : 'text-slate-300'}>{team.abbr}</span>
+            <span className={team.highlight ? 'text-raptors-red font-bold' : isDark ? 'text-slate-300' : 'text-slate-700'}>{team.abbr}</span>
           </div>
-          <span className="text-slate-400 font-mono">{team.wins}-{team.losses}</span>
+          <span className={`font-mono ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{team.wins}-{team.losses}</span>
         </div>
       ))}
     </div>
   </div>
 );
+
+// Theme Context
+const ThemeContext = React.createContext({ isDark: true, toggle: () => {} });
 
 // APP (ROOT)
 // ============================================================
@@ -1844,6 +1857,53 @@ function App() {
   const [games, setGames] = useState([]);
   const [selectedGame, setSelectedGame] = useState(null);
   const [loadingSchedule, setLoadingSchedule] = useState(true);
+  const [isDark, setIsDark] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('raptors-intel-theme');
+      return saved ? saved === 'dark' : true;
+    }
+    return true;
+  });
+  const [showReminder, setShowReminder] = useState(false);
+  const [showShare, setShowShare] = useState(false);
+  const [showKeyboardHelp, setShowKeyboardHelp] = useState(false);
+
+  const toggleTheme = () => {
+    setIsDark(prev => {
+      const newVal = !prev;
+      localStorage.setItem('raptors-intel-theme', newVal ? 'dark' : 'light');
+      return newVal;
+    });
+  };
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeydown = (e) => {
+      if (e.key === '?' && !e.ctrlKey && !e.metaKey) {
+        setShowKeyboardHelp(prev => !prev);
+      }
+      if (e.key === 'd' && !e.ctrlKey && !e.metaKey && e.target.tagName !== 'INPUT') {
+        toggleTheme();
+      }
+      if (e.key === 'Escape') {
+        setShowKeyboardHelp(false);
+        setShowReminder(false);
+        setShowShare(false);
+      }
+      if (e.key === 'ArrowDown' && e.target.tagName !== 'INPUT') {
+        e.preventDefault();
+        const idx = games.findIndex(g => g.id === selectedGame?.id);
+        if (idx < games.length - 1) setSelectedGame(games[idx + 1]);
+      }
+      if (e.key === 'ArrowUp' && e.target.tagName !== 'INPUT') {
+        e.preventDefault();
+        const idx = games.findIndex(g => g.id === selectedGame?.id);
+        if (idx > 0) setSelectedGame(games[idx - 1]);
+      }
+    };
+    window.addEventListener('keydown', handleKeydown);
+    return () => window.removeEventListener('keydown', handleKeydown);
+  }, [games, selectedGame]);
 
   useEffect(() => {
     const init = async () => {
@@ -1857,57 +1917,178 @@ function App() {
     init();
   }, []);
 
+  // Share function
+  const handleShare = async (platform) => {
+    const url = window.location.href;
+    const text = selectedGame ? `Check out the Raptors vs ${selectedGame.opponent} scouting report on Raptors Intel! 🦖🏀` : 'Check out Raptors Intel - the ultimate game day scouting dashboard!';
+    
+    if (platform === 'copy') {
+      await navigator.clipboard.writeText(url);
+      alert('Link copied to clipboard!');
+    } else if (platform === 'twitter') {
+      window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
+    } else if (platform === 'facebook') {
+      window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
+    }
+    setShowShare(false);
+  };
+
+  // Set reminder
+  const handleSetReminder = () => {
+    if (selectedGame && selectedGame.status === 'upcoming') {
+      const gameDate = new Date(selectedGame.date + ' 2026 ' + selectedGame.time);
+      const reminderTime = new Date(gameDate.getTime() - 60 * 60 * 1000); // 1 hour before
+      const calendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=Raptors vs ${selectedGame.opponent}&dates=${gameDate.toISOString().replace(/[-:]/g, '').split('.')[0]}Z/${new Date(gameDate.getTime() + 3*60*60*1000).toISOString().replace(/[-:]/g, '').split('.')[0]}Z&details=Game at ${selectedGame.venue}&location=${selectedGame.venue}`;
+      window.open(calendarUrl, '_blank');
+    }
+    setShowReminder(false);
+  };
+
+  const themeClasses = isDark 
+    ? 'bg-cmd-bg text-slate-200' 
+    : 'bg-light-bg text-slate-800';
+  
+  const navClasses = isDark
+    ? 'border-cmd-border bg-cmd-surface/90'
+    : 'border-light-border bg-light-surface/90';
+
   return (
-    <div className="min-h-screen bg-cmd-bg bg-grid text-slate-200 font-sans selection:bg-raptors-red selection:text-white flex flex-col h-screen overflow-hidden">
-      <nav className="border-b border-cmd-border bg-cmd-surface/90 backdrop-blur-xl flex-shrink-0 z-30 relative">
+    <ThemeContext.Provider value={{ isDark, toggle: toggleTheme }}>
+    <div className={`min-h-screen ${themeClasses} font-sans selection:bg-raptors-red selection:text-white flex flex-col h-screen overflow-hidden transition-colors duration-300`}>
+      <nav className={`border-b ${navClasses} backdrop-blur-xl flex-shrink-0 z-30 relative`}>
         <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-raptors-red/50 to-transparent"></div>
         <div className="w-full max-w-[98%] mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-             <div className="w-10 h-10 bg-cmd-bg rounded-full flex items-center justify-center p-1 border border-raptors-red/30 shadow-lg shadow-raptors-red/10 animate-glow-pulse">
+             <div className={`w-10 h-10 ${isDark ? 'bg-cmd-bg' : 'bg-light-card'} rounded-full flex items-center justify-center p-1 border border-raptors-red/30 shadow-lg shadow-raptors-red/10 animate-glow-pulse`}>
                <img src="https://cdn.nba.com/logos/nba/1610612761/primary/L/logo.svg" alt="Raptors Logo" className="w-full h-full object-contain" />
              </div>
-             <span className="text-xl font-bold tracking-tight text-white">RAPTORS <span className="text-raptors-red neon-text-subtle">INTEL</span></span>
+             <span className={`text-xl font-bold tracking-tight ${isDark ? 'text-white' : 'text-slate-800'}`}>RAPTORS <span className="text-raptors-red neon-text-subtle">INTEL</span></span>
           </div>
-          <div className="flex items-center gap-3">
-            <div className="text-xs"><span className="text-slate-500">Record:</span> <span className="font-bold text-white">{RAPTORS_STATS.wins}-{RAPTORS_STATS.losses}</span></div>
-            <div className="text-xs"><span className="text-slate-500">Streak:</span> <span className="font-bold text-green-400">{RAPTORS_STATS.streak}</span></div>
+          <div className="flex items-center gap-4">
+            <div className="hidden md:flex items-center gap-3">
+              <div className="text-xs"><span className={isDark ? 'text-slate-500' : 'text-slate-500'}>Record:</span> <span className={`font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>{RAPTORS_STATS.wins}-{RAPTORS_STATS.losses}</span></div>
+              <div className="text-xs"><span className={isDark ? 'text-slate-500' : 'text-slate-500'}>Streak:</span> <span className="font-bold text-green-500">{RAPTORS_STATS.streak}</span></div>
+            </div>
+            <div className="flex items-center gap-1">
+              {/* Reminder Button */}
+              <button onClick={() => setShowReminder(true)} className={`p-2 rounded-lg transition-all ${isDark ? 'hover:bg-cmd-card text-slate-400 hover:text-white' : 'hover:bg-light-card text-slate-500 hover:text-slate-800'}`} title="Set Reminder">
+                <Bell className="w-4 h-4" />
+              </button>
+              {/* Share Button */}
+              <button onClick={() => setShowShare(true)} className={`p-2 rounded-lg transition-all ${isDark ? 'hover:bg-cmd-card text-slate-400 hover:text-white' : 'hover:bg-light-card text-slate-500 hover:text-slate-800'}`} title="Share">
+                <Share className="w-4 h-4" />
+              </button>
+              {/* Theme Toggle */}
+              <button onClick={toggleTheme} className={`p-2 rounded-lg transition-all ${isDark ? 'hover:bg-cmd-card text-slate-400 hover:text-yellow-400' : 'hover:bg-light-card text-slate-500 hover:text-blue-600'}`} title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}>
+                {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+              </button>
+              {/* Keyboard Shortcuts */}
+              <button onClick={() => setShowKeyboardHelp(true)} className={`p-2 rounded-lg transition-all hidden md:block ${isDark ? 'hover:bg-cmd-card text-slate-400 hover:text-white' : 'hover:bg-light-card text-slate-500 hover:text-slate-800'}`} title="Keyboard Shortcuts">
+                <span className="text-xs font-mono">?</span>
+              </button>
+            </div>
           </div>
         </div>
       </nav>
+
+      {/* Keyboard Shortcuts Modal */}
+      {showKeyboardHelp && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" onClick={() => setShowKeyboardHelp(false)}>
+          <div className={`${isDark ? 'bg-cmd-surface border-cmd-border' : 'bg-white border-light-border'} border rounded-2xl p-6 max-w-sm w-full shadow-2xl`} onClick={e => e.stopPropagation()}>
+            <h3 className={`text-lg font-bold ${isDark ? 'text-white' : 'text-slate-800'} mb-4 flex items-center gap-2`}>⌨️ Keyboard Shortcuts</h3>
+            <div className="space-y-3 text-sm">
+              <div className="flex justify-between"><span className={isDark ? 'text-slate-400' : 'text-slate-600'}>Toggle theme</span><kbd className={`px-2 py-1 rounded ${isDark ? 'bg-cmd-bg text-white' : 'bg-light-card text-slate-800'} font-mono text-xs`}>D</kbd></div>
+              <div className="flex justify-between"><span className={isDark ? 'text-slate-400' : 'text-slate-600'}>Next game</span><kbd className={`px-2 py-1 rounded ${isDark ? 'bg-cmd-bg text-white' : 'bg-light-card text-slate-800'} font-mono text-xs`}>↓</kbd></div>
+              <div className="flex justify-between"><span className={isDark ? 'text-slate-400' : 'text-slate-600'}>Previous game</span><kbd className={`px-2 py-1 rounded ${isDark ? 'bg-cmd-bg text-white' : 'bg-light-card text-slate-800'} font-mono text-xs`}>↑</kbd></div>
+              <div className="flex justify-between"><span className={isDark ? 'text-slate-400' : 'text-slate-600'}>Close modals</span><kbd className={`px-2 py-1 rounded ${isDark ? 'bg-cmd-bg text-white' : 'bg-light-card text-slate-800'} font-mono text-xs`}>Esc</kbd></div>
+              <div className="flex justify-between"><span className={isDark ? 'text-slate-400' : 'text-slate-600'}>Show shortcuts</span><kbd className={`px-2 py-1 rounded ${isDark ? 'bg-cmd-bg text-white' : 'bg-light-card text-slate-800'} font-mono text-xs`}>?</kbd></div>
+            </div>
+            <button onClick={() => setShowKeyboardHelp(false)} className="mt-4 w-full py-2 bg-raptors-red text-white rounded-lg font-bold hover:bg-raptors-red/90 transition-colors">Got it!</button>
+          </div>
+        </div>
+      )}
+
+      {/* Share Modal */}
+      {showShare && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" onClick={() => setShowShare(false)}>
+          <div className={`${isDark ? 'bg-cmd-surface border-cmd-border' : 'bg-white border-light-border'} border rounded-2xl p-6 max-w-sm w-full shadow-2xl`} onClick={e => e.stopPropagation()}>
+            <h3 className={`text-lg font-bold ${isDark ? 'text-white' : 'text-slate-800'} mb-4 flex items-center gap-2`}>📤 Share This Report</h3>
+            <div className="grid grid-cols-3 gap-3">
+              <button onClick={() => handleShare('twitter')} className={`p-4 rounded-xl ${isDark ? 'bg-cmd-bg hover:bg-cmd-card' : 'bg-light-card hover:bg-slate-200'} transition-colors flex flex-col items-center gap-2`}>
+                <Twitter className="w-6 h-6 text-blue-400" />
+                <span className="text-xs">Twitter</span>
+              </button>
+              <button onClick={() => handleShare('facebook')} className={`p-4 rounded-xl ${isDark ? 'bg-cmd-bg hover:bg-cmd-card' : 'bg-light-card hover:bg-slate-200'} transition-colors flex flex-col items-center gap-2`}>
+                <Facebook className="w-6 h-6 text-blue-600" />
+                <span className="text-xs">Facebook</span>
+              </button>
+              <button onClick={() => handleShare('copy')} className={`p-4 rounded-xl ${isDark ? 'bg-cmd-bg hover:bg-cmd-card' : 'bg-light-card hover:bg-slate-200'} transition-colors flex flex-col items-center gap-2`}>
+                <Copy className="w-6 h-6 text-slate-400" />
+                <span className="text-xs">Copy Link</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Reminder Modal */}
+      {showReminder && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" onClick={() => setShowReminder(false)}>
+          <div className={`${isDark ? 'bg-cmd-surface border-cmd-border' : 'bg-white border-light-border'} border rounded-2xl p-6 max-w-sm w-full shadow-2xl`} onClick={e => e.stopPropagation()}>
+            <h3 className={`text-lg font-bold ${isDark ? 'text-white' : 'text-slate-800'} mb-4 flex items-center gap-2`}>🔔 Set Game Reminder</h3>
+            {selectedGame?.status === 'upcoming' ? (
+              <>
+                <p className={`text-sm ${isDark ? 'text-slate-400' : 'text-slate-600'} mb-4`}>
+                  Add <strong>Raptors vs {selectedGame.opponent}</strong> on <strong>{selectedGame.date}</strong> to your calendar?
+                </p>
+                <button onClick={handleSetReminder} className="w-full py-3 bg-raptors-red text-white rounded-lg font-bold hover:bg-raptors-red/90 transition-colors flex items-center justify-center gap-2">
+                  <Calendar className="w-4 h-4" /> Add to Google Calendar
+                </button>
+              </>
+            ) : (
+              <p className={`text-sm ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>Select an upcoming game to set a reminder.</p>
+            )}
+          </div>
+        </div>
+      )}
       <main className="flex-1 overflow-hidden w-full max-w-[98%] mx-auto px-4 py-4">
         <div className="grid grid-cols-12 gap-4 h-full">
           <div className="col-span-12 lg:col-span-2 h-full overflow-y-auto">
-            <ScheduleList games={games} onSelectGame={setSelectedGame} selectedGameId={selectedGame?.id} />
-            <StandingsWidget />
+            <ScheduleList games={games} onSelectGame={setSelectedGame} selectedGameId={selectedGame?.id} isDark={isDark} />
+            <StandingsWidget isDark={isDark} />
           </div>
           <div className="col-span-12 lg:col-span-10 h-full overflow-y-auto custom-scrollbar pb-10">
             {loadingSchedule ? (
-              <div className="h-full flex flex-col items-center justify-center glass-card">
+              <div className={`h-full flex flex-col items-center justify-center ${isDark ? 'glass-card' : 'bg-white border border-light-border rounded-2xl shadow-lg'}`}>
                 <div className="relative w-10 h-10 mb-4"><div className="absolute inset-0 rounded-full border-4 border-raptors-red/20"></div><div className="absolute inset-0 rounded-full border-4 border-raptors-red border-t-transparent animate-spin"></div></div>
-                <p className="text-slate-400 font-medium">Loading Season Data...</p>
+                <p className={`font-medium ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>Loading Season Data...</p>
               </div>
             ) : selectedGame ? (
-              <MatchupAnalyzer game={selectedGame} />
+              <MatchupAnalyzer game={selectedGame} isDark={isDark} />
             ) : (
-              <div className="h-full flex flex-col items-center justify-center glass-card text-slate-500"><LayoutDashboard className="w-12 h-12 mb-4 opacity-30" /><p>Select a game from the calendar to open the scouting report.</p></div>
+              <div className={`h-full flex flex-col items-center justify-center ${isDark ? 'glass-card text-slate-500' : 'bg-white border border-light-border rounded-2xl shadow-lg text-slate-400'}`}><LayoutDashboard className="w-12 h-12 mb-4 opacity-30" /><p>Select a game from the calendar to open the scouting report.</p></div>
             )}
           </div>
         </div>
       </main>
-      <footer className="flex-shrink-0 border-t border-cmd-border bg-cmd-surface/50 backdrop-blur py-3">
+      <footer className={`flex-shrink-0 border-t ${isDark ? 'border-cmd-border bg-cmd-surface/50' : 'border-light-border bg-white/50'} backdrop-blur py-3`}>
         <div className="w-full max-w-[98%] mx-auto px-4 flex items-center justify-between text-xs text-slate-500">
           <div className="flex items-center gap-2">
             <span className="font-bold text-raptors-red">RAPTORS INTEL</span>
-            <span className="text-slate-600">v5.0</span>
+            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v5.2</span>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-4">
             <span>Built for Raptors fans 🦖</span>
-            <span className="text-slate-600">|</span>
+            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>|</span>
             <span>Not affiliated with the NBA or Toronto Raptors</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className={`text-[10px] ${isDark ? 'text-slate-600' : 'text-slate-400'}`}>Press <kbd className={`px-1 py-0.5 rounded ${isDark ? 'bg-cmd-bg' : 'bg-light-card'} font-mono`}>?</kbd> for shortcuts</span>
           </div>
         </div>
       </footer>
     </div>
+    </ThemeContext.Provider>
   );
 }
 
