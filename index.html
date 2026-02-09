@@ -576,8 +576,19 @@ const analyzeGameMatchup = async (opponent) => {
             { player: "RJ Barrett", status: "Questionable", details: "Left ankle sprain — day-to-day", team: "raptors" },
             { player: "Scottie Barnes", status: "Active", details: "Available", team: "raptors" },
             { player: "Chris Paul", status: "Active", details: "Acquired via trade — available", team: "raptors" },
-            { player: "Trayce Jackson-Davis", status: "Active", details: "Acquired via trade — available", team: "raptors" }
+            { player: "Trayce Jackson-Davis", status: "Active", details: "Acquired via trade — available", team: "raptors" },
+            { player: opponentRoster[0]?.name || "Star Player", status: "Active", details: "Full go", team: "opponent" },
+            { player: opponentRoster[3]?.name || "Key Forward", status: "Questionable", details: "Knee soreness — GTD", team: "opponent" }
         ],
+        restDays: { raptors: 2, opponent: 1 },
+        backToBack: { raptors: false, opponent: true },
+        referees: [
+            { name: "Scott Foster", role: "Crew Chief", foulCallRate: 45.2, tendency: "Lets them play" },
+            { name: "Marc Davis", role: "Referee", foulCallRate: 42.8, tendency: "Whistle-happy in paint" },
+            { name: "Courtney Kirkland", role: "Umpire", foulCallRate: 41.5, tendency: "Consistent" }
+        ],
+        pace: { raptors: 101.2, opponent: 98.5, leagueAvg: 99.8 },
+        homeSplits: { raptors: { home: "14-12", away: "9-20" }, opponent: { home: "18-8", away: "14-14" } },
         socialChatter: [
             { headline: "Raptors acquire Chris Paul in blockbuster 3-team deadline deal", source: "Woj (ESPN)", sentiment: "positive" },
             { headline: "Trayce Jackson-Davis traded from Warriors to Raptors for 2nd-round pick", source: "Shams (Athletic)", sentiment: "neutral" },
@@ -597,7 +608,8 @@ const {
   Brain, Trophy, Activity, Shield, Zap, RotateCcw, ChevronRight, LayoutTemplate,
   MessageSquare, AlertTriangle, TrendingUp, Radio, Users, Heart, Share,
   MessageCircle, MoveVertical, RefreshCcw, BarChart3, ArrowUpDown, Swords, Info,
-  Calendar, LayoutDashboard, X, Target, Award
+  Calendar, LayoutDashboard, X, Target, Award, Bandage, Clock, Gavel, Home, Plane,
+  ArrowRightLeft, Gauge, Timer
 } = LucideReact;
 
 // ============================================================
@@ -1157,8 +1169,111 @@ const MatchupAnalyzer = ({ game }) => {
           </div>
       </div>
 
-      {/* 5. ROTATION SIMULATOR */}
-      <div className="glass-card overflow-hidden animate-slide-up" style={{animationDelay: '0.45s'}}>
+      {/* 5. GAME CONTEXT - REST, REFS, PACE */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 animate-slide-up" style={{animationDelay: '0.4s'}}>
+          {/* Rest Days */}
+          <div className="glass-card p-4">
+              <div className="flex items-center gap-2 mb-3"><Clock className="w-4 h-4 text-blue-400" /><span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Rest Advantage</span></div>
+              <div className="flex justify-between items-center">
+                  <div className="text-center">
+                      <div className="text-3xl font-black text-white">{analysis.intel?.restDays?.raptors || 2}</div>
+                      <div className="text-[10px] text-slate-500 uppercase">TOR Days</div>
+                  </div>
+                  <div className="text-slate-600">vs</div>
+                  <div className="text-center">
+                      <div className="text-3xl font-black text-slate-400">{analysis.intel?.restDays?.opponent || 1}</div>
+                      <div className="text-[10px] text-slate-500 uppercase">OPP Days</div>
+                  </div>
+              </div>
+              {analysis.intel?.backToBack?.opponent && (
+                  <div className="mt-3 px-2 py-1.5 bg-yellow-500/10 border border-yellow-500/20 rounded-lg text-center">
+                      <span className="text-[10px] font-bold text-yellow-400 uppercase">⚠️ {game.opponent} on B2B</span>
+                  </div>
+              )}
+              {analysis.intel?.backToBack?.raptors && (
+                  <div className="mt-3 px-2 py-1.5 bg-red-500/10 border border-red-500/20 rounded-lg text-center">
+                      <span className="text-[10px] font-bold text-red-400 uppercase">⚠️ Raptors on B2B</span>
+                  </div>
+              )}
+          </div>
+
+          {/* Referee Crew */}
+          <div className="glass-card p-4">
+              <div className="flex items-center gap-2 mb-3"><Gavel className="w-4 h-4 text-purple-400" /><span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Officials</span></div>
+              <div className="space-y-2">
+                  {analysis.intel?.referees?.map((ref, i) => (
+                      <div key={i} className="flex items-center justify-between p-2 bg-cmd-bg/50 rounded-lg border border-cmd-border">
+                          <div>
+                              <div className="text-sm font-bold text-white">{ref.name}</div>
+                              <div className="text-[10px] text-slate-500">{ref.role}</div>
+                          </div>
+                          <div className="text-right">
+                              <div className="text-xs font-mono text-slate-300">{ref.foulCallRate} F/G</div>
+                              <div className="text-[9px] text-slate-500 italic">{ref.tendency}</div>
+                          </div>
+                      </div>
+                  ))}
+              </div>
+          </div>
+
+          {/* Pace Comparison */}
+          <div className="glass-card p-4">
+              <div className="flex items-center gap-2 mb-3"><Gauge className="w-4 h-4 text-green-400" /><span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Pace Factor</span></div>
+              <div className="space-y-3">
+                  <div>
+                      <div className="flex justify-between items-center mb-1">
+                          <span className="text-xs text-raptors-red font-bold">TOR</span>
+                          <span className="text-sm font-mono text-white">{analysis.intel?.pace?.raptors || 101.2}</span>
+                      </div>
+                      <div className="w-full bg-cmd-border h-2 rounded-full overflow-hidden">
+                          <div className="bg-raptors-red h-full rounded-full" style={{width: `${((analysis.intel?.pace?.raptors || 101.2) / 110) * 100}%`}}></div>
+                      </div>
+                  </div>
+                  <div>
+                      <div className="flex justify-between items-center mb-1">
+                          <span className="text-xs text-blue-400 font-bold">{game.opponent?.slice(0,3).toUpperCase()}</span>
+                          <span className="text-sm font-mono text-white">{analysis.intel?.pace?.opponent || 98.5}</span>
+                      </div>
+                      <div className="w-full bg-cmd-border h-2 rounded-full overflow-hidden">
+                          <div className="bg-blue-500 h-full rounded-full" style={{width: `${((analysis.intel?.pace?.opponent || 98.5) / 110) * 100}%`}}></div>
+                      </div>
+                  </div>
+                  <div className="text-center pt-2 border-t border-cmd-border">
+                      <span className="text-[10px] text-slate-500">League Avg: {analysis.intel?.pace?.leagueAvg || 99.8}</span>
+                  </div>
+              </div>
+          </div>
+
+          {/* Home/Away Splits */}
+          <div className="glass-card p-4">
+              <div className="flex items-center gap-2 mb-3"><Home className="w-4 h-4 text-orange-400" /><span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Venue Splits</span></div>
+              <div className="space-y-3">
+                  <div className="flex items-center justify-between p-2 bg-cmd-bg/50 rounded-lg border border-cmd-border">
+                      <div className="flex items-center gap-2">
+                          <img src="https://cdn.nba.com/logos/nba/1610612761/primary/L/logo.svg" className="w-5 h-5" alt="TOR" />
+                          <span className="text-xs font-bold text-white">TOR</span>
+                      </div>
+                      <div className="flex gap-3 text-xs">
+                          <span className="text-green-400"><Home className="w-3 h-3 inline mr-1" />{analysis.intel?.homeSplits?.raptors?.home || "14-12"}</span>
+                          <span className="text-slate-400"><Plane className="w-3 h-3 inline mr-1" />{analysis.intel?.homeSplits?.raptors?.away || "9-20"}</span>
+                      </div>
+                  </div>
+                  <div className="flex items-center justify-between p-2 bg-cmd-bg/50 rounded-lg border border-cmd-border">
+                      <div className="flex items-center gap-2">
+                          {game.opponentId && <img src={`https://cdn.nba.com/logos/nba/${game.opponentId}/primary/L/logo.svg`} className="w-5 h-5" alt="" />}
+                          <span className="text-xs font-bold text-white">{game.opponent?.slice(0,3).toUpperCase()}</span>
+                      </div>
+                      <div className="flex gap-3 text-xs">
+                          <span className="text-green-400"><Home className="w-3 h-3 inline mr-1" />{analysis.intel?.homeSplits?.opponent?.home || "18-8"}</span>
+                          <span className="text-slate-400"><Plane className="w-3 h-3 inline mr-1" />{analysis.intel?.homeSplits?.opponent?.away || "14-14"}</span>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      {/* 6. ROTATION SIMULATOR */}
+      <div className="glass-card overflow-hidden animate-slide-up" style={{animationDelay: '0.5s'}}>
           <div className="relative bg-gradient-to-r from-cmd-bg via-cmd-surface to-cmd-bg px-6 py-5 overflow-hidden">
               <div className="absolute inset-0 bg-grid opacity-20"></div>
               <div className="relative z-10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
