@@ -2205,6 +2205,41 @@ const StandingsWidget = ({ isDark = true }) => (
 // Theme Context
 const ThemeContext = React.createContext({ isDark: true, toggle: () => {} });
 
+// Mobile Bottom Nav
+const MobileBottomNav = ({ isDark = true, onThemeToggle, onShare, onReminder }) => {
+  return (
+    <div className={`lg:hidden fixed bottom-0 left-0 right-0 z-40 ${isDark ? 'bg-cmd-surface/95 border-cmd-border' : 'bg-white/95 border-light-border'} border-t backdrop-blur-lg py-2 px-4`}>
+      <div className="flex justify-around items-center">
+        <button onClick={onThemeToggle} className={`flex flex-col items-center gap-1 p-2 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+          {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+          <span className="text-[9px]">Theme</span>
+        </button>
+        <button onClick={onReminder} className={`flex flex-col items-center gap-1 p-2 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+          <Bell className="w-5 h-5" />
+          <span className="text-[9px]">Remind</span>
+        </button>
+        <button onClick={onShare} className={`flex flex-col items-center gap-1 p-2 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+          <Share className="w-5 h-5" />
+          <span className="text-[9px]">Share</span>
+        </button>
+        <a href="#top" className={`flex flex-col items-center gap-1 p-2 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+          <ChevronUp className="w-5 h-5" />
+          <span className="text-[9px]">Top</span>
+        </a>
+      </div>
+    </div>
+  );
+};
+
+// Loading Skeleton
+const SkeletonCard = ({ isDark = true }) => (
+  <div className={`${isDark ? 'bg-cmd-card' : 'bg-light-card'} rounded-xl p-4 animate-pulse`}>
+    <div className={`h-4 ${isDark ? 'bg-cmd-border' : 'bg-light-border'} rounded w-3/4 mb-3`}></div>
+    <div className={`h-3 ${isDark ? 'bg-cmd-border' : 'bg-light-border'} rounded w-1/2 mb-2`}></div>
+    <div className={`h-3 ${isDark ? 'bg-cmd-border' : 'bg-light-border'} rounded w-2/3`}></div>
+  </div>
+);
+
 // Scroll to Top Button
 const ScrollToTop = ({ isDark = true }) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -2461,7 +2496,7 @@ function App() {
             <StandingsWidget isDark={isDark} />
             {selectedGame?.status === 'upcoming' && <BettingTrendsWidget isDark={isDark} game={selectedGame} />}
           </div>
-          <div className="col-span-12 lg:col-span-10 h-full overflow-y-auto custom-scrollbar pb-10">
+          <div className="col-span-12 lg:col-span-10 h-full overflow-y-auto custom-scrollbar pb-20 lg:pb-10">
             {loadingSchedule ? (
               <div className={`h-full flex flex-col items-center justify-center ${isDark ? 'glass-card' : 'bg-white border border-light-border rounded-2xl shadow-lg'}`}>
                 <div className="relative w-10 h-10 mb-4"><div className="absolute inset-0 rounded-full border-4 border-raptors-red/20"></div><div className="absolute inset-0 rounded-full border-4 border-raptors-red border-t-transparent animate-spin"></div></div>
@@ -2476,11 +2511,12 @@ function App() {
         </div>
       </main>
       <ScrollToTop isDark={isDark} />
-      <footer className={`flex-shrink-0 border-t ${isDark ? 'border-cmd-border bg-cmd-surface/50' : 'border-light-border bg-white/50'} backdrop-blur py-3`}>
+      <MobileBottomNav isDark={isDark} onThemeToggle={toggleTheme} onShare={() => setShowShare(true)} onReminder={() => setShowReminder(true)} />
+      <footer className={`flex-shrink-0 border-t ${isDark ? 'border-cmd-border bg-cmd-surface/50' : 'border-light-border bg-white/50'} backdrop-blur py-3 hidden lg:block`}>
         <div className="w-full max-w-[98%] mx-auto px-4 flex items-center justify-between text-xs text-slate-500">
           <div className="flex items-center gap-2">
             <span className="font-bold text-raptors-red">RAPTORS INTEL</span>
-            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v5.6</span>
+            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v5.8</span>
           </div>
           <div className="hidden md:flex items-center gap-4">
             <span>Built for Raptors fans 🦖</span>
