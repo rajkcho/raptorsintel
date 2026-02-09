@@ -429,6 +429,15 @@
         100% { background-position: 0% 50%; }
       }
       
+      @keyframes marquee-scroll {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+      }
+      .animate-marquee {
+        display: inline-block;
+        animation: marquee-scroll 30s linear infinite;
+      }
+      
       .aurora-bg {
         background: linear-gradient(135deg, 
           rgba(206,17,65,0.1) 0%, 
@@ -1260,11 +1269,117 @@ const LIVE_NBA_SCORES = [
   { home: "DAL", away: "OKC", homeScore: 0, awayScore: 0, status: "8:00 PM", homeId: "1610612742", awayId: "1610612760" },
 ];
 
-// Betting data
-const BETTING_DATA = {
+// Comprehensive Betting Intelligence Data
+const BETTING_INTEL = {
+  // Odds from multiple sportsbooks
+  odds: {
+    opponent: "CLE",
+    gameTime: "2026-02-10T00:00:00Z",
+    books: {
+      DraftKings: { spread: { line: -3.5, vig: -110 }, ml: { raptors: -155, opp: 135 }, ou: { line: 225.5, overVig: -110, underVig: -110 }, updated: "6:45 PM" },
+      FanDuel: { spread: { line: -3, vig: -108 }, ml: { raptors: -148, opp: 126 }, ou: { line: 226, overVig: -112, underVig: -108 }, updated: "6:42 PM" },
+      bet365: { spread: { line: -3.5, vig: -105 }, ml: { raptors: -150, opp: 130 }, ou: { line: 225.5, overVig: -108, underVig: -112 }, updated: "6:38 PM" },
+      BetMGM: { spread: { line: -3, vig: -115 }, ml: { raptors: -160, opp: 140 }, ou: { line: 226, overVig: -110, underVig: -110 }, updated: "6:40 PM" }
+    },
+    opening: { spread: -2.5, ml: -130, ou: 224 },
+    movements: [
+      { time: "10:00 AM", spread: -2.5, ou: 224, note: "Open" },
+      { time: "12:30 PM", spread: -3, ou: 224.5, note: "Sharp action" },
+      { time: "3:15 PM", spread: -3.5, ou: 225, note: "Injury news" },
+      { time: "5:00 PM", spread: -3.5, ou: 225.5, note: "Steam move" },
+      { time: "6:45 PM", spread: -3.5, ou: 225.5, note: "Current" }
+    ]
+  },
+  // ATS records
+  ats: {
+    overall: { w: 28, l: 29, push: 1, pct: 49.1 },
+    home: { w: 16, l: 12, push: 1, pct: 57.1 },
+    away: { w: 12, l: 17, push: 0, pct: 41.4 },
+    last10: { w: 6, l: 4, push: 0, pct: 60.0 },
+    last20: { w: 11, l: 9, push: 0, pct: 55.0 },
+    asFavorite: { w: 8, l: 12, push: 0, pct: 40.0 },
+    asUnderdog: { w: 20, l: 17, push: 1, pct: 54.1 },
+    margins: { "1-3": { w: 10, l: 8 }, "4-7": { w: 11, l: 12 }, "8+": { w: 7, l: 9 } },
+    conference: { w: 18, l: 17, pct: 51.4 },
+    division: { w: 7, l: 5, pct: 58.3 },
+    afterWin: { w: 13, l: 14, pct: 48.1 },
+    afterLoss: { w: 15, l: 15, pct: 50.0 }
+  },
+  // Over/Under trends
+  ouTrends: {
+    overall: { over: 30, under: 27, push: 1, pct: 52.6 },
+    home: { over: 17, under: 12, pct: 58.6 },
+    away: { over: 13, under: 15, pct: 46.4 },
+    last10: { over: 7, under: 3, pct: 70.0 },
+    avgTotal: 222.8,
+    avgTeamPts: 113.4,
+    avgOppPts: 109.4,
+    paceRank: 8,
+    paceFactor: 100.2,
+    byQuarter: { Q1: { over: 32, under: 26 }, Q2: { over: 28, under: 30 }, Q3: { over: 31, under: 27 }, Q4: { over: 29, under: 29 } },
+    streaks: ["Over in 7 of last 10 games", "Over 225 in 5 of last 7 home games", "Under in 4 of last 6 road games"]
+  },
+  // Player props
+  playerProps: [
+    { name: "Scottie Barnes", pos: "F", pts: { line: 22.5, overRate: 65, last10: [28,19,24,31,20,25,18,27,23,26] }, reb: { line: 7.5, overRate: 55, last10: [8,6,9,7,10,5,8,7,11,6] }, ast: { line: 6.5, overRate: 50, last10: [7,5,8,6,9,4,7,6,8,5] }, threes: { line: 1.5, overRate: 45 }, hot: true, matchupAdj: +1.2 },
+    { name: "RJ Barrett", pos: "G/F", pts: { line: 20.5, overRate: 55, last10: [22,18,25,17,21,23,19,24,16,20] }, reb: { line: 5.5, overRate: 50, last10: [6,4,7,5,8,3,6,5,7,4] }, ast: { line: 4.5, overRate: 45, last10: [5,3,6,4,7,2,5,4,6,3] }, threes: { line: 2.5, overRate: 60 }, hot: false, matchupAdj: -0.5 },
+    { name: "Immanuel Quickley", pos: "G", pts: { line: 17.5, overRate: 50, last10: [20,15,18,22,14,19,16,21,13,17] }, reb: { line: 4.5, overRate: 40, last10: [5,3,4,6,3,5,4,7,2,4] }, ast: { line: 6.5, overRate: 55, last10: [7,5,8,6,9,4,7,6,8,5] }, threes: { line: 2.5, overRate: 50 }, hot: false, matchupAdj: +0.3 },
+    { name: "Jakob Poeltl", pos: "C", pts: { line: 14.5, overRate: 48, last10: [16,12,18,11,15,14,17,10,16,13] }, reb: { line: 9.5, overRate: 60, last10: [11,8,12,9,10,7,11,10,13,8] }, ast: { line: 2.5, overRate: 35, last10: [3,1,4,2,3,1,2,3,4,1] }, threes: { line: 0.5, overRate: 10 }, hot: false, matchupAdj: -1.0 },
+    { name: "Gradey Dick", pos: "G", pts: { line: 15.5, overRate: 52, last10: [18,13,16,20,12,17,14,19,11,15] }, reb: { line: 3.5, overRate: 42, last10: [4,2,5,3,4,2,3,4,5,2] }, ast: { line: 2.5, overRate: 38, last10: [3,1,4,2,3,1,2,3,4,1] }, threes: { line: 2.5, overRate: 55 }, hot: true, matchupAdj: +0.8 }
+  ],
+  // Sharp money
+  sharp: {
+    spreadPublic: { raptors: 62, opp: 38 },
+    spreadMoney: { raptors: 45, opp: 55 },
+    ouPublic: { over: 58, under: 42 },
+    ouMoney: { over: 40, under: 60 },
+    mlPublic: { raptors: 68, opp: 32 },
+    mlMoney: { raptors: 52, opp: 48 },
+    steamMoves: [
+      { time: "12:32 PM", type: "spread", direction: "TOR -3", book: "Pinnacle", alert: true },
+      { time: "3:18 PM", type: "total", direction: "Over 225", book: "Circa", alert: false }
+    ],
+    reverseLineMovement: { detected: true, detail: "68% public on TOR ML but line moved from -155 to -148 at FanDuel" }
+  },
+  // Situational angles
+  situations: {
+    b2b: { w: 4, l: 8, pct: 33.3, note: "Raptors 4-8 ATS on back-to-backs" },
+    restAdvantage: { w: 15, l: 9, pct: 62.5, note: "62.5% ATS with rest advantage" },
+    afterBreak: { w: 3, l: 1, pct: 75.0, note: "3-1 ATS after 3+ days rest" },
+    divisionRivals: { w: 7, l: 5, pct: 58.3, note: "Strong vs Atlantic Division" },
+    nationalTV: { w: 3, l: 5, pct: 37.5, note: "Struggle in spotlight games" },
+    postASB: { w: 0, l: 0, pct: 0, note: "Post All-Star data pending" },
+    monthly: { Oct: { w: 5, l: 4 }, Nov: { w: 7, l: 8 }, Dec: { w: 6, l: 7 }, Jan: { w: 8, l: 7 }, Feb: { w: 2, l: 3 } }
+  },
+  // Model predictions
+  model: {
+    compositeScore: 72,
+    raptorsPower: 4.8,
+    oppPower: 3.2,
+    predictedScore: { raptors: 114, opp: 109 },
+    spreadPick: { pick: "TOR -3.5", confidence: 68, edge: 1.2 },
+    mlPick: { pick: "TOR ML", confidence: 72, edge: 3.5 },
+    ouPick: { pick: "Over 225.5", confidence: 61, edge: 0.8 },
+    factors: [
+      "Raptors 6-4 ATS L10 with improving defensive metrics",
+      "Opponent missing key rotation player (questionable)",
+      "Pace matchup favors over: both teams top-12 in pace",
+      "Home court advantage: TOR 16-12 ATS at home",
+      "Sharp money aligning with TOR spread"
+    ]
+  },
+  // Prop builder correlations
+  correlations: [
+    { trigger: "Barnes scores 25+", result: "Raptors 8-3 ATS", strength: 72 },
+    { trigger: "Barrett hits 3+ threes", result: "Game goes Over 78%", strength: 78 },
+    { trigger: "Poeltl 12+ rebounds", result: "Raptors win by 5+", strength: 65 },
+    { trigger: "Quickley 8+ assists", result: "Raptors 6-2 ATS", strength: 75 },
+    { trigger: "Dick hits 4+ threes", result: "Game goes Over 82%", strength: 82 }
+  ],
+  // Legacy compat
   spread: { line: -3.5, raptorsPct: 58, opponentPct: 42 },
   overUnder: { line: 225.5, overPct: 52, underPct: 48 },
-  moneyline: { raptors: -155, opponent: +135, raptorsPct: 62, opponentPct: 38 }
+  moneyline: { raptors: -155, opponent: 135, raptorsPct: 62, opponentPct: 38 }
 };
 
 // 2025-26 NBA Salary Cap Info
@@ -2559,7 +2674,7 @@ const {
   ArrowRightLeft, Gauge, Timer, Sun, Moon, Bell, Download, ExternalLink, Flame,
   Snowflake, TrendingDown, Volume2, Printer, Copy, Twitter, Facebook, Send,
   ChevronUp, ChevronDown, Search, Filter, Star, Sparkles, Eye, EyeOff, History,
-  Battery, BatteryMedium, Cpu
+  Battery, BatteryMedium, Cpu, BarChart2, DollarSign, Sliders, Compass
 } = LucideReact;
 
 // ============================================================
@@ -2568,7 +2683,7 @@ const {
 const {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
   RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar,
-  LineChart, Line, AreaChart, Area
+  LineChart, Line, AreaChart, Area, ReferenceLine, Cell
 } = Recharts;
 
 const { useState, useEffect, useRef, useCallback, useMemo, Component } = React;
@@ -4403,70 +4518,449 @@ const FormIndicator = ({ form }) => {
   return null;
 };
 
-// Betting Trends Widget
-const BettingTrendsWidget = ({ isDark = true, game }) => {
-  const data = BETTING_DATA;
+// === BETTING INTELLIGENCE COMPONENTS ===
+
+// Collapsible Section helper
+const BettingSection = ({ title, icon, isDark, defaultOpen = false, children }) => {
+  const [open, setOpen] = React.useState(defaultOpen);
   return (
-    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
-      <div className="flex items-center justify-between mb-3">
-        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
-          <TrendingUp className="w-3 h-3 text-green-400" /> Betting Trends
-        </h3>
-        <span className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Public %</span>
-      </div>
-      <div className="space-y-3">
-        {/* Spread */}
-        <div>
-          <div className="flex justify-between items-center mb-1">
-            <span className={`text-[10px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Spread</span>
-            <span className={`text-xs font-mono font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>TOR {data.spread.line > 0 ? '+' : ''}{data.spread.line}</span>
-          </div>
-          <div className="flex h-3 rounded-full overflow-hidden">
-            <div className="bg-raptors-red flex items-center justify-center" style={{width: `${data.spread.raptorsPct}%`}}>
-              <span className="text-[8px] font-bold text-white">{data.spread.raptorsPct}%</span>
-            </div>
-            <div className="bg-blue-500 flex items-center justify-center" style={{width: `${data.spread.opponentPct}%`}}>
-              <span className="text-[8px] font-bold text-white">{data.spread.opponentPct}%</span>
-            </div>
-          </div>
-        </div>
-        {/* Over/Under */}
-        <div>
-          <div className="flex justify-between items-center mb-1">
-            <span className={`text-[10px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Total</span>
-            <span className={`text-xs font-mono font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>O/U {data.overUnder.line}</span>
-          </div>
-          <div className="flex h-3 rounded-full overflow-hidden">
-            <div className="bg-green-500 flex items-center justify-center" style={{width: `${data.overUnder.overPct}%`}}>
-              <span className="text-[8px] font-bold text-white">O {data.overUnder.overPct}%</span>
-            </div>
-            <div className="bg-slate-500 flex items-center justify-center" style={{width: `${data.overUnder.underPct}%`}}>
-              <span className="text-[8px] font-bold text-white">U {data.overUnder.underPct}%</span>
-            </div>
-          </div>
-        </div>
-        {/* Moneyline */}
-        <div>
-          <div className="flex justify-between items-center mb-1">
-            <span className={`text-[10px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Moneyline</span>
-            <div className="flex gap-2 text-xs font-mono">
-              <span className="text-raptors-red font-bold">{data.moneyline.raptors}</span>
-              <span className={isDark ? 'text-slate-500' : 'text-slate-400'}>|</span>
-              <span className="text-blue-400 font-bold">{data.moneyline.opponent > 0 ? '+' : ''}{data.moneyline.opponent}</span>
-            </div>
-          </div>
-          <div className="flex h-3 rounded-full overflow-hidden">
-            <div className="bg-raptors-red flex items-center justify-center" style={{width: `${data.moneyline.raptorsPct}%`}}>
-              <span className="text-[8px] font-bold text-white">{data.moneyline.raptorsPct}%</span>
-            </div>
-            <div className="bg-blue-500 flex items-center justify-center" style={{width: `${data.moneyline.opponentPct}%`}}>
-              <span className="text-[8px] font-bold text-white">{data.moneyline.opponentPct}%</span>
-            </div>
+    <div className={`${isDark ? 'bg-black/20 border border-white/5' : 'bg-slate-50 border border-slate-200'} rounded-xl overflow-hidden`}>
+      <button onClick={() => setOpen(!open)} className={`w-full flex items-center justify-between p-3 ${isDark ? 'hover:bg-white/5' : 'hover:bg-slate-100'} transition-colors`}>
+        <span className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>{icon} {title}</span>
+        <ChevronDown className={`w-3.5 h-3.5 ${isDark ? 'text-slate-400' : 'text-slate-500'} transition-transform ${open ? 'rotate-180' : ''}`} />
+      </button>
+      {open && <div className="p-3 pt-0">{children}</div>}
+    </div>
+  );
+};
+
+// Live Odds Ticker
+const LiveOddsTickerWidget = ({ isDark = true }) => {
+  const d = BETTING_INTEL.odds;
+  const items = Object.entries(d.books).map(([name, b]) => (
+    `${name}: TOR ${b.spread.line} (${b.spread.vig}) | ML ${b.ml.raptors} | O/U ${b.ou.line}`
+  ));
+  return (
+    <div className={`${isDark ? 'bg-black/30 border border-white/10' : 'bg-slate-100 border border-slate-200'} rounded-lg overflow-hidden mb-3`}>
+      <div className="flex items-center">
+        <div className={`px-2 py-1.5 ${isDark ? 'bg-raptors-red/80' : 'bg-raptors-red'} text-white text-[9px] font-bold uppercase shrink-0`}>LIVE</div>
+        <div className="overflow-hidden flex-1">
+          <div className="animate-marquee whitespace-nowrap py-1.5">
+            {items.map((item, i) => (
+              <span key={i} className={`text-[10px] font-mono ${isDark ? 'text-slate-300' : 'text-slate-600'} mx-4`}>
+                {item} {i < items.length - 1 ? '•' : ''}
+              </span>
+            ))}
+            {items.map((item, i) => (
+              <span key={`dup-${i}`} className={`text-[10px] font-mono ${isDark ? 'text-slate-300' : 'text-slate-600'} mx-4`}>
+                {item} {i < items.length - 1 ? '•' : ''}
+              </span>
+            ))}
           </div>
         </div>
       </div>
-      <div className={`mt-3 pt-2 border-t ${isDark ? 'border-cmd-border' : 'border-light-border'} text-center`}>
-        <span className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>💡 Sharp money: TOR -3.5</span>
+    </div>
+  );
+};
+
+// Odds Comparison Widget
+const OddsComparisonWidget = ({ isDark = true }) => {
+  const d = BETTING_INTEL.odds;
+  const books = Object.entries(d.books);
+  const bestSpread = Math.max(...books.map(([,b]) => b.spread.line));
+  const bestML = Math.max(...books.map(([,b]) => b.ml.raptors));
+  const bestOU = Math.max(...books.map(([,b]) => b.ou.line));
+  const openLine = d.opening;
+
+  return (
+    <div className="space-y-3">
+      <div className="overflow-x-auto">
+        <table className="w-full text-[10px]">
+          <thead>
+            <tr className={isDark ? 'text-slate-400' : 'text-slate-500'}>
+              <th className="text-left py-1 font-medium">Book</th>
+              <th className="text-center py-1 font-medium">Spread</th>
+              <th className="text-center py-1 font-medium">ML TOR</th>
+              <th className="text-center py-1 font-medium">ML OPP</th>
+              <th className="text-center py-1 font-medium">O/U</th>
+              <th className="text-right py-1 font-medium">Updated</th>
+            </tr>
+          </thead>
+          <tbody>
+            {books.map(([name, b]) => (
+              <tr key={name} className={`${isDark ? 'border-t border-white/5' : 'border-t border-slate-100'}`}>
+                <td className={`py-1.5 font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>{name}</td>
+                <td className={`py-1.5 text-center font-mono font-bold ${b.spread.line === bestSpread ? 'text-green-400' : isDark ? 'text-slate-300' : 'text-slate-600'}`}>{b.spread.line} ({b.spread.vig})</td>
+                <td className={`py-1.5 text-center font-mono font-bold ${b.ml.raptors === bestML ? 'text-green-400' : isDark ? 'text-slate-300' : 'text-slate-600'}`}>{b.ml.raptors}</td>
+                <td className={`py-1.5 text-center font-mono ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>+{b.ml.opp}</td>
+                <td className={`py-1.5 text-center font-mono font-bold ${b.ou.line === bestOU ? 'text-green-400' : isDark ? 'text-slate-300' : 'text-slate-600'}`}>{b.ou.line}</td>
+                <td className={`py-1.5 text-right ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{b.updated}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className={`flex gap-3 text-[9px] ${isDark ? 'text-slate-400' : 'text-slate-500'} pt-1`}>
+        <span>Open: TOR {openLine.spread} | ML {openLine.ml} | O/U {openLine.ou}</span>
+        <span className="text-raptors-red font-bold">→ Moved {Math.abs(d.books.DraftKings.spread.line - openLine.spread)} pts</span>
+      </div>
+    </div>
+  );
+};
+
+// ATS Trends Widget
+const ATSTrendsWidget = ({ isDark = true }) => {
+  const d = BETTING_INTEL.ats;
+  const { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } = window.Recharts;
+  const records = [
+    { label: "Overall", ...d.overall }, { label: "Home", ...d.home }, { label: "Away", ...d.away },
+    { label: "L10", ...d.last10 }, { label: "L20", ...d.last20 }, { label: "Fav", ...d.asFavorite },
+    { label: "Dog", ...d.asUnderdog }
+  ];
+  const marginData = Object.entries(d.margins).map(([k, v]) => ({ name: k, w: v.w, l: v.l }));
+
+  return (
+    <div className="space-y-3">
+      <div className="grid grid-cols-4 gap-1.5">
+        {records.slice(0, 4).map(r => (
+          <div key={r.label} className={`p-2 rounded-lg text-center ${isDark ? 'bg-cmd-bg' : 'bg-white border border-slate-100'}`}>
+            <div className={`text-sm font-black ${(r.pct||r.w/(r.w+r.l)*100) > 50 ? 'text-green-400' : 'text-red-400'}`}>{r.w}-{r.l}</div>
+            <div className={`text-[8px] ${isDark ? 'text-slate-500' : 'text-slate-400'} uppercase`}>{r.label}</div>
+          </div>
+        ))}
+      </div>
+      <div className="grid grid-cols-3 gap-1.5">
+        {records.slice(4).map(r => (
+          <div key={r.label} className={`p-2 rounded-lg text-center ${isDark ? 'bg-cmd-bg' : 'bg-white border border-slate-100'}`}>
+            <div className={`text-sm font-black ${(r.pct||r.w/(r.w+r.l)*100) > 50 ? 'text-green-400' : 'text-red-400'}`}>{r.w}-{r.l}</div>
+            <div className={`text-[8px] ${isDark ? 'text-slate-500' : 'text-slate-400'} uppercase`}>{r.label}</div>
+          </div>
+        ))}
+      </div>
+      <div className="h-28">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={marginData} barSize={16}>
+            <XAxis dataKey="name" tick={{ fill: isDark ? '#94a3b8' : '#64748b', fontSize: 9 }} axisLine={false} tickLine={false} />
+            <YAxis hide />
+            <Bar dataKey="w" fill="#22c55e" radius={[3,3,0,0]} name="Wins" />
+            <Bar dataKey="l" fill="#ef4444" radius={[3,3,0,0]} name="Losses" />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+      <div className={`grid grid-cols-2 gap-2 text-[10px] ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>
+        <div className="flex justify-between"><span>Conference</span><span className="font-bold">{d.conference.w}-{d.conference.l - d.conference.w + d.conference.w} ({d.conference.pct}%)</span></div>
+        <div className="flex justify-between"><span>Division</span><span className="font-bold">{d.division.w}-{d.division.l} ({d.division.pct}%)</span></div>
+        <div className="flex justify-between"><span>After Win</span><span className="font-bold">{d.afterWin.w}-{d.afterWin.l}</span></div>
+        <div className="flex justify-between"><span>After Loss</span><span className="font-bold">{d.afterLoss.w}-{d.afterLoss.l}</span></div>
+      </div>
+    </div>
+  );
+};
+
+// Over/Under Trends Widget
+const OverUnderTrendsWidget = ({ isDark = true }) => {
+  const d = BETTING_INTEL.ouTrends;
+  const records = [
+    { label: "Overall", ...d.overall }, { label: "Home", ...d.home }, { label: "Away", ...d.away }, { label: "L10", ...d.last10 }
+  ];
+  const quarterData = Object.entries(d.byQuarter).map(([q, v]) => ({ name: q, over: v.over, under: v.under }));
+  const { BarChart, Bar, XAxis, ResponsiveContainer } = window.Recharts;
+
+  return (
+    <div className="space-y-3">
+      <div className="grid grid-cols-4 gap-1.5">
+        {records.map(r => (
+          <div key={r.label} className={`p-2 rounded-lg text-center ${isDark ? 'bg-cmd-bg' : 'bg-white border border-slate-100'}`}>
+            <div className={`text-sm font-black ${(r.pct||(r.over/(r.over+r.under)*100)) > 50 ? 'text-green-400' : 'text-red-400'}`}>{r.over}-{r.under}</div>
+            <div className={`text-[8px] ${isDark ? 'text-slate-500' : 'text-slate-400'} uppercase`}>{r.label}</div>
+          </div>
+        ))}
+      </div>
+      <div className="grid grid-cols-3 gap-2">
+        <div className={`p-2 rounded-lg text-center ${isDark ? 'bg-cmd-bg' : 'bg-white border border-slate-100'}`}>
+          <div className={`text-lg font-black ${isDark ? 'text-white' : 'text-slate-800'}`}>{d.avgTotal}</div>
+          <div className={`text-[8px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>AVG TOTAL</div>
+        </div>
+        <div className={`p-2 rounded-lg text-center ${isDark ? 'bg-cmd-bg' : 'bg-white border border-slate-100'}`}>
+          <div className="text-lg font-black text-raptors-red">{d.avgTeamPts}</div>
+          <div className={`text-[8px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>TOR PPG</div>
+        </div>
+        <div className={`p-2 rounded-lg text-center ${isDark ? 'bg-cmd-bg' : 'bg-white border border-slate-100'}`}>
+          <div className={`text-lg font-black ${isDark ? 'text-blue-400' : 'text-blue-500'}`}>{d.avgOppPts}</div>
+          <div className={`text-[8px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>OPP PPG</div>
+        </div>
+      </div>
+      <div className="h-24">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={quarterData} barSize={14}>
+            <XAxis dataKey="name" tick={{ fill: isDark ? '#94a3b8' : '#64748b', fontSize: 9 }} axisLine={false} tickLine={false} />
+            <Bar dataKey="over" fill="#22c55e" radius={[3,3,0,0]} />
+            <Bar dataKey="under" fill="#ef4444" radius={[3,3,0,0]} />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+      <div className="space-y-1">
+        {d.streaks.map((s, i) => (
+          <div key={i} className={`text-[10px] ${isDark ? 'text-amber-400' : 'text-amber-600'} flex items-center gap-1`}>
+            <span>🔥</span> {s}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Player Props Insight Widget
+const PlayerPropsInsightWidget = ({ isDark = true }) => {
+  const players = BETTING_INTEL.playerProps;
+  return (
+    <div className="space-y-2">
+      <div className="overflow-x-auto">
+        <table className="w-full text-[9px]">
+          <thead>
+            <tr className={isDark ? 'text-slate-400' : 'text-slate-500'}>
+              <th className="text-left py-1">Player</th>
+              <th className="text-center py-1">PTS</th>
+              <th className="text-center py-1">REB</th>
+              <th className="text-center py-1">AST</th>
+              <th className="text-center py-1">3PM</th>
+              <th className="text-center py-1">ADJ</th>
+            </tr>
+          </thead>
+          <tbody>
+            {players.map(p => (
+              <tr key={p.name} className={`${isDark ? 'border-t border-white/5' : 'border-t border-slate-100'}`}>
+                <td className={`py-1.5 font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-1`}>
+                  {p.name.split(' ')[1]}
+                  {p.hot && <span className="text-[7px] bg-orange-500/20 text-orange-400 px-1 rounded font-bold">🔥</span>}
+                </td>
+                <td className="py-1.5 text-center">
+                  <span className="font-mono font-bold">{p.pts.line}</span>
+                  <span className={`block text-[8px] ${p.pts.overRate > 55 ? 'text-green-400' : p.pts.overRate < 45 ? 'text-red-400' : isDark ? 'text-slate-500' : 'text-slate-400'}`}>{p.pts.overRate}%O</span>
+                </td>
+                <td className="py-1.5 text-center">
+                  <span className="font-mono font-bold">{p.reb.line}</span>
+                  <span className={`block text-[8px] ${p.reb.overRate > 55 ? 'text-green-400' : p.reb.overRate < 45 ? 'text-red-400' : isDark ? 'text-slate-500' : 'text-slate-400'}`}>{p.reb.overRate}%O</span>
+                </td>
+                <td className="py-1.5 text-center">
+                  <span className="font-mono font-bold">{p.ast.line}</span>
+                  <span className={`block text-[8px] ${p.ast.overRate > 55 ? 'text-green-400' : p.ast.overRate < 45 ? 'text-red-400' : isDark ? 'text-slate-500' : 'text-slate-400'}`}>{p.ast.overRate}%O</span>
+                </td>
+                <td className="py-1.5 text-center">
+                  <span className="font-mono font-bold">{p.threes.line}</span>
+                  <span className={`block text-[8px] ${p.threes.overRate > 55 ? 'text-green-400' : p.threes.overRate < 45 ? 'text-red-400' : isDark ? 'text-slate-500' : 'text-slate-400'}`}>{p.threes.overRate}%O</span>
+                </td>
+                <td className={`py-1.5 text-center font-mono text-[9px] ${p.matchupAdj > 0 ? 'text-green-400' : 'text-red-400'}`}>
+                  {p.matchupAdj > 0 ? '+' : ''}{p.matchupAdj}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className={`text-[8px] ${isDark ? 'text-slate-500' : 'text-slate-400'} text-center`}>ADJ = Matchup adjustment vs opponent DRTG • %O = Over hit rate L10</div>
+    </div>
+  );
+};
+
+// Sharp Money Widget
+const SharpMoneyWidget = ({ isDark = true }) => {
+  const d = BETTING_INTEL.sharp;
+  const SplitBar = ({ label, pub, sharp, pubLabel, sharpLabel }) => (
+    <div className="space-y-1">
+      <div className={`text-[9px] font-bold ${isDark ? 'text-slate-400' : 'text-slate-500'} uppercase`}>{label}</div>
+      <div>
+        <div className={`flex justify-between text-[8px] mb-0.5 ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
+          <span>Public: {pubLabel} {pub}%</span><span>Money: {sharpLabel} {sharp}%</span>
+        </div>
+        <div className="flex gap-0.5">
+          <div className="flex h-2.5 rounded-l-full overflow-hidden flex-1">
+            <div className="bg-raptors-red/60" style={{width: `${pub}%`}} />
+            <div className={`${isDark ? 'bg-slate-700' : 'bg-slate-300'}`} style={{width: `${100-pub}%`}} />
+          </div>
+          <div className="flex h-2.5 rounded-r-full overflow-hidden flex-1">
+            <div className="bg-emerald-500/70" style={{width: `${sharp}%`}} />
+            <div className={`${isDark ? 'bg-slate-700' : 'bg-slate-300'}`} style={{width: `${100-sharp}%`}} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="space-y-3">
+      <SplitBar label="Spread" pub={d.spreadPublic.raptors} sharp={d.spreadMoney.raptors} pubLabel="TOR" sharpLabel="TOR" />
+      <SplitBar label="Over/Under" pub={d.ouPublic.over} sharp={d.ouMoney.over} pubLabel="Over" sharpLabel="Over" />
+      <SplitBar label="Moneyline" pub={d.mlPublic.raptors} sharp={d.mlMoney.raptors} pubLabel="TOR" sharpLabel="TOR" />
+      {d.steamMoves.length > 0 && (
+        <div className="space-y-1">
+          <div className={`text-[9px] font-bold ${isDark ? 'text-slate-400' : 'text-slate-500'} uppercase`}>Steam Moves</div>
+          {d.steamMoves.map((m, i) => (
+            <div key={i} className={`flex items-center gap-2 text-[10px] p-1.5 rounded ${m.alert ? (isDark ? 'bg-amber-500/10 border border-amber-500/20' : 'bg-amber-50 border border-amber-200') : (isDark ? 'bg-cmd-bg' : 'bg-slate-50')}`}>
+              {m.alert && <span className="text-amber-400 text-[8px] font-bold">⚡ STEAM</span>}
+              <span className={isDark ? 'text-slate-400' : 'text-slate-500'}>{m.time}</span>
+              <span className={`font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>{m.direction}</span>
+              <span className={isDark ? 'text-slate-500' : 'text-slate-400'}>@ {m.book}</span>
+            </div>
+          ))}
+        </div>
+      )}
+      {d.reverseLineMovement.detected && (
+        <div className={`p-2 rounded-lg text-[10px] ${isDark ? 'bg-purple-500/10 border border-purple-500/20 text-purple-300' : 'bg-purple-50 border border-purple-200 text-purple-700'}`}>
+          <span className="font-bold">⚠️ Reverse Line Movement: </span>{d.reverseLineMovement.detail}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Situational Angles Widget
+const SituationalAnglesWidget = ({ isDark = true }) => {
+  const d = BETTING_INTEL.situations;
+  const angles = [
+    { label: "Back-to-Back", ...d.b2b },
+    { label: "Rest Advantage", ...d.restAdvantage },
+    { label: "After 3+ Days Rest", ...d.afterBreak },
+    { label: "Division Rivals", ...d.divisionRivals },
+    { label: "National TV", ...d.nationalTV }
+  ];
+  const monthly = Object.entries(d.monthly);
+
+  return (
+    <div className="space-y-3">
+      <div className="space-y-1.5">
+        {angles.map(a => (
+          <div key={a.label} className={`flex items-center justify-between p-2 rounded-lg ${isDark ? 'bg-cmd-bg' : 'bg-white border border-slate-100'}`}>
+            <span className={`text-[10px] ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>{a.label}</span>
+            <div className="flex items-center gap-2">
+              <span className={`text-xs font-mono font-bold ${a.pct > 55 ? 'text-green-400' : a.pct < 45 ? 'text-red-400' : isDark ? 'text-white' : 'text-slate-800'}`}>{a.w}-{a.l}</span>
+              <span className={`text-[9px] font-mono ${a.pct > 55 ? 'text-green-400' : a.pct < 45 ? 'text-red-400' : isDark ? 'text-slate-400' : 'text-slate-500'}`}>{a.pct}%</span>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div>
+        <div className={`text-[9px] font-bold ${isDark ? 'text-slate-400' : 'text-slate-500'} uppercase mb-1.5`}>Monthly ATS</div>
+        <div className="flex gap-1.5">
+          {monthly.map(([month, r]) => (
+            <div key={month} className={`flex-1 p-1.5 rounded text-center ${isDark ? 'bg-cmd-bg' : 'bg-white border border-slate-100'}`}>
+              <div className={`text-[8px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{month}</div>
+              <div className={`text-[10px] font-bold ${r.w > r.l ? 'text-green-400' : 'text-red-400'}`}>{r.w}-{r.l}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Betting Model Widget
+const BettingModelWidget = ({ isDark = true }) => {
+  const d = BETTING_INTEL.model;
+  const scoreColor = d.compositeScore >= 70 ? 'text-green-400' : d.compositeScore >= 50 ? 'text-amber-400' : 'text-red-400';
+  const scoreBg = d.compositeScore >= 70 ? 'from-green-500/20' : d.compositeScore >= 50 ? 'from-amber-500/20' : 'from-red-500/20';
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center gap-3">
+        <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${scoreBg} to-transparent flex flex-col items-center justify-center`}>
+          <div className={`text-2xl font-black ${scoreColor}`}>{d.compositeScore}</div>
+          <div className={`text-[7px] ${isDark ? 'text-slate-500' : 'text-slate-400'} uppercase`}>Score</div>
+        </div>
+        <div className="flex-1 space-y-1">
+          <div className="flex justify-between">
+            <span className={`text-[10px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Predicted</span>
+            <span className={`text-sm font-mono font-black ${isDark ? 'text-white' : 'text-slate-800'}`}>TOR {d.predictedScore.raptors} - {d.predictedScore.opp} OPP</span>
+          </div>
+          <div className="flex justify-between">
+            <span className={`text-[10px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Power</span>
+            <span className={`text-xs font-mono ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>TOR {d.raptorsPower} vs {d.oppPower} OPP</span>
+          </div>
+        </div>
+      </div>
+      <div className="grid grid-cols-3 gap-1.5">
+        {[d.spreadPick, d.mlPick, d.ouPick].map((pick, i) => (
+          <div key={i} className={`p-2 rounded-lg text-center ${isDark ? 'bg-cmd-bg' : 'bg-white border border-slate-100'}`}>
+            <div className={`text-[10px] font-bold ${pick.confidence >= 65 ? 'text-green-400' : 'text-amber-400'}`}>{pick.pick}</div>
+            <div className={`text-[8px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{pick.confidence}% conf</div>
+            <div className="text-[8px] text-emerald-400">+{pick.edge}% edge</div>
+          </div>
+        ))}
+      </div>
+      <div className="space-y-1">
+        {d.factors.map((f, i) => (
+          <div key={i} className={`text-[10px] ${isDark ? 'text-slate-300' : 'text-slate-600'} flex items-start gap-1.5`}>
+            <span className="text-raptors-red mt-0.5">•</span> {f}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Prop Builder Widget
+const PropBuilderWidget = ({ isDark = true }) => {
+  const players = BETTING_INTEL.playerProps;
+  const correlations = BETTING_INTEL.correlations;
+  const [selectedPlayer, setSelectedPlayer] = React.useState(0);
+  const [selectedStat, setSelectedStat] = React.useState('pts');
+  const { BarChart, Bar, XAxis, YAxis, ReferenceLine, ResponsiveContainer, Cell } = window.Recharts;
+  
+  const player = players[selectedPlayer];
+  const statData = player[selectedStat];
+  const last10 = statData.last10 || [];
+  const chartData = last10.map((v, i) => ({ game: `G${i+1}`, value: v }));
+  const avg = last10.length > 0 ? (last10.reduce((a,b) => a+b, 0) / last10.length).toFixed(1) : 0;
+  const overCount = last10.filter(v => v > statData.line).length;
+
+  return (
+    <div className="space-y-3">
+      <div className="flex gap-2 flex-wrap">
+        {players.map((p, i) => (
+          <button key={i} onClick={() => setSelectedPlayer(i)}
+            className={`text-[9px] px-2 py-1 rounded-full font-bold transition-colors ${i === selectedPlayer ? 'bg-raptors-red text-white' : isDark ? 'bg-cmd-bg text-slate-400 hover:text-white' : 'bg-slate-100 text-slate-500 hover:text-slate-800'}`}>
+            {p.name.split(' ')[1]}
+          </button>
+        ))}
+      </div>
+      <div className="flex gap-1.5">
+        {['pts','reb','ast'].map(stat => (
+          <button key={stat} onClick={() => setSelectedStat(stat)}
+            className={`text-[9px] px-2 py-1 rounded font-bold uppercase transition-colors ${stat === selectedStat ? 'bg-white/10 text-white border border-white/20' : isDark ? 'text-slate-500 hover:text-slate-300' : 'text-slate-400 hover:text-slate-600'}`}>
+            {stat}
+          </button>
+        ))}
+      </div>
+      <div className="h-32">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={chartData} barSize={18}>
+            <XAxis dataKey="game" tick={{ fill: isDark ? '#64748b' : '#94a3b8', fontSize: 8 }} axisLine={false} tickLine={false} />
+            <YAxis hide />
+            <ReferenceLine y={statData.line} stroke="#CE1141" strokeDasharray="3 3" label={{ value: statData.line, fill: '#CE1141', fontSize: 9, position: 'right' }} />
+            <Bar dataKey="value" radius={[3,3,0,0]}>
+              {chartData.map((entry, i) => (
+                <Cell key={i} fill={entry.value > statData.line ? '#22c55e' : '#ef4444'} />
+              ))}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+      <div className="flex justify-between items-center">
+        <div className={`text-[10px] ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>
+          Avg: <span className="font-bold">{avg}</span> | Line: <span className="font-bold">{statData.line}</span> | Over: <span className={`font-bold ${overCount >= 6 ? 'text-green-400' : 'text-red-400'}`}>{overCount}/10</span>
+        </div>
+        <div className={`text-[10px] font-bold ${overCount >= 6 ? 'text-green-400' : 'text-red-400'}`}>
+          {overCount >= 6 ? '✅ LEAN OVER' : '❌ LEAN UNDER'}
+        </div>
+      </div>
+      <div className="space-y-1 pt-1">
+        <div className={`text-[9px] font-bold ${isDark ? 'text-slate-400' : 'text-slate-500'} uppercase`}>Correlations</div>
+        {correlations.map((c, i) => (
+          <div key={i} className={`flex items-center justify-between text-[10px] p-1.5 rounded ${isDark ? 'bg-cmd-bg' : 'bg-slate-50'}`}>
+            <span className={isDark ? 'text-slate-300' : 'text-slate-600'}>{c.trigger} → {c.result}</span>
+            <span className={`font-bold ${c.strength >= 70 ? 'text-green-400' : 'text-amber-400'}`}>{c.strength}%</span>
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -6954,47 +7448,44 @@ const LiveViewersWidget = ({ isDark = true }) => {
   );
 };
 
-// Betting Edge Widget
-const BettingEdgeWidget = ({ isDark = true }) => {
-  const records = {
-    ats: { w: 28, l: 29, pct: 49.1 },
-    ou: { over: 30, under: 27, pct: 52.6 },
-    favorites: { w: 8, l: 12 },
-    underdogs: { w: 17, l: 20 }
-  };
-  
+// Betting Hub Widget - Main Container
+const BettingHubWidget = ({ isDark = true, game }) => {
   return (
     <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
       <div className="flex items-center justify-between mb-3">
-        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
-          <Target className="w-3 h-3 text-emerald-400" /> Betting Edge
+        <h3 className={`text-sm font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <Target className="w-4 h-4 text-emerald-400" /> Betting Intelligence Hub
         </h3>
+        <span className={`text-[9px] px-2 py-0.5 rounded-full ${isDark ? 'bg-emerald-500/20 text-emerald-400' : 'bg-emerald-50 text-emerald-600'} font-bold`}>
+          {Object.keys(BETTING_INTEL.odds.books).length} Books
+        </span>
       </div>
-      
-      <div className="grid grid-cols-2 gap-2 mb-3">
-        <div className={`p-2 rounded-lg text-center ${isDark ? 'bg-cmd-bg' : 'bg-light-card'}`}>
-          <div className={`text-lg font-black ${records.ats.pct > 50 ? 'text-green-400' : 'text-red-400'}`}>
-            {records.ats.w}-{records.ats.l}
-          </div>
-          <div className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'} uppercase`}>ATS</div>
-        </div>
-        <div className={`p-2 rounded-lg text-center ${isDark ? 'bg-cmd-bg' : 'bg-light-card'}`}>
-          <div className={`text-lg font-black ${records.ou.pct > 50 ? 'text-green-400' : 'text-red-400'}`}>
-            {records.ou.over}-{records.ou.under}
-          </div>
-          <div className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'} uppercase`}>O/U</div>
-        </div>
-      </div>
-      
-      <div className={`text-[10px] ${isDark ? 'text-slate-300' : 'text-slate-600'} space-y-1`}>
-        <div className="flex justify-between">
-          <span>As Favorite</span>
-          <span className="font-bold">{records.favorites.w}-{records.favorites.l}</span>
-        </div>
-        <div className="flex justify-between">
-          <span>As Underdog</span>
-          <span className="font-bold">{records.underdogs.w}-{records.underdogs.l}</span>
-        </div>
+      <LiveOddsTickerWidget isDark={isDark} />
+      <div className="space-y-2">
+        <BettingSection title="Model Prediction" icon={<Target className="w-3 h-3 text-emerald-400" />} isDark={isDark} defaultOpen={true}>
+          <BettingModelWidget isDark={isDark} />
+        </BettingSection>
+        <BettingSection title="Odds Comparison" icon={<BarChart2 className="w-3 h-3 text-blue-400" />} isDark={isDark} defaultOpen={true}>
+          <OddsComparisonWidget isDark={isDark} />
+        </BettingSection>
+        <BettingSection title="Sharp Money Tracker" icon={<DollarSign className="w-3 h-3 text-green-400" />} isDark={isDark} defaultOpen={false}>
+          <SharpMoneyWidget isDark={isDark} />
+        </BettingSection>
+        <BettingSection title="ATS Trends" icon={<TrendingUp className="w-3 h-3 text-raptors-red" />} isDark={isDark} defaultOpen={false}>
+          <ATSTrendsWidget isDark={isDark} />
+        </BettingSection>
+        <BettingSection title="Over/Under Trends" icon={<Activity className="w-3 h-3 text-amber-400" />} isDark={isDark} defaultOpen={false}>
+          <OverUnderTrendsWidget isDark={isDark} />
+        </BettingSection>
+        <BettingSection title="Player Props" icon={<Users className="w-3 h-3 text-purple-400" />} isDark={isDark} defaultOpen={false}>
+          <PlayerPropsInsightWidget isDark={isDark} />
+        </BettingSection>
+        <BettingSection title="Prop Builder" icon={<Sliders className="w-3 h-3 text-cyan-400" />} isDark={isDark} defaultOpen={false}>
+          <PropBuilderWidget isDark={isDark} />
+        </BettingSection>
+        <BettingSection title="Situational Angles" icon={<Compass className="w-3 h-3 text-orange-400" />} isDark={isDark} defaultOpen={false}>
+          <SituationalAnglesWidget isDark={isDark} />
+        </BettingSection>
       </div>
     </div>
   );
@@ -9749,7 +10240,7 @@ function App() {
             <ScheduleList games={games} onSelectGame={setSelectedGame} selectedGameId={selectedGame?.id} isDark={isDark} />
             <StandingsWidget isDark={isDark} />
             <TeamSalaryWidget isDark={isDark} teamName="Raptors" opponentName={selectedGame?.opponent} />
-            {selectedGame?.status === 'upcoming' && <BettingTrendsWidget isDark={isDark} game={selectedGame} />}
+            {selectedGame?.status === 'upcoming' && <BettingHubWidget isDark={isDark} game={selectedGame} />}
             <QuickCompareWidget isDark={isDark} />
             <HistoricalH2HWidget isDark={isDark} opponent={selectedGame?.opponent} />
             <NetRatingWidget isDark={isDark} />
@@ -9765,7 +10256,6 @@ function App() {
             <CoachInsightsWidget isDark={isDark} />
             <DraftPickWidget isDark={isDark} />
             <PlayoffPictureWidget isDark={isDark} />
-            <BettingEdgeWidget isDark={isDark} />
             <SeasonGradesWidget isDark={isDark} />
             <ScheduleStrengthWidget isDark={isDark} />
             <MilestonesWidget isDark={isDark} />
