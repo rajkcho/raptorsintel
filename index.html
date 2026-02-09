@@ -388,13 +388,67 @@ const STANDINGS_EAST = [
   { rank: 7, team: "Heat", abbr: "MIA", id: "1610612748", wins: 27, losses: 27, gb: "15", l10: "5-5" },
   { rank: 8, team: "Hawks", abbr: "ATL", id: "1610612737", wins: 26, losses: 29, gb: "16.5", l10: "4-6" },
   { rank: 9, team: "Bulls", abbr: "CHI", id: "1610612741", wins: 24, losses: 30, gb: "18", l10: "3-7" },
-  { rank: 10, team: "Raptors", abbr: "TOR", id: "1610612761", wins: 23, losses: 32, gb: "19.5", l10: "7-3", highlight: true },
+  { rank: 9, team: "Raptors", abbr: "TOR", id: "1610612761", wins: 25, losses: 32, gb: "17.5", l10: "8-2", highlight: true },
 ];
 
 // Raptors Team Stats
-const RAPTORS_STATS = { wins: 23, losses: 32, ppg: 111.8, oppPpg: 114.2, streak: "W4" };
+const RAPTORS_STATS = { wins: 25, losses: 32, ppg: 112.5, oppPpg: 113.8, streak: "W6" };
 
 const OPPONENT_DATA = {
+  "Pistons": {
+    id: "1610612765",
+    roster: [
+       { id: "1630595", name: "Cade Cunningham", position: "G", number: "2", seasonStats: { ppg: 24.2, rpg: 6.8, apg: 9.3 } },
+       { id: "1630224", name: "Jaden Ivey", position: "G", number: "23", seasonStats: { ppg: 17.8, rpg: 3.5, apg: 4.2 } },
+       { id: "1631105", name: "Jalen Duren", position: "C", number: "0", seasonStats: { ppg: 10.5, rpg: 10.8, apg: 2.1 } },
+       { id: "1630527", name: "Ausar Thompson", position: "F", number: "9", seasonStats: { ppg: 8.2, rpg: 5.5, apg: 2.0 } },
+       { id: "203082", name: "Tobias Harris", position: "F", number: "12", seasonStats: { ppg: 11.8, rpg: 5.2, apg: 2.5 } },
+       { id: "1628381", name: "Malik Beasley", position: "G", number: "5", seasonStats: { ppg: 12.4, rpg: 2.8, apg: 1.5 } },
+       { id: "1629667", name: "Tim Hardaway Jr.", position: "G", number: "10", seasonStats: { ppg: 10.5, rpg: 2.2, apg: 1.8 } },
+       { id: "1631219", name: "Ron Holland", position: "F", number: "7", seasonStats: { ppg: 6.5, rpg: 3.2, apg: 1.2 } }
+    ],
+    tendencies: ["Young Core Development", "Transition Offense", "Rim Protection"],
+    playbook: [
+      { id: "p1", name: "Cade PnR", type: "offense", description: "Cunningham pick and roll.", diagramType: "pnr", execution: ["Cade initiates at top", "Duren sets screen", "Roll or pop based on coverage"], raptorsCounter: "Blitz Cunningham, rotate quick." },
+      { id: "p2", name: "Ivey Push", type: "offense", description: "Transition attack.", diagramType: "iso", execution: ["Ivey gets outlet", "Pushes in transition", "Attacks before D sets"], raptorsCounter: "Get back, contain the ball." }
+    ]
+  },
+  "Pacers": {
+    id: "1610612754",
+    roster: [
+       { id: "1629029", name: "Tyrese Haliburton", position: "G", number: "0", seasonStats: { ppg: 18.5, rpg: 4.0, apg: 9.8 } },
+       { id: "1628988", name: "Pascal Siakam", position: "F", number: "43", seasonStats: { ppg: 19.8, rpg: 7.2, apg: 3.8 } },
+       { id: "1631114", name: "Bennedict Mathurin", position: "G", number: "00", seasonStats: { ppg: 16.2, rpg: 4.2, apg: 2.5 } },
+       { id: "203490", name: "Myles Turner", position: "C", number: "33", seasonStats: { ppg: 15.8, rpg: 6.8, apg: 1.5, bpg: 2.2 } },
+       { id: "1629303", name: "Andrew Nembhard", position: "G", number: "2", seasonStats: { ppg: 10.5, rpg: 3.2, apg: 5.5 } },
+       { id: "1627763", name: "T.J. McConnell", position: "G", number: "9", seasonStats: { ppg: 8.2, rpg: 2.5, apg: 4.8 } },
+       { id: "1627734", name: "Obi Toppin", position: "F", number: "1", seasonStats: { ppg: 11.5, rpg: 4.5, apg: 1.8 } },
+       { id: "1629659", name: "Aaron Nesmith", position: "F", number: "23", seasonStats: { ppg: 9.8, rpg: 3.8, apg: 1.2 } }
+    ],
+    tendencies: ["Fast Pace", "Ball Movement", "3PT Shooting"],
+    playbook: [
+      { id: "p1", name: "Hali PnR", type: "offense", description: "Haliburton pick and roll action.", diagramType: "pnr", execution: ["Haliburton at top", "Turner or Siakam screens", "Lob threat or kick"], raptorsCounter: "ICE the screen, drop coverage." },
+      { id: "p2", name: "Siakam Post", type: "offense", description: "Siakam post-up.", diagramType: "iso", execution: ["Entry to block", "Siakam spins baseline", "Kick to corner on double"], raptorsCounter: "Front the post, dig on catch." }
+    ]
+  },
+  "Bulls": {
+    id: "1610612741",
+    roster: [
+       { id: "1627853", name: "Zach LaVine", position: "G", number: "8", seasonStats: { ppg: 22.5, rpg: 4.2, apg: 4.0 } },
+       { id: "1628374", name: "Coby White", position: "G", number: "0", seasonStats: { ppg: 18.5, rpg: 3.8, apg: 5.2 } },
+       { id: "1630533", name: "Josh Giddey", position: "G", number: "3", seasonStats: { ppg: 12.8, rpg: 6.2, apg: 5.8 } },
+       { id: "203897", name: "Nikola Vucevic", position: "C", number: "9", seasonStats: { ppg: 18.2, rpg: 10.5, apg: 3.2 } },
+       { id: "1628990", name: "Patrick Williams", position: "F", number: "44", seasonStats: { ppg: 10.8, rpg: 4.5, apg: 2.2 } },
+       { id: "1630173", name: "Ayo Dosunmu", position: "G", number: "12", seasonStats: { ppg: 8.5, rpg: 3.2, apg: 3.5 } },
+       { id: "1631210", name: "Matas Buzelis", position: "F", number: "25", seasonStats: { ppg: 7.2, rpg: 3.8, apg: 1.5 } },
+       { id: "1629655", name: "Talen Horton-Tucker", position: "G", number: "2", seasonStats: { ppg: 6.5, rpg: 2.5, apg: 2.8 } }
+    ],
+    tendencies: ["Mid-Range Scoring", "Vucevic Post-Ups", "Transition Attack"],
+    playbook: [
+      { id: "p1", name: "Vooch High-Low", type: "offense", description: "Vucevic post action.", diagramType: "horns", execution: ["Entry to Vooch at elbow", "High-low with cutter", "Face-up jumper option"], raptorsCounter: "Push Vooch off the block." },
+      { id: "p2", name: "LaVine Iso", type: "offense", description: "LaVine isolation.", diagramType: "iso", execution: ["Clear side", "LaVine attacks from wing", "Step-back option"], raptorsCounter: "Force left, contest the step-back." }
+    ]
+  },
   "Timberwolves": {
     id: "1610612750",
     roster: [
@@ -459,6 +513,74 @@ const OPPONENT_DATA = {
       { id: "p1", name: "5-Out Spacing", type: "offense", description: "All 5 players on perimeter.", diagramType: "iso", execution: ["Tatum isolation top of key", "Porzingis lifts to corner", "Corners stay wide"], raptorsCounter: "Stay home on shooters, force tough 2s." },
       { id: "p2", name: "Double Drag Screen", type: "offense", description: "Two high screens for ball handler.", diagramType: "pnr", execution: ["Holiday brings ball up", "Horford and Tatum set screens", "First screener rolls, second pops"], raptorsCounter: "Ice the first screen, switch the second." },
       { id: "p3", name: "Ghost Screen", type: "offense", description: "Fake screen to pop.", diagramType: "pnr", execution: ["Guard sprints to set screen", "Slips before contact", "Flares to 3pt line"], raptorsCounter: "Switch communication." }
+    ]
+  },
+  "Bucks": {
+    id: "1610612749",
+    roster: [
+       { id: "203507", name: "Giannis Antetokounmpo", position: "F", number: "34", seasonStats: { ppg: 31.5, rpg: 12.0, apg: 6.2, bpg: 1.5 } },
+       { id: "203114", name: "Khris Middleton", position: "F", number: "22", seasonStats: { ppg: 15.2, rpg: 4.5, apg: 4.8 } },
+       { id: "201572", name: "Brook Lopez", position: "C", number: "11", seasonStats: { ppg: 11.5, rpg: 5.2, apg: 1.5, bpg: 2.5 } },
+       { id: "1627739", name: "Taurean Prince", position: "F", number: "35", seasonStats: { ppg: 8.5, rpg: 3.2, apg: 1.5 } },
+       { id: "1629022", name: "Gary Trent Jr.", position: "G", number: "4", seasonStats: { ppg: 13.5, rpg: 2.8, apg: 2.0 } },
+       { id: "1631100", name: "AJ Green", position: "G", number: "20", seasonStats: { ppg: 8.8, rpg: 2.2, apg: 1.8 } },
+       { id: "1630226", name: "Pat Connaughton", position: "G", number: "24", seasonStats: { ppg: 5.5, rpg: 3.0, apg: 1.2 } },
+       { id: "1628978", name: "Bobby Portis", position: "F-C", number: "9", seasonStats: { ppg: 10.2, rpg: 7.5, apg: 1.5 } }
+    ],
+    tendencies: ["Giannis Drives", "Wall Defense", "Rim Protection"],
+    playbook: [
+      { id: "p1", name: "Giannis Freight Train", type: "offense", description: "Giannis drives from top.", diagramType: "iso", execution: ["Clear lane", "Giannis attacks rim", "Kick to shooters on help"], raptorsCounter: "Build a wall, don't reach." }
+    ]
+  },
+  "Thunder": {
+    id: "1610612760",
+    roster: [
+       { id: "1630532", name: "Shai Gilgeous-Alexander", position: "G", number: "2", seasonStats: { ppg: 32.8, rpg: 5.5, apg: 6.2 } },
+       { id: "1630581", name: "Jalen Williams", position: "F", number: "8", seasonStats: { ppg: 21.5, rpg: 5.8, apg: 5.0 } },
+       { id: "1630549", name: "Chet Holmgren", position: "C", number: "7", seasonStats: { ppg: 16.5, rpg: 8.8, apg: 2.5, bpg: 2.8 } },
+       { id: "1629008", name: "Lu Dort", position: "G", number: "5", seasonStats: { ppg: 11.2, rpg: 4.2, apg: 2.0 } },
+       { id: "1630537", name: "Isaiah Joe", position: "G", number: "11", seasonStats: { ppg: 9.5, rpg: 2.5, apg: 1.8 } },
+       { id: "1628412", name: "Kenrich Williams", position: "F", number: "34", seasonStats: { ppg: 5.8, rpg: 4.0, apg: 2.2 } },
+       { id: "1629743", name: "Isaiah Hartenstein", position: "C", number: "55", seasonStats: { ppg: 8.2, rpg: 8.5, apg: 3.0 } },
+       { id: "1630585", name: "Aaron Wiggins", position: "G", number: "21", seasonStats: { ppg: 7.8, rpg: 3.2, apg: 1.5 } }
+    ],
+    tendencies: ["SGA Isolation", "Switchable Defense", "Length Everywhere"],
+    playbook: [
+      { id: "p1", name: "SGA ISO", type: "offense", description: "SGA isolation play.", diagramType: "iso", execution: ["Clear side", "SGA attacks downhill", "Mid-range or floater"], raptorsCounter: "Force tough 2s, wall up at rim." }
+    ]
+  },
+  "Spurs": {
+    id: "1610612759",
+    roster: [
+       { id: "1641706", name: "Victor Wembanyama", position: "C", number: "1", seasonStats: { ppg: 24.5, rpg: 10.8, apg: 4.0, bpg: 4.0 } },
+       { id: "1631104", name: "Stephon Castle", position: "G", number: "5", seasonStats: { ppg: 11.5, rpg: 3.2, apg: 4.5 } },
+       { id: "1628464", name: "Devin Vassell", position: "G", number: "24", seasonStats: { ppg: 16.8, rpg: 3.8, apg: 3.5 } },
+       { id: "1629649", name: "Keldon Johnson", position: "F", number: "3", seasonStats: { ppg: 13.2, rpg: 5.0, apg: 2.5 } },
+       { id: "1630537", name: "Jeremy Sochan", position: "F", number: "10", seasonStats: { ppg: 15.5, rpg: 7.2, apg: 4.0 } },
+       { id: "201566", name: "Harrison Barnes", position: "F", number: "40", seasonStats: { ppg: 9.8, rpg: 4.5, apg: 1.5 } },
+       { id: "1628499", name: "Julian Champagnie", position: "F", number: "30", seasonStats: { ppg: 7.5, rpg: 3.2, apg: 1.0 } },
+       { id: "1629649", name: "Tre Jones", position: "G", number: "33", seasonStats: { ppg: 8.5, rpg: 2.5, apg: 5.2 } }
+    ],
+    tendencies: ["Wemby Rim Protection", "Young Core Development", "Ball Movement"],
+    playbook: [
+      { id: "p1", name: "Wemby Pop", type: "offense", description: "Wembanyama pick and pop.", diagramType: "pnr", execution: ["Guard initiates", "Wemby screens and pops", "3PT or drive kick"], raptorsCounter: "Contest the pop, don't leave him." }
+    ]
+  },
+  "Wizards": {
+    id: "1610612764",
+    roster: [
+       { id: "1630178", name: "Jordan Poole", position: "G", number: "13", seasonStats: { ppg: 17.8, rpg: 2.5, apg: 4.5 } },
+       { id: "1630217", name: "Corey Kispert", position: "F", number: "24", seasonStats: { ppg: 12.5, rpg: 3.5, apg: 2.0 } },
+       { id: "1629008", name: "Kyle Kuzma", position: "F", number: "33", seasonStats: { ppg: 15.5, rpg: 5.5, apg: 3.2 } },
+       { id: "1631097", name: "Alexandre Sarr", position: "C", number: "20", seasonStats: { ppg: 10.5, rpg: 6.8, apg: 2.0, bpg: 1.8 } },
+       { id: "1631101", name: "Bilal Coulibaly", position: "F", number: "0", seasonStats: { ppg: 10.2, rpg: 4.5, apg: 3.5 } },
+       { id: "1629635", name: "Deni Avdija", position: "F", number: "8", seasonStats: { ppg: 11.8, rpg: 5.2, apg: 4.0 } },
+       { id: "1630206", name: "Malcolm Brogdon", position: "G", number: "3", seasonStats: { ppg: 8.5, rpg: 2.8, apg: 3.2 } },
+       { id: "1631107", name: "Johnny Davis", position: "G", number: "1", seasonStats: { ppg: 6.5, rpg: 2.5, apg: 2.0 } }
+    ],
+    tendencies: ["Pace and Space", "Young Development", "Transition"],
+    playbook: [
+      { id: "p1", name: "Poole Party", type: "offense", description: "Poole isolation.", diagramType: "iso", execution: ["Poole at top", "Step-back 3 option", "Drive and kick"], raptorsCounter: "Force him left, contest everything." }
     ]
   }
 };
@@ -527,8 +649,8 @@ const fetchRaptorsSchedule = async () => {
     { id: "g50", date: "Jan 30", opponent: "Magic", opponentId: "1610612753", isHome: false, time: "7:00 PM", venue: "Kia Center", status: "completed", result: "L 120-130" },
     { id: "g51", date: "Feb 1", opponent: "Jazz", opponentId: "1610612762", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "completed", result: "W 107-100" },
     { id: "g52", date: "Feb 4", opponent: "Timberwolves", opponentId: "1610612750", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "completed", result: "L 126-128" },
-    { id: "g53", date: "Feb 5", opponent: "Bulls", opponentId: "1610612741", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "upcoming" },
-    { id: "g54", date: "Feb 8", opponent: "Pacers", opponentId: "1610612754", isHome: true, time: "3:00 PM", venue: "Scotiabank Arena", status: "upcoming" },
+    { id: "g53", date: "Feb 5", opponent: "Bulls", opponentId: "1610612741", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "completed", result: "W 130-113" },
+    { id: "g54", date: "Feb 8", opponent: "Pacers", opponentId: "1610612754", isHome: true, time: "3:00 PM", venue: "Scotiabank Arena", status: "completed", result: "W 130-123" },
     { id: "g55", date: "Feb 11", opponent: "Pistons", opponentId: "1610612765", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "upcoming" },
     { id: "g56", date: "Feb 19", opponent: "Bulls", opponentId: "1610612741", isHome: false, time: "8:00 PM", venue: "United Center", status: "upcoming" },
     { id: "g57", date: "Feb 22", opponent: "Bucks", opponentId: "1610612749", isHome: false, time: "3:30 PM", venue: "Fiserv Forum", status: "upcoming" },
