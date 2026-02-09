@@ -3844,6 +3844,109 @@ const PowerRankingsWidget = ({ isDark = true }) => {
   );
 };
 
+// All-Star Tracker Widget
+const AllStarTrackerWidget = ({ isDark = true }) => {
+  const candidates = [
+    { name: 'Scottie Barnes', votes: 524000, trend: 'up', pct: 72 },
+    { name: 'RJ Barrett', votes: 312000, trend: 'same', pct: 45 }
+  ];
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" /> All-Star Watch
+        </h3>
+      </div>
+      
+      <div className="space-y-3">
+        {candidates.map((c, i) => (
+          <div key={i}>
+            <div className="flex justify-between text-[10px] mb-1">
+              <span className={`font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>{c.name}</span>
+              <span className={isDark ? 'text-slate-400' : 'text-slate-500'}>{(c.votes / 1000).toFixed(0)}K votes</span>
+            </div>
+            <div className={`h-2 rounded-full overflow-hidden ${isDark ? 'bg-cmd-border' : 'bg-light-border'}`}>
+              <div 
+                className="h-full rounded-full progress-fill"
+                style={{ width: `${c.pct}%`, background: 'linear-gradient(90deg, #f59e0b, #fcd34d)' }}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Social Links Widget
+const SocialLinksWidget = ({ isDark = true }) => {
+  const links = [
+    { icon: '🐦', label: 'Twitter', url: '#' },
+    { icon: '📸', label: 'Instagram', url: '#' },
+    { icon: '📺', label: 'YouTube', url: '#' }
+  ];
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <Share className="w-3 h-3 text-blue-400" /> Follow
+        </h3>
+      </div>
+      
+      <div className="flex justify-center gap-3">
+        {links.map((l, i) => (
+          <a
+            key={i}
+            href={l.url}
+            className={`p-3 rounded-xl transition-all hover:scale-110 ${
+              isDark ? 'bg-cmd-bg hover:bg-cmd-card' : 'bg-light-card hover:bg-slate-200'
+            }`}
+          >
+            <span className="text-xl">{l.icon}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// League Pass Promo Widget
+const LeaguePassWidget = ({ isDark = true }) => (
+  <div className={`${isDark ? 'glass-card gradient-border' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4 relative overflow-hidden`}>
+    <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-raptors-red/20 to-transparent rounded-bl-full" />
+    
+    <div className="flex items-center gap-3">
+      <div className="text-3xl">🏀</div>
+      <div>
+        <div className={`text-[11px] font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>NBA League Pass</div>
+        <div className={`text-[9px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Watch every Raptors game</div>
+      </div>
+    </div>
+    
+    <button className="w-full mt-3 py-2 gradient-raptors rounded-lg text-xs font-bold text-white hover:opacity-90 transition-opacity">
+      Get League Pass
+    </button>
+  </div>
+);
+
+// Credits/About Widget
+const AboutWidget = ({ isDark = true }) => (
+  <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+    <div className="text-center">
+      <div className="text-2xl mb-2">🦖</div>
+      <div className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>Raptors Intel</div>
+      <div className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'} mt-1`}>
+        Built with ❤️ for Raptors fans
+      </div>
+      <div className={`text-[8px] ${isDark ? 'text-slate-600' : 'text-slate-400'} mt-2`}>
+        Not affiliated with the NBA or Toronto Raptors
+      </div>
+    </div>
+  </div>
+);
+
 // ============================================================
 // PARTICLE SYSTEM - Floating basketballs and geometric shapes
 // ============================================================
@@ -9796,8 +9899,12 @@ function App() {
             <PowerRankingsWidget isDark={isDark} />
             <WeatherImpactWidget isDark={isDark} />
             <SoundWidget isDark={isDark} />
+            <AllStarTrackerWidget isDark={isDark} />
+            <SocialLinksWidget isDark={isDark} />
+            <LeaguePassWidget isDark={isDark} />
             <LiveViewersWidget isDark={isDark} />
             <ArenaWidget isDark={isDark} />
+            <AboutWidget isDark={isDark} />
           </div>
           <div className="col-span-12 lg:col-span-10 h-full overflow-y-auto custom-scrollbar pb-20 lg:pb-10">
             {loadingSchedule ? (
@@ -9819,7 +9926,7 @@ function App() {
         <div className="w-full max-w-[98%] mx-auto px-4 flex items-center justify-between text-xs text-slate-500">
           <div className="flex items-center gap-2">
             <span className="font-bold text-raptors-red neon-flicker">RAPTORS INTEL</span>
-            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v9.2</span>
+            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v9.3</span>
           </div>
           <div className="hidden md:flex items-center gap-4">
             <span>Built for Raptors fans 🦖</span>
