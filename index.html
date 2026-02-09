@@ -129,6 +129,317 @@
         }
       }
 
+      /* ======== PREMIUM DESIGN ELEMENTS ======== */
+      
+      /* Noise Texture Overlay */
+      .noise-overlay::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.03;
+        z-index: 1000;
+        pointer-events: none;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      }
+      
+      /* Glassmorphism 2.0 */
+      .glass-premium {
+        background: rgba(17, 24, 39, 0.6);
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 
+          0 8px 32px rgba(0, 0, 0, 0.4),
+          inset 0 1px 0 rgba(255, 255, 255, 0.05),
+          inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+      }
+      
+      /* 3D Card Hover Effect */
+      .card-3d {
+        transform-style: preserve-3d;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .card-3d:hover {
+        transform: perspective(1000px) rotateX(2deg) rotateY(-2deg) translateY(-4px);
+        box-shadow: 
+          0 20px 40px rgba(0, 0, 0, 0.4),
+          0 0 40px rgba(206, 17, 65, 0.1);
+      }
+      
+      /* Animated Gradient Border */
+      .gradient-border {
+        position: relative;
+        background: linear-gradient(135deg, #0a0e17, #111827);
+        border-radius: 16px;
+      }
+      .gradient-border::before {
+        content: '';
+        position: absolute;
+        inset: -2px;
+        border-radius: 18px;
+        background: linear-gradient(135deg, #CE1141, #3E2680, #CE1141, #3E2680);
+        background-size: 300% 300%;
+        animation: gradient-rotate 4s ease infinite;
+        z-index: -1;
+        opacity: 0.6;
+      }
+      
+      /* Magnetic Button Effect */
+      .btn-magnetic {
+        position: relative;
+        transition: transform 0.2s cubic-bezier(0.33, 1, 0.68, 1);
+      }
+      .btn-magnetic::after {
+        content: '';
+        position: absolute;
+        inset: -10px;
+        border-radius: inherit;
+      }
+      
+      /* Glow Text */
+      .text-glow {
+        text-shadow: 
+          0 0 10px currentColor,
+          0 0 20px currentColor,
+          0 0 40px currentColor;
+      }
+      
+      /* Animated Gradient Text */
+      .gradient-text {
+        background: linear-gradient(90deg, #CE1141, #ff6b6b, #CE1141);
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: gradient-text-flow 3s ease infinite;
+      }
+      
+      /* Scroll Reveal */
+      .scroll-reveal {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.6s ease, transform 0.6s ease;
+      }
+      .scroll-reveal.revealed {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      
+      /* Skeleton Loading */
+      .skeleton {
+        background: linear-gradient(90deg, #1a1f2e 25%, #2a3040 50%, #1a1f2e 75%);
+        background-size: 200% 100%;
+        animation: skeleton-shimmer 1.5s infinite;
+        border-radius: 8px;
+      }
+      
+      /* Floating Animation */
+      .float-subtle {
+        animation: float-subtle 6s ease-in-out infinite;
+      }
+      
+      /* Pulse Ring */
+      .pulse-ring {
+        position: relative;
+      }
+      .pulse-ring::after {
+        content: '';
+        position: absolute;
+        inset: -4px;
+        border-radius: 50%;
+        border: 2px solid #CE1141;
+        animation: pulse-ring-expand 2s ease-out infinite;
+      }
+      
+      /* Hover Lift */
+      .hover-lift {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .hover-lift:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+      }
+      
+      /* Stagger Animation for Lists */
+      .stagger-item { opacity: 0; animation: stagger-in 0.4s ease forwards; }
+      .stagger-item:nth-child(1) { animation-delay: 0.05s; }
+      .stagger-item:nth-child(2) { animation-delay: 0.1s; }
+      .stagger-item:nth-child(3) { animation-delay: 0.15s; }
+      .stagger-item:nth-child(4) { animation-delay: 0.2s; }
+      .stagger-item:nth-child(5) { animation-delay: 0.25s; }
+      
+      /* Neon Glow Box */
+      .neon-box {
+        box-shadow: 
+          0 0 5px #CE1141,
+          0 0 10px #CE1141,
+          0 0 20px #CE1141,
+          0 0 40px #CE1141;
+      }
+      
+      /* Morphing Blob Background */
+      .blob-bg {
+        position: absolute;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(circle, rgba(206,17,65,0.15) 0%, transparent 70%);
+        border-radius: 50%;
+        filter: blur(60px);
+        animation: blob-morph 20s ease-in-out infinite;
+        pointer-events: none;
+      }
+      
+      /* Typewriter Effect */
+      .typewriter {
+        overflow: hidden;
+        border-right: 2px solid #CE1141;
+        white-space: nowrap;
+        animation: typing 3s steps(30) 1s forwards, blink-caret 0.75s step-end infinite;
+      }
+      
+      /* Interactive Cursor Glow */
+      .cursor-glow {
+        position: fixed;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, rgba(206,17,65,0.08) 0%, transparent 70%);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9999;
+        transform: translate(-50%, -50%);
+        transition: opacity 0.3s;
+      }
+      
+      /* Animated Underline */
+      .animated-underline {
+        position: relative;
+      }
+      .animated-underline::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: linear-gradient(90deg, #CE1141, #3E2680);
+        transition: width 0.3s ease;
+      }
+      .animated-underline:hover::after {
+        width: 100%;
+      }
+      
+      /* Glitch Effect */
+      .glitch {
+        position: relative;
+      }
+      .glitch::before,
+      .glitch::after {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+      .glitch::before {
+        animation: glitch-1 0.3s infinite linear alternate-reverse;
+        color: #ff0000;
+        z-index: -1;
+      }
+      .glitch::after {
+        animation: glitch-2 0.3s infinite linear alternate-reverse;
+        color: #00ffff;
+        z-index: -2;
+      }
+
+      /* ======== KEYFRAMES ======== */
+      @keyframes gradient-rotate {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+      
+      @keyframes gradient-text-flow {
+        0% { background-position: 0% center; }
+        100% { background-position: 200% center; }
+      }
+      
+      @keyframes skeleton-shimmer {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+      }
+      
+      @keyframes float-subtle {
+        0%, 100% { transform: translateY(0) rotate(0deg); }
+        25% { transform: translateY(-5px) rotate(0.5deg); }
+        75% { transform: translateY(5px) rotate(-0.5deg); }
+      }
+      
+      @keyframes pulse-ring-expand {
+        0% { transform: scale(1); opacity: 1; }
+        100% { transform: scale(1.5); opacity: 0; }
+      }
+      
+      @keyframes stagger-in {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      
+      @keyframes blob-morph {
+        0%, 100% { transform: translate(0, 0) scale(1); }
+        25% { transform: translate(50px, -50px) scale(1.1); }
+        50% { transform: translate(100px, 50px) scale(0.9); }
+        75% { transform: translate(-50px, 100px) scale(1.05); }
+      }
+      
+      @keyframes typing {
+        from { width: 0; }
+        to { width: 100%; }
+      }
+      
+      @keyframes blink-caret {
+        from, to { border-color: transparent; }
+        50% { border-color: #CE1141; }
+      }
+      
+      @keyframes glitch-1 {
+        0% { clip-path: inset(20% 0 60% 0); transform: translate(-2px, 2px); }
+        20% { clip-path: inset(60% 0 20% 0); transform: translate(2px, -2px); }
+        40% { clip-path: inset(40% 0 40% 0); transform: translate(-2px, 0); }
+        60% { clip-path: inset(80% 0 5% 0); transform: translate(0, 2px); }
+        80% { clip-path: inset(5% 0 80% 0); transform: translate(2px, -2px); }
+        100% { clip-path: inset(50% 0 30% 0); transform: translate(-2px, 2px); }
+      }
+      
+      @keyframes glitch-2 {
+        0% { clip-path: inset(60% 0 20% 0); transform: translate(2px, -2px); }
+        20% { clip-path: inset(20% 0 60% 0); transform: translate(-2px, 2px); }
+        40% { clip-path: inset(80% 0 5% 0); transform: translate(0, -2px); }
+        60% { clip-path: inset(40% 0 40% 0); transform: translate(2px, 0); }
+        80% { clip-path: inset(5% 0 80% 0); transform: translate(-2px, 2px); }
+        100% { clip-path: inset(30% 0 50% 0); transform: translate(2px, -2px); }
+      }
+      
+      @keyframes aurora {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+      
+      .aurora-bg {
+        background: linear-gradient(135deg, 
+          rgba(206,17,65,0.1) 0%, 
+          rgba(62,38,128,0.1) 25%, 
+          rgba(17,24,39,0.1) 50%,
+          rgba(62,38,128,0.1) 75%,
+          rgba(206,17,65,0.1) 100%);
+        background-size: 400% 400%;
+        animation: aurora 15s ease infinite;
+      }
+
       /* ---- Keyframe Animations ---- */
       @keyframes fade-in {
         from { opacity: 0; transform: translateY(8px); }
@@ -491,11 +802,23 @@
 
       /* ---- Utility Classes ---- */
       .glass-card {
-        background: rgba(17, 24, 39, 0.7);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        border: 1px solid rgba(30, 41, 59, 0.8);
+        background: rgba(17, 24, 39, 0.75);
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.08);
         border-radius: 1rem;
+        box-shadow: 
+          0 8px 32px rgba(0, 0, 0, 0.3),
+          inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+      }
+      .glass-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 
+          0 12px 40px rgba(0, 0, 0, 0.4),
+          inset 0 1px 0 rgba(255, 255, 255, 0.08),
+          0 0 20px rgba(206, 17, 65, 0.05);
+        border-color: rgba(206, 17, 65, 0.2);
       }
       .gradient-border {
         position: relative;
@@ -526,10 +849,114 @@
         box-shadow: 0 20px 40px rgba(206,17,65,0.15), 0 0 20px rgba(206,17,65,0.1);
       }
       .neon-text {
-        text-shadow: 0 0 10px rgba(206,17,65,0.5), 0 0 20px rgba(206,17,65,0.3), 0 0 40px rgba(206,17,65,0.1);
+        text-shadow: 
+          0 0 5px rgba(206,17,65,0.8),
+          0 0 10px rgba(206,17,65,0.6), 
+          0 0 20px rgba(206,17,65,0.4), 
+          0 0 40px rgba(206,17,65,0.2),
+          0 0 80px rgba(206,17,65,0.1);
+        animation: neon-pulse 2s ease-in-out infinite;
+      }
+      @keyframes neon-pulse {
+        0%, 100% { filter: brightness(1); }
+        50% { filter: brightness(1.2); }
       }
       .neon-text-subtle {
         text-shadow: 0 0 8px rgba(206,17,65,0.3), 0 0 16px rgba(206,17,65,0.1);
+      }
+      
+      /* Enhanced Hover States */
+      .interactive-glow {
+        position: relative;
+        overflow: hidden;
+      }
+      .interactive-glow::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+        transition: left 0.5s ease;
+      }
+      .interactive-glow:hover::before {
+        left: 100%;
+      }
+      
+      /* Animated Border Gradient */
+      .border-gradient-animated {
+        position: relative;
+        border: none !important;
+      }
+      .border-gradient-animated::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        padding: 1px;
+        background: linear-gradient(90deg, #CE1141, #3E2680, #CE1141);
+        background-size: 200% 100%;
+        animation: border-flow 3s linear infinite;
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        mask-composite: exclude;
+        pointer-events: none;
+      }
+      @keyframes border-flow {
+        0% { background-position: 0% 50%; }
+        100% { background-position: 200% 50%; }
+      }
+      
+      /* Shine Effect */
+      .shine-effect {
+        position: relative;
+        overflow: hidden;
+      }
+      .shine-effect::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(
+          45deg,
+          transparent 30%,
+          rgba(255,255,255,0.08) 50%,
+          transparent 70%
+        );
+        animation: shine 4s ease-in-out infinite;
+        pointer-events: none;
+      }
+      @keyframes shine {
+        0% { transform: translateX(-100%) rotate(45deg); }
+        100% { transform: translateX(100%) rotate(45deg); }
+      }
+      
+      /* Ripple Button Effect */
+      .btn-ripple {
+        position: relative;
+        overflow: hidden;
+      }
+      .btn-ripple::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        background-image: radial-gradient(circle, rgba(255,255,255,0.3) 10%, transparent 10%);
+        background-repeat: no-repeat;
+        background-position: 50%;
+        transform: scale(10, 10);
+        opacity: 0;
+        transition: transform 0.5s, opacity 0.5s;
+      }
+      .btn-ripple:active::after {
+        transform: scale(0, 0);
+        opacity: 0.3;
+        transition: 0s;
       }
       .hover-lift {
         transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -1955,6 +2382,262 @@ class ErrorBoundary extends Component {
     return this.props.children;
   }
 }
+
+// ============================================================
+// PREMIUM DESIGN COMPONENTS
+// ============================================================
+
+// Cursor Glow Follower
+const CursorGlow = ({ isDark = true }) => {
+  const [position, setPosition] = useState({ x: -500, y: -500 });
+  
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      setPosition({ x: e.clientX, y: e.clientY });
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+  
+  if (!isDark) return null;
+  
+  return (
+    <div 
+      className="cursor-glow"
+      style={{ left: position.x, top: position.y }}
+    />
+  );
+};
+
+// Animated Hero Stats
+const HeroStatsBar = ({ isDark = true }) => {
+  const stats = [
+    { label: 'WINS', value: 25, icon: '🏆' },
+    { label: 'STREAK', value: 6, icon: '🔥' },
+    { label: 'PPG', value: 111.5, icon: '🏀' },
+    { label: 'RANK', value: '#10', icon: '📊' }
+  ];
+  
+  return (
+    <div className={`flex justify-center gap-4 py-3 ${isDark ? 'aurora-bg' : 'bg-gradient-to-r from-raptors-red/5 via-transparent to-raptors-red/5'}`}>
+      {stats.map((s, i) => (
+        <div 
+          key={i} 
+          className={`flex items-center gap-2 px-4 py-2 rounded-full glass-premium hover-lift stagger-item`}
+          style={{ animationDelay: `${i * 0.1}s` }}
+        >
+          <span className="text-lg">{s.icon}</span>
+          <div>
+            <div className={`text-xs font-black ${typeof s.value === 'number' && s.value > 20 ? 'gradient-text' : isDark ? 'text-white' : 'text-slate-800'}`}>
+              {s.value}
+            </div>
+            <div className={`text-[8px] ${isDark ? 'text-slate-500' : 'text-slate-400'} uppercase tracking-wider`}>{s.label}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+// Animated Number Counter
+const AnimatedNumber = ({ value, duration = 2000, prefix = '', suffix = '', className = '' }) => {
+  const [display, setDisplay] = useState(0);
+  const ref = useRef(null);
+  
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        let start = 0;
+        const end = parseFloat(value);
+        const increment = end / (duration / 16);
+        const timer = setInterval(() => {
+          start += increment;
+          if (start >= end) {
+            setDisplay(end);
+            clearInterval(timer);
+          } else {
+            setDisplay(start);
+          }
+        }, 16);
+        observer.disconnect();
+      }
+    });
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [value, duration]);
+  
+  return (
+    <span ref={ref} className={className}>
+      {prefix}{typeof value === 'number' ? display.toFixed(1) : value}{suffix}
+    </span>
+  );
+};
+
+// 3D Tilt Card Wrapper
+const TiltCard = ({ children, className = '', isDark = true }) => {
+  const cardRef = useRef(null);
+  
+  const handleMouseMove = (e) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateX = (y - centerY) / 20;
+    const rotateY = (centerX - x) / 20;
+    cardRef.current.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+  };
+  
+  const handleMouseLeave = () => {
+    if (cardRef.current) {
+      cardRef.current.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+    }
+  };
+  
+  return (
+    <div 
+      ref={cardRef}
+      className={`transition-transform duration-300 ${className}`}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+    >
+      {children}
+    </div>
+  );
+};
+
+// Animated Progress Ring
+const ProgressRing = ({ progress, size = 80, strokeWidth = 8, color = '#CE1141', isDark = true }) => {
+  const radius = (size - strokeWidth) / 2;
+  const circumference = radius * 2 * Math.PI;
+  const offset = circumference - (progress / 100) * circumference;
+  
+  return (
+    <div className="relative inline-flex items-center justify-center">
+      <svg width={size} height={size} className="transform -rotate-90">
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          stroke={isDark ? '#1e293b' : '#e2e8f0'}
+          strokeWidth={strokeWidth}
+          fill="none"
+        />
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={radius}
+          stroke={color}
+          strokeWidth={strokeWidth}
+          fill="none"
+          strokeLinecap="round"
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+          className="transition-all duration-1000 ease-out"
+          style={{ filter: `drop-shadow(0 0 6px ${color})` }}
+        />
+      </svg>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <span className={`text-lg font-black ${isDark ? 'text-white' : 'text-slate-800'}`}>{progress}%</span>
+      </div>
+    </div>
+  );
+};
+
+// Glowing Badge
+const GlowBadge = ({ children, color = 'red', pulse = false }) => {
+  const colors = {
+    red: 'bg-raptors-red text-white shadow-[0_0_15px_rgba(206,17,65,0.5)]',
+    green: 'bg-green-500 text-white shadow-[0_0_15px_rgba(34,197,94,0.5)]',
+    purple: 'bg-purple-500 text-white shadow-[0_0_15px_rgba(168,85,247,0.5)]',
+    gold: 'bg-amber-500 text-black shadow-[0_0_15px_rgba(245,158,11,0.5)]'
+  };
+  
+  return (
+    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${colors[color]} ${pulse ? 'animate-pulse' : ''}`}>
+      {children}
+    </span>
+  );
+};
+
+// Animated Blob Background
+const AnimatedBlobs = ({ isDark = true }) => {
+  if (!isDark) return null;
+  
+  return (
+    <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
+      <div className="blob-bg" style={{ top: '10%', left: '10%' }} />
+      <div className="blob-bg" style={{ top: '60%', right: '10%', animationDelay: '-5s', background: 'radial-gradient(circle, rgba(62,38,128,0.12) 0%, transparent 70%)' }} />
+      <div className="blob-bg" style={{ bottom: '10%', left: '30%', animationDelay: '-10s', width: '300px', height: '300px' }} />
+    </div>
+  );
+};
+
+// Scroll Reveal Wrapper
+const ScrollReveal = ({ children, className = '' }) => {
+  const ref = useRef(null);
+  const [revealed, setRevealed] = useState(false);
+  
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setRevealed(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
+  
+  return (
+    <div ref={ref} className={`scroll-reveal ${revealed ? 'revealed' : ''} ${className}`}>
+      {children}
+    </div>
+  );
+};
+
+// Skeleton Loader
+const SkeletonLoader = ({ width = '100%', height = '20px', rounded = 'md' }) => (
+  <div 
+    className={`skeleton rounded-${rounded}`} 
+    style={{ width, height }}
+  />
+);
+
+// Magnetic Button
+const MagneticButton = ({ children, onClick, className = '', isDark = true }) => {
+  const buttonRef = useRef(null);
+  
+  const handleMouseMove = (e) => {
+    if (!buttonRef.current) return;
+    const rect = buttonRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+    buttonRef.current.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+  };
+  
+  const handleMouseLeave = () => {
+    if (buttonRef.current) {
+      buttonRef.current.style.transform = 'translate(0, 0)';
+    }
+  };
+  
+  return (
+    <button
+      ref={buttonRef}
+      onClick={onClick}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className={`btn-magnetic transition-transform ${className}`}
+    >
+      {children}
+    </button>
+  );
+};
 
 // ============================================================
 // PARTICLE SYSTEM - Floating basketballs and geometric shapes
@@ -7656,6 +8339,8 @@ function App() {
       {isDark && <ParticleSystem isDark={isDark} />}
       {isDark && <GradientOrbs isDark={isDark} />}
       {isDark && <CourtBackground isDark={isDark} />}
+      {isDark && <AnimatedBlobs isDark={isDark} />}
+      <CursorGlow isDark={isDark} />
       
       {/* Confetti for win streaks */}
       <ConfettiSystem active={showConfetti} />
@@ -7777,6 +8462,9 @@ function App() {
       
       {/* Fun Facts Ticker */}
       <FunFactsTicker isDark={isDark} />
+      
+      {/* Hero Stats Bar */}
+      <HeroStatsBar isDark={isDark} />
 
       {/* Reminder Modal */}
       {showReminder && (
@@ -7914,7 +8602,7 @@ function App() {
         <div className="w-full max-w-[98%] mx-auto px-4 flex items-center justify-between text-xs text-slate-500">
           <div className="flex items-center gap-2">
             <span className="font-bold text-raptors-red neon-flicker">RAPTORS INTEL</span>
-            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v8.5</span>
+            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v8.6</span>
           </div>
           <div className="hidden md:flex items-center gap-4">
             <span>Built for Raptors fans 🦖</span>
