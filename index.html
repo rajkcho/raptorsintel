@@ -10,6 +10,12 @@
     <meta property="og:description" content="The ultimate Raptors fan scouting dashboard. Deep analytics, rotation simulator, and matchup intelligence." />
     <meta property="og:type" content="website" />
     <link rel="icon" href="https://cdn.nba.com/logos/nba/1610612761/primary/L/logo.svg" type="image/svg+xml" />
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#CE1141" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Raptors Intel" />
+    <link rel="apple-touch-icon" href="https://cdn.nba.com/logos/nba/1610612761/primary/L/logo.svg" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -1143,6 +1149,37 @@ const HISTORICAL_H2H = {
   playoffs: { raptors: 4, opponent: 2 }
 };
 
+// Injury Report
+const INJURY_REPORT = {
+  raptors: [
+    { name: "Immanuel Quickley", status: "GTD", reason: "Hip", updated: "Feb 9" },
+    { name: "Kelly Olynyk", status: "OUT", reason: "Back", updated: "Feb 8" },
+    { name: "Bruce Brown", status: "OUT", reason: "Knee", updated: "Feb 7" }
+  ],
+  opponent: [] // Populated dynamically per opponent
+};
+
+// Trade Deadline (2025 deadline was Feb 6, 2025 - using 2026 estimate)
+const TRADE_DEADLINE = {
+  date: new Date('2026-02-05T15:00:00-05:00'), // 3pm ET
+  rumorsActive: true,
+  raptorsPlayers: [
+    { name: "Chris Boucher", likelihood: "High", destination: "Contender" },
+    { name: "Bruce Brown", likelihood: "Medium", destination: "TBD" }
+  ]
+};
+
+// Rest/Fatigue Data
+const REST_DATA = {
+  lastGameDate: new Date('2026-02-08'), // Feb 8 vs Hawks
+  nextGameDate: new Date('2026-02-11'), // Feb 11 vs Pistons
+  isBackToBack: false,
+  daysBetween: 3,
+  milesLastWeek: 1250, // Toronto -> cities
+  gamesLast7Days: 2,
+  avgMinutesLast5: 34.2
+};
+
 // Fun Facts
 const FUN_FACTS = [
   "The Raptors are 8-2 in their last 10 home games",
@@ -1389,6 +1426,9 @@ const OPPONENT_DATA = {
        { id: "203501", name: "Tim Hardaway Jr.", position: "G", number: "10", seasonStats: { ppg: 10.5, rpg: 2.2, apg: 1.8 } },
        { id: "1631326", name: "Ron Holland", position: "F", number: "7", seasonStats: { ppg: 6.5, rpg: 3.2, apg: 1.2 } }
     ],
+    injuries: [
+      { name: "Ausar Thompson", status: "OUT", reason: "Blood clot", updated: "Feb 9" }
+    ],
     tendencies: ["Young Core Development", "Transition Offense", "Rim Protection"],
     playbook: [
       { id: "p1", name: "Cade PnR", type: "offense", description: "Cunningham pick and roll.", diagramType: "pnr", execution: ["Cade initiates at top", "Duren sets screen", "Roll or pop based on coverage"], raptorsCounter: "Blitz Cunningham, rotate quick." },
@@ -1407,6 +1447,9 @@ const OPPONENT_DATA = {
        { id: "1627734", name: "Obi Toppin", position: "F", number: "1", seasonStats: { ppg: 11.5, rpg: 4.5, apg: 1.8 } },
        { id: "1629659", name: "Aaron Nesmith", position: "F", number: "23", seasonStats: { ppg: 9.8, rpg: 3.8, apg: 1.2 } }
     ],
+    injuries: [
+      { name: "James Wiseman", status: "OUT", reason: "Achilles", updated: "Feb 8" }
+    ],
     tendencies: ["Fast Pace", "Ball Movement", "3PT Shooting"],
     playbook: [
       { id: "p1", name: "Hali PnR", type: "offense", description: "Haliburton pick and roll action.", diagramType: "pnr", execution: ["Haliburton at top", "Turner or Siakam screens", "Lob threat or kick"], raptorsCounter: "ICE the screen, drop coverage." },
@@ -1424,6 +1467,10 @@ const OPPONENT_DATA = {
        { id: "1630173", name: "Ayo Dosunmu", position: "G", number: "12", seasonStats: { ppg: 8.5, rpg: 3.2, apg: 3.5 } },
        { id: "1631210", name: "Matas Buzelis", position: "F", number: "25", seasonStats: { ppg: 7.2, rpg: 3.8, apg: 1.5 } },
        { id: "1629655", name: "Talen Horton-Tucker", position: "G", number: "2", seasonStats: { ppg: 6.5, rpg: 2.5, apg: 2.8 } }
+    ],
+    injuries: [
+      { name: "Lonzo Ball", status: "OUT", reason: "Knee", updated: "Feb 5" },
+      { name: "Patrick Williams", status: "GTD", reason: "Ankle", updated: "Feb 9" }
     ],
     tendencies: ["Mid-Range Scoring", "Vucevic Post-Ups", "Transition Attack"],
     playbook: [
@@ -1854,7 +1901,8 @@ const {
   Calendar, LayoutDashboard, X, Target, Award, Bandage, Clock, Gavel, Home, Plane,
   ArrowRightLeft, Gauge, Timer, Sun, Moon, Bell, Download, ExternalLink, Flame,
   Snowflake, TrendingDown, Volume2, Printer, Copy, Twitter, Facebook, Send,
-  ChevronUp, ChevronDown, Search, Filter, Star, Sparkles, Eye, EyeOff, History
+  ChevronUp, ChevronDown, Search, Filter, Star, Sparkles, Eye, EyeOff, History,
+  Battery, BatteryMedium, Cpu
 } = LucideReact;
 
 // ============================================================
@@ -4275,6 +4323,192 @@ const HistoricalH2HWidget = ({ isDark = true, opponent }) => (
   </div>
 );
 
+// Injury Report Widget
+const InjuryReportWidget = ({ isDark = true, opponent }) => {
+  const opponentInjuries = OPPONENT_DATA[opponent]?.injuries || [];
+  
+  const statusColor = (status) => {
+    switch(status) {
+      case 'OUT': return 'text-red-500';
+      case 'GTD': return 'text-yellow-500';
+      case 'QUES': return 'text-orange-400';
+      default: return 'text-slate-400';
+    }
+  };
+  
+  const statusIcon = (status) => {
+    switch(status) {
+      case 'OUT': return '🚫';
+      case 'GTD': return '⚠️';
+      case 'QUES': return '❓';
+      default: return '✓';
+    }
+  };
+
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <Activity className="w-3 h-3 text-red-400" /> Injury Report
+        </h3>
+        <span className="text-lg">🏥</span>
+      </div>
+      
+      {/* Raptors Injuries */}
+      <div className="mb-3">
+        <div className={`text-[10px] font-bold ${isDark ? 'text-raptors-red' : 'text-raptors-red'} mb-1 uppercase`}>Toronto</div>
+        {INJURY_REPORT.raptors.length === 0 ? (
+          <div className={`text-[10px] ${isDark ? 'text-green-400' : 'text-green-600'}`}>✓ Fully healthy</div>
+        ) : (
+          <div className="space-y-1">
+            {INJURY_REPORT.raptors.map((player, i) => (
+              <div key={i} className="flex items-center justify-between text-[10px]">
+                <span className={isDark ? 'text-slate-300' : 'text-slate-600'}>{player.name}</span>
+                <span className="flex items-center gap-1">
+                  <span className={statusColor(player.status)}>{player.status}</span>
+                  <span className={isDark ? 'text-slate-500' : 'text-slate-400'}>({player.reason})</span>
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+      
+      {/* Opponent Injuries */}
+      <div className={`pt-2 border-t ${isDark ? 'border-cmd-border' : 'border-light-border'}`}>
+        <div className={`text-[10px] font-bold ${isDark ? 'text-blue-400' : 'text-blue-600'} mb-1 uppercase`}>{opponent || 'Opponent'}</div>
+        {opponentInjuries.length === 0 ? (
+          <div className={`text-[10px] ${isDark ? 'text-green-400' : 'text-green-600'}`}>✓ Fully healthy</div>
+        ) : (
+          <div className="space-y-1">
+            {opponentInjuries.map((player, i) => (
+              <div key={i} className="flex items-center justify-between text-[10px]">
+                <span className={isDark ? 'text-slate-300' : 'text-slate-600'}>{player.name}</span>
+                <span className="flex items-center gap-1">
+                  <span className={statusColor(player.status)}>{player.status}</span>
+                  <span className={isDark ? 'text-slate-500' : 'text-slate-400'}>({player.reason})</span>
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// Rest & Fatigue Widget
+const RestFatigueWidget = ({ isDark = true }) => {
+  const daysBetween = REST_DATA.daysBetween;
+  const fatigueLevel = daysBetween <= 1 ? 'High' : daysBetween === 2 ? 'Medium' : 'Low';
+  const fatigueColor = daysBetween <= 1 ? 'text-red-500' : daysBetween === 2 ? 'text-yellow-500' : 'text-green-500';
+  const fatigueBg = daysBetween <= 1 ? 'bg-red-500/10' : daysBetween === 2 ? 'bg-yellow-500/10' : 'bg-green-500/10';
+
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <Battery className="w-3 h-3 text-green-400" /> Rest & Fatigue
+        </h3>
+        <span className={`text-[10px] px-2 py-0.5 rounded-full ${fatigueBg} ${fatigueColor} font-bold`}>{fatigueLevel}</span>
+      </div>
+      
+      <div className={`grid grid-cols-2 gap-2 text-[10px] ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>
+        <div className="flex justify-between">
+          <span>Days Rest</span>
+          <span className={`font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>{daysBetween}</span>
+        </div>
+        <div className="flex justify-between">
+          <span>B2B</span>
+          <span className={`font-bold ${REST_DATA.isBackToBack ? 'text-red-400' : 'text-green-400'}`}>
+            {REST_DATA.isBackToBack ? 'Yes ⚠️' : 'No ✓'}
+          </span>
+        </div>
+        <div className="flex justify-between">
+          <span>Games (7d)</span>
+          <span className={`font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>{REST_DATA.gamesLast7Days}</span>
+        </div>
+        <div className="flex justify-between">
+          <span>Avg MPG (L5)</span>
+          <span className={`font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>{REST_DATA.avgMinutesLast5}</span>
+        </div>
+      </div>
+      
+      <div className={`mt-3 pt-2 border-t ${isDark ? 'border-cmd-border' : 'border-light-border'}`}>
+        <div className="flex justify-between items-center text-[10px]">
+          <span className={isDark ? 'text-slate-500' : 'text-slate-400'}>Miles traveled (7d)</span>
+          <span className={`font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>{REST_DATA.milesLastWeek.toLocaleString()} mi</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Trade Deadline Countdown Widget
+const TradeDeadlineWidget = ({ isDark = true }) => {
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, mins: 0, secs: 0, expired: false });
+  
+  useEffect(() => {
+    const calculate = () => {
+      const now = new Date();
+      const diff = TRADE_DEADLINE.date - now;
+      if (diff <= 0) {
+        setTimeLeft({ days: 0, hours: 0, mins: 0, secs: 0, expired: true });
+        return;
+      }
+      setTimeLeft({
+        days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
+        mins: Math.floor((diff / (1000 * 60)) % 60),
+        secs: Math.floor((diff / 1000) % 60),
+        expired: false
+      });
+    };
+    calculate();
+    const interval = setInterval(calculate, 1000);
+    return () => clearInterval(interval);
+  }, []);
+  
+  if (timeLeft.expired) return null;
+  
+  return (
+    <div className={`${isDark ? 'glass-card border-orange-500/30' : 'bg-white border border-orange-300 shadow-lg rounded-2xl'} p-4`} style={{animation: 'border-glow 3s ease-in-out infinite'}}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <Clock className="w-3 h-3 text-orange-400" /> Trade Deadline
+        </h3>
+        <span className="text-lg animate-pulse">🔥</span>
+      </div>
+      
+      <div className="grid grid-cols-4 gap-1 text-center mb-3">
+        {[
+          { val: timeLeft.days, label: 'D' },
+          { val: timeLeft.hours, label: 'H' },
+          { val: timeLeft.mins, label: 'M' },
+          { val: timeLeft.secs, label: 'S' }
+        ].map((t, i) => (
+          <div key={i} className={`p-1 rounded ${isDark ? 'bg-cmd-bg' : 'bg-light-card'}`}>
+            <div className={`text-lg font-black ${isDark ? 'text-orange-400' : 'text-orange-500'}`}>{String(t.val).padStart(2, '0')}</div>
+            <div className={`text-[8px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{t.label}</div>
+          </div>
+        ))}
+      </div>
+      
+      {TRADE_DEADLINE.rumorsActive && (
+        <div className={`pt-2 border-t ${isDark ? 'border-cmd-border' : 'border-light-border'}`}>
+          <div className={`text-[10px] font-bold ${isDark ? 'text-slate-400' : 'text-slate-500'} mb-1 uppercase`}>Raptors Trade Watch</div>
+          {TRADE_DEADLINE.raptorsPlayers.map((p, i) => (
+            <div key={i} className="flex justify-between text-[10px]">
+              <span className={isDark ? 'text-slate-300' : 'text-slate-600'}>{p.name}</span>
+              <span className={`${p.likelihood === 'High' ? 'text-red-400' : 'text-yellow-400'}`}>{p.likelihood}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
 // Fun Facts Ticker
 const FunFactsTicker = ({ isDark = true }) => {
   const [currentFact, setCurrentFact] = useState(0);
@@ -4800,6 +5034,9 @@ function App() {
             <GameCountdown game={selectedGame} isDark={isDark} />
             <RecentResultsWidget games={games} isDark={isDark} />
             {selectedGame && <KeyMatchupsWidget opponent={selectedGame.opponent} isDark={isDark} />}
+            <InjuryReportWidget isDark={isDark} opponent={selectedGame?.opponent} />
+            <RestFatigueWidget isDark={isDark} />
+            <TradeDeadlineWidget isDark={isDark} />
             <FanPollWidget isDark={isDark} />
             <ScheduleList games={games} onSelectGame={setSelectedGame} selectedGameId={selectedGame?.id} isDark={isDark} />
             <StandingsWidget isDark={isDark} />
@@ -4829,7 +5066,7 @@ function App() {
         <div className="w-full max-w-[98%] mx-auto px-4 flex items-center justify-between text-xs text-slate-500">
           <div className="flex items-center gap-2">
             <span className="font-bold text-raptors-red neon-flicker">RAPTORS INTEL</span>
-            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v7.2</span>
+            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v7.3</span>
           </div>
           <div className="hidden md:flex items-center gap-4">
             <span>Built for Raptors fans 🦖</span>

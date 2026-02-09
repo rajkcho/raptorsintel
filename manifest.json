@@ -1,0 +1,19 @@
+{
+  "name": "Raptors Intel - Game Day Scouting",
+  "short_name": "Raptors Intel",
+  "description": "Advanced Toronto Raptors game day scouting dashboard with analytics, matchups, and predictions",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0e17",
+  "theme_color": "#CE1141",
+  "orientation": "portrait-primary",
+  "categories": ["sports", "entertainment"],
+  "icons": [
+    {
+      "src": "https://cdn.nba.com/logos/nba/1610612761/primary/L/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
