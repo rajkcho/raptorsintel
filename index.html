@@ -3512,6 +3512,170 @@ const MiniBarChart = ({ data, height = 40, isDark = true }) => {
   );
 };
 
+// Community Buzz Widget
+const CommunityBuzzWidget = ({ isDark = true }) => {
+  const reactions = [
+    { emoji: '🔥', count: 234, label: 'Fire' },
+    { emoji: '😤', count: 156, label: 'Hype' },
+    { emoji: '🦖', count: 189, label: 'Raptors' },
+    { emoji: '💜', count: 98, label: 'Love' }
+  ];
+  
+  const [selected, setSelected] = useState(null);
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <Heart className="w-3 h-3 text-pink-400" /> React
+        </h3>
+      </div>
+      
+      <div className="flex justify-center gap-2">
+        {reactions.map((r, i) => (
+          <button
+            key={i}
+            onClick={() => setSelected(i)}
+            className={`flex flex-col items-center p-2 rounded-lg transition-all hover:scale-110 ${
+              selected === i 
+                ? 'gradient-raptors' 
+                : isDark ? 'bg-cmd-bg hover:bg-cmd-card' : 'bg-light-card hover:bg-slate-200'
+            }`}
+          >
+            <span className="text-xl">{r.emoji}</span>
+            <span className={`text-[9px] font-bold ${selected === i ? 'text-white' : isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+              {r.count + (selected === i ? 1 : 0)}
+            </span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// MVP Race Widget
+const MVPRaceWidget = ({ isDark = true }) => {
+  const candidates = [
+    { name: 'Scottie Barnes', odds: '+2500', trend: 'up' },
+    { name: 'Shai GA', odds: '+150', trend: 'same' },
+    { name: 'Jokic', odds: '+200', trend: 'down' }
+  ];
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <Award className="w-3 h-3 text-yellow-400" /> MVP Watch
+        </h3>
+      </div>
+      
+      <div className="space-y-2">
+        {candidates.map((c, i) => (
+          <div key={i} className="flex items-center justify-between text-[10px]">
+            <div className="flex items-center gap-2">
+              <span className={`font-bold ${i === 0 ? 'text-raptors-red' : isDark ? 'text-slate-300' : 'text-slate-600'}`}>
+                {i + 1}. {c.name}
+              </span>
+              {c.trend === 'up' && <span className="text-green-400">↑</span>}
+              {c.trend === 'down' && <span className="text-red-400">↓</span>}
+            </div>
+            <span className={`font-bold ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{c.odds}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Season Highlight Widget
+const SeasonHighlightWidget = ({ isDark = true }) => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const highlights = [
+    { title: "Scottie's 38-Point Explosion", date: "Jan 15", emoji: "🔥" },
+    { title: "6-Game Win Streak Begins", date: "Feb 1", emoji: "🏆" },
+    { title: "RJ Barrett's Return Game", date: "Dec 20", emoji: "💪" }
+  ];
+  
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide(prev => (prev + 1) % highlights.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4 overflow-hidden`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <Star className="w-3 h-3 text-yellow-400" /> Highlights
+        </h3>
+        <div className="flex gap-1">
+          {highlights.map((_, i) => (
+            <div key={i} className={`w-1.5 h-1.5 rounded-full ${i === currentSlide ? 'bg-raptors-red' : isDark ? 'bg-slate-600' : 'bg-slate-300'}`} />
+          ))}
+        </div>
+      </div>
+      
+      <div className="relative h-16">
+        {highlights.map((h, i) => (
+          <div
+            key={i}
+            className={`absolute inset-0 transition-all duration-500 ${
+              i === currentSlide ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full'
+            }`}
+          >
+            <div className="flex items-center gap-3">
+              <span className="text-3xl">{h.emoji}</span>
+              <div>
+                <div className={`text-sm font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>{h.title}</div>
+                <div className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{h.date}</div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Quick Stats Grid
+const QuickStatsGrid = ({ isDark = true }) => {
+  const stats = [
+    { label: 'FG%', value: '46.8', rank: 18 },
+    { label: '3P%', value: '34.3', rank: 22 },
+    { label: 'REB', value: '45.0', rank: 12 },
+    { label: 'AST', value: '26.2', rank: 14 },
+    { label: 'STL', value: '8.2', rank: 8 },
+    { label: 'BLK', value: '5.8', rank: 10 }
+  ];
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <BarChart3 className="w-3 h-3 text-cyan-400" /> Quick Stats
+        </h3>
+      </div>
+      
+      <div className="grid grid-cols-3 gap-2">
+        {stats.map((s, i) => (
+          <div 
+            key={i} 
+            className={`p-2 rounded-lg text-center stagger-item ${isDark ? 'bg-cmd-bg' : 'bg-light-card'}`}
+            style={{ animationDelay: `${i * 0.05}s` }}
+          >
+            <div className={`text-lg font-black ${s.rank <= 10 ? 'text-green-400' : s.rank <= 20 ? 'text-yellow-400' : 'text-red-400'}`}>
+              {s.value}
+            </div>
+            <div className={`text-[8px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{s.label}</div>
+            <div className={`text-[7px] ${isDark ? 'text-slate-600' : 'text-slate-400'}`}>#{s.rank}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 // ============================================================
 // PARTICLE SYSTEM - Floating basketballs and geometric shapes
 // ============================================================
@@ -9455,6 +9619,10 @@ function App() {
             {selectedGame?.status === 'upcoming' && <ScorePredictorWidget isDark={isDark} opponent={selectedGame.opponent} />}
             <TrophyRoom isDark={isDark} />
             <MiniHeatMap isDark={isDark} />
+            <CommunityBuzzWidget isDark={isDark} />
+            <MVPRaceWidget isDark={isDark} />
+            <SeasonHighlightWidget isDark={isDark} />
+            <QuickStatsGrid isDark={isDark} />
             <LiveViewersWidget isDark={isDark} />
             <ArenaWidget isDark={isDark} />
           </div>
@@ -9478,7 +9646,7 @@ function App() {
         <div className="w-full max-w-[98%] mx-auto px-4 flex items-center justify-between text-xs text-slate-500">
           <div className="flex items-center gap-2">
             <span className="font-bold text-raptors-red neon-flicker">RAPTORS INTEL</span>
-            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v9.0</span>
+            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v9.1</span>
           </div>
           <div className="hidden md:flex items-center gap-4">
             <span>Built for Raptors fans 🦖</span>
