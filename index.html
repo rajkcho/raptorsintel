@@ -5459,8 +5459,8 @@ const StandingsVisualizationWidget = ({ isDark = true }) => {
 // All-Star Tracker Widget
 const AllStarTrackerWidget = ({ isDark = true }) => {
   const candidates = [
-    { name: 'Scottie Barnes', votes: 524000, trend: 'up', pct: 72 },
-    { name: 'RJ Barrett', votes: 312000, trend: 'same', pct: 45 }
+    { name: 'Scottie Barnes', votes: 3241242, trend: 'up', pct: 85, note: '2026 All-Star Starter ⭐' },
+    { name: 'RJ Barrett', votes: 487000, trend: 'same', pct: 22, note: 'Strong season, missed cut' }
   ];
   
   return (
@@ -5476,8 +5476,9 @@ const AllStarTrackerWidget = ({ isDark = true }) => {
           <div key={i}>
             <div className="flex justify-between text-[10px] mb-1">
               <span className={`font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>{c.name}</span>
-              <span className={isDark ? 'text-slate-400' : 'text-slate-500'}>{(c.votes / 1000).toFixed(0)}K votes</span>
+              <span className={isDark ? 'text-slate-400' : 'text-slate-500'}>{c.votes >= 1000000 ? (c.votes / 1000000).toFixed(1) + 'M' : (c.votes / 1000).toFixed(0) + 'K'} votes</span>
             </div>
+            {c.note && <div className={`text-[9px] mb-1 ${isDark ? 'text-yellow-400/80' : 'text-yellow-600'}`}>{c.note}</div>}
             <div className={`h-2 rounded-full overflow-hidden ${isDark ? 'bg-cmd-border' : 'bg-light-border'}`}>
               <div 
                 className="h-full rounded-full progress-fill"
