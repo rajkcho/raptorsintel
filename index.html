@@ -13547,7 +13547,7 @@ function App() {
             </button>
           </div>
           {/* Slim Sidebar */}
-          <div id="sidebar-panel" className="col-span-12 lg:col-span-2 space-y-1 pb-4 mobile-sidebar-hidden lg:!block" role="complementary" aria-label="Sidebar widgets" style={{position:'sticky',top:'1rem',alignSelf:'start',maxHeight:'calc(100vh - 2rem)',overflowY:'auto'}}>
+          <div id="sidebar-panel" className="col-span-12 lg:col-span-2 space-y-1 pb-4 mobile-sidebar-hidden lg:!block" role="complementary" aria-label="Sidebar widgets" style={{alignSelf:'start'}}>
             <ScheduleList games={games} onSelectGame={setSelectedGame} selectedGameId={selectedGame?.id} isDark={isDark} />
             <GameCountdown game={selectedGame} isDark={isDark} gameDayMode={gameDayMode} />
             <QuickStatsBar isDark={isDark} />
