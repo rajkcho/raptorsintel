@@ -11899,6 +11899,209 @@ const SocialShareWidget = ({ isDark = true }) => {
   );
 };
 
+// ============================================================
+// HEAD-TO-HEAD WIDGET (Raptors vs Pistons - Division Rivals)
+// ============================================================
+const HeadToHeadWidget = ({ isDark = true }) => {
+  return (
+    <div className={`${isDark ? 'premium-glass' : 'bg-white border border-light-border shadow-lg'} rounded-2xl p-4`}>
+      <div className="flex items-center gap-2 mb-3">
+        <span className="text-lg">⚔️</span>
+        <h3 className={`text-xs font-bold uppercase ${isDark ? 'text-white' : 'text-slate-800'}`}>Historical Head-to-Head</h3>
+      </div>
+      <div className="flex items-center justify-between mb-3">
+        <div className="text-center flex-1">
+          <div className={`text-2xl font-black ${isDark ? 'text-white' : 'text-slate-800'}`}>🦖</div>
+          <div className={`text-xs font-bold ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>Raptors</div>
+        </div>
+        <div className={`text-xs font-bold px-3 py-1 rounded-full ${isDark ? 'bg-raptors-red/20 text-raptors-red' : 'bg-raptors-red/10 text-raptors-red'}`}>VS</div>
+        <div className="text-center flex-1">
+          <div className={`text-2xl font-black ${isDark ? 'text-white' : 'text-slate-800'}`}>🏀</div>
+          <div className={`text-xs font-bold ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>Pistons</div>
+        </div>
+      </div>
+      <div className={`text-center text-[10px] uppercase font-bold mb-2 ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Atlantic Division Rivals</div>
+      <div className={`${isDark ? 'bg-cmd-bg/50' : 'bg-slate-50'} rounded-lg p-3 mb-3`}>
+        <div className={`text-xs font-bold mb-2 ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>All-Time Series</div>
+        <div className="flex justify-between items-center">
+          <div className="text-center">
+            <div className={`text-lg font-black text-green-400`}>~85</div>
+            <div className={`text-[10px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>TOR Wins</div>
+          </div>
+          <div className={`text-[10px] ${isDark ? 'text-slate-600' : 'text-slate-400'}`}>—</div>
+          <div className="text-center">
+            <div className={`text-lg font-black text-red-400`}>~75</div>
+            <div className={`text-[10px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>DET Wins</div>
+          </div>
+        </div>
+      </div>
+      <div className={`${isDark ? 'bg-cmd-bg/50' : 'bg-slate-50'} rounded-lg p-3`}>
+        <div className={`text-xs font-bold mb-2 ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>Season Series</div>
+        <div className={`text-[11px] ${isDark ? 'text-slate-400' : 'text-slate-500'} text-center italic`}>
+          Season series data loads from <a href="https://www.espn.com/nba/team/schedule/_/name/tor" target="_blank" rel="noopener" className="text-raptors-red underline">ESPN</a>
+        </div>
+      </div>
+      <div className={`mt-2 text-[10px] text-center ${isDark ? 'text-slate-600' : 'text-slate-400'}`}>Both teams joined the Atlantic Division in 1995</div>
+    </div>
+  );
+};
+
+// ============================================================
+// PLAYER SPOTLIGHT CAROUSEL
+// ============================================================
+const PlayerSpotlightCarousel = ({ isDark = true }) => {
+  const [activeIdx, setActiveIdx] = useState(0);
+  const players = [
+    { name: 'Scottie Barnes', number: 4, pos: 'F', img: 'https://cdn.nba.com/headshots/nba/latest/1040x760/1630567.png', stats: { ppg: '19.6', rpg: '7.8', apg: '5.4' }, fact: '"All-Star starter in 2024 — youngest Raptor ever selected."' },
+    { name: 'RJ Barrett', number: 9, pos: 'G/F', img: 'https://cdn.nba.com/headshots/nba/latest/1040x760/1629628.png', stats: { ppg: '21.8', rpg: '6.4', apg: '4.1' }, fact: '"Canadian homecoming — Mississauga native traded to Toronto in 2023."' },
+    { name: 'Jakob Poeltl', number: 19, pos: 'C', img: 'https://cdn.nba.com/headshots/nba/latest/1040x760/1627751.png', stats: { ppg: '11.5', rpg: '8.6', apg: '2.5' }, fact: '"Returned to Toronto in 2023 — the prodigal big man."' },
+    { name: 'Immanuel Quickley', number: 5, pos: 'G', img: 'https://cdn.nba.com/headshots/nba/latest/1040x760/1630193.png', stats: { ppg: '18.6', rpg: '4.8', apg: '6.8' }, fact: '"Acquired with RJ Barrett — instant fan favourite."' },
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => setActiveIdx(i => (i + 1) % players.length), 5000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const p = players[activeIdx];
+  return (
+    <div className={`${isDark ? 'premium-glass' : 'bg-white border border-light-border shadow-lg'} rounded-2xl p-4 overflow-hidden`}>
+      <div className="flex items-center gap-2 mb-3">
+        <span className="text-lg">🌟</span>
+        <h3 className={`text-xs font-bold uppercase ${isDark ? 'text-white' : 'text-slate-800'}`}>Player Spotlight</h3>
+        <div className="ml-auto flex gap-1">
+          {players.map((_, i) => (
+            <button key={i} onClick={() => setActiveIdx(i)} className={`w-2 h-2 rounded-full transition-all ${i === activeIdx ? 'bg-raptors-red scale-125' : isDark ? 'bg-slate-600' : 'bg-slate-300'}`} aria-label={`Show player ${i+1}`} />
+          ))}
+        </div>
+      </div>
+      <div style={{ position: 'relative', minHeight: '180px' }}>
+        {players.map((pl, i) => (
+          <div key={pl.name} style={{ position: 'absolute', inset: 0, opacity: i === activeIdx ? 1 : 0, transition: 'opacity 0.6s ease', pointerEvents: i === activeIdx ? 'auto' : 'none' }}>
+            <div className="flex gap-3 items-center mb-3">
+              <img src={pl.img} alt={pl.name} className="w-16 h-16 rounded-full object-cover border-2 border-raptors-red" loading="lazy" style={{ objectPosition: 'top' }} />
+              <div>
+                <div className={`text-sm font-extrabold ${isDark ? 'text-white' : 'text-slate-800'}`}>{pl.name}</div>
+                <div className={`text-[10px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>#{pl.number} · {pl.pos}</div>
+              </div>
+            </div>
+            <div className="grid grid-cols-3 gap-2 mb-3">
+              {Object.entries(pl.stats).map(([k, v]) => (
+                <div key={k} className={`text-center ${isDark ? 'bg-cmd-bg/50' : 'bg-slate-50'} rounded-lg py-2`}>
+                  <div className={`text-sm font-black stat-counter ${isDark ? 'text-white' : 'text-slate-800'}`} data-target={parseFloat(v)}>{v}</div>
+                  <div className={`text-[10px] uppercase font-bold ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{k}</div>
+                </div>
+              ))}
+            </div>
+            <div className={`text-[11px] italic ${isDark ? 'text-slate-400' : 'text-slate-500'} leading-relaxed`}>{pl.fact}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// ============================================================
+// FAN ENGAGEMENT STATS WIDGET
+// ============================================================
+const FanEngagementWidget = ({ isDark = true }) => {
+  const [visits, setVisits] = useState(0);
+  const [sessionTime, setSessionTime] = useState(0);
+  const [predictions, setPredictions] = useState(0);
+
+  useEffect(() => {
+    // Visit counter
+    const v = parseInt(localStorage.getItem('raptors-intel-visits') || '0') + 1;
+    localStorage.setItem('raptors-intel-visits', v.toString());
+    setVisits(v);
+
+    // Predictions count
+    const pollKeys = Object.keys(localStorage).filter(k => k.startsWith('raptors-') && (k.includes('poll') || k.includes('predict') || k.includes('vote')));
+    setPredictions(pollKeys.length);
+
+    // Session timer
+    const start = Date.now();
+    const interval = setInterval(() => {
+      setSessionTime(Math.floor((Date.now() - start) / 60000));
+    }, 10000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const stats = [
+    { label: 'Visits', value: visits, icon: '👁️' },
+    { label: 'Minutes', value: sessionTime, icon: '⏱️' },
+    { label: 'Predictions', value: predictions, icon: '🎯' },
+  ];
+
+  return (
+    <div className={`${isDark ? 'premium-glass' : 'bg-white border border-light-border shadow-lg'} rounded-2xl p-4`}>
+      <div className="flex items-center gap-2 mb-3">
+        <span className="text-lg">📊</span>
+        <h3 className={`text-xs font-bold uppercase ${isDark ? 'text-white' : 'text-slate-800'}`}>Your Fan Stats</h3>
+      </div>
+      <div className="grid grid-cols-3 gap-2">
+        {stats.map(s => (
+          <div key={s.label} className={`text-center ${isDark ? 'bg-cmd-bg/50' : 'bg-slate-50'} rounded-lg py-2 px-1`}>
+            <div className="text-lg">{s.icon}</div>
+            <div className={`text-sm font-black ${isDark ? 'text-white' : 'text-slate-800'}`}>{s.value}</div>
+            <div className={`text-[10px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{s.label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// ============================================================
+// DYNAMIC TIME-BASED BACKGROUND (applied to body via useEffect in App)
+// ============================================================
+function applyDynamicBackground() {
+  const hour = new Date().getHours();
+  let gradient;
+  if (hour >= 6 && hour < 12) {
+    gradient = 'linear-gradient(135deg, #0a0e17 0%, #1a1408 30%, #0f0d06 60%, #0a0e17 100%)';
+  } else if (hour >= 12 && hour < 18) {
+    gradient = 'linear-gradient(135deg, #0a0e17 0%, #0e1219 40%, #0a0e17 100%)';
+  } else if (hour >= 18 && hour < 24) {
+    gradient = 'linear-gradient(135deg, #0a0e17 0%, #0d0a1a 35%, #110a20 65%, #0a0e17 100%)';
+  } else {
+    gradient = 'linear-gradient(135deg, #050810 0%, #070a12 40%, #050810 100%)';
+  }
+  document.body.style.background = gradient;
+  document.body.style.backgroundAttachment = 'fixed';
+  document.body.style.minHeight = '100vh';
+}
+
+// ============================================================
+// ANIMATED STATS COUNTER (Intersection Observer)
+// ============================================================
+function initAnimatedCounters() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !entry.target.dataset.counted) {
+        entry.target.dataset.counted = 'true';
+        const target = parseFloat(entry.target.dataset.target);
+        if (isNaN(target)) return;
+        const duration = 1200;
+        const start = performance.now();
+        const isDecimal = String(target).includes('.');
+        const decPlaces = isDecimal ? (String(target).split('.')[1] || '').length : 0;
+        const animate = (now) => {
+          const elapsed = now - start;
+          const progress = Math.min(elapsed / duration, 1);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          const current = eased * target;
+          entry.target.textContent = isDecimal ? current.toFixed(decPlaces) : Math.round(current).toString();
+          if (progress < 1) requestAnimationFrame(animate);
+        };
+        entry.target.textContent = isDecimal ? '0.' + '0'.repeat(decPlaces) : '0';
+        requestAnimationFrame(animate);
+      }
+    });
+  }, { threshold: 0.3 });
+  document.querySelectorAll('.stat-counter[data-target]').forEach(el => observer.observe(el));
+}
+
 function App() {
   const [games, setGames] = useState([]);
   const [selectedGame, setSelectedGame] = useState(null);
@@ -11992,6 +12195,18 @@ function App() {
     };
     init();
   }, []);
+
+  // Dynamic time-based background + animated counters
+  useEffect(() => {
+    if (isDark) applyDynamicBackground();
+    else {
+      document.body.style.background = '';
+      document.body.style.backgroundAttachment = '';
+    }
+    const counterTimer = setTimeout(initAnimatedCounters, 1500);
+    const counterObserver = setInterval(initAnimatedCounters, 3000);
+    return () => { clearTimeout(counterTimer); clearInterval(counterObserver); };
+  }, [isDark]);
 
   // Parallax scroll effect for hero/header
   useEffect(() => {
@@ -12251,6 +12466,9 @@ function App() {
           <div id="sidebar-panel" className="col-span-12 lg:col-span-2 h-full overflow-y-auto space-y-4 pb-4 mobile-sidebar-hidden lg:!block" role="complementary" aria-label="Sidebar widgets">
             <div id="sec-matchup"></div><div id="sec-standings"></div><div id="sec-draft"></div><div id="sec-trade"></div><div id="sec-analytics"></div><div id="sec-schedule"></div>
             <QuickStatsBar isDark={isDark} />
+            <PlayerSpotlightCarousel isDark={isDark} />
+            <HeadToHeadWidget isDark={isDark} />
+            <FanEngagementWidget isDark={isDark} />
             <SeasonProgress isDark={isDark} />
             <StreakCelebration streak={RAPTORS_STATS.streak} isDark={isDark} />
             <GameCountdown game={selectedGame} isDark={isDark} gameDayMode={gameDayMode} />
@@ -12410,7 +12628,7 @@ function App() {
         <div className="flex flex-col items-center gap-2">
           <div className="flex items-center gap-2 flex-wrap justify-center">
             <span className="font-bold text-raptors-red">RAPTORS INTEL</span>
-            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v11.0</span>
+            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v11.2</span>
           </div>
           <p style={{margin:0}}>Built with 🏀 by Raptors Intel • Data from ESPN • Not affiliated with the NBA</p>
           <button className="back-to-top" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>↑ Back to Top</button>
