@@ -1489,7 +1489,6 @@ const TEAM_SALARIES = {
       "1630567": { salary: 28372000, years: 4, expiry: 2029, type: "Rookie Max Extension" }, // Scottie Barnes
       "1629628": { salary: 25550000, years: 3, expiry: 2027, type: "Standard" }, // RJ Barrett
       "1630193": { salary: 26900000, years: 4, expiry: 2029, type: "Extension" }, // Immanuel Quickley
-      "1627742": { salary: 36000000, years: 3, expiry: 2028, type: "Max" }, // Brandon Ingram
       "1627751": { salary: 19500000, years: 2, expiry: 2027, type: "Standard" }, // Jakob Poeltl
       "1630572": { salary: 2200000, years: 2, expiry: 2027, type: "Standard" }, // Sandro Mamukelashvili
       "1642347": { salary: 3500000, years: 4, expiry: 2029, type: "Rookie" }, // Jamal Shead
@@ -1858,7 +1857,7 @@ const TEAM_SALARIES = {
     luxuryTaxBill: 0,
     roster: {
       "1629627": { salary: 36000000, years: 4, expiry: 2029, type: "Max Extension" }, // Zion Williamson
-      "1627742": { salary: 36000000, years: 3, expiry: 2028, type: "Max" }, // Brandon Ingram (traded to TOR)
+      "1627742": { salary: 36000000, years: 3, expiry: 2028, type: "Max" }, // Brandon Ingram
       "203468": { salary: 26600000, years: 2, expiry: 2027, type: "Standard" }, // CJ McCollum
       "1627749": { salary: 20000000, years: 3, expiry: 2028, type: "Trade" }, // Dejounte Murray
       "1630529": { salary: 12500000, years: 4, expiry: 2029, type: "Extension" }, // Herbert Jones
@@ -1975,9 +1974,8 @@ const HISTORICAL_H2H = {
 // Injury Report
 const INJURY_REPORT = {
   raptors: [
-    { name: "Immanuel Quickley", status: "GTD", reason: "Hip", updated: "Feb 9" },
-    { name: "Kelly Olynyk", status: "OUT", reason: "Back", updated: "Feb 8" },
-    { name: "Bruce Brown", status: "OUT", reason: "Knee", updated: "Feb 7" }
+    { name: "Jakob Poeltl", status: "OUT", reason: "Back", updated: "Feb 8" },
+    { name: "Collin Murray-Boyles", status: "GTD", reason: "Left thumb", updated: "Feb 8" }
   ],
   opponent: [] // Populated dynamically per opponent
 };
@@ -1996,14 +1994,14 @@ const TRADE_RUMORS = [
   { id: 1, status: 'Completed', teams: ['Raptors', 'Clippers'], players: { sent: ['—'], received: ['Chris Paul'] }, picks: 'None', source: 'ESPN', impact: 7, date: 'Feb 5', summary: 'CP3 acquired from the Clippers. Veteran leadership and playmaking for a team pushing for the playoffs at 32-22.' },
   { id: 2, status: 'Completed', teams: ['Raptors', 'Warriors'], players: { sent: ['2026 2nd Round Pick'], received: ['Trayce Jackson-Davis'] }, picks: '2026 2nd (TOR) to GSW', source: 'ESPN', impact: 5, date: 'Feb 5', summary: 'Added frontcourt depth from Golden State in exchange for a second-round pick. TJD provides energy off the bench.' },
   { id: 3, status: 'Rumored', teams: ['Raptors', 'Various'], players: { sent: ['Jakob Poeltl'], received: ['TBD'] }, picks: 'N/A', source: 'League Sources', impact: 6, summary: 'Poeltl was reportedly available at the deadline but Toronto ultimately held firm, keeping their core intact for the playoff push.' },
-  { id: 4, status: 'Rumored', teams: ['Raptors', 'Pelicans'], players: { sent: ['TBD'], received: ['Brandon Ingram'] }, picks: 'N/A', source: 'Marc Stein', impact: 8, summary: 'Raptors were linked to Ingram as New Orleans explored trading him. Price was reportedly too steep — multiple firsts + young player.' },
+  { id: 4, status: 'Dead', teams: ['Raptors', 'Pelicans'], players: { sent: ['TBD'], received: ['Brandon Ingram'] }, picks: 'N/A', source: 'Marc Stein', impact: 3, summary: 'Raptors were briefly linked to Ingram but never made a serious offer. Price was too steep and Toronto preferred to keep assets for the playoff push.' },
   { id: 5, status: 'Unlikely', teams: ['Raptors', 'Spurs'], players: { sent: ['Scottie Barnes'], received: ['Victor Wembanyama'] }, picks: 'N/A', source: 'Fan Twitter', impact: 1, summary: 'Pure fantasy. Neither side had any interest. Wemby and Scottie are both untouchable franchise cornerstones.' },
 ];
 
 const ADVANCED_STATS = {
-  raptors: { offRtg: 112.4, defRtg: 114.8, netRtg: -2.4, pace: 100.2, efgPct: 52.1, tsPct: 56.8, astPct: 61.2, rebPct: 50.4, tovPct: 13.1 },
+  raptors: { offRtg: 114.8, defRtg: 112.6, netRtg: 2.2, pace: 100.2, efgPct: 53.4, tsPct: 57.9, astPct: 62.8, rebPct: 51.2, tovPct: 12.8 },
   leagueAvg: { offRtg: 114.2, defRtg: 114.2, netRtg: 0.0, pace: 99.8, efgPct: 53.0, tsPct: 57.5, astPct: 60.5, rebPct: 50.0, tovPct: 13.5 },
-  rank: { offRtg: 20, defRtg: 22, netRtg: 21, pace: 12, efgPct: 19, tsPct: 18 }
+  rank: { offRtg: 10, defRtg: 8, netRtg: 9, pace: 12, efgPct: 11, tsPct: 10 }
 };
 
 const SCHEDULE_DATA = {
@@ -2079,15 +2077,6 @@ const RAPTORS_ROSTER = [
     last5: { ppg: 21.4, rpg: 5.2, apg: 8.0, fgPct: 48.5 },
     form: 'hot',
     analysis: "Primary playmaker and floor general. Lethal three-point shooting off the dribble."
-  },
-  {
-    id: "1627742", name: "Brandon Ingram", position: "SF", number: "3",
-    seasonStats: { ppg: 21.9, rpg: 5.9, apg: 3.7, spg: 0.8, bpg: 0.8, oreb: 0.6, dreb: 5.3, fgPct: 47.0, threePtPct: 35.8, ftPct: 83.6, plusMinus: 2.8, turnovers: 2.6 },
-    vsOpponentStats: { ppg: 23.5, rpg: 6.2, apg: 4.0, spg: 0.9, bpg: 0.9, oreb: 0.7, dreb: 5.5, fgPct: 48.5, threePtPct: 37.0, ftPct: 85.0, plusMinus: 3.5, turnovers: 2.3 },
-    advanced: { per: 19.5, ts: 57.0, usg: 27.0, ortg: 115.0, drtg: 112.0 },
-    last5: { ppg: 18.5, rpg: 5.0, apg: 3.2, fgPct: 41.0 },
-    form: 'cold',
-    analysis: "Leading scorer and midrange assassin."
   },
   {
     id: "1627751", name: "Jakob Poeltl", position: "C", number: "19",
@@ -2384,7 +2373,7 @@ const fetchLiveScoreboard = async () => {
 
 // Raptors Team Stats (will be updated from standings)
 // Raptors Team Stats (Feb 2026 - post All-Star)
-const RAPTORS_STATS = { wins: 32, losses: 25, ppg: 113.8, oppPpg: 112.5, streak: "W3", lastUpdate: "Feb 9, 2026", rpg: 44.2, apg: 26.8, fgPct: 47.5, threePtPct: 36.2 };
+const RAPTORS_STATS = { wins: 32, losses: 22, ppg: 114.8, oppPpg: 112.6, streak: "W3", lastUpdate: "Feb 9, 2026", rpg: 44.2, apg: 26.8, fgPct: 47.5, threePtPct: 36.2 };
 
 // ============================================================
 // DRAFT INTELLIGENCE DATA
@@ -2463,13 +2452,6 @@ const PLAYER_LAST_5_GAMES = {
     { date: "Feb 2", opp: "ORL", pts: 14, reb: 4, ast: 5, fgm: 5, fga: 14, min: 30, result: "L" },
     { date: "Jan 31", opp: "MIL", pts: 20, reb: 6, ast: 9, fgm: 8, fga: 18, min: 36, result: "L" },
     { date: "Jan 29", opp: "BKN", pts: 25, reb: 3, ast: 6, fgm: 10, fga: 20, min: 35, result: "W" },
-  ],
-  "Brandon Ingram": [
-    { date: "Feb 4", opp: "ATL", pts: 26, reb: 7, ast: 5, fgm: 10, fga: 20, min: 36, result: "W" },
-    { date: "Feb 2", opp: "ORL", pts: 30, reb: 5, ast: 3, fgm: 12, fga: 22, min: 38, result: "L" },
-    { date: "Jan 31", opp: "MIL", pts: 19, reb: 6, ast: 4, fgm: 8, fga: 19, min: 34, result: "L" },
-    { date: "Jan 29", opp: "BKN", pts: 24, reb: 4, ast: 6, fgm: 9, fga: 18, min: 35, result: "W" },
-    { date: "Jan 27", opp: "MIA", pts: 22, reb: 8, ast: 3, fgm: 9, fga: 21, min: 37, result: "W" },
   ],
   "Jakob Poeltl": [
     { date: "Feb 8", opp: "IND", pts: 14, reb: 12, ast: 3, fgm: 7, fga: 9, min: 32, result: "W" },
@@ -2963,8 +2945,8 @@ const analyzeGameMatchup = async (opponent) => {
     },
     intel: {
         injuries: [
-            { player: "Jakob Poeltl", status: "Out", details: "Back injury — no return timeline", team: "raptors" },
-            { player: "RJ Barrett", status: "Questionable", details: "Left ankle sprain — day-to-day", team: "raptors" },
+            { player: "Jakob Poeltl", status: "Out", details: "Back — ruled out Feb 8 vs Pacers", team: "raptors" },
+            { player: "Collin Murray-Boyles", status: "Questionable", details: "Left thumb — aggravated vs Pacers, day-to-day", team: "raptors" },
             { player: "Scottie Barnes", status: "Active", details: "Available", team: "raptors" },
             { player: "Chris Paul", status: "Active", details: "Acquired via trade — available", team: "raptors" },
             { player: "Trayce Jackson-Davis", status: "Active", details: "Acquired via trade — available", team: "raptors" },
@@ -7800,11 +7782,12 @@ const ScheduleResultsWidget = ({ isDark = true }) => {
 // Draft Pick Tracker Widget
 const DraftPickWidget = ({ isDark = true }) => {
   const pick = {
-    currentPosition: 12,
-    worstCase: 20,
-    bestCase: 6,
-    lottery: true,
-    ownsPick: true
+    currentPosition: 21,
+    worstCase: 25,
+    bestCase: 18,
+    lottery: false,
+    ownsPick: true,
+    note: "2026 1st — projected late 1st round"
   };
   
   return (
@@ -10837,6 +10820,7 @@ const DraftWatchWidget = ({ isDark = true }) => {
       <div className="flex items-center gap-2 mb-3">
         <Target className="w-4 h-4 text-raptors-red" />
         <h3 className={`text-xs font-bold uppercase ${isDark ? 'text-white' : 'text-slate-800'}`}>🎯 Draft Watch 2026</h3>
+        <div className={`text-[9px] ${isDark ? 'text-slate-400' : 'text-slate-500'} mt-1`}>Raptors own their 2026 1st — projected late 1st round (~21st pick). Top prospects for lottery teams:</div>
       </div>
       
       {/* Projected Pick Card */}
