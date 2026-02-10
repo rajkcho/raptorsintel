@@ -79,6 +79,11 @@
         background-color: #0a0e17;
         color: #e2e8f0;
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+      .light body, body.light-mode {
+        background-color: #f8fafc;
+        color: #1e293b;
       }
       ::-webkit-scrollbar {
         width: 6px;
@@ -93,6 +98,28 @@
       }
       ::-webkit-scrollbar-thumb:hover {
         background: #CE1141;
+      }
+      
+      /* Light mode overrides for hardcoded dark elements */
+      .light .glass-card, .light .premium-glass, .light .glass-premium {
+        background: rgba(255, 255, 255, 0.9) !important;
+        border-color: rgba(0, 0, 0, 0.08) !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06), 0 1px 0 rgba(0, 0, 0, 0.02) !important;
+      }
+      .light .glass-card:hover, .light .premium-glass:hover {
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1), 0 0 12px rgba(206, 17, 65, 0.05) !important;
+      }
+      .light .gradient-mesh { background: none; }
+      .light .noise-overlay::before { opacity: 0.01; }
+      .light .animated-border::after { background: #f8fafc; }
+      .light .skeleton-bar {
+        background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+        background-size: 200% 100%;
+      }
+      .light .polished-footer {
+        background: rgba(248, 250, 252, 0.9);
+        border-top-color: rgba(0, 0, 0, 0.06);
+        color: #64748b;
       }
       
       /* Accessibility */
@@ -2996,6 +3023,7 @@ const fetchLiveRoster = async (teamName) => {
     return roster;
   } catch (e) {
     console.warn('Roster fetch failed for', teamName, e);
+    window._raptorsApiFailure = true;
     return null;
   }
 };
@@ -3308,23 +3336,35 @@ const LoadingSkeleton = ({ lines = 3, className = '' }) => (
 class WidgetErrorBoundary extends Component {
   constructor(props) {
     super(props);
-    this.state = { hasError: false };
+    this.state = { hasError: false, retryCount: 0 };
   }
   static getDerivedStateFromError() { return { hasError: true }; }
   componentDidCatch(error, info) { console.error(`Widget error [${this.props.name || 'unknown'}]:`, error, info); }
+  handleRetry = () => {
+    this.setState(prev => ({ hasError: false, retryCount: prev.retryCount + 1 }));
+  };
   render() {
     if (this.state.hasError) {
       return (
-        <div className="glass-card p-4 text-center text-slate-500 text-sm">
+        <div className="glass-card p-4 text-center text-slate-500 text-sm" role="alert">
           <span className="text-lg">⚠️</span>
-          <p className="mt-1">{this.props.name || 'Widget'} failed to load</p>
-          <button onClick={() => this.setState({ hasError: false })} className="mt-2 text-xs text-raptors-red hover:underline">Retry</button>
+          <p className="mt-1 font-semibold">{this.props.name || 'Widget'} failed to load</p>
+          {this.state.retryCount > 0 && <p className="text-xs mt-1 text-yellow-500">Live data unavailable — showing cached data</p>}
+          <button onClick={this.handleRetry} className="mt-2 px-3 py-1 text-xs bg-raptors-red/20 text-raptors-red rounded-full hover:bg-raptors-red/30 transition-colors font-bold" aria-label={`Retry loading ${this.props.name || 'widget'}`}>🔄 Retry</button>
         </div>
       );
     }
     return this.props.children;
   }
 }
+
+// API Failure Banner Component
+const ApiFailureBanner = ({ message = "Live data unavailable — showing cached data", onRetry }) => (
+  <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg px-4 py-2 flex items-center justify-between gap-3 mb-3" role="alert">
+    <span className="text-yellow-400 text-xs font-medium flex items-center gap-2">⚠️ {message}</span>
+    {onRetry && <button onClick={onRetry} className="text-xs bg-yellow-500/20 text-yellow-400 px-2 py-1 rounded font-bold hover:bg-yellow-500/30 transition-colors" aria-label="Retry loading data">Retry</button>}
+  </div>
+);
 
 // ============================================================
 // PREMIUM DESIGN COMPONENTS
@@ -11983,7 +12023,8 @@ function App() {
   return (
     <ThemeContext.Provider value={{ isDark, toggle: toggleTheme }}>
     <a href="#main-content" className="skip-link">Skip to main content</a>
-    <div className={`min-h-screen ${themeClasses} font-sans selection:bg-raptors-red selection:text-white flex flex-col h-screen overflow-hidden transition-colors duration-300 ${isDark ? 'gradient-mesh' : ''} ${gameDayMode && isDark ? 'gameday-bg' : ''}`} role="application" aria-label="Raptors Intel Dashboard">
+    <div className="print-header"><h1>Raptors Intel Scouting Report</h1><p>{new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p></div>
+    <div className={`min-h-screen ${themeClasses} ${!isDark ? 'light' : ''} font-sans selection:bg-raptors-red selection:text-white flex flex-col h-screen overflow-hidden transition-colors duration-300 ${isDark ? 'gradient-mesh' : ''} ${gameDayMode && isDark ? 'gameday-bg' : ''}`} role="application" aria-label="Raptors Intel Dashboard">
       {/* Animated Background Elements */}
       {isDark && <ParticleSystem isDark={isDark} />}
       {isDark && <GradientOrbs isDark={isDark} />}
@@ -12066,12 +12107,18 @@ function App() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" onClick={() => setShowKeyboardHelp(false)}>
           <div className={`${isDark ? 'bg-cmd-surface border-cmd-border' : 'bg-white border-light-border'} border rounded-2xl p-6 max-w-sm w-full shadow-2xl`} onClick={e => e.stopPropagation()}>
             <h3 className={`text-lg font-bold ${isDark ? 'text-white' : 'text-slate-800'} mb-4 flex items-center gap-2`}>⌨️ Keyboard Shortcuts</h3>
-            <div className="space-y-3 text-sm">
-              <div className="flex justify-between"><span className={isDark ? 'text-slate-400' : 'text-slate-600'}>Toggle theme</span><kbd className={`px-2 py-1 rounded ${isDark ? 'bg-cmd-bg text-white' : 'bg-light-card text-slate-800'} font-mono text-xs`}>D</kbd></div>
-              <div className="flex justify-between"><span className={isDark ? 'text-slate-400' : 'text-slate-600'}>Next game</span><kbd className={`px-2 py-1 rounded ${isDark ? 'bg-cmd-bg text-white' : 'bg-light-card text-slate-800'} font-mono text-xs`}>↓</kbd></div>
-              <div className="flex justify-between"><span className={isDark ? 'text-slate-400' : 'text-slate-600'}>Previous game</span><kbd className={`px-2 py-1 rounded ${isDark ? 'bg-cmd-bg text-white' : 'bg-light-card text-slate-800'} font-mono text-xs`}>↑</kbd></div>
-              <div className="flex justify-between"><span className={isDark ? 'text-slate-400' : 'text-slate-600'}>Close modals</span><kbd className={`px-2 py-1 rounded ${isDark ? 'bg-cmd-bg text-white' : 'bg-light-card text-slate-800'} font-mono text-xs`}>Esc</kbd></div>
-              <div className="flex justify-between"><span className={isDark ? 'text-slate-400' : 'text-slate-600'}>Show shortcuts</span><kbd className={`px-2 py-1 rounded ${isDark ? 'bg-cmd-bg text-white' : 'bg-light-card text-slate-800'} font-mono text-xs`}>?</kbd></div>
+            <div className="space-y-2.5 text-sm">
+              {[
+                ['Jump to section', '1 – 7'],
+                ['Toggle dark/light mode', 'D'],
+                ['Print report', 'P'],
+                ['Next game', '↓'],
+                ['Previous game', '↑'],
+                ['Close modals', 'Esc'],
+                ['Show shortcuts', '?'],
+              ].map(([label, key]) => (
+                <div key={key} className="flex justify-between"><span className={isDark ? 'text-slate-400' : 'text-slate-600'}>{label}</span><kbd className={`px-2 py-1 rounded ${isDark ? 'bg-cmd-bg text-white' : 'bg-light-card text-slate-800'} font-mono text-xs`}>{key}</kbd></div>
+              ))}
             </div>
             <button onClick={() => setShowKeyboardHelp(false)} className="mt-4 w-full py-2 bg-raptors-red text-white rounded-lg font-bold hover:bg-raptors-red/90 transition-colors">Got it!</button>
           </div>
@@ -12128,10 +12175,12 @@ function App() {
       <FunFactsTicker isDark={isDark} />
       
       {/* Hero Stats Bar */}
+      <div id="sec-hero" role="region" aria-label="Hero stats">
       <HeroStatsBar isDark={isDark} />
       
       {/* Quick Stats Dashboard */}
       <QuickStatsDashboard isDark={isDark} />
+      </div>
 
       {/* Reminder Modal */}
       {showReminder && (
@@ -12153,7 +12202,7 @@ function App() {
           </div>
         </div>
       )}
-      <main id="main-content" className="flex-1 overflow-hidden w-full max-w-[98%] mx-auto px-4 py-4" role="main">
+      <main id="main-content" className="flex-1 overflow-hidden w-full max-w-[98%] mx-auto px-4 py-4" role="main" aria-label="Raptors Intel main content">
         <div className="grid grid-cols-12 gap-4 h-full">
           {/* Mobile sidebar toggle */}
           <div className="col-span-12 lg:hidden mb-2">
@@ -12166,7 +12215,8 @@ function App() {
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6"/></svg>
             </button>
           </div>
-          <div id="sidebar-panel" className="col-span-12 lg:col-span-2 h-full overflow-y-auto space-y-4 pb-4 mobile-sidebar-hidden lg:!block">
+          <div id="sidebar-panel" className="col-span-12 lg:col-span-2 h-full overflow-y-auto space-y-4 pb-4 mobile-sidebar-hidden lg:!block" role="complementary" aria-label="Sidebar widgets">
+            <div id="sec-matchup"></div><div id="sec-standings"></div><div id="sec-draft"></div><div id="sec-trade"></div><div id="sec-analytics"></div><div id="sec-schedule"></div>
             <QuickStatsBar isDark={isDark} />
             <SeasonProgress isDark={isDark} />
             <StreakCelebration streak={RAPTORS_STATS.streak} isDark={isDark} />
@@ -12327,7 +12377,7 @@ function App() {
         <div className="flex flex-col items-center gap-2">
           <div className="flex items-center gap-2 flex-wrap justify-center">
             <span className="font-bold text-raptors-red">RAPTORS INTEL</span>
-            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v10.7</span>
+            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v11.0</span>
           </div>
           <p style={{margin:0}}>Built with 🏀 by Raptors Intel • Data from ESPN • Not affiliated with the NBA</p>
           <button className="back-to-top" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>↑ Back to Top</button>
