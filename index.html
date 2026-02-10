@@ -4585,6 +4585,303 @@ const MiniHeatMap = ({ isDark = true }) => {
   );
 };
 
+// ============================================================
+// SHOT CHART VISUALIZATION - Half-court SVG with zone shooting %
+// ============================================================
+const ShotChartWidget = ({ isDark = true }) => {
+  const [hoveredZone, setHoveredZone] = useState(null);
+  const shotZones = [
+    { id: 'paint', label: 'Paint', pct: 62.4, makes: 412, attempts: 660, x: 150, y: 155, leagueAvg: 58.0 },
+    { id: 'midLeft', label: 'Mid-Range Left', pct: 41.8, makes: 89, attempts: 213, x: 60, y: 110, leagueAvg: 40.5 },
+    { id: 'midRight', label: 'Mid-Range Right', pct: 43.1, makes: 93, attempts: 216, x: 240, y: 110, leagueAvg: 40.5 },
+    { id: 'midTop', label: 'Mid-Range Top', pct: 42.0, makes: 76, attempts: 181, x: 150, y: 60, leagueAvg: 40.5 },
+    { id: 'corner3L', label: 'Corner 3 Left', pct: 38.7, makes: 65, attempts: 168, x: 18, y: 170, leagueAvg: 37.0 },
+    { id: 'corner3R', label: 'Corner 3 Right', pct: 37.9, makes: 61, attempts: 161, x: 282, y: 170, leagueAvg: 37.0 },
+    { id: 'three3L', label: '3PT Wing Left', pct: 35.8, makes: 98, attempts: 274, x: 35, y: 55, leagueAvg: 35.5 },
+    { id: 'three3R', label: '3PT Wing Right', pct: 36.4, makes: 102, attempts: 280, x: 265, y: 55, leagueAvg: 35.5 },
+    { id: 'threeTop', label: '3PT Top of Key', pct: 36.1, makes: 115, attempts: 318, x: 150, y: 15, leagueAvg: 35.5 }
+  ];
+
+  const getZoneColor = (pct, leagueAvg) => {
+    const diff = pct - leagueAvg;
+    if (diff >= 4) return { fill: 'rgba(239,68,68,0.85)', stroke: '#ef4444', label: '🔥' };
+    if (diff >= 1.5) return { fill: 'rgba(251,146,60,0.75)', stroke: '#fb923c', label: '🟠' };
+    if (diff >= -1.5) return { fill: 'rgba(250,204,21,0.65)', stroke: '#facc15', label: '🟡' };
+    if (diff >= -4) return { fill: 'rgba(96,165,250,0.7)', stroke: '#60a5fa', label: '🔵' };
+    return { fill: 'rgba(59,130,246,0.85)', stroke: '#3b82f6', label: '❄️' };
+  };
+
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <Target className="w-3.5 h-3.5 text-orange-400" /> Shot Chart
+        </h3>
+        <span className={`text-[8px] px-1.5 py-0.5 rounded ${isDark ? 'bg-cmd-bg text-slate-400' : 'bg-light-card text-slate-500'}`}>vs League Avg</span>
+      </div>
+
+      <div className="relative flex justify-center">
+        <svg viewBox="0 0 300 200" className="w-full max-w-[300px]" style={{ filter: isDark ? 'drop-shadow(0 0 8px rgba(206,17,65,0.1))' : 'none' }}>
+          {/* Half Court */}
+          <rect x="5" y="5" width="290" height="190" rx="2" fill={isDark ? '#111827' : '#f8fafc'} stroke={isDark ? '#334155' : '#cbd5e1'} strokeWidth="1.5"/>
+          {/* 3-point arc */}
+          <path d="M 30 195 L 30 135 Q 30 20 150 15 Q 270 20 270 135 L 270 195" fill="none" stroke={isDark ? '#334155' : '#cbd5e1'} strokeWidth="1" strokeDasharray="4,3"/>
+          {/* Paint / Key */}
+          <rect x="100" y="120" width="100" height="75" rx="1" fill="none" stroke={isDark ? '#475569' : '#94a3b8'} strokeWidth="1"/>
+          {/* Free throw circle */}
+          <circle cx="150" cy="120" r="30" fill="none" stroke={isDark ? '#475569' : '#94a3b8'} strokeWidth="0.8" strokeDasharray="3,3"/>
+          {/* Basket */}
+          <circle cx="150" cy="185" r="4" fill="none" stroke={isDark ? '#f97316' : '#ea580c'} strokeWidth="1.5"/>
+          <line x1="140" y1="192" x2="160" y2="192" stroke={isDark ? '#f97316' : '#ea580c'} strokeWidth="1.5"/>
+          {/* Restricted area */}
+          <path d="M 135 195 Q 135 170 150 168 Q 165 170 165 195" fill="none" stroke={isDark ? '#475569' : '#94a3b8'} strokeWidth="0.8"/>
+
+          {/* Shot zone circles */}
+          {shotZones.map((zone) => {
+            const colors = getZoneColor(zone.pct, zone.leagueAvg);
+            const isHovered = hoveredZone === zone.id;
+            const r = isHovered ? 18 : 14;
+            return (
+              <g key={zone.id} 
+                 onMouseEnter={() => setHoveredZone(zone.id)} 
+                 onMouseLeave={() => setHoveredZone(null)}
+                 style={{ cursor: 'pointer' }}>
+                <circle cx={zone.x} cy={zone.y} r={r} fill={colors.fill} stroke={colors.stroke} strokeWidth={isHovered ? 2 : 1} style={{ transition: 'r 0.2s, stroke-width 0.2s' }}/>
+                <text x={zone.x} y={zone.y + 1} textAnchor="middle" dominantBaseline="middle" fill="white" fontSize={isHovered ? "9" : "8"} fontWeight="800" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.8)' }}>
+                  {zone.pct}%
+                </text>
+              </g>
+            );
+          })}
+        </svg>
+      </div>
+
+      {/* Hover tooltip */}
+      {hoveredZone && (() => {
+        const zone = shotZones.find(z => z.id === hoveredZone);
+        const diff = (zone.pct - zone.leagueAvg).toFixed(1);
+        return (
+          <div className={`mt-2 p-2 rounded-lg text-center ${isDark ? 'bg-cmd-bg' : 'bg-light-card'} animate-fade-in`}>
+            <div className={`text-[10px] font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>{zone.label}</div>
+            <div className={`text-[9px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+              {zone.makes}/{zone.attempts} • 
+              <span className={parseFloat(diff) > 0 ? 'text-green-400' : 'text-red-400'}> {diff > 0 ? '+' : ''}{diff}% vs avg</span>
+            </div>
+          </div>
+        );
+      })()}
+
+      {/* Legend */}
+      <div className="flex items-center justify-center gap-3 mt-2">
+        {[{l:'Hot', c:'bg-red-500'},{l:'Warm', c:'bg-orange-400'},{l:'Avg', c:'bg-yellow-400'},{l:'Cool', c:'bg-blue-400'},{l:'Cold', c:'bg-blue-600'}].map((item,i) => (
+          <div key={i} className="flex items-center gap-1">
+            <div className={`w-2 h-2 rounded-full ${item.c}`}/>
+            <span className={`text-[7px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{item.l}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// ============================================================
+// PACE & EFFICIENCY SCATTER CHART - ORtg vs DRtg all teams
+// ============================================================
+const PaceEfficiencyWidget = ({ isDark = true }) => {
+  const [hoveredTeam, setHoveredTeam] = useState(null);
+  const teams = [
+    { abbr: 'BOS', ortg: 120.1, drtg: 110.2, color: '#007A33' },
+    { abbr: 'OKC', ortg: 118.5, drtg: 108.8, color: '#007AC1' },
+    { abbr: 'CLE', ortg: 116.8, drtg: 107.5, color: '#860038' },
+    { abbr: 'DEN', ortg: 117.2, drtg: 112.5, color: '#0E2240' },
+    { abbr: 'NYK', ortg: 115.8, drtg: 111.0, color: '#006BB6' },
+    { abbr: 'MIL', ortg: 116.0, drtg: 112.8, color: '#00471B' },
+    { abbr: 'TOR', ortg: 114.2, drtg: 111.8, color: '#CE1141' },
+    { abbr: 'MIA', ortg: 112.5, drtg: 110.5, color: '#98002E' },
+    { abbr: 'LAL', ortg: 113.8, drtg: 113.2, color: '#552583' },
+    { abbr: 'PHX', ortg: 115.0, drtg: 114.0, color: '#1D1160' },
+    { abbr: 'MIN', ortg: 112.0, drtg: 108.5, color: '#0C2340' },
+    { abbr: 'DAL', ortg: 116.5, drtg: 113.8, color: '#00538C' },
+    { abbr: 'PHI', ortg: 113.0, drtg: 112.0, color: '#006BB6' },
+    { abbr: 'IND', ortg: 117.5, drtg: 115.5, color: '#002D62' },
+    { abbr: 'SAC', ortg: 114.5, drtg: 114.8, color: '#5A2D81' },
+    { abbr: 'GSW', ortg: 113.2, drtg: 113.0, color: '#1D428A' },
+    { abbr: 'HOU', ortg: 112.8, drtg: 111.5, color: '#CE1141' },
+    { abbr: 'MEM', ortg: 111.5, drtg: 112.8, color: '#5D76A9' },
+    { abbr: 'ATL', ortg: 114.8, drtg: 116.0, color: '#E03A3E' },
+    { abbr: 'CHI', ortg: 110.5, drtg: 113.5, color: '#CE1141' },
+    { abbr: 'ORL', ortg: 110.8, drtg: 109.8, color: '#0077C0' },
+    { abbr: 'NOP', ortg: 111.0, drtg: 114.5, color: '#0C2340' },
+    { abbr: 'SAS', ortg: 109.5, drtg: 115.8, color: '#C4CED4' },
+    { abbr: 'POR', ortg: 108.8, drtg: 116.5, color: '#E03A3E' },
+    { abbr: 'CHA', ortg: 108.0, drtg: 117.0, color: '#1D1160' },
+    { abbr: 'DET', ortg: 107.5, drtg: 116.0, color: '#C8102E' },
+    { abbr: 'WAS', ortg: 107.0, drtg: 118.5, color: '#002B5C' },
+    { abbr: 'UTA', ortg: 109.0, drtg: 115.0, color: '#002B5C' },
+    { abbr: 'BKN', ortg: 108.5, drtg: 116.8, color: '#000000' },
+    { abbr: 'LAC', ortg: 112.2, drtg: 112.5, color: '#C8102E' }
+  ];
+
+  // Chart dimensions
+  const W = 280, H = 200, pad = 28;
+  const ortgMin = 105, ortgMax = 122, drtgMin = 106, drtgMax = 120;
+  const midOrtg = (ortgMin + ortgMax) / 2, midDrtg = (drtgMin + drtgMax) / 2;
+  const scaleX = (ortg) => pad + ((ortg - ortgMin) / (ortgMax - ortgMin)) * (W - pad * 2);
+  const scaleY = (drtg) => pad + ((drtg - drtgMin) / (drtgMax - drtgMin)) * (H - pad * 2);
+
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-2">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <BarChart3 className="w-3.5 h-3.5 text-cyan-400" /> Pace & Efficiency
+        </h3>
+        <span className={`text-[8px] px-1.5 py-0.5 rounded ${isDark ? 'bg-cmd-bg text-slate-400' : 'bg-light-card text-slate-500'}`}>ORtg vs DRtg</span>
+      </div>
+
+      <div className="relative flex justify-center">
+        <svg viewBox={`0 0 ${W} ${H}`} className="w-full">
+          {/* Quadrant backgrounds */}
+          <rect x={scaleX(midOrtg)} y={pad} width={scaleX(ortgMax)-scaleX(midOrtg)} height={scaleY(midDrtg)-pad} fill={isDark ? 'rgba(34,197,94,0.06)' : 'rgba(34,197,94,0.08)'} />
+          <rect x={pad} y={pad} width={scaleX(midOrtg)-pad} height={scaleY(midDrtg)-pad} fill={isDark ? 'rgba(96,165,250,0.05)' : 'rgba(96,165,250,0.06)'} />
+          <rect x={scaleX(midOrtg)} y={scaleY(midDrtg)} width={scaleX(ortgMax)-scaleX(midOrtg)} height={scaleY(drtgMax)-scaleY(midDrtg)} fill={isDark ? 'rgba(251,146,60,0.05)' : 'rgba(251,146,60,0.06)'} />
+          <rect x={pad} y={scaleY(midDrtg)} width={scaleX(midOrtg)-pad} height={scaleY(drtgMax)-scaleY(midDrtg)} fill={isDark ? 'rgba(239,68,68,0.05)' : 'rgba(239,68,68,0.06)'} />
+
+          {/* Quadrant labels */}
+          <text x={scaleX(ortgMax)-4} y={pad+10} textAnchor="end" fontSize="6" fill={isDark ? '#4ade80' : '#16a34a'} fontWeight="700">ELITE</text>
+          <text x={pad+4} y={pad+10} textAnchor="start" fontSize="6" fill={isDark ? '#60a5fa' : '#2563eb'} fontWeight="700">DEF-FIRST</text>
+          <text x={scaleX(ortgMax)-4} y={scaleY(drtgMax)-4} textAnchor="end" fontSize="6" fill={isDark ? '#fb923c' : '#ea580c'} fontWeight="700">OFF-FIRST</text>
+          <text x={pad+4} y={scaleY(drtgMax)-4} textAnchor="start" fontSize="6" fill={isDark ? '#f87171' : '#dc2626'} fontWeight="700">BELOW AVG</text>
+
+          {/* Midlines */}
+          <line x1={scaleX(midOrtg)} y1={pad} x2={scaleX(midOrtg)} y2={scaleY(drtgMax)} stroke={isDark ? '#334155' : '#cbd5e1'} strokeWidth="0.5" strokeDasharray="3,3"/>
+          <line x1={pad} y1={scaleY(midDrtg)} x2={scaleX(ortgMax)} y2={scaleY(midDrtg)} stroke={isDark ? '#334155' : '#cbd5e1'} strokeWidth="0.5" strokeDasharray="3,3"/>
+
+          {/* Axes labels */}
+          <text x={W/2} y={H-2} textAnchor="middle" fontSize="6" fill={isDark ? '#64748b' : '#94a3b8'}>Offensive Rating →</text>
+          <text x={6} y={H/2} textAnchor="middle" fontSize="6" fill={isDark ? '#64748b' : '#94a3b8'} transform={`rotate(-90, 6, ${H/2})`}>← Better Defense</text>
+
+          {/* Team dots */}
+          {teams.map((t) => {
+            const isTor = t.abbr === 'TOR';
+            const isHov = hoveredTeam === t.abbr;
+            return (
+              <g key={t.abbr} onMouseEnter={() => setHoveredTeam(t.abbr)} onMouseLeave={() => setHoveredTeam(null)} style={{ cursor: 'pointer' }}>
+                {isTor && <circle cx={scaleX(t.ortg)} cy={scaleY(t.drtg)} r="10" fill="none" stroke="#CE1141" strokeWidth="1" strokeDasharray="2,2" opacity="0.5" style={{ animation: 'pulse-ring-expand 2s ease-out infinite' }}/>}
+                <circle cx={scaleX(t.ortg)} cy={scaleY(t.drtg)} r={isTor ? 5 : isHov ? 4.5 : 3} fill={isTor ? '#CE1141' : (t.color || (isDark ? '#64748b' : '#94a3b8'))} stroke={isTor ? '#fff' : 'none'} strokeWidth={isTor ? 1 : 0} opacity={isTor ? 1 : isHov ? 1 : 0.6}/>
+                {(isTor || isHov) && <text x={scaleX(t.ortg)} y={scaleY(t.drtg) - (isTor ? 8 : 7)} textAnchor="middle" fontSize={isTor ? "7" : "6"} fill={isTor ? '#CE1141' : (isDark ? '#e2e8f0' : '#334155')} fontWeight="800">{t.abbr}</text>}
+              </g>
+            );
+          })}
+        </svg>
+      </div>
+
+      {hoveredTeam && (() => {
+        const t = teams.find(x => x.abbr === hoveredTeam);
+        return (
+          <div className={`mt-1 p-1.5 rounded text-center ${isDark ? 'bg-cmd-bg' : 'bg-light-card'} animate-fade-in`}>
+            <span className={`text-[10px] font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>{t.abbr}</span>
+            <span className={`text-[9px] ${isDark ? 'text-slate-400' : 'text-slate-500'} ml-2`}>ORtg: {t.ortg} | DRtg: {t.drtg} | Net: {(t.ortg - t.drtg).toFixed(1)}</span>
+          </div>
+        );
+      })()}
+    </div>
+  );
+};
+
+// ============================================================
+// INTERACTIVE ROSTER GRID - Formation-style layout with depth chart
+// ============================================================
+const InteractiveRosterGrid = ({ isDark = true }) => {
+  const [selectedPos, setSelectedPos] = useState(null);
+  const depthChart = {
+    PG: { starters: ['Immanuel Quickley'], bench: ['Davion Mitchell', 'Jamal Shead'] },
+    SG: { starters: ['Gradey Dick'], bench: ['Bruce Brown', 'Ochai Agbaji'] },
+    SF: { starters: ['RJ Barrett'], bench: ['Kelly Olynyk', 'Garrett Temple'] },
+    PF: { starters: ['Scottie Barnes'], bench: ['Chris Boucher', 'Collin Murray-Boyles'] },
+    C:  { starters: ['Jakob Poeltl'], bench: ['Kelly Olynyk', 'Bruno Fernando'] }
+  };
+  const posStats = {
+    PG: { ppg: 15.2, apg: 6.8 }, SG: { ppg: 14.8, apg: 2.5 },
+    SF: { ppg: 21.3, apg: 4.2 }, PF: { ppg: 22.8, apg: 6.1 },
+    C:  { ppg: 14.5, rpg: 10.8 }
+  };
+  // Formation positions (basketball court style - PG at top, C near basket)
+  const positions = [
+    { pos: 'PG', x: '50%', y: '12%' },
+    { pos: 'SG', x: '80%', y: '30%' },
+    { pos: 'SF', x: '20%', y: '30%' },
+    { pos: 'PF', x: '30%', y: '58%' },
+    { pos: 'C',  x: '70%', y: '58%' }
+  ];
+  const posColors = { PG: '#60a5fa', SG: '#f472b6', SF: '#4ade80', PF: '#fb923c', C: '#a78bfa' };
+
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <Users className="w-3.5 h-3.5 text-raptors-red" /> Roster Formation
+        </h3>
+        {selectedPos && <button onClick={() => setSelectedPos(null)} className="text-[8px] text-raptors-red font-bold">✕ CLOSE</button>}
+      </div>
+
+      {!selectedPos ? (
+        <div className="relative" style={{ height: '180px' }}>
+          {/* Mini court background */}
+          <div className={`absolute inset-0 rounded-lg ${isDark ? 'bg-cmd-bg' : 'bg-light-card'}`} style={{ opacity: 0.5 }}>
+            <svg viewBox="0 0 200 150" className="w-full h-full" preserveAspectRatio="xMidYMid meet">
+              <ellipse cx="100" cy="130" rx="40" ry="20" fill="none" stroke={isDark ? '#1e293b' : '#e2e8f0'} strokeWidth="1"/>
+              <rect x="60" y="100" width="80" height="50" fill="none" stroke={isDark ? '#1e293b' : '#e2e8f0'} strokeWidth="0.8"/>
+              <path d="M 20 150 Q 20 10 100 5 Q 180 10 180 150" fill="none" stroke={isDark ? '#1e293b' : '#e2e8f0'} strokeWidth="0.6" strokeDasharray="4,4"/>
+            </svg>
+          </div>
+
+          {positions.map(({ pos, x, y }) => (
+            <button key={pos} onClick={() => setSelectedPos(pos)} className="absolute transform -translate-x-1/2 -translate-y-1/2 group" style={{ left: x, top: y }}>
+              <div className={`w-11 h-11 rounded-full flex flex-col items-center justify-center border-2 transition-all group-hover:scale-110 ${isDark ? 'bg-cmd-surface' : 'bg-white'}`}
+                   style={{ borderColor: posColors[pos], boxShadow: `0 0 12px ${posColors[pos]}33` }}>
+                <span className="text-[9px] font-black" style={{ color: posColors[pos] }}>{pos}</span>
+                <span className={`text-[7px] font-medium ${isDark ? 'text-slate-400' : 'text-slate-500'} truncate max-w-[36px]`}>{depthChart[pos].starters[0].split(' ').pop()}</span>
+              </div>
+            </button>
+          ))}
+        </div>
+      ) : (
+        <div className="animate-fade-in">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-black text-white" style={{ background: posColors[selectedPos] }}>{selectedPos}</div>
+            <span className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>Depth Chart</span>
+          </div>
+          {/* Starter */}
+          <div className={`p-2.5 rounded-lg mb-1.5 border ${isDark ? 'bg-cmd-bg border-cmd-border' : 'bg-light-card border-light-border'}`}>
+            <div className="flex items-center justify-between">
+              <div>
+                <span className={`text-[8px] font-bold uppercase px-1 py-0.5 rounded ${isDark ? 'bg-green-500/20 text-green-400' : 'bg-green-100 text-green-700'}`}>STARTER</span>
+                <div className={`text-xs font-bold mt-1 ${isDark ? 'text-white' : 'text-slate-800'}`}>{depthChart[selectedPos].starters[0]}</div>
+              </div>
+              <div className="text-right">
+                <div className={`text-sm font-black ${isDark ? 'text-white' : 'text-slate-800'}`}>{posStats[selectedPos].ppg} <span className="text-[8px] font-normal text-slate-500">PPG</span></div>
+                <div className={`text-[9px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{posStats[selectedPos].apg ? posStats[selectedPos].apg + ' APG' : posStats[selectedPos].rpg + ' RPG'}</div>
+              </div>
+            </div>
+          </div>
+          {/* Bench */}
+          {depthChart[selectedPos].bench.map((player, i) => (
+            <div key={i} className={`p-2 rounded-lg mb-1 ${isDark ? 'bg-cmd-bg/50' : 'bg-light-card/50'}`}>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className={`text-[8px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>#{i + 2}</span>
+                  <span className={`text-[10px] font-medium ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>{player}</span>
+                </div>
+                <span className={`text-[8px] px-1 py-0.5 rounded ${isDark ? 'bg-slate-800 text-slate-400' : 'bg-slate-100 text-slate-500'}`}>BENCH</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
 // Live Pulse Animation
 const LivePulse = ({ label = 'LIVE', isDark = true }) => (
   <div className="flex items-center gap-2">
@@ -9386,28 +9683,56 @@ const RecordBreakdownWidget = ({ isDark = true }) => {
 // Lineup Combos Widget
 const LineupCombosWidget = ({ isDark = true }) => {
   const lineups = [
-    { players: 'Barnes-Barrett-IQ-Dick-Poeltl', mins: 124, netRtg: 8.2 },
-    { players: 'Barnes-Barrett-IQ-Boucher-Poeltl', mins: 86, netRtg: -2.1 },
-    { players: 'Barnes-Barrett-Olynyk-Dick-IQ', mins: 72, netRtg: 5.5 }
+    { players: 'Barnes • Barrett • Quickley • Dick • Poeltl', tag: 'Starting 5', mins: 248, netRtg: 8.2, ortg: 118.5, drtg: 110.3 },
+    { players: 'Barnes • Barrett • Quickley • Brown • Poeltl', tag: 'Alt Start', mins: 156, netRtg: 5.5, ortg: 116.0, drtg: 110.5 },
+    { players: 'Mitchell • Brown • Olynyk • Boucher • Fernando', tag: 'Bench Mob', mins: 112, netRtg: -1.8, ortg: 108.2, drtg: 110.0 },
+    { players: 'Barnes • Barrett • Dick • Olynyk • Quickley', tag: 'Small Ball', mins: 98, netRtg: 6.8, ortg: 119.0, drtg: 112.2 },
+    { players: 'Quickley • Dick • Brown • Boucher • Poeltl', tag: 'Closing', mins: 72, netRtg: 3.4, ortg: 114.5, drtg: 111.1 }
   ];
-  
+  const maxAbs = Math.max(...lineups.map(l => Math.abs(l.netRtg)));
+  const [expanded, setExpanded] = useState(null);
+
   return (
     <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
       <div className="flex items-center justify-between mb-3">
         <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
-          <Users className="w-3 h-3 text-indigo-400" /> Top Lineups
+          <Users className="w-3.5 h-3.5 text-indigo-400" /> Lineup Combinations
         </h3>
+        <span className={`text-[8px] px-1.5 py-0.5 rounded ${isDark ? 'bg-cmd-bg text-slate-400' : 'bg-light-card text-slate-500'}`}>Net Rtg</span>
       </div>
       
-      <div className="space-y-2">
+      <div className="space-y-1.5">
         {lineups.map((l, i) => (
-          <div key={i} className={`p-2 rounded-lg ${isDark ? 'bg-cmd-bg' : 'bg-light-card'}`}>
-            <div className={`text-[9px] ${isDark ? 'text-slate-300' : 'text-slate-600'} mb-1 truncate`}>{l.players}</div>
-            <div className="flex justify-between text-[10px]">
-              <span className={isDark ? 'text-slate-500' : 'text-slate-400'}>{l.mins} min</span>
-              <span className={`font-bold ${l.netRtg > 0 ? 'text-green-400' : 'text-red-400'}`}>
-                {l.netRtg > 0 ? '+' : ''}{l.netRtg}
-              </span>
+          <div key={i} className={`rounded-lg overflow-hidden cursor-pointer transition-all ${isDark ? 'hover:bg-cmd-bg/80' : 'hover:bg-light-card/80'}`} onClick={() => setExpanded(expanded === i ? null : i)}>
+            <div className={`p-2 ${isDark ? 'bg-cmd-bg' : 'bg-light-card'}`}>
+              <div className="flex items-center justify-between mb-1">
+                <div className="flex items-center gap-1.5">
+                  <span className={`text-[8px] font-bold px-1 py-0.5 rounded ${isDark ? 'bg-indigo-500/20 text-indigo-400' : 'bg-indigo-100 text-indigo-600'}`}>{l.tag}</span>
+                  <span className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{l.mins} min</span>
+                </div>
+                <span className={`text-xs font-black ${l.netRtg > 0 ? 'text-green-400' : 'text-red-400'}`}>
+                  {l.netRtg > 0 ? '+' : ''}{l.netRtg}
+                </span>
+              </div>
+              {/* Horizontal bar */}
+              <div className="relative h-2.5 rounded-full overflow-hidden" style={{ background: isDark ? '#1e293b' : '#e2e8f0' }}>
+                <div className="absolute top-0 h-full rounded-full transition-all duration-700"
+                     style={{
+                       width: `${(Math.abs(l.netRtg) / maxAbs) * 50}%`,
+                       left: l.netRtg >= 0 ? '50%' : `${50 - (Math.abs(l.netRtg) / maxAbs) * 50}%`,
+                       background: l.netRtg >= 0 ? 'linear-gradient(90deg, #22c55e, #4ade80)' : 'linear-gradient(90deg, #f87171, #ef4444)'
+                     }}/>
+                <div className="absolute top-0 left-1/2 w-px h-full" style={{ background: isDark ? '#475569' : '#94a3b8' }}/>
+              </div>
+              {expanded === i && (
+                <div className="mt-2 pt-2 border-t animate-fade-in" style={{ borderColor: isDark ? '#1e293b' : '#e2e8f0' }}>
+                  <div className={`text-[8px] ${isDark ? 'text-slate-400' : 'text-slate-500'} mb-1`}>{l.players}</div>
+                  <div className="flex gap-3">
+                    <span className={`text-[9px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>ORtg: <b className={isDark ? 'text-white' : 'text-slate-800'}>{l.ortg}</b></span>
+                    <span className={`text-[9px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>DRtg: <b className={isDark ? 'text-white' : 'text-slate-800'}>{l.drtg}</b></span>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         ))}
@@ -12987,7 +13312,10 @@ function App() {
             <FanPredictionWidget isDark={isDark} />
             {selectedGame?.status === 'upcoming' && <ScorePredictorWidget isDark={isDark} opponent={selectedGame.opponent} />}
             <TrophyRoom isDark={isDark} />
+            <ShotChartWidget isDark={isDark} />
             <MiniHeatMap isDark={isDark} />
+            <PaceEfficiencyWidget isDark={isDark} />
+            <InteractiveRosterGrid isDark={isDark} />
             <CommunityBuzzWidget isDark={isDark} />
             <MVPRaceWidget isDark={isDark} />
             <SeasonHighlightWidget isDark={isDark} />
@@ -13027,7 +13355,7 @@ function App() {
         <div className="flex flex-col items-center gap-2">
           <div className="flex items-center gap-2 flex-wrap justify-center">
             <span className="font-bold text-raptors-red">RAPTORS INTEL</span>
-            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v11.3</span>
+            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v11.4</span>
           </div>
           <p style={{margin:0}}>Built with 🏀 by Raptors Intel • Data from ESPN • Not affiliated with the NBA</p>
           <p style={{margin:0, fontSize:'0.65rem', opacity:0.6}}>Last Updated: {new Date().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}</p>
