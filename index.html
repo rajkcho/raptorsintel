@@ -13400,7 +13400,7 @@ function App() {
         </div>
       )}
       <main id="main-content" className="flex-1 w-full max-w-[98%] mx-auto px-4 py-4" role="main" aria-label="Raptors Intel main content">
-        <div className="grid grid-cols-12 gap-6">
+        <div className="grid grid-cols-12 gap-3">
           {/* Mobile sidebar toggle */}
           <div className="col-span-12 lg:hidden mb-2">
             <button 
@@ -13413,7 +13413,7 @@ function App() {
             </button>
           </div>
           {/* Slim Sidebar */}
-          <div id="sidebar-panel" className="col-span-12 lg:col-span-2 space-y-4 pb-4 mobile-sidebar-hidden lg:!block" role="complementary" aria-label="Sidebar widgets" style={{position:'sticky',top:'1rem',alignSelf:'start'}}>
+          <div id="sidebar-panel" className="col-span-12 lg:col-span-2 space-y-3 pb-4 mobile-sidebar-hidden lg:!block" role="complementary" aria-label="Sidebar widgets" style={{position:'sticky',top:'1rem',alignSelf:'start'}}>
             <ScheduleList games={games} onSelectGame={setSelectedGame} selectedGameId={selectedGame?.id} isDark={isDark} />
             <RecentResultsWidget games={games} isDark={isDark} />
             <GameCountdown game={selectedGame} isDark={isDark} gameDayMode={gameDayMode} />
@@ -13450,24 +13450,28 @@ function App() {
               });
               const toggleSection = (id) => setMobileSectionCollapsed(prev => ({...prev, [id]: !prev[id]}));
               const SectionHeader = ({ id, icon, title }) => (
-                <div id={id} className="scroll-mt-24 pt-8 pb-4">
-                  <button onClick={() => toggleSection(id)} className={`w-full flex items-center gap-3 group`}>
-                    <span className="text-2xl">{icon}</span>
-                    <h2 className={`text-xl font-bold uppercase tracking-wider ${isDark ? 'text-white' : 'text-slate-800'}`}>{title}</h2>
+                <div id={id} className="scroll-mt-20 pt-3 pb-1">
+                  <button onClick={() => toggleSection(id)} className={`w-full flex items-center gap-2 group`}>
+                    <span className="text-lg">{icon}</span>
+                    <h2 className={`text-sm font-bold uppercase tracking-wider ${isDark ? 'text-white' : 'text-slate-800'}`}>{title}</h2>
                     <div className={`flex-1 h-px ${isDark ? 'bg-cmd-border' : 'bg-light-border'}`}></div>
                     <span className={`lg:hidden text-xs ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{mobileSectionCollapsed[id] ? '▶' : '▼'}</span>
                   </button>
                 </div>
               );
-              const SectionBody = ({ id, children }) => (
+              const SectionBody = ({ id, children }) => {
+                const filtered = React.Children.toArray(children).filter(Boolean);
+                if (filtered.length === 0) return null;
+                return (
                 <div className={`${mobileSectionCollapsed[id] ? 'hidden lg:block' : ''}`}>
-                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                    {children}
+                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+                    {filtered}
                   </div>
                 </div>
-              );
+                );
+              };
               return (<>
-              <div className={`sticky top-0 z-30 mb-4 rounded-xl ${isDark ? 'bg-cmd-surface/95 border border-cmd-border' : 'bg-white/95 border border-light-border shadow-sm'} backdrop-blur-md`}>
+              <div className={`sticky top-0 z-30 mb-2 rounded-xl ${isDark ? 'bg-cmd-surface/95 border border-cmd-border' : 'bg-white/95 border border-light-border shadow-sm'} backdrop-blur-md`}>
                 <div className="flex overflow-x-auto gap-1 p-2 custom-scrollbar" style={{scrollbarWidth:'thin'}}>
                   {jumpSections.map(s => (
                     <button key={s.id} onClick={() => { const el = document.getElementById(s.id); if(el) el.scrollIntoView({behavior:'smooth'}); }}
@@ -13479,7 +13483,7 @@ function App() {
                 </div>
               </div>
               {/* Matchup Analyzer area */}
-              <div className="mb-6">
+              <div className="mb-3">
             {loadingSchedule ? (
               <div className={`h-64 flex flex-col items-center justify-center ${isDark ? 'glass-card' : 'bg-white border border-light-border rounded-2xl shadow-lg'}`}>
                 <BasketballLoader size={60} />
@@ -13682,7 +13686,7 @@ function App() {
         <div className="flex flex-col items-center gap-2">
           <div className="flex items-center gap-2 flex-wrap justify-center">
             <span className="font-bold text-raptors-red">RAPTORS INTEL</span>
-            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v12.0</span>
+            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v12.1</span>
           </div>
           <p style={{margin:0}}>Built with 🏀 by Raptors Intel • Data from ESPN • Not affiliated with the NBA</p>
           <p style={{margin:0, fontSize:'0.65rem', opacity:0.6}}>Last Updated: {new Date().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}</p>
