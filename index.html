@@ -828,6 +828,18 @@
           0 8px 32px rgba(0,0,0,0.4),
           inset 0 1px 0 rgba(255,255,255,0.05),
           0 0 0 1px rgba(206,17,65,0.1);
+        transform-style: preserve-3d;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .premium-glass:hover {
+        transform: perspective(1000px) rotateX(1deg) rotateY(-1deg) translateY(-3px);
+        box-shadow: 
+          0 16px 40px rgba(0, 0, 0, 0.4),
+          0 0 30px rgba(206, 17, 65, 0.08);
+      }
+      /* Unify glass-card with card-3d hover */
+      .glass-card {
+        transform-style: preserve-3d;
       }
       
       /* Cyberpunk scan line */
@@ -880,6 +892,146 @@
           0 0 20px rgba(206, 17, 65, 0.05);
         border-color: rgba(206, 17, 65, 0.2);
       }
+
+      /* ======== STICKY SECTION NAV ======== */
+      .section-nav {
+        position: sticky;
+        top: 0;
+        z-index: 25;
+        background: rgba(10, 14, 23, 0.7);
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        padding: 0.5rem 1rem;
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+      .section-nav::-webkit-scrollbar { display: none; }
+      .section-nav a {
+        white-space: nowrap;
+        padding: 0.375rem 0.875rem;
+        border-radius: 9999px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: rgba(148, 163, 184, 0.8);
+        transition: all 0.2s ease;
+        text-decoration: none;
+      }
+      .section-nav a:hover, .section-nav a.active {
+        color: #fff;
+        background: rgba(206, 17, 65, 0.2);
+        box-shadow: 0 0 12px rgba(206, 17, 65, 0.15);
+      }
+      .light .section-nav {
+        background: rgba(248, 250, 252, 0.8);
+        border-bottom-color: rgba(0, 0, 0, 0.06);
+      }
+      .light .section-nav a { color: rgba(71, 85, 105, 0.8); }
+      .light .section-nav a:hover, .light .section-nav a.active {
+        color: #1e293b;
+        background: rgba(206, 17, 65, 0.1);
+      }
+
+      /* ======== SECTION HEADERS ======== */
+      .section-heading {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+        animation: fade-in 0.5s ease-out both;
+      }
+      .section-heading .section-num {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.75rem;
+        height: 1.75rem;
+        border-radius: 0.5rem;
+        background: linear-gradient(135deg, #CE1141, #3E2680);
+        color: #fff;
+        font-size: 0.7rem;
+        font-weight: 800;
+        flex-shrink: 0;
+      }
+      .section-heading h2 {
+        font-size: 1rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        position: relative;
+        padding-bottom: 0.375rem;
+      }
+      .section-heading h2::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 3rem;
+        height: 2px;
+        background: linear-gradient(90deg, #CE1141, #3E2680);
+        border-radius: 2px;
+      }
+
+      /* ======== SKELETON LOADING ======== */
+      .skeleton-bar {
+        background: linear-gradient(90deg, rgba(26, 31, 46, 0.8) 25%, rgba(42, 48, 64, 0.8) 50%, rgba(26, 31, 46, 0.8) 75%);
+        background-size: 200% 100%;
+        animation: skeleton-shimmer 1.5s infinite;
+        border-radius: 6px;
+      }
+      .skeleton-row { display: flex; gap: 0.5rem; margin-bottom: 0.5rem; }
+      .skeleton-row .skeleton-bar:first-child { width: 2rem; height: 1rem; }
+      .skeleton-row .skeleton-bar:last-child { flex: 1; height: 1rem; }
+
+      /* ======== POLISHED FOOTER ======== */
+      .polished-footer {
+        background: rgba(10, 14, 23, 0.8);
+        backdrop-filter: blur(16px);
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        padding: 1.25rem 1.5rem;
+        text-align: center;
+        font-size: 0.75rem;
+        color: #64748b;
+      }
+      .polished-footer .back-to-top {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        padding: 0.375rem 1rem;
+        border-radius: 9999px;
+        background: rgba(206, 17, 65, 0.15);
+        color: #CE1141;
+        font-size: 0.7rem;
+        font-weight: 700;
+        cursor: pointer;
+        border: 1px solid rgba(206, 17, 65, 0.3);
+        transition: all 0.2s;
+        margin-top: 0.75rem;
+      }
+      .polished-footer .back-to-top:hover {
+        background: rgba(206, 17, 65, 0.3);
+        transform: translateY(-2px);
+      }
+
+      /* ======== MOBILE RESPONSIVE OVERRIDES ======== */
+      @media (max-width: 768px) {
+        .grid-cols-12 { grid-template-columns: 1fr !important; }
+        .col-span-12.lg\:col-span-2,
+        .col-span-12.lg\:col-span-10 {
+          grid-column: span 1 !important;
+          max-height: none !important;
+          overflow: visible !important;
+        }
+        .grid-cols-2 { grid-template-columns: 1fr !important; }
+        .grid-cols-3 { grid-template-columns: 1fr !important; }
+        .grid-cols-4 { grid-template-columns: repeat(2, 1fr) !important; }
+        .section-nav { padding: 0.375rem 0.5rem; }
+        .section-nav a { font-size: 0.6rem; padding: 0.25rem 0.625rem; }
+      }
+
       .gradient-border {
         position: relative;
         border: none;
@@ -7026,7 +7178,7 @@ const StandingsWidget = ({ isDark = true }) => {
         </div>
       </div>
       <div className={`divide-y ${isDark ? 'divide-cmd-border/50' : 'divide-light-border'} max-h-64 overflow-y-auto`}>
-        {standings.map((team) => (
+        {loading && standings.length === 0 ? <SkeletonBlock rows={8} /> : standings.map((team) => (
           <div key={team.abbr} className={`flex items-center justify-between px-3 py-1.5 text-xs ${team.highlight ? 'bg-raptors-red/10' : ''}`}>
             <div className="flex items-center gap-2">
               <span className="text-slate-500 w-4">{team.rank}</span>
@@ -11130,6 +11282,40 @@ const InjuryDashboardWidget = ({ isDark = true }) => {
 
 // APP (ROOT)
 // ============================================================
+// Section Navigation Bar
+const SectionNav = ({ isDark = true }) => {
+  const sections = [
+    { id: 'main-content', label: '🏠 Hero' },
+    { id: 'main-content', label: '⚔️ Matchup' },
+    { id: 'main-content', label: '🏆 Standings' },
+    { id: 'main-content', label: '📋 Draft Watch' },
+    { id: 'main-content', label: '💼 Trade Room' },
+    { id: 'main-content', label: '📊 Analytics' },
+    { id: 'main-content', label: '📅 Schedule' },
+  ];
+  return (
+    <div className="section-nav flex items-center gap-1 no-print">
+      {sections.map((s, i) => (
+        <a key={i} href={`#${s.id}`} onClick={(e) => { e.preventDefault(); document.getElementById(s.id)?.scrollIntoView({ behavior: 'smooth' }); }}>
+          {s.label}
+        </a>
+      ))}
+    </div>
+  );
+};
+
+// Skeleton Loading Placeholder
+const SkeletonBlock = ({ rows = 5 }) => (
+  <div className="p-4 space-y-3">
+    {Array.from({ length: rows }).map((_, i) => (
+      <div key={i} className="skeleton-row">
+        <div className="skeleton-bar" style={{ width: '2rem', height: '0.875rem' }}></div>
+        <div className="skeleton-bar" style={{ flex: 1, height: '0.875rem', opacity: 1 - i * 0.1 }}></div>
+      </div>
+    ))}
+  </div>
+);
+
 function App() {
   const [games, setGames] = useState([]);
   const [selectedGame, setSelectedGame] = useState(null);
@@ -11348,6 +11534,9 @@ function App() {
           </div>
         </div>
       </nav>
+
+      {/* Sticky Section Navigation */}
+      <SectionNav isDark={isDark} />
 
       {/* Keyboard Shortcuts Modal */}
       {showKeyboardHelp && (
@@ -11578,6 +11767,9 @@ function App() {
               <div className={`h-full flex flex-col items-center justify-center ${isDark ? 'glass-card' : 'bg-white border border-light-border rounded-2xl shadow-lg'}`}>
                 <BasketballLoader size={60} />
                 <p className={`font-medium ${isDark ? 'text-slate-400' : 'text-slate-600'} mt-4`}>Loading Season Data...</p>
+                <div className="w-full max-w-md mt-6 px-8">
+                  <SkeletonBlock rows={6} />
+                </div>
               </div>
             ) : selectedGame ? (
               <WidgetErrorBoundary name="Matchup Analyzer"><MatchupAnalyzer game={selectedGame} isDark={isDark} /></WidgetErrorBoundary>
@@ -11589,20 +11781,14 @@ function App() {
       </main>
       <ScrollToTop isDark={isDark} />
       <MobileBottomNav isDark={isDark} onThemeToggle={toggleTheme} onShare={() => setShowShare(true)} onReminder={() => setShowReminder(true)} />
-      <footer className={`flex-shrink-0 border-t ${isDark ? 'border-cmd-border bg-cmd-surface/50' : 'border-light-border bg-white/50'} backdrop-blur py-3 hidden lg:block`}>
-        <div className="w-full max-w-[98%] mx-auto px-4 flex items-center justify-between text-xs text-slate-500">
-          <div className="flex items-center gap-2">
-            <span className="font-bold text-raptors-red neon-flicker">RAPTORS INTEL</span>
-            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v10.4</span>
+      <footer className="polished-footer no-print">
+        <div className="flex flex-col items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap justify-center">
+            <span className="font-bold text-raptors-red">RAPTORS INTEL</span>
+            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v10.6</span>
           </div>
-          <div className="hidden md:flex items-center gap-4">
-            <span>Built for Raptors fans 🦖</span>
-            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>|</span>
-            <span>Not affiliated with the NBA or Toronto Raptors</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className={`text-[10px] ${isDark ? 'text-slate-600' : 'text-slate-400'}`}>Press <kbd className={`px-1 py-0.5 rounded ${isDark ? 'bg-cmd-bg' : 'bg-light-card'} font-mono`}>?</kbd> for shortcuts</span>
-          </div>
+          <p style={{margin:0}}>Built with 🏀 by Raptors Intel • Data from ESPN • Not affiliated with the NBA</p>
+          <button className="back-to-top" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>↑ Back to Top</button>
         </div>
       </footer>
     </div>
