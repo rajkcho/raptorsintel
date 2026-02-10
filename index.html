@@ -1159,11 +1159,15 @@
 
       /* Ultra-compact widget internals */
       .dashboard-grid > div {
-        padding: 6px !important;
+        padding: 0 !important;
         border-radius: 6px !important;
         overflow: hidden;
       }
-      .dashboard-grid > div > div { padding: 4px !important; }
+      .dashboard-grid > div > div {
+        padding: 5px !important;
+        border-radius: 6px !important;
+        height: 100%;
+      }
       .dashboard-grid h3 {
         font-size: 9px !important;
         font-weight: 800 !important;
@@ -13561,7 +13565,7 @@ function App() {
           {/* Main Content */}
           <div className="col-span-12 lg:col-span-10 pb-20 lg:pb-10">
               {/* Matchup Analyzer — full width above grid */}
-              <div className="mb-1">
+              <div className="mb-0">
             {loadingSchedule ? (
               <div className={`h-64 flex flex-col items-center justify-center ${isDark ? 'glass-card' : 'bg-white border border-light-border rounded-2xl shadow-lg'}`}>
                 <BasketballLoader size={60} />
@@ -13577,6 +13581,11 @@ function App() {
             )}
               </div>
               {/* ===== DASHBOARD GRID ===== */}
+              <div className={`flex items-center gap-2 mb-1 mt-2`}>
+                <div className="w-1 h-4 bg-raptors-red rounded-full"></div>
+                <h2 className={`text-xs font-black uppercase tracking-widest ${isDark ? 'text-white/80' : 'text-slate-700'}`}>Advanced Analytics Dashboard</h2>
+                <div className={`flex-1 h-px ${isDark ? 'bg-white/10' : 'bg-slate-200'}`}></div>
+              </div>
               <div className="dashboard-grid">
                 {/* Game Day — red accent */}
                 {selectedGame && <div className="widget-wide dg-gameday"><TeamStatsComparisonWidget isDark={isDark} opponent={selectedGame.opponent} /></div>}
@@ -13698,7 +13707,7 @@ function App() {
         <div className="flex flex-col items-center gap-2">
           <div className="flex items-center gap-2 flex-wrap justify-center">
             <span className="font-bold text-raptors-red">RAPTORS INTEL</span>
-            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v13.1</span>
+            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v13.2</span>
           </div>
           <p style={{margin:0}}>Built with 🏀 by Raptors Intel • Data from ESPN • Not affiliated with the NBA</p>
           <p style={{margin:0, fontSize:'0.65rem', opacity:0.6}}>Last Updated: {new Date().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}</p>
