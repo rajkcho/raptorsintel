@@ -1949,7 +1949,7 @@ const TEAM_SALARIES = {
       "1630639": { salary: 580000, years: 1, expiry: 2026, type: "Two-Way" }, // A.J. Lawson
       "1642918": { salary: 580000, years: 1, expiry: 2026, type: "Two-Way" }, // Alijah Martin
       "1642935": { salary: 580000, years: 1, expiry: 2026, type: "Two-Way" }, // Chucky Hepburn
-      "101108": { salary: 11400000, years: 1, expiry: 2026, type: "Standard" }, // Chris Paul
+      "1627742": { salary: 36000000, years: 3, expiry: 2028, type: "Max" }, // Brandon Ingram
     }
   },
   "Pistons": {
@@ -2422,6 +2422,7 @@ const HISTORICAL_H2H = {
 const INJURY_REPORT = {
   raptors: [
     { name: "Jakob Poeltl", status: "OUT", reason: "Back", updated: "Feb 8" },
+    { name: "Chucky Hepburn", status: "OUT", reason: "Undisclosed", updated: "Feb 10" },
     { name: "Collin Murray-Boyles", status: "GTD", reason: "Left thumb", updated: "Feb 8" }
   ],
   opponent: [] // Populated dynamically per opponent
@@ -2438,10 +2439,10 @@ const TRADE_DEADLINE = {
 };
 
 const TRADE_RUMORS = [
-  { id: 1, status: 'Completed', teams: ['Raptors', 'Clippers'], players: { sent: ['—'], received: ['Chris Paul'] }, picks: 'None', source: 'ESPN', impact: 7, date: 'Feb 5', summary: 'CP3 acquired from the Clippers. Veteran leadership and playmaking for a team pushing for the playoffs at 32-22.' },
+  { id: 1, status: 'Completed', teams: ['Raptors', 'Pelicans'], players: { sent: ['Chris Paul', 'Picks'], received: ['Brandon Ingram'] }, picks: 'TBD', source: 'ESPN', impact: 9, date: 'Feb 6', summary: 'Brandon Ingram acquired from the Pelicans. Elite scoring wing adds a massive offensive punch to the playoff push at 32-22.' },
   { id: 2, status: 'Completed', teams: ['Raptors', 'Warriors'], players: { sent: ['2026 2nd Round Pick'], received: ['Trayce Jackson-Davis'] }, picks: '2026 2nd (TOR) to GSW', source: 'ESPN', impact: 5, date: 'Feb 5', summary: 'Added frontcourt depth from Golden State in exchange for a second-round pick. TJD provides energy off the bench.' },
   { id: 3, status: 'Rumored', teams: ['Raptors', 'Various'], players: { sent: ['Jakob Poeltl'], received: ['TBD'] }, picks: 'N/A', source: 'League Sources', impact: 6, summary: 'Poeltl was reportedly available at the deadline but Toronto ultimately held firm, keeping their core intact for the playoff push.' },
-  { id: 4, status: 'Dead', teams: ['Raptors', 'Pelicans'], players: { sent: ['TBD'], received: ['Brandon Ingram'] }, picks: 'N/A', source: 'Marc Stein', impact: 3, summary: 'Raptors were briefly linked to Ingram but never made a serious offer. Price was too steep and Toronto preferred to keep assets for the playoff push.' },
+  { id: 4, status: 'Completed', teams: ['Raptors', 'Clippers'], players: { sent: ['—'], received: ['Chris Paul'] }, picks: 'None', source: 'ESPN', impact: 5, date: 'Feb 5', summary: 'CP3 was briefly acquired from Clippers but was subsequently included in the Ingram trade package to New Orleans.' },
   { id: 5, status: 'Unlikely', teams: ['Raptors', 'Spurs'], players: { sent: ['Scottie Barnes'], received: ['Victor Wembanyama'] }, picks: 'N/A', source: 'Fan Twitter', impact: 1, summary: 'Pure fantasy. Neither side had any interest. Wemby and Scottie are both untouchable franchise cornerstones.' },
 ];
 
@@ -2453,16 +2454,12 @@ const ADVANCED_STATS = {
 
 const SCHEDULE_DATA = {
   upcoming: [
-    { date: 'Feb 11', opponent: 'Pistons', home: true, time: '7:30 PM ET', tv: 'TSN', oppRecord: '18-34', difficulty: 2 },
-    { date: 'Feb 13', opponent: 'Cavaliers', home: false, time: '7:00 PM ET', tv: 'SN', oppRecord: '40-12', difficulty: 5 },
-    { date: 'Feb 15', opponent: '76ers', home: true, time: '7:30 PM ET', tv: 'TSN', oppRecord: '22-30', difficulty: 3 },
-    { date: 'Feb 18', opponent: 'Celtics', home: false, time: '7:30 PM ET', tv: 'SN', oppRecord: '38-14', difficulty: 5 },
-    { date: 'Feb 20', opponent: 'Hawks', home: true, time: '7:30 PM ET', tv: 'TSN', oppRecord: '26-26', difficulty: 3 },
-    { date: 'Feb 22', opponent: 'Bucks', home: false, time: '8:00 PM ET', tv: 'SN', oppRecord: '30-22', difficulty: 4 },
-    { date: 'Feb 24', opponent: 'Magic', home: true, time: '7:30 PM ET', tv: 'TSN', oppRecord: '28-24', difficulty: 3 },
-    { date: 'Feb 26', opponent: 'Bulls', home: false, time: '8:00 PM ET', tv: 'TSN', oppRecord: '20-32', difficulty: 2 },
-    { date: 'Feb 28', opponent: 'Nets', home: true, time: '7:30 PM ET', tv: 'SN', oppRecord: '16-36', difficulty: 1 },
-    { date: 'Mar 2', opponent: 'Heat', home: false, time: '6:00 PM ET', tv: 'SN', oppRecord: '29-23', difficulty: 4 }
+    { date: 'Feb 12', opponent: 'Pistons', home: true, time: '7:30 PM ET', tv: 'TSN', oppRecord: '39-13', difficulty: 5 },
+    { date: 'Feb 20', opponent: 'Bulls', home: false, time: '8:00 PM ET', tv: 'SN', oppRecord: '24-30', difficulty: 2 },
+    { date: 'Feb 22', opponent: 'Bucks', home: false, time: '8:00 PM ET', tv: 'SN', oppRecord: '21-30', difficulty: 2 },
+    { date: 'Feb 25', opponent: 'Thunder', home: true, time: '7:30 PM ET', tv: 'TSN', oppRecord: '41-13', difficulty: 5 },
+    { date: 'Feb 26', opponent: 'Spurs', home: true, time: '7:30 PM ET', tv: 'TSN', oppRecord: '36-16', difficulty: 4 },
+    { date: 'Mar 2', opponent: 'Heat', home: false, time: '6:00 PM ET', tv: 'SN', oppRecord: '28-27', difficulty: 4 }
   ],
   recent: [
     { date: 'Feb 8', opponent: 'Hawks', home: true, result: 'W', score: '118-105' },
@@ -2476,7 +2473,7 @@ const SCHEDULE_DATA = {
 // Rest/Fatigue Data
 const REST_DATA = {
   lastGameDate: new Date('2026-02-08'), // Feb 8 vs Hawks
-  nextGameDate: new Date('2026-02-11'), // Feb 11 vs Pistons
+  nextGameDate: new Date('2026-02-12'), // Feb 12 vs Pistons
   isBackToBack: false,
   daysBetween: 3,
   milesLastWeek: 1250, // Toronto -> cities
@@ -2620,11 +2617,11 @@ const RAPTORS_ROSTER = [
   },
   // --- TRADE DEADLINE ACQUISITIONS ---
   {
-    id: "101108", name: "Chris Paul", position: "PG", number: "3",
-    seasonStats: { ppg: 2.9, rpg: 1.8, apg: 3.3, spg: 0.6, bpg: 0.0, oreb: 0.2, dreb: 1.6, fgPct: 37.5, threePtPct: 30.0, ftPct: 75.0, plusMinus: -1.5, turnovers: 1.0 },
-    vsOpponentStats: { ppg: 3.2, rpg: 2.0, apg: 3.5, spg: 0.7, bpg: 0.0, oreb: 0.2, dreb: 1.8, fgPct: 39.0, threePtPct: 32.0, ftPct: 77.0, plusMinus: -1.0, turnovers: 0.9 },
-    advanced: { per: 8.5, ts: 45.0, usg: 14.0, ortg: 100.0, drtg: 112.0 },
-    analysis: "Acquired from Clippers at trade deadline. Future Hall of Famer providing veteran leadership."
+    id: "1627742", name: "Brandon Ingram", position: "SF", number: "3",
+    seasonStats: { ppg: 22.2, rpg: 5.4, apg: 5.6, spg: 0.8, bpg: 0.5, oreb: 0.6, dreb: 4.8, fgPct: 47.5, threePtPct: 35.8, ftPct: 86.0, plusMinus: 0.5, turnovers: 2.5 },
+    vsOpponentStats: { ppg: 23.0, rpg: 5.8, apg: 6.0, spg: 0.9, bpg: 0.6, oreb: 0.7, dreb: 5.1, fgPct: 49.0, threePtPct: 37.0, ftPct: 87.0, plusMinus: 1.0, turnovers: 2.3 },
+    advanced: { per: 19.5, ts: 57.0, usg: 27.0, ortg: 114.0, drtg: 111.0 },
+    analysis: "Acquired from Pelicans at trade deadline. Elite scorer and shot creator."
   }
 ];
 
@@ -2650,21 +2647,21 @@ const TEAM_IDS = {
 
 // Fallback standings (updated Feb 9, 2026)
 const FALLBACK_STANDINGS_EAST = [
-  { rank: 1, team: "Pistons", abbr: "DET", id: "1610612765", wins: 38, losses: 13, gb: "-", l10: "7-3" },
-  { rank: 2, team: "Knicks", abbr: "NYK", id: "1610612752", wins: 34, losses: 19, gb: "5", l10: "9-1" },
-  { rank: 3, team: "Celtics", abbr: "BOS", id: "1610612738", wins: 34, losses: 19, gb: "5", l10: "7-3" },
-  { rank: 4, team: "Raptors", abbr: "TOR", id: "1610612761", wins: 32, losses: 22, gb: "7.5", l10: "7-3", highlight: true },
-  { rank: 5, team: "Cavaliers", abbr: "CLE", id: "1610612739", wins: 32, losses: 21, gb: "7", l10: "8-2" },
-  { rank: 6, team: "76ers", abbr: "PHI", id: "1610612755", wins: 30, losses: 22, gb: "8.5", l10: "7-3" },
-  { rank: 7, team: "Heat", abbr: "MIA", id: "1610612748", wins: 28, losses: 26, gb: "11.5", l10: "5-5" },
-  { rank: 8, team: "Magic", abbr: "ORL", id: "1610612753", wins: 27, losses: 24, gb: "11", l10: "4-6" },
-  { rank: 9, team: "Hawks", abbr: "ATL", id: "1610612737", wins: 26, losses: 28, gb: "13.5", l10: "6-4" },
-  { rank: 10, team: "Hornets", abbr: "CHA", id: "1610612766", wins: 25, losses: 28, gb: "14", l10: "9-1" },
-  { rank: 11, team: "Bulls", abbr: "CHI", id: "1610612741", wins: 24, losses: 29, gb: "15", l10: "3-7" },
-  { rank: 12, team: "Bucks", abbr: "MIL", id: "1610612749", wins: 21, losses: 29, gb: "16.5", l10: "4-6" },
-  { rank: 13, team: "Nets", abbr: "BKN", id: "1610612751", wins: 14, losses: 37, gb: "24", l10: "2-8" },
-  { rank: 14, team: "Wizards", abbr: "WAS", id: "1610612764", wins: 14, losses: 38, gb: "24.5", l10: "4-6" },
-  { rank: 15, team: "Pacers", abbr: "IND", id: "1610612754", wins: 13, losses: 40, gb: "26", l10: "3-7" },
+  { rank: 1, team: "Pistons", abbr: "DET", id: "1610612765", wins: 39, losses: 13, gb: "-", l10: "7-3" },
+  { rank: 2, team: "Knicks", abbr: "NYK", id: "1610612752", wins: 34, losses: 19, gb: "5.5", l10: "9-1" },
+  { rank: 3, team: "Celtics", abbr: "BOS", id: "1610612738", wins: 34, losses: 19, gb: "5.5", l10: "7-3" },
+  { rank: 4, team: "Cavaliers", abbr: "CLE", id: "1610612739", wins: 33, losses: 21, gb: "7", l10: "8-2" },
+  { rank: 5, team: "Raptors", abbr: "TOR", id: "1610612761", wins: 32, losses: 22, gb: "8", l10: "7-3", highlight: true },
+  { rank: 6, team: "76ers", abbr: "PHI", id: "1610612755", wins: 30, losses: 23, gb: "9.5", l10: "7-3" },
+  { rank: 7, team: "Heat", abbr: "MIA", id: "1610612748", wins: 28, losses: 27, gb: "12.5", l10: "5-5" },
+  { rank: 8, team: "Magic", abbr: "ORL", id: "1610612753", wins: 28, losses: 24, gb: "11", l10: "4-6" },
+  { rank: 9, team: "Hawks", abbr: "ATL", id: "1610612737", wins: 26, losses: 29, gb: "14.5", l10: "6-4" },
+  { rank: 10, team: "Hornets", abbr: "CHA", id: "1610612766", wins: 25, losses: 29, gb: "15", l10: "9-1" },
+  { rank: 11, team: "Bulls", abbr: "CHI", id: "1610612741", wins: 24, losses: 29, gb: "15.5", l10: "3-7" },
+  { rank: 12, team: "Bucks", abbr: "MIL", id: "1610612749", wins: 21, losses: 29, gb: "17", l10: "4-6" },
+  { rank: 13, team: "Nets", abbr: "BKN", id: "1610612751", wins: 14, losses: 37, gb: "24.5", l10: "2-8" },
+  { rank: 14, team: "Wizards", abbr: "WAS", id: "1610612764", wins: 14, losses: 38, gb: "25", l10: "4-6" },
+  { rank: 15, team: "Pacers", abbr: "IND", id: "1610612754", wins: 13, losses: 40, gb: "26.5", l10: "3-7" },
 ];
 
 // ESPN API cache
@@ -2820,21 +2817,21 @@ const fetchLiveScoreboard = async () => {
 
 // Fallback West standings (updated Feb 9, 2026)
 const FALLBACK_STANDINGS_WEST = [
-  { rank: 1, team: "Thunder", abbr: "OKC", id: "1610612760", wins: 39, losses: 12, gb: "-", l10: "8-2" },
-  { rank: 2, team: "Rockets", abbr: "HOU", id: "1610612745", wins: 34, losses: 18, gb: "5.5", l10: "7-3" },
-  { rank: 3, team: "Grizzlies", abbr: "MEM", id: "1610612763", wins: 33, losses: 19, gb: "6.5", l10: "6-4" },
-  { rank: 4, team: "Lakers", abbr: "LAL", id: "1610612747", wins: 31, losses: 21, gb: "8.5", l10: "5-5" },
-  { rank: 5, team: "Nuggets", abbr: "DEN", id: "1610612743", wins: 30, losses: 22, gb: "9.5", l10: "6-4" },
-  { rank: 6, team: "Mavericks", abbr: "DAL", id: "1610612742", wins: 29, losses: 23, gb: "10.5", l10: "5-5" },
-  { rank: 7, team: "Timberwolves", abbr: "MIN", id: "1610612750", wins: 28, losses: 24, gb: "11.5", l10: "4-6" },
-  { rank: 8, team: "Clippers", abbr: "LAC", id: "1610612746", wins: 27, losses: 25, gb: "12.5", l10: "5-5" },
-  { rank: 9, team: "Kings", abbr: "SAC", id: "1610612758", wins: 26, losses: 26, gb: "13.5", l10: "6-4" },
-  { rank: 10, team: "Warriors", abbr: "GSW", id: "1610612744", wins: 25, losses: 27, gb: "14.5", l10: "4-6" },
-  { rank: 11, team: "Spurs", abbr: "SAS", id: "1610612759", wins: 24, losses: 28, gb: "15.5", l10: "5-5" },
-  { rank: 12, team: "Suns", abbr: "PHX", id: "1610612756", wins: 23, losses: 29, gb: "16.5", l10: "3-7" },
-  { rank: 13, team: "Trail Blazers", abbr: "POR", id: "1610612757", wins: 18, losses: 34, gb: "21.5", l10: "3-7" },
-  { rank: 14, team: "Jazz", abbr: "UTA", id: "1610612762", wins: 14, losses: 37, gb: "25", l10: "2-8" },
-  { rank: 15, team: "Pelicans", abbr: "NOP", id: "1610612740", wins: 12, losses: 40, gb: "27.5", l10: "2-8" },
+  { rank: 1, team: "Thunder", abbr: "OKC", id: "1610612760", wins: 41, losses: 13, gb: "-", l10: "8-2" },
+  { rank: 2, team: "Spurs", abbr: "SAS", id: "1610612759", wins: 36, losses: 16, gb: "4", l10: "7-3" },
+  { rank: 3, team: "Nuggets", abbr: "DEN", id: "1610612743", wins: 34, losses: 20, gb: "7", l10: "6-4" },
+  { rank: 4, team: "Timberwolves", abbr: "MIN", id: "1610612750", wins: 33, losses: 22, gb: "8.5", l10: "5-5" },
+  { rank: 5, team: "Lakers", abbr: "LAL", id: "1610612747", wins: 32, losses: 20, gb: "8", l10: "5-5" },
+  { rank: 6, team: "Rockets", abbr: "HOU", id: "1610612745", wins: 32, losses: 19, gb: "7.5", l10: "7-3" },
+  { rank: 7, team: "Suns", abbr: "PHX", id: "1610612756", wins: 31, losses: 22, gb: "9.5", l10: "5-5" },
+  { rank: 8, team: "Warriors", abbr: "GSW", id: "1610612744", wins: 29, losses: 25, gb: "12", l10: "4-6" },
+  { rank: 9, team: "Kings", abbr: "SAC", id: "1610612758", wins: 26, losses: 26, gb: "14", l10: "6-4" },
+  { rank: 10, team: "Mavericks", abbr: "DAL", id: "1610612742", wins: 25, losses: 27, gb: "15", l10: "4-6" },
+  { rank: 11, team: "Clippers", abbr: "LAC", id: "1610612746", wins: 24, losses: 28, gb: "16", l10: "5-5" },
+  { rank: 12, team: "Grizzlies", abbr: "MEM", id: "1610612763", wins: 23, losses: 29, gb: "17", l10: "3-7" },
+  { rank: 13, team: "Trail Blazers", abbr: "POR", id: "1610612757", wins: 18, losses: 34, gb: "22", l10: "3-7" },
+  { rank: 14, team: "Jazz", abbr: "UTA", id: "1610612762", wins: 14, losses: 37, gb: "25.5", l10: "2-8" },
+  { rank: 15, team: "Pelicans", abbr: "NOP", id: "1610612740", wins: 12, losses: 40, gb: "28", l10: "2-8" },
 ];
 
 // Fetch West standings from ESPN API  
@@ -2924,13 +2921,13 @@ const AWARDS_WATCH = [
   { category: 'All-Star', emoji: '⭐', players: [{ name: 'Scottie Barnes', note: 'Selected as 2026 All-Star starter', team: 'TOR', highlight: true }, { name: 'RJ Barrett', note: 'Borderline candidate — strong second-half push', team: 'TOR', highlight: true }] },
   { category: 'MVP', emoji: '🏆', players: [{ name: 'Scottie Barnes', note: 'Outside top-10 but making noise', team: 'TOR', highlight: true }] },
   { category: 'DPOY', emoji: '🛡️', players: [{ name: 'Jakob Poeltl', note: 'Anchoring a top-10 defense — in the conversation', team: 'TOR', highlight: true }] },
-  { category: '6MOY', emoji: '💪', players: [{ name: 'Chris Boucher', note: 'Consistent spark off the bench', team: 'TOR', highlight: true }] },
+  { category: '6MOY', emoji: '💪', players: [{ name: 'Sandro Mamukelashvili', note: 'Consistent spark off the bench — breakout stretch-five', team: 'TOR', highlight: true }] },
   { category: 'ROY', emoji: '🌟', players: [{ name: 'No Raptors rookies in the race this season', note: '', team: '', highlight: false }] },
 ];
 
 // Raptors Team Stats (will be updated from standings)
 // Raptors Team Stats (Feb 2026 - post All-Star)
-const RAPTORS_STATS = { wins: 32, losses: 22, ppg: 114.8, oppPpg: 112.6, streak: "W3", lastUpdate: "Feb 9, 2026", rpg: 44.2, apg: 26.8, fgPct: 47.5, threePtPct: 36.2 };
+const RAPTORS_STATS = { wins: 32, losses: 22, ppg: 114.8, oppPpg: 112.6, streak: "W2", lastUpdate: "Feb 10, 2026", rpg: 44.2, apg: 26.8, fgPct: 47.5, threePtPct: 36.2 };
 
 // ============================================================
 // DRAFT INTELLIGENCE DATA
@@ -2982,7 +2979,8 @@ const DRAFT_DATA = {
 // ============================================================
 const INJURY_DATA = [
   { player: "Jakob Poeltl", status: "Out", injury: "Back", returnDate: "TBD", gamesOut: 1, ppg: 14.2, mpg: 30.5, impact: 8.5 },
-  { player: "Collin Murray-Boyles", status: "Questionable", injury: "Left thumb (aggravated vs Pacers)", returnDate: "Feb 11, 2026", gamesOut: 0, ppg: 8.6, mpg: 22.0, impact: 6.0 },
+  { player: "Chucky Hepburn", status: "Out", injury: "Undisclosed", returnDate: "TBD", gamesOut: 3, ppg: 1.8, mpg: 8.0, impact: 2.0 },
+  { player: "Collin Murray-Boyles", status: "Day-To-Day", injury: "Left thumb (aggravated vs Pacers)", returnDate: "Feb 11, 2026", gamesOut: 0, ppg: 8.6, mpg: 22.0, impact: 6.0 },
 ];
 
 // ============================================================
@@ -3020,12 +3018,13 @@ const PLAYER_LAST_5_GAMES = {
 };
 
 const RAPTORS_NEWS = [
-  { id: 1, headline: "CP3 Brings Veteran Leadership After Trade from Clippers", source: "TSN", timeAgo: "3d ago", category: "Trade Rumor" },
+  { id: 1, headline: "Brandon Ingram Acquired from Pelicans in Blockbuster Deadline Deal", source: "ESPN", timeAgo: "4d ago", category: "Trade Rumor" },
   { id: 2, headline: "Poeltl Out with Back Injury — Timeline Uncertain", source: "Sportsnet", timeAgo: "1d ago", category: "Injury" },
   { id: 3, headline: "Raptors Host Pistons Tuesday in Key Playoff Positioning Game", source: "NBA.com", timeAgo: "6h ago", category: "Recap" },
   { id: 4, headline: "Barnes All-Star Selection Cements His Rise as Franchise Cornerstone", source: "The Athletic", timeAgo: "5d ago", category: "Award" },
-  { id: 5, headline: "Trayce Jackson-Davis Acquired from Warriors at Deadline", source: "ESPN", timeAgo: "3d ago", category: "Trade Rumor" },
-  { id: 6, headline: "Murray-Boyles Game-to-Game with Thumb Issue", source: "Raptors Republic", timeAgo: "1d ago", category: "Injury" },
+  { id: 5, headline: "Trayce Jackson-Davis Acquired from Warriors at Deadline", source: "ESPN", timeAgo: "5d ago", category: "Trade Rumor" },
+  { id: 6, headline: "Murray-Boyles Day-to-Day with Thumb Issue", source: "Raptors Republic", timeAgo: "1d ago", category: "Injury" },
+  { id: 7, headline: "Chris Paul Shipped to Pelicans as Part of Ingram Deal", source: "TSN", timeAgo: "4d ago", category: "Trade Rumor" },
 ];
 
 const OPPONENT_DATA = {
@@ -3126,7 +3125,7 @@ const OPPONENT_DATA = {
     id: "1610612740",
     roster: [
        { id: "1629627", name: "Zion Williamson", position: "F", number: "1" },
-       { id: "1627742", name: "Brandon Ingram", position: "F", number: "14" },
+       { id: "101108", name: "Chris Paul", position: "G", number: "3" },
        { id: "203468", name: "CJ McCollum", position: "G", number: "3" },
        { id: "1627749", name: "Dejounte Murray", position: "G", number: "5" },
        { id: "1630529", name: "Herbert Jones", position: "F", number: "5" },
@@ -3166,7 +3165,7 @@ const OPPONENT_DATA = {
        { id: "203114", name: "Khris Middleton", position: "F", number: "22", seasonStats: { ppg: 15.2, rpg: 4.5, apg: 4.8 } },
        { id: "201572", name: "Brook Lopez", position: "C", number: "11", seasonStats: { ppg: 11.5, rpg: 5.2, apg: 1.5, bpg: 2.5 } },
        { id: "1627739", name: "Taurean Prince", position: "F", number: "35", seasonStats: { ppg: 8.5, rpg: 3.2, apg: 1.5 } },
-       { id: "101108", name: "Chris Paul", position: "G", number: "3", seasonStats: { ppg: 6.8, rpg: 3.2, apg: 6.5 } },
+       { id: "1630540", name: "Gary Trent Jr.", position: "G", number: "33", seasonStats: { ppg: 8.5, rpg: 2.5, apg: 1.8 } },
        { id: "1631100", name: "AJ Green", position: "G", number: "20", seasonStats: { ppg: 8.8, rpg: 2.2, apg: 1.8 } },
        { id: "1630226", name: "Pat Connaughton", position: "G", number: "24", seasonStats: { ppg: 5.5, rpg: 3.0, apg: 1.2 } },
        { id: "1628978", name: "Bobby Portis", position: "F-C", number: "9", seasonStats: { ppg: 10.2, rpg: 7.5, apg: 1.5 } }
@@ -3450,8 +3449,8 @@ const fetchRaptorsSchedule = async () => {
     { id: "g52", date: "Feb 4", opponent: "Timberwolves", opponentId: "1610612750", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "completed", result: "W 131-128 OT" },
     { id: "g53", date: "Feb 5", opponent: "Bulls", opponentId: "1610612741", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "completed", result: "W 130-113" },
     { id: "g54", date: "Feb 8", opponent: "Pacers", opponentId: "1610612754", isHome: true, time: "3:00 PM", venue: "Scotiabank Arena", status: "completed", result: "W 130-123" },
-    { id: "g55", date: "Feb 11", opponent: "Pistons", opponentId: "1610612765", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "upcoming" },
-    { id: "g56", date: "Feb 19", opponent: "Bulls", opponentId: "1610612741", isHome: false, time: "8:00 PM", venue: "United Center", status: "upcoming" },
+    { id: "g55", date: "Feb 12", opponent: "Pistons", opponentId: "1610612765", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "upcoming" },
+    { id: "g56", date: "Feb 20", opponent: "Bulls", opponentId: "1610612741", isHome: false, time: "8:00 PM", venue: "United Center", status: "upcoming" },
     { id: "g57", date: "Feb 22", opponent: "Bucks", opponentId: "1610612749", isHome: false, time: "3:30 PM", venue: "Fiserv Forum", status: "upcoming" },
     { id: "g58", date: "Feb 24", opponent: "Thunder", opponentId: "1610612760", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "upcoming" },
     { id: "g59", date: "Feb 25", opponent: "Spurs", opponentId: "1610612759", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "upcoming" },
@@ -3504,9 +3503,9 @@ const analyzeGameMatchup = async (opponent) => {
     intel: {
         injuries: [
             { player: "Jakob Poeltl", status: "Out", details: "Back — ruled out Feb 8 vs Pacers", team: "raptors" },
-            { player: "Collin Murray-Boyles", status: "Questionable", details: "Left thumb — aggravated vs Pacers, day-to-day", team: "raptors" },
-            { player: "Scottie Barnes", status: "Active", details: "Available", team: "raptors" },
-            { player: "Chris Paul", status: "Active", details: "Acquired via trade — available", team: "raptors" },
+            { player: "Chucky Hepburn", status: "Out", details: "Out — no timetable", team: "raptors" },
+            { player: "Collin Murray-Boyles", status: "Questionable", details: "Left thumb — day-to-day", team: "raptors" },
+            { player: "Brandon Ingram", status: "Active", details: "Acquired via trade from Pelicans — available", team: "raptors" },
             { player: "Trayce Jackson-Davis", status: "Active", details: "Acquired via trade — available", team: "raptors" },
             { player: opponentRoster[0]?.name || "Star Player", status: "Active", details: "Full go", team: "opponent" },
             { player: opponentRoster[3]?.name || "Key Forward", status: "Questionable", details: "Knee soreness — GTD", team: "opponent" }
@@ -3519,7 +3518,7 @@ const analyzeGameMatchup = async (opponent) => {
             { name: "Courtney Kirkland", role: "Umpire", foulCallRate: 41.5, tendency: "Consistent" }
         ],
         pace: { raptors: 101.2, opponent: 98.5, leagueAvg: 99.8 },
-        homeSplits: { raptors: { home: "14-12", away: "9-20" }, opponent: { home: "18-8", away: "14-14" } },
+        homeSplits: { raptors: { home: "16-12", away: "16-10" }, opponent: { home: "22-5", away: "17-8" } },
         rebounding: {
             raptors: { oreb: 10.2, dreb: 33.5, total: 43.7, orebPct: 26.8 },
             opponent: { oreb: 11.5, dreb: 34.2, total: 45.7, orebPct: 28.1 }
@@ -3569,9 +3568,9 @@ const analyzeGameMatchup = async (opponent) => {
             opponent: [110, 102, 115, 108, 99, 112, 105, 118, 108, 111]
         },
         socialChatter: [
-            { headline: "Raptors acquire Chris Paul in blockbuster 3-team deadline deal", source: "Shams Charania (ESPN)", sentiment: "positive" },
+            { headline: "Raptors land Brandon Ingram from Pelicans in blockbuster deadline deal", source: "Shams Charania (ESPN)", sentiment: "positive" },
             { headline: "Trayce Jackson-Davis traded from Warriors to Raptors for 2nd-round pick", source: "Chris Haynes (TNT)", sentiment: "neutral" },
-            { headline: "Ochai Agbaji headed to Nets as part of CP3 deal", source: "Marc Stein (Substack)", sentiment: "neutral" },
+            { headline: "Chris Paul included in Ingram trade package, headed to Pelicans", source: "Marc Stein (Substack)", sentiment: "neutral" },
             { headline: "Jakob Poeltl's back injury lingers — Raptors add depth at center", source: "Raptors Republic", sentiment: "neutral" },
             { headline: `${opponent} heading to Scotiabank Arena as Raptors adjust post-deadline roster`, source: "ESPN", sentiment: "positive" }
         ]
@@ -4928,11 +4927,11 @@ const PaceEfficiencyWidget = ({ isDark = true }) => {
 const InteractiveRosterGrid = ({ isDark = true }) => {
   const [selectedPos, setSelectedPos] = useState(null);
   const depthChart = {
-    PG: { starters: ['Immanuel Quickley'], bench: ['Davion Mitchell', 'Jamal Shead'] },
-    SG: { starters: ['Gradey Dick'], bench: ['Bruce Brown', 'Ochai Agbaji'] },
-    SF: { starters: ['RJ Barrett'], bench: ['Kelly Olynyk', 'Garrett Temple'] },
-    PF: { starters: ['Scottie Barnes'], bench: ['Chris Boucher', 'Collin Murray-Boyles'] },
-    C:  { starters: ['Jakob Poeltl'], bench: ['Kelly Olynyk', 'Bruno Fernando'] }
+    PG: { starters: ['Immanuel Quickley'], bench: ['Jamal Shead', 'Chucky Hepburn'] },
+    SG: { starters: ['Gradey Dick'], bench: ["Ja'Kobe Walter", 'Alijah Martin'] },
+    SF: { starters: ['RJ Barrett'], bench: ['Brandon Ingram', 'Garrett Temple'] },
+    PF: { starters: ['Scottie Barnes'], bench: ['Jamison Battle', 'Collin Murray-Boyles'] },
+    C:  { starters: ['Jakob Poeltl'], bench: ['Sandro Mamukelashvili', 'Trayce Jackson-Davis'] }
   };
   const posStats = {
     PG: { ppg: 15.2, apg: 6.8 }, SG: { ppg: 14.8, apg: 2.5 },
@@ -9135,7 +9134,7 @@ const StorylinesWidget = ({ isDark = true }) => {
 const HomeAwaySplitsWidget = ({ isDark = true, nextGameHome }) => {
   const splits = {
     home: { w: 16, l: 12, ppg: 116.2, opp: 113.8 },
-    away: { w: 9, l: 20, ppg: 108.4, opp: 115.2 }
+    away: { w: 16, l: 10, ppg: 113.4, opp: 111.2 }
   };
   
   return (
@@ -9451,23 +9450,23 @@ const BettingHubWidget = ({ isDark = true, game }) => {
 // Playoff Picture Widget
 const PlayoffPictureWidget = ({ isDark = true }) => {
   const eastStandings = [
-    { seed: 1, team: 'Cavaliers', record: '40-14', gb: 0 },
-    { seed: 2, team: 'Celtics', record: '37-17', gb: 3 },
-    { seed: 3, team: 'Knicks', record: '35-19', gb: 5 },
-    { seed: 4, team: 'Bucks', record: '33-21', gb: 7 },
-    { seed: 5, team: 'Pacers', record: '33-22', gb: 7.5 },
-    { seed: 6, team: 'Raptors', record: '32-22', gb: 8, highlight: true },
-    { seed: 7, team: 'Magic', record: '31-23', gb: 9 },
-    { seed: 8, team: 'Hawks', record: '29-25', gb: 11 },
-    { seed: 9, team: '76ers', record: '27-27', gb: 13 },
-    { seed: 10, team: 'Heat', record: '26-28', gb: 14 },
+    { seed: 1, team: 'Pistons', record: '39-13', gb: 0 },
+    { seed: 2, team: 'Knicks', record: '34-19', gb: 5.5 },
+    { seed: 3, team: 'Celtics', record: '34-19', gb: 5.5 },
+    { seed: 4, team: 'Cavaliers', record: '33-21', gb: 7 },
+    { seed: 5, team: 'Raptors', record: '32-22', gb: 8, highlight: true },
+    { seed: 6, team: '76ers', record: '30-23', gb: 9.5 },
+    { seed: 7, team: 'Heat', record: '28-27', gb: 12.5 },
+    { seed: 8, team: 'Magic', record: '28-24', gb: 11 },
+    { seed: 9, team: 'Hawks', record: '26-29', gb: 14.5 },
+    { seed: 10, team: 'Hornets', record: '25-29', gb: 15 },
   ];
   const raptors = eastStandings.find(t => t.highlight);
   const gamesPlayed = 54;
   const gamesRemaining = 82 - gamesPlayed;
   const wins = 32;
-  const magicNumber = Math.max(1, gamesRemaining - (wins - 26) + 1);
-  const matchupOpp = eastStandings.find(t => t.seed === 3);
+  const magicNumber = Math.max(1, gamesRemaining - (wins - 25) + 1);
+  const matchupOpp = eastStandings.find(t => t.seed === 4);
 
   return (
     <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
@@ -9475,12 +9474,12 @@ const PlayoffPictureWidget = ({ isDark = true }) => {
         <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
           <Trophy className="w-3 h-3 text-amber-400" /> Playoff Picture
         </h3>
-        <span className="text-[9px] px-1.5 py-0.5 rounded bg-green-500/20 text-green-400 font-bold">IN — 6th</span>
+        <span className="text-[9px] px-1.5 py-0.5 rounded bg-green-500/20 text-green-400 font-bold">IN — 5th</span>
       </div>
 
       <div className="grid grid-cols-3 gap-2 text-center mb-3">
         <div className={`p-2 rounded-lg ${isDark ? 'bg-cmd-bg' : 'bg-light-card'}`}>
-          <div className={`text-xl font-black text-green-400`}>6th</div>
+          <div className={`text-xl font-black text-green-400`}>5th</div>
           <div className={`text-[8px] ${isDark ? 'text-slate-500' : 'text-slate-400'} uppercase`}>East Seed</div>
         </div>
         <div className={`p-2 rounded-lg ${isDark ? 'bg-cmd-bg' : 'bg-light-card'}`}>
@@ -9497,7 +9496,7 @@ const PlayoffPictureWidget = ({ isDark = true }) => {
       <div className={`p-2.5 rounded-lg mb-3 ${isDark ? 'bg-gradient-to-r from-raptors-red/10 to-purple-900/20 border border-raptors-red/20' : 'bg-red-50 border border-red-100'}`}>
         <div className={`text-[9px] font-bold uppercase mb-1 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>🏆 If Season Ended Today</div>
         <div className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>
-          (6) Raptors vs (3) {matchupOpp.team}
+          (5) Raptors vs (4) {matchupOpp.team}
         </div>
         <div className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>First Round — Best of 7</div>
       </div>
@@ -9579,13 +9578,13 @@ const SalaryCapWidget = ({ isDark = true }) => {
   const capData = {
     salaryCap: 140,
     luxuryTax: 170,
-    totalSalary: 152.3,
+    totalSalary: 176.9,
     topContracts: [
       { name: 'Scottie Barnes', salary: 35.6, years: '4yr' },
       { name: 'RJ Barrett', salary: 25.3, years: '3yr' },
       { name: 'Immanuel Quickley', salary: 18.9, years: '4yr' },
       { name: 'Jakob Poeltl', salary: 16.0, years: '2yr' },
-      { name: 'Chris Paul', salary: 16.4, years: 'Exp' },
+      { name: 'Brandon Ingram', salary: 36.0, years: '3yr' },
     ]
   };
   const capUsedPct = (capData.totalSalary / capData.luxuryTax) * 100;
@@ -9976,7 +9975,7 @@ const SocialBuzzWidget = ({ isDark = true }) => {
   const tweets = [
     { user: '@RaptorsFan416', text: "Scottie is HIM! 🔥", likes: 234 },
     { user: '@NorthSideBall', text: "Barnes for All-Star next year 💯", likes: 189 },
-    { user: '@WeTheNorthCrew', text: "6 game streak LFG! 🦖", likes: 156 }
+    { user: '@WeTheNorthCrew', text: "2 straight Ws, let's keep it rolling! 🦖", likes: 156 }
   ];
   
   return (
@@ -10047,12 +10046,12 @@ const TeamChemistryWidget = ({ isDark = true }) => {
 // Record Breakdown Widget
 const RecordBreakdownWidget = ({ isDark = true }) => {
   const records = [
-    { label: 'vs East', record: '18-21', pct: 46.2 },
-    { label: 'vs West', record: '7-11', pct: 38.9 },
-    { label: 'vs .500+', record: '8-18', pct: 30.8 },
-    { label: 'vs <.500', record: '17-14', pct: 54.8 },
+    { label: 'vs East', record: '20-14', pct: 58.8 },
+    { label: 'vs West', record: '12-8', pct: 60.0 },
+    { label: 'vs .500+', record: '14-12', pct: 53.8 },
+    { label: 'vs <.500', record: '18-10', pct: 64.3 },
     { label: 'OT Games', record: '2-1', pct: 66.7 },
-    { label: '1-Poss Games', record: '6-8', pct: 42.9 }
+    { label: '1-Poss Games', record: '8-6', pct: 57.1 }
   ];
   
   return (
@@ -12848,10 +12847,10 @@ const SeasonTimelineWidget = ({ isDark = true }) => {
   const milestones = [
     { date: 'Oct 22', label: 'Season Opener', desc: 'Raptors tip off 2025-26 season', icon: '🏀', done: true },
     { date: 'Nov 8', label: 'First Win Streak', desc: '4-game winning streak begins', icon: '🔥', done: true },
-    { date: 'Dec 15', label: 'CP3 Acquired', desc: 'Chris Paul trade from Spurs', icon: '🤝', done: true },
-    { date: 'Feb 6', label: 'Trade Deadline', desc: 'TJD acquired from Warriors', icon: '📋', done: true },
+    { date: 'Feb 5', label: 'TJD Acquired', desc: 'Trayce Jackson-Davis from Warriors', icon: '🤝', done: true },
+    { date: 'Feb 6', label: 'Ingram Trade', desc: 'Brandon Ingram acquired from Pelicans', icon: '📋', done: true },
     { date: 'Feb 16', label: 'All-Star Break', desc: 'Scottie Barnes All-Star nod', icon: '⭐', done: false },
-    { date: 'Now', label: 'Current Position', desc: '25-32 · 11th in East', icon: '📍', done: false, current: true },
+    { date: 'Now', label: 'Current Position', desc: '32-22 · 5th in East', icon: '📍', done: false, current: true },
   ];
 
   return (
@@ -12877,11 +12876,11 @@ const SeasonTimelineWidget = ({ isDark = true }) => {
 // 4. Quick Quiz Widget
 const RaptorsQuizWidget = ({ isDark = true }) => {
   const questions = [
-    { q: "Who did the Raptors acquire from the Spurs?", options: ["Chris Paul", "Victor Wembanyama", "Keldon Johnson", "Devin Vassell"], answer: 0 },
+    { q: "Who did the Raptors acquire from the Pelicans?", options: ["Brandon Ingram", "Zion Williamson", "CJ McCollum", "Herb Jones"], answer: 0 },
     { q: "What is Jakob Poeltl's jersey number?", options: ["25", "42", "19", "7"], answer: 2 },
     { q: "Who was acquired from the Warriors at the trade deadline?", options: ["Kuminga", "Trayce Jackson-Davis", "Wiggins", "Moody"], answer: 1 },
     { q: "What pick was Scottie Barnes in the 2021 draft?", options: ["1st", "2nd", "4th", "7th"], answer: 2 },
-    { q: "Which Raptor leads the team in assists per game?", options: ["Scottie Barnes", "Immanuel Quickley", "RJ Barrett", "Chris Paul"], answer: 1 },
+    { q: "Which Raptor leads the team in assists per game?", options: ["Scottie Barnes", "Immanuel Quickley", "RJ Barrett", "Brandon Ingram"], answer: 1 },
   ];
 
   const QUIZ_KEY = 'raptors_quiz_state';
