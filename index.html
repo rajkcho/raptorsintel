@@ -1037,6 +1037,21 @@
         background: rgba(206, 17, 65, 0.1);
       }
 
+      /* ======== COMPACT WIDGETS ======== */
+      .glass-card > .p-4, .premium-glass > .p-4,
+      .glass-card.p-4, .premium-glass.p-4,
+      [class*="rounded-2xl"].p-4 {
+        padding: 0.75rem !important;
+      }
+      [class*="rounded-2xl"].p-5, [class*="rounded-2xl"].p-6 {
+        padding: 0.75rem !important;
+      }
+      /* Reduce margin/gap in widget internals */
+      [class*="rounded-2xl"] .mb-3 { margin-bottom: 0.5rem !important; }
+      [class*="rounded-2xl"] .mb-4 { margin-bottom: 0.5rem !important; }
+      [class*="rounded-2xl"] .space-y-3 > * + * { margin-top: 0.5rem !important; }
+      [class*="rounded-2xl"] .space-y-4 > * + * { margin-top: 0.5rem !important; }
+
       /* ======== SECTION HEADERS ======== */
       .section-heading {
         display: flex;
@@ -2888,12 +2903,12 @@ const PLAYER_LAST_5_GAMES = {
 };
 
 const RAPTORS_NEWS = [
-  { id: 1, headline: "Barnes Named Eastern Conference Player of the Week", source: "NBA.com", timeAgo: "2h ago", category: "Award" },
-  { id: 2, headline: "Raptors Exploring Trade Options Before Deadline", source: "The Athletic", timeAgo: "5h ago", category: "Trade Rumor" },
-  { id: 3, headline: "Barrett Returns to Full Practice After Knee Soreness", source: "TSN", timeAgo: "8h ago", category: "Injury" },
-  { id: 4, headline: "Raptors Extend Win Streak to 3 with Dominant Pacers Victory", source: "Sportsnet", timeAgo: "1d ago", category: "Recap" },
-  { id: 5, headline: "Dick's Three-Point Shooting Fuels Bench Revival", source: "Raptors Republic", timeAgo: "1d ago", category: "Analysis" },
-  { id: 6, headline: "Poeltl Quietly Having Career-Best Season in Toronto", source: "ESPN", timeAgo: "2d ago", category: "Feature" },
+  { id: 1, headline: "CP3 Brings Veteran Leadership After Trade from Clippers", source: "TSN", timeAgo: "3d ago", category: "Trade Rumor" },
+  { id: 2, headline: "Poeltl Out with Back Injury — Timeline Uncertain", source: "Sportsnet", timeAgo: "1d ago", category: "Injury" },
+  { id: 3, headline: "Raptors Host Pistons Tuesday in Key Playoff Positioning Game", source: "NBA.com", timeAgo: "6h ago", category: "Recap" },
+  { id: 4, headline: "Barnes All-Star Selection Cements His Rise as Franchise Cornerstone", source: "The Athletic", timeAgo: "5d ago", category: "Award" },
+  { id: 5, headline: "Trayce Jackson-Davis Acquired from Warriors at Deadline", source: "ESPN", timeAgo: "3d ago", category: "Trade Rumor" },
+  { id: 6, headline: "Murray-Boyles Game-to-Game with Thumb Issue", source: "Raptors Republic", timeAgo: "1d ago", category: "Injury" },
 ];
 
 const OPPONENT_DATA = {
@@ -13687,7 +13702,7 @@ function App() {
         <div className="flex flex-col items-center gap-2">
           <div className="flex items-center gap-2 flex-wrap justify-center">
             <span className="font-bold text-raptors-red">RAPTORS INTEL</span>
-            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v12.2</span>
+            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v12.3</span>
           </div>
           <p style={{margin:0}}>Built with 🏀 by Raptors Intel • Data from ESPN • Not affiliated with the NBA</p>
           <p style={{margin:0, fontSize:'0.65rem', opacity:0.6}}>Last Updated: {new Date().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}</p>
