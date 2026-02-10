@@ -1967,16 +1967,11 @@ const TRADE_DEADLINE = {
 };
 
 const TRADE_RUMORS = [
-  { id: 1, status: 'Completed', teams: ['Raptors', 'Warriors'], players: { sent: ['Chris Boucher'], received: ['2026 2nd Round Pick', 'Cash'] }, picks: '2026 2nd (GSW)', source: 'Woj', impact: 7, date: 'Feb 5', summary: 'Boucher sent to Golden State for a 2nd rounder. Clears $10M in cap space for the summer.' },
-  { id: 2, status: 'Completed', teams: ['Raptors', 'Clippers'], players: { sent: ['Bruce Brown'], received: ['2027 1st Round Pick (top-14 protected)'] }, picks: '2027 1st (LAC)', source: 'Shams', impact: 9, date: 'Feb 5', summary: 'Brown flipped for a valuable future first. Raptors stockpile assets for rebuild.' },
-  { id: 3, status: 'Completed', teams: ['Raptors', 'Heat'], players: { sent: ['Gary Trent Jr.'], received: ['Duncan Robinson', '2026 2nd Round Pick'] }, picks: '2026 2nd (MIA)', source: 'Woj', impact: 6, date: 'Feb 4', summary: 'GTJ heads to Miami. Robinson\'s expiring deal gives Toronto flexibility.' },
-  { id: 4, status: 'Rumored', teams: ['Raptors', 'Lakers'], players: { sent: ['Jakob Poeltl'], received: ['Rui Hachimura', '2027 1st Round Pick'] }, picks: '2027 1st (LAL)', source: 'Marc Stein', impact: 8, summary: 'Lakers pushed hard for Poeltl but Toronto\'s asking price was too high. Could revisit in offseason.' },
-  { id: 5, status: 'Rumored', teams: ['Raptors', 'Celtics'], players: { sent: ['OG Anunoby'], received: ['Multiple 1sts'] }, picks: 'N/A', source: 'Brian Windhorst', impact: 5, summary: 'OG already traded in prior season. Boston inquired about a separate deal that never materialized.' },
-  { id: 6, status: 'Unlikely', teams: ['Raptors', 'Spurs'], players: { sent: ['Scottie Barnes'], received: ['Victor Wembanyama'] }, picks: 'N/A', source: 'Fan Twitter', impact: 1, summary: 'Pure fantasy. Neither side had any interest. Wemby is untouchable.' },
-  { id: 7, status: 'Rumored', teams: ['Raptors', 'Pacers'], players: { sent: ['Gradey Dick', '2026 1st'], received: ['Tyrese Haliburton'] }, picks: '2026 1st (TOR)', source: 'Jake Fischer', impact: 9, summary: 'Indiana explored a shake-up but ultimately held firm on Haliburton.' },
-  { id: 8, status: 'Completed', teams: ['Raptors', 'Pistons'], players: { sent: ['Thaddeus Young'], received: ['Cash Considerations'] }, picks: 'None', source: 'Team PR', impact: 3, date: 'Feb 6', summary: 'Veteran minimum buyout agreement. Young heads to Detroit for the rest of the season.' },
-  { id: 9, status: 'Rumored', teams: ['Raptors', 'Thunder'], players: { sent: ['Immanuel Quickley'], received: ['Lu Dort', '2027 1st Round Pick'] }, picks: '2027 1st (OKC)', source: 'Kevin O\'Connor', impact: 8, summary: 'OKC explored adding IQ for their bench but couldn\'t agree on pick protections.' },
-  { id: 10, status: 'Unlikely', teams: ['Raptors', 'Knicks'], players: { sent: ['Scottie Barnes'], received: ['Julius Randle', '3 1sts'] }, picks: '3 future 1sts', source: 'NY Post', impact: 2, summary: 'Clickbait rumor. Barnes is franchise cornerstone and untouchable.' }
+  { id: 1, status: 'Completed', teams: ['Raptors', 'Clippers'], players: { sent: ['—'], received: ['Chris Paul'] }, picks: 'None', source: 'ESPN', impact: 7, date: 'Feb 5', summary: 'CP3 acquired from the Clippers. Veteran leadership and playmaking for a team pushing for the playoffs at 32-22.' },
+  { id: 2, status: 'Completed', teams: ['Raptors', 'Warriors'], players: { sent: ['2026 2nd Round Pick'], received: ['Trayce Jackson-Davis'] }, picks: '2026 2nd (TOR) to GSW', source: 'ESPN', impact: 5, date: 'Feb 5', summary: 'Added frontcourt depth from Golden State in exchange for a second-round pick. TJD provides energy off the bench.' },
+  { id: 3, status: 'Rumored', teams: ['Raptors', 'Various'], players: { sent: ['Jakob Poeltl'], received: ['TBD'] }, picks: 'N/A', source: 'League Sources', impact: 6, summary: 'Poeltl was reportedly available at the deadline but Toronto ultimately held firm, keeping their core intact for the playoff push.' },
+  { id: 4, status: 'Rumored', teams: ['Raptors', 'Pelicans'], players: { sent: ['TBD'], received: ['Brandon Ingram'] }, picks: 'N/A', source: 'Marc Stein', impact: 8, summary: 'Raptors were linked to Ingram as New Orleans explored trading him. Price was reportedly too steep — multiple firsts + young player.' },
+  { id: 5, status: 'Unlikely', teams: ['Raptors', 'Spurs'], players: { sent: ['Scottie Barnes'], received: ['Victor Wembanyama'] }, picks: 'N/A', source: 'Fan Twitter', impact: 1, summary: 'Pure fantasy. Neither side had any interest. Wemby and Scottie are both untouchable franchise cornerstones.' },
 ];
 
 const ADVANCED_STATS = {
@@ -2210,41 +2205,155 @@ const FALLBACK_STANDINGS_EAST = [
   { rank: 15, team: "Pacers", abbr: "IND", id: "1610612754", wins: 13, losses: 40, gb: "26", l10: "3-7" },
 ];
 
-// Fetch live standings from NBA API
+// ESPN API cache
+const _espnCache = {};
+const espnFetch = async (url, cacheKey, ttlMs = 300000) => {
+  if (_espnCache[cacheKey] && (Date.now() - _espnCache[cacheKey].ts < ttlMs)) {
+    return _espnCache[cacheKey].data;
+  }
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8000);
+  try {
+    const res = await fetch(url, { signal: controller.signal });
+    clearTimeout(timeout);
+    if (!res.ok) throw new Error(res.status);
+    const data = await res.json();
+    _espnCache[cacheKey] = { data, ts: Date.now() };
+    return data;
+  } catch (e) {
+    clearTimeout(timeout);
+    throw e;
+  }
+};
+
+// ESPN team ID to NBA CDN ID mapping
+const ESPN_TO_NBA_ID = {
+  1: "1610612737", 2: "1610612738", 17: "1610612751", 30: "1610612766",
+  4: "1610612741", 5: "1610612739", 8: "1610612765", 11: "1610612754",
+  14: "1610612748", 15: "1610612749", 18: "1610612752", 19: "1610612753",
+  20: "1610612755", 28: "1610612761", 27: "1610612764", 21: "1610612756",
+  9: "1610612744", 13: "1610612747", 7: "1610612743", 25: "1610612760",
+  6: "1610612742", 10: "1610612745", 16: "1610612750", 22: "1610612757",
+  23: "1610612758", 24: "1610612759", 26: "1610612762", 12: "1610612754",
+  3: "1610612740", 29: "1610612763"
+};
+
+// Fetch live standings from ESPN API
 const fetchLiveStandings = async () => {
   try {
-    const response = await fetch('https://cdn.nba.com/static/json/staticData/LeagueScheduleandStandingsKey.json');
-    const scheduleKey = await response.json();
-    
-    // Try NBA stats API
-    const standingsUrl = `https://stats.nba.com/stats/leaguestandingsv3?LeagueID=00&Season=2025-26&SeasonType=Regular+Season`;
-    const standingsRes = await fetch(standingsUrl, {
-      headers: { 'Accept': 'application/json' }
+    const data = await espnFetch(
+      'https://site.api.espn.com/apis/v2/sports/basketball/nba/standings',
+      'standings',
+      300000
+    );
+    const eastChildren = data.children?.find(c => c.name === 'Eastern Conference' || c.abbreviation === 'East');
+    if (!eastChildren) throw new Error('No East data');
+    const entries = eastChildren.standings?.entries || [];
+    const parsed = entries.map((entry, i) => {
+      const team = entry.team || {};
+      const stats = {};
+      (entry.stats || []).forEach(s => { stats[s.name] = s.displayValue || s.value; });
+      const espnId = parseInt(team.id);
+      const nbaId = ESPN_TO_NBA_ID[espnId] || team.id;
+      const abbr = team.abbreviation || '';
+      return {
+        rank: i + 1,
+        team: team.shortDisplayName || team.displayName || '',
+        abbr,
+        id: nbaId,
+        wins: parseInt(stats.wins) || 0,
+        losses: parseInt(stats.losses) || 0,
+        pct: stats.winPercent || stats.winPct || '',
+        gb: stats.gamesBehind === '0' || stats.gamesBehind === '-' ? '-' : (stats.gamesBehind || '-'),
+        l10: stats.record || '',
+        streak: stats.streak || '',
+        highlight: abbr === 'TOR'
+      };
     });
-    
-    if (standingsRes.ok) {
-      const data = await standingsRes.json();
-      // Parse and return standings
-      const teams = data.resultSets[0].rowSet;
-      const eastTeams = teams
-        .filter(t => t[6] === 'East')
-        .map((t, i) => ({
-          rank: i + 1,
-          team: t[4],
-          abbr: t[5],
-          id: String(t[2]),
-          wins: t[13],
-          losses: t[14],
-          gb: t[39] === 0 ? '-' : String(t[39]),
-          l10: t[21],
-          highlight: t[5] === 'TOR'
-        }));
-      return eastTeams;
-    }
+    // Sort by rank/wins
+    parsed.sort((a, b) => b.wins - a.wins || a.losses - b.losses);
+    parsed.forEach((t, i) => t.rank = i + 1);
+    return parsed;
   } catch (e) {
-    console.log('Using fallback standings');
+    console.log('ESPN standings fetch failed, using fallback:', e.message);
   }
   return FALLBACK_STANDINGS_EAST;
+};
+
+// useLiveStandings hook
+const useLiveStandings = () => {
+  const [standings, setStandings] = useState(FALLBACK_STANDINGS_EAST);
+  const [loading, setLoading] = useState(true);
+  const [lastUpdated, setLastUpdated] = useState(null);
+  const [raptorsRecord, setRaptorsRecord] = useState(null);
+
+  useEffect(() => {
+    let mounted = true;
+    const load = async () => {
+      setLoading(true);
+      const data = await fetchLiveStandings();
+      if (!mounted) return;
+      setStandings(data);
+      setLastUpdated(new Date());
+      setLoading(false);
+      const tor = data.find(t => t.abbr === 'TOR');
+      if (tor) setRaptorsRecord({ wins: tor.wins, losses: tor.losses, pct: tor.pct, rank: tor.rank });
+    };
+    load();
+    const interval = setInterval(load, 5 * 60 * 1000);
+    return () => { mounted = false; clearInterval(interval); };
+  }, []);
+
+  return { standings, loading, lastUpdated, raptorsRecord };
+};
+
+// Fetch live scoreboard from ESPN
+const fetchLiveScoreboard = async () => {
+  try {
+    const data = await espnFetch(
+      'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard',
+      'scoreboard',
+      60000
+    );
+    const events = data.events || [];
+    return events.map(ev => {
+      const comp = ev.competitions?.[0] || {};
+      const competitors = comp.competitors || [];
+      const home = competitors.find(c => c.homeAway === 'home') || competitors[0] || {};
+      const away = competitors.find(c => c.homeAway === 'away') || competitors[1] || {};
+      const status = comp.status || ev.status || {};
+      const statusType = status.type || {};
+      let displayStatus;
+      if (statusType.completed) {
+        displayStatus = 'Final';
+      } else if (statusType.state === 'in') {
+        displayStatus = status.displayClock ? `${status.period ? 'Q' + status.period + ' ' : ''}${status.displayClock}` : 'Live';
+      } else {
+        const dt = new Date(ev.date || comp.date);
+        displayStatus = dt.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+      }
+      const homeTeam = home.team || {};
+      const awayTeam = away.team || {};
+      const homeEspnId = parseInt(homeTeam.id);
+      const awayEspnId = parseInt(awayTeam.id);
+      const isRaptors = homeTeam.abbreviation === 'TOR' || awayTeam.abbreviation === 'TOR';
+      return {
+        home: homeTeam.abbreviation || '',
+        away: awayTeam.abbreviation || '',
+        homeScore: parseInt(home.score) || 0,
+        awayScore: parseInt(away.score) || 0,
+        status: displayStatus,
+        homeId: ESPN_TO_NBA_ID[homeEspnId] || homeTeam.id,
+        awayId: ESPN_TO_NBA_ID[awayEspnId] || awayTeam.id,
+        isLive: statusType.state === 'in',
+        isFinal: !!statusType.completed,
+        isRaptors
+      };
+    });
+  } catch (e) {
+    console.log('ESPN scoreboard fetch failed:', e.message);
+    return null;
+  }
 };
 
 // Raptors Team Stats (will be updated from standings)
@@ -2255,7 +2364,7 @@ const RAPTORS_STATS = { wins: 32, losses: 25, ppg: 113.8, oppPpg: 112.5, streak:
 // DRAFT INTELLIGENCE DATA
 // ============================================================
 const DRAFT_DATA = {
-  raptorsRecord: { wins: 17, losses: 38, pct: '.309', projectedSeed: 4 },
+  raptorsRecord: { wins: 32, losses: 22, pct: '.593', projectedSeed: 21 },
   lotteryOdds: [
     { seed: 1, first: 14.0, top4: 52.1 },
     { seed: 2, first: 14.0, top4: 52.1 },
@@ -2285,13 +2394,13 @@ const DRAFT_DATA = {
     { name: "Koa Peat", school: "Arizona", position: "SF", projected: "10-15", stats: "19.1 PPG, 7.3 RPG, 3.4 APG", comparison: "Jarace Walker+", emoji: "🛡️" },
   ],
   tankWatch: [
-    { team: "WAS", wins: 14, losses: 40, pct: '.259', lotteryPos: 1 },
-    { team: "NOP", wins: 16, losses: 39, pct: '.291', lotteryPos: 2 },
-    { team: "CHA", wins: 17, losses: 38, pct: '.309', lotteryPos: 3 },
-    { team: "TOR", wins: 17, losses: 38, pct: '.309', lotteryPos: 4 },
-    { team: "POR", wins: 19, losses: 37, pct: '.339', lotteryPos: 5 },
-    { team: "BKN", wins: 19, losses: 37, pct: '.339', lotteryPos: 6 },
-    { team: "UTA", wins: 20, losses: 36, pct: '.357', lotteryPos: 7 },
+    { team: "SAC", wins: 14, losses: 40, pct: '.259', lotteryPos: 1 },
+    { team: "IND", wins: 16, losses: 39, pct: '.291', lotteryPos: 2 },
+    { team: "NOP", wins: 17, losses: 38, pct: '.309', lotteryPos: 3 },
+    { team: "WAS", wins: 18, losses: 38, pct: '.321', lotteryPos: 4 },
+    { team: "BKN", wins: 19, losses: 37, pct: '.339', lotteryPos: 5 },
+    { team: "UTA", wins: 19, losses: 37, pct: '.339', lotteryPos: 6 },
+    { team: "POR", wins: 20, losses: 36, pct: '.357', lotteryPos: 7 },
     { team: "CHI", wins: 21, losses: 35, pct: '.375', lotteryPos: 8 },
   ]
 };
@@ -4759,39 +4868,64 @@ const AnimatedStatCard = ({ icon: Icon, label, value, trend, trendValue, delay =
 // LIVE SCORE TICKER
 // ============================================================
 const LiveScoreTicker = ({ isDark = true }) => {
+  const [scores, setScores] = useState(LIVE_NBA_SCORES);
   const [offset, setOffset] = useState(0);
+  const [liveCount, setLiveCount] = useState(0);
   
   useEffect(() => {
+    let mounted = true;
+    const load = async () => {
+      const data = await fetchLiveScoreboard();
+      if (data && mounted) {
+        setScores(data.length > 0 ? data : LIVE_NBA_SCORES);
+        setLiveCount(data.filter(g => g.isLive).length);
+      }
+    };
+    load();
+    const interval = setInterval(load, 60000);
+    return () => { mounted = false; clearInterval(interval); };
+  }, []);
+
+  useEffect(() => {
     const interval = setInterval(() => {
-      setOffset(prev => (prev - 1) % -2000);
+      setOffset(prev => (prev - 1) % -3000);
     }, 30);
     return () => clearInterval(interval);
   }, []);
 
+  const displayScores = scores.length > 0 ? scores : LIVE_NBA_SCORES;
+
   return (
     <div className={`w-full overflow-hidden ${isDark ? 'bg-cmd-bg border-cmd-border' : 'bg-light-card border-light-border'} border-b py-1.5`}>
-      <div className="flex items-center gap-8 whitespace-nowrap" style={{ transform: `translateX(${offset}px)` }}>
-        {[...LIVE_NBA_SCORES, ...LIVE_NBA_SCORES].map((game, i) => {
-          const isLive = game.status.includes('Q');
-          const isFinal = game.status === 'Final';
-          return (
-            <div key={i} className="flex items-center gap-3 px-4">
-              <div className="flex items-center gap-2">
-                <img loading="lazy" src={`https://cdn.nba.com/logos/nba/${game.awayId}/primary/L/logo.svg`} className="w-4 h-4" alt="" />
-                <span className={`text-xs font-bold ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>{game.away}</span>
-                <span className={`text-xs font-mono font-bold ${game.awayScore > game.homeScore ? 'text-green-500' : isDark ? 'text-white' : 'text-slate-800'}`}>{game.awayScore || '-'}</span>
-              </div>
-              <span className={`text-xs ${isLive ? 'text-raptors-red font-bold animate-pulse' : isFinal ? 'text-slate-500' : isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-                {isLive && '🔴 '}{game.status}
-              </span>
-              <div className="flex items-center gap-2">
-                <span className={`text-xs font-mono font-bold ${game.homeScore > game.awayScore ? 'text-green-500' : isDark ? 'text-white' : 'text-slate-800'}`}>{game.homeScore || '-'}</span>
-                <span className={`text-xs font-bold ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>{game.home}</span>
-                <img loading="lazy" src={`https://cdn.nba.com/logos/nba/${game.homeId}/primary/L/logo.svg`} className="w-4 h-4" alt="" />
-              </div>
-            </div>
-          );
-        })}
+      <div className="flex items-center">
+        <div className={`shrink-0 px-2 py-0.5 text-[10px] font-bold uppercase flex items-center gap-1 ${liveCount > 0 ? 'text-raptors-red' : isDark ? 'text-slate-500' : 'text-slate-400'}`}>
+          🏀 {liveCount > 0 ? `${liveCount} Live` : 'Scores'}
+        </div>
+        <div className="overflow-hidden flex-1">
+          <div className="flex items-center gap-8 whitespace-nowrap" style={{ transform: `translateX(${offset}px)` }}>
+            {[...displayScores, ...displayScores].map((game, i) => {
+              const isLive = game.isLive || game.status?.includes('Q');
+              const isFinal = game.isFinal || game.status === 'Final';
+              return (
+                <div key={i} className={`flex items-center gap-3 px-4 py-0.5 rounded ${game.isRaptors ? (isDark ? 'bg-raptors-red/15 border border-raptors-red/30' : 'bg-raptors-red/10 border border-raptors-red/20') : ''}`}>
+                  <div className="flex items-center gap-2">
+                    <img loading="lazy" src={`https://cdn.nba.com/logos/nba/${game.awayId}/primary/L/logo.svg`} className="w-4 h-4" alt="" />
+                    <span className={`text-xs font-bold ${game.isRaptors && game.away === 'TOR' ? 'text-raptors-red' : isDark ? 'text-slate-300' : 'text-slate-700'}`}>{game.away}</span>
+                    <span className={`text-xs font-mono font-bold ${game.awayScore > game.homeScore ? 'text-green-500' : isDark ? 'text-white' : 'text-slate-800'}`}>{game.awayScore || '-'}</span>
+                  </div>
+                  <span className={`text-xs ${isLive ? 'text-raptors-red font-bold animate-pulse' : isFinal ? 'text-slate-500' : isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+                    {isLive && '🔴 '}{game.status}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className={`text-xs font-mono font-bold ${game.homeScore > game.awayScore ? 'text-green-500' : isDark ? 'text-white' : 'text-slate-800'}`}>{game.homeScore || '-'}</span>
+                    <span className={`text-xs font-bold ${game.isRaptors && game.home === 'TOR' ? 'text-raptors-red' : isDark ? 'text-slate-300' : 'text-slate-700'}`}>{game.home}</span>
+                    <img loading="lazy" src={`https://cdn.nba.com/logos/nba/${game.homeId}/primary/L/logo.svg`} className="w-4 h-4" alt="" />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
       </div>
     </div>
   );
