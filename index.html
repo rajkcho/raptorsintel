@@ -1133,6 +1133,33 @@
         transform: translateY(-2px);
       }
 
+      /* ======== MASONRY LAYOUT ======== */
+      .widget-masonry {
+        columns: 3 300px;
+        column-gap: 0.75rem;
+      }
+      .widget-masonry > * {
+        break-inside: avoid;
+        margin-bottom: 0.75rem;
+      }
+      .widget-full-span {
+        column-span: all;
+        margin-bottom: 0.75rem;
+      }
+      /* ======== COMPACT WIDGET PADDING ======== */
+      .glass-card, .premium-glass,
+      [class*="rounded-2xl"][class*="p-4"],
+      [class*="rounded-2xl"][class*="p-5"],
+      [class*="rounded-2xl"][class*="p-6"] {
+        padding: 0.625rem !important;
+      }
+      .glass-card h3, .premium-glass h3,
+      [class*="rounded-2xl"] h3 {
+        margin-bottom: 0.375rem !important;
+      }
+      .max-h-64 { max-height: 12rem !important; }
+      .max-h-\[300px\] { max-height: 200px !important; }
+
       /* Mobile sidebar toggle */
       .mobile-sidebar-hidden { display: none !important; }
       @media (min-width: 1024px) { .mobile-sidebar-hidden { display: block !important; } }
@@ -13429,15 +13456,28 @@ function App() {
             </button>
           </div>
           {/* Slim Sidebar */}
-          <div id="sidebar-panel" className="col-span-12 lg:col-span-2 space-y-3 pb-4 mobile-sidebar-hidden lg:!block" role="complementary" aria-label="Sidebar widgets" style={{position:'sticky',top:'1rem',alignSelf:'start'}}>
+          <div id="sidebar-panel" className="col-span-12 lg:col-span-3 space-y-3 pb-4 mobile-sidebar-hidden lg:!block" role="complementary" aria-label="Sidebar widgets" style={{position:'sticky',top:'1rem',alignSelf:'start',maxHeight:'calc(100vh - 2rem)',overflowY:'auto'}}>
             <ScheduleList games={games} onSelectGame={setSelectedGame} selectedGameId={selectedGame?.id} isDark={isDark} />
             <RecentResultsWidget games={games} isDark={isDark} />
             <GameCountdown game={selectedGame} isDark={isDark} gameDayMode={gameDayMode} />
+            <QuickStatsBar isDark={isDark} />
+            <QuickStatsGrid isDark={isDark} />
+            <SeasonProgress isDark={isDark} />
+            <StreakCelebration streak={RAPTORS_STATS.streak} isDark={isDark} />
+            <TeamLeadersWidget isDark={isDark} />
+            <WidgetErrorBoundary name="Standings"><StandingsWidget isDark={isDark} /></WidgetErrorBoundary>
+            <PlayoffPictureWidget isDark={isDark} />
+            <InjuryReportWidget isDark={isDark} opponent={selectedGame?.opponent} />
+            <InjuryDashboardWidget isDark={isDark} />
+            <RestFatigueWidget isDark={isDark} />
+            <DraftWatchWidget isDark={isDark} />
+            <PowerRankingsWidget isDark={isDark} />
+            <SocialLinksWidget isDark={isDark} />
             <ArenaWidget isDark={isDark} />
             <AboutWidget isDark={isDark} />
           </div>
           {/* Main Content */}
-          <div className="col-span-12 lg:col-span-10 pb-20 lg:pb-10">
+          <div className="col-span-12 lg:col-span-9 pb-20 lg:pb-10">
             {/* Sticky Jump Nav */}
             {(() => {
               const jumpSections = [
@@ -13445,10 +13485,8 @@ function App() {
                 { id: 'section-teamstats', icon: '📊', label: 'Team Stats' },
                 { id: 'section-players', icon: '👤', label: 'Players' },
                 { id: 'section-analytics', icon: '🧠', label: 'Analytics' },
-                { id: 'section-offense', icon: '⚔️', label: 'Offense' },
-                { id: 'section-defense', icon: '🛡️', label: 'Defense' },
-                { id: 'section-season', icon: '📅', label: 'Season' },
-                { id: 'section-frontoffice', icon: '🏢', label: 'Front Office' },
+                { id: 'section-oncourt', icon: '⚔️', label: 'On-Court' },
+                { id: 'section-seasonfo', icon: '📅', label: 'Season & Front Office' },
                 { id: 'section-community', icon: '💬', label: 'Community' },
               ];
               const [activeJumpSection, setActiveJumpSection] = React.useState('section-gameday');
@@ -13466,11 +13504,11 @@ function App() {
               });
               const toggleSection = (id) => setMobileSectionCollapsed(prev => ({...prev, [id]: !prev[id]}));
               const SectionHeader = ({ id, icon, title }) => (
-                <div id={id} className="scroll-mt-16 pt-2 pb-1">
-                  <button onClick={() => toggleSection(id)} className={`w-full flex items-center gap-2 group`}>
-                    <span className="text-lg">{icon}</span>
-                    <h2 className={`text-sm font-bold uppercase tracking-wider ${isDark ? 'text-white' : 'text-slate-800'}`}>{title}</h2>
-                    <div className={`flex-1 h-px ${isDark ? 'bg-cmd-border' : 'bg-light-border'}`}></div>
+                <div id={id} className="scroll-mt-16 pt-2 mb-1" style={{columnSpan:'all'}}>
+                  <button onClick={() => toggleSection(id)} className="inline-flex items-center gap-1.5">
+                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${isDark ? 'bg-raptors-red/15 text-raptors-red border border-raptors-red/20' : 'bg-raptors-red/10 text-raptors-red border border-raptors-red/15'}`}>
+                      {icon} {title}
+                    </span>
                     <span className={`lg:hidden text-xs ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{mobileSectionCollapsed[id] ? '▶' : '▼'}</span>
                   </button>
                 </div>
@@ -13480,7 +13518,7 @@ function App() {
                 if (filtered.length === 0) return null;
                 return (
                 <div className={`${mobileSectionCollapsed[id] ? 'hidden lg:block' : ''}`}>
-                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3" style={{alignItems:'start'}}>
+                  <div className="widget-masonry">
                     {filtered}
                   </div>
                 </div>
@@ -13519,7 +13557,6 @@ function App() {
               <SectionBody id="section-gameday">
                 {selectedGame && <TeamStatsComparisonWidget isDark={isDark} opponent={selectedGame.opponent} />}
                 {selectedGame && <KeyMatchupsWidget opponent={selectedGame.opponent} isDark={isDark} />}
-                <InjuryReportWidget isDark={isDark} opponent={selectedGame?.opponent} />
                 {selectedGame?.status === 'upcoming' && <WidgetErrorBoundary name="Betting Hub"><BettingHubWidget isDark={isDark} game={selectedGame} /></WidgetErrorBoundary>}
                 {selectedGame && <PredictionBreakdownWidget isDark={isDark} opponent={selectedGame.opponent} />}
                 {selectedGame?.status === 'upcoming' && <PredictedScoreWidget isDark={isDark} opponent={selectedGame.opponent} />}
@@ -13537,10 +13574,6 @@ function App() {
               {/* ===== TEAM STATS ===== */}
               <SectionHeader id="section-teamstats" icon="📊" title="Team Stats" />
               <SectionBody id="section-teamstats">
-                <QuickStatsBar isDark={isDark} />
-                <QuickStatsGrid isDark={isDark} />
-                <SeasonProgress isDark={isDark} />
-                <StreakCelebration streak={RAPTORS_STATS.streak} isDark={isDark} />
                 <RecordBreakdownWidget isDark={isDark} />
                 <HomeAwaySplitsWidget isDark={isDark} nextGameHome={selectedGame?.home} />
                 <RecordByDayWidget isDark={isDark} />
@@ -13582,7 +13615,6 @@ function App() {
                 <RookieWatchWidget isDark={isDark} />
                 <WinSharesWidget isDark={isDark} />
                 <ContractWidget isDark={isDark} />
-                <TeamLeadersWidget isDark={isDark} />
               </SectionBody>
               {/* ===== ADVANCED ANALYTICS ===== */}
               <SectionHeader id="section-analytics" icon="🧠" title="Advanced Analytics" />
@@ -13597,14 +13629,13 @@ function App() {
                 <CrunchTimeWidget isDark={isDark} />
                 <EfficiencyWidget isDark={isDark} />
                 <AstToWidget isDark={isDark} />
-                <RestFatigueWidget isDark={isDark} />
                 <PacePredictorWidget isDark={isDark} opponent={selectedGame?.opponent} />
                 <QuarterBreakdownWidget isDark={isDark} />
                 <StreakProbabilityWidget isDark={isDark} streak={RAPTORS_STATS.streak} />
               </SectionBody>
-              {/* ===== OFFENSE ===== */}
-              <SectionHeader id="section-offense" icon="⚔️" title="Offense" />
-              <SectionBody id="section-offense">
+              {/* ===== ON-COURT (Offense + Defense merged) ===== */}
+              <SectionHeader id="section-oncourt" icon="⚔️" title="On-Court" />
+              <SectionBody id="section-oncourt">
                 <PointsDistributionWidget isDark={isDark} />
                 <AssistLeadersWidget isDark={isDark} />
                 <PointsOffAssistsWidget isDark={isDark} />
@@ -13613,53 +13644,39 @@ function App() {
                 <FastBreakWidget isDark={isDark} />
                 <PaintScoringWidget isDark={isDark} />
                 <SecondChanceWidget isDark={isDark} />
-                <ShotChartWidget isDark={isDark} />
+                <div className="widget-full-span"><ShotChartWidget isDark={isDark} /></div>
                 <MiniHeatMap isDark={isDark} />
                 <ShotClockWidget isDark={isDark} />
                 <BenchProductionWidget isDark={isDark} />
                 <StarterVsBenchWidget isDark={isDark} />
-                <LineupCombosWidget isDark={isDark} />
-              </SectionBody>
-              {/* ===== DEFENSE ===== */}
-              <SectionHeader id="section-defense" icon="🛡️" title="Defense" />
-              <SectionBody id="section-defense">
+                <div className="widget-full-span"><LineupCombosWidget isDark={isDark} /></div>
                 <StealsBlocksWidget isDark={isDark} />
                 <ReboundBattleWidget isDark={isDark} />
                 <TurnoverWidget isDark={isDark} />
                 <FoulTroubleWidget isDark={isDark} />
                 <TimeoutTrackerWidget isDark={isDark} />
               </SectionBody>
-              {/* ===== SEASON OVERVIEW ===== */}
-              <SectionHeader id="section-season" icon="📅" title="Season Overview" />
-              <SectionBody id="section-season">
-                <div id="standings-section"><WidgetErrorBoundary name="Standings"><StandingsWidget isDark={isDark} /></WidgetErrorBoundary></div>
+              {/* ===== SEASON & FRONT OFFICE (merged) ===== */}
+              <SectionHeader id="section-seasonfo" icon="📅" title="Season & Front Office" />
+              <SectionBody id="section-seasonfo">
                 <StandingsVisualizationWidget isDark={isDark} />
-                <PlayoffPictureWidget isDark={isDark} />
-                <div id="schedule-section"><ScheduleResultsWidget isDark={isDark} /></div>
+                <div className="widget-full-span" id="schedule-section"><ScheduleResultsWidget isDark={isDark} /></div>
                 <ScheduleStrengthWidget isDark={isDark} />
                 <SeasonTrackerWidget isDark={isDark} games={games} />
-                <SeasonTimelineWidget isDark={isDark} />
+                <div className="widget-full-span"><SeasonTimelineWidget isDark={isDark} /></div>
                 <SeasonComparisonWidget isDark={isDark} />
-                <SeasonHighlightWidget isDark={isDark} />
                 <DivisionRivalsWidget isDark={isDark} />
                 <TravelWidget isDark={isDark} />
                 <NationalTVWidget isDark={isDark} />
-                <PowerRankingsWidget isDark={isDark} />
                 <AwardsWatchWidget isDark={isDark} />
                 <MVPRaceWidget isDark={isDark} />
                 <AllStarTrackerWidget isDark={isDark} />
-              </SectionBody>
-              {/* ===== FRONT OFFICE ===== */}
-              <SectionHeader id="section-frontoffice" icon="🏢" title="Front Office" />
-              <SectionBody id="section-frontoffice">
                 <TradeAnalysisWidget isDark={isDark} />
-                <DraftWatchWidget isDark={isDark} />
                 <DraftPickWidget isDark={isDark} />
                 <SalaryCapWidget isDark={isDark} />
                 <TeamSalaryWidget isDark={isDark} teamName="Raptors" opponentName={selectedGame?.opponent} />
                 <TeamAgeWidget isDark={isDark} />
                 <CoachInsightsWidget isDark={isDark} />
-                <InjuryDashboardWidget isDark={isDark} />
                 <MilestonesWidget isDark={isDark} />
                 <FranchiseHistoryWidget isDark={isDark} />
                 <SeasonGradesWidget isDark={isDark} />
@@ -13671,25 +13688,15 @@ function App() {
                 <FanEngagementWidget isDark={isDark} />
                 <GamePredictionPoll isDark={isDark} />
                 <FanPollWidget isDark={isDark} />
-                <FanPredictionWidget isDark={isDark} />
                 <RaptorsQuizWidget isDark={isDark} />
                 <TriviaWidget isDark={isDark} />
-                <MoodMeterWidget isDark={isDark} />
-                <CommunityBuzzWidget isDark={isDark} />
                 <StorylinesWidget isDark={isDark} />
                 <SocialBuzzWidget isDark={isDark} />
                 <TeamChemistryWidget isDark={isDark} />
                 <SocialShareWidget isDark={isDark} />
-                <SocialLinksWidget isDark={isDark} />
                 <MomentumTrackerWidget isDark={isDark} />
                 <RaptorsPulseWidget isDark={isDark} />
                 <VenueStatsWidget isDark={isDark} />
-                <WeatherImpactWidget isDark={isDark} />
-                <SoundWidget isDark={isDark} />
-                <LeaguePassWidget isDark={isDark} />
-                <LiveViewersWidget isDark={isDark} />
-                <InteractiveRosterGrid isDark={isDark} />
-                <QuickCompareWidget isDark={isDark} />
               </SectionBody>
               </>);
             })()}
@@ -13702,7 +13709,7 @@ function App() {
         <div className="flex flex-col items-center gap-2">
           <div className="flex items-center gap-2 flex-wrap justify-center">
             <span className="font-bold text-raptors-red">RAPTORS INTEL</span>
-            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v12.3</span>
+            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v12.5</span>
           </div>
           <p style={{margin:0}}>Built with 🏀 by Raptors Intel • Data from ESPN • Not affiliated with the NBA</p>
           <p style={{margin:0, fontSize:'0.65rem', opacity:0.6}}>Last Updated: {new Date().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}</p>
