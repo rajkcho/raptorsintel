@@ -1136,20 +1136,17 @@
       /* ======== MASONRY LAYOUT ======== */
       /* ======== DASHBOARD GRID ======== */
       .dashboard-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 6px;
-        align-items: start;
+        columns: 4 240px;
+        column-gap: 3px;
       }
       .dashboard-grid > div {
-        min-width: 0;
+        break-inside: avoid;
+        margin-bottom: 3px;
       }
-      .widget-wide { grid-column: span 2; }
-      .widget-tall { grid-row: span 2; }
-      .widget-large { grid-column: span 2; grid-row: span 2; }
-      @media (max-width: 1280px) { .dashboard-grid { grid-template-columns: repeat(3, 1fr); } }
-      @media (max-width: 1024px) { .dashboard-grid { grid-template-columns: repeat(2, 1fr); } }
-      @media (max-width: 640px) { .dashboard-grid { grid-template-columns: repeat(2, 1fr); gap: 4px; } }
+      .widget-wide, .widget-tall, .widget-large { /* no special sizing in column layout */ }
+      @media (max-width: 1280px) { .dashboard-grid { columns: 3 220px; } }
+      @media (max-width: 1024px) { .dashboard-grid { columns: 2 200px; } }
+      @media (max-width: 640px) { .dashboard-grid { columns: 2 150px; column-gap: 2px; } }
 
       /* Category border accents */
       .dg-gameday { border-left: 2px solid #CE1141; }
