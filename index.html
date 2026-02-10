@@ -2454,11 +2454,11 @@ const ADVANCED_STATS = {
 
 const SCHEDULE_DATA = {
   upcoming: [
-    { date: 'Feb 12', opponent: 'Pistons', home: true, time: '7:30 PM ET', tv: 'TSN', oppRecord: '39-13', difficulty: 5 },
-    { date: 'Feb 20', opponent: 'Bulls', home: false, time: '8:00 PM ET', tv: 'SN', oppRecord: '24-30', difficulty: 2 },
-    { date: 'Feb 22', opponent: 'Bucks', home: false, time: '8:00 PM ET', tv: 'SN', oppRecord: '21-30', difficulty: 2 },
-    { date: 'Feb 25', opponent: 'Thunder', home: true, time: '7:30 PM ET', tv: 'TSN', oppRecord: '41-13', difficulty: 5 },
-    { date: 'Feb 26', opponent: 'Spurs', home: true, time: '7:30 PM ET', tv: 'TSN', oppRecord: '36-16', difficulty: 4 },
+    { date: 'Feb 11', opponent: 'Pistons', home: true, time: '7:30 PM ET', tv: 'TSN', oppRecord: '39-13', difficulty: 5 },
+    { date: 'Feb 19', opponent: 'Bulls', home: false, time: '8:00 PM ET', tv: 'SN', oppRecord: '24-30', difficulty: 2 },
+    { date: 'Feb 21', opponent: 'Bucks', home: false, time: '8:00 PM ET', tv: 'SN', oppRecord: '21-30', difficulty: 2 },
+    { date: 'Feb 24', opponent: 'Thunder', home: true, time: '7:30 PM ET', tv: 'TSN', oppRecord: '41-13', difficulty: 5 },
+    { date: 'Feb 25', opponent: 'Spurs', home: true, time: '7:30 PM ET', tv: 'TSN', oppRecord: '36-16', difficulty: 4 },
     { date: 'Mar 2', opponent: 'Heat', home: false, time: '6:00 PM ET', tv: 'SN', oppRecord: '28-27', difficulty: 4 }
   ],
   recent: [
@@ -2473,7 +2473,7 @@ const SCHEDULE_DATA = {
 // Rest/Fatigue Data
 const REST_DATA = {
   lastGameDate: new Date('2026-02-08'), // Feb 8 vs Hawks
-  nextGameDate: new Date('2026-02-12'), // Feb 12 vs Pistons
+  nextGameDate: new Date('2026-02-11'), // Feb 12 vs Pistons
   isBackToBack: false,
   daysBetween: 3,
   milesLastWeek: 1250, // Toronto -> cities
@@ -3448,9 +3448,9 @@ const fetchRaptorsSchedule = async () => {
     { id: "g52", date: "Feb 5", opponent: "Timberwolves", opponentId: "1610612750", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "completed", result: "L 126-128" },
     { id: "g53", date: "Feb 6", opponent: "Bulls", opponentId: "1610612741", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "completed", result: "W 123-107" },
     { id: "g54", date: "Feb 8", opponent: "Pacers", opponentId: "1610612754", isHome: true, time: "3:00 PM", venue: "Scotiabank Arena", status: "completed", result: "W 122-104" },
-    { id: "g55", date: "Feb 12", opponent: "Pistons", opponentId: "1610612765", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "upcoming" },
-    { id: "g56", date: "Feb 20", opponent: "Bulls", opponentId: "1610612741", isHome: false, time: "8:00 PM", venue: "United Center", status: "upcoming" },
-    { id: "g57", date: "Feb 22", opponent: "Bucks", opponentId: "1610612749", isHome: false, time: "3:30 PM", venue: "Fiserv Forum", status: "upcoming" },
+    { id: "g55", date: "Feb 11", opponent: "Pistons", opponentId: "1610612765", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "upcoming" },
+    { id: "g56", date: "Feb 19", opponent: "Bulls", opponentId: "1610612741", isHome: false, time: "8:00 PM", venue: "United Center", status: "upcoming" },
+    { id: "g57", date: "Feb 21", opponent: "Bucks", opponentId: "1610612749", isHome: false, time: "3:30 PM", venue: "Fiserv Forum", status: "upcoming" },
     { id: "g58", date: "Feb 24", opponent: "Thunder", opponentId: "1610612760", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "upcoming" },
     { id: "g59", date: "Feb 25", opponent: "Spurs", opponentId: "1610612759", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "upcoming" },
     { id: "g60", date: "Feb 28", opponent: "Wizards", opponentId: "1610612764", isHome: false, time: "7:00 PM", venue: "Capital One Arena", status: "upcoming" },
