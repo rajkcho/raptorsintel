@@ -129,9 +129,18 @@
       
       /* Print styles */
       @media print {
-        .no-print { display: none !important; }
-        body { background: white !important; color: black !important; }
+        .no-print, .section-nav, .polished-footer, .particles-container, .cursor-glow,
+        .glow-orb, .blob-bg, button, [role="button"], .btn-magnetic, .mobile-bottom-nav,
+        input[type="range"], .poll-widget, details summary, .noise-overlay::before { display: none !important; }
+        body { background: white !important; color: black !important; font-size: 11pt !important; }
+        * { box-shadow: none !important; text-shadow: none !important; animation: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+        .glass-card, .premium-glass, .glass-premium { background: white !important; border: 1px solid #ddd !important; }
+        .print-header { display: block !important; text-align: center; padding: 1rem 0; border-bottom: 2px solid #CE1141; margin-bottom: 1rem; }
+        .print-header h1 { font-size: 18pt; color: #CE1141; margin: 0; }
+        .print-header p { font-size: 10pt; color: #666; margin: 4px 0 0; }
+        @page { size: A4; margin: 1.5cm; }
       }
+      .print-header { display: none; }
       
       /* Reduced motion */
       @media (prefers-reduced-motion: reduce) {
@@ -1025,6 +1034,10 @@
         transform: translateY(-2px);
       }
 
+      /* Mobile sidebar toggle */
+      .mobile-sidebar-hidden { display: none !important; }
+      @media (min-width: 1024px) { .mobile-sidebar-hidden { display: block !important; } }
+      
       /* ======== MOBILE RESPONSIVE OVERRIDES ======== */
       @media (max-width: 768px) {
         .grid-cols-12 { grid-template-columns: 1fr !important; }
@@ -11473,23 +11486,35 @@ const InjuryDashboardWidget = ({ isDark = true }) => {
 // ============================================================
 // Section Navigation Bar
 const SectionNav = ({ isDark = true }) => {
+  const { toggle } = React.useContext(ThemeContext);
   const sections = [
-    { id: 'main-content', label: '🏠 Hero' },
-    { id: 'main-content', label: '⚔️ Matchup' },
-    { id: 'main-content', label: '🏆 Standings' },
-    { id: 'main-content', label: '📋 Draft Watch' },
-    { id: 'main-content', label: '💼 Trade Room' },
-    { id: 'main-content', label: '📊 Analytics' },
-    { id: 'main-content', label: '📅 Schedule' },
+    { id: 'sec-hero', label: '🏠 Hero', key: '1' },
+    { id: 'sec-matchup', label: '⚔️ Matchup', key: '2' },
+    { id: 'sec-standings', label: '🏆 Standings', key: '3' },
+    { id: 'sec-draft', label: '📋 Draft Watch', key: '4' },
+    { id: 'sec-trade', label: '💼 Trade Room', key: '5' },
+    { id: 'sec-analytics', label: '📊 Analytics', key: '6' },
+    { id: 'sec-schedule', label: '📅 Schedule', key: '7' },
   ];
+  const handlePrint = () => {
+    window.print();
+  };
   return (
-    <div className="section-nav flex items-center gap-1 no-print">
+    <nav className="section-nav flex items-center gap-1 no-print" role="navigation" aria-label="Section navigation">
       {sections.map((s, i) => (
-        <a key={i} href={`#${s.id}`} onClick={(e) => { e.preventDefault(); document.getElementById(s.id)?.scrollIntoView({ behavior: 'smooth' }); }}>
+        <a key={i} href={`#${s.id}`} aria-label={`Jump to ${s.label.replace(/[^\w\s]/g, '').trim()} section (${s.key})`} onClick={(e) => { e.preventDefault(); const el = document.getElementById(s.id); if (el) el.scrollIntoView({ behavior: 'smooth' }); else document.getElementById('main-content')?.scrollIntoView({ behavior: 'smooth' }); }}>
           {s.label}
         </a>
       ))}
-    </div>
+      <div className="ml-auto flex items-center gap-1 flex-shrink-0">
+        <button onClick={handlePrint} className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-[0.7rem] font-bold uppercase tracking-wide transition-all ${isDark ? 'bg-cmd-bg/80 border border-cmd-border text-slate-400 hover:text-white hover:bg-cmd-card' : 'bg-light-card border border-light-border text-slate-500 hover:text-slate-800 hover:bg-slate-200'}`} aria-label="Print report (P)" title="Print Report (P)">
+          🖨️ Print
+        </button>
+        <button onClick={toggle} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[0.7rem] font-bold uppercase tracking-wide transition-all ${isDark ? 'bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 hover:bg-yellow-500/20' : 'bg-blue-500/10 border border-blue-500/30 text-blue-600 hover:bg-blue-500/20'}`} aria-label={isDark ? 'Switch to light mode (D)' : 'Switch to dark mode (D)'} title={isDark ? 'Light Mode (D)' : 'Dark Mode (D)'}>
+          {isDark ? '☀️ Light' : '🌙 Dark'}
+        </button>
+      </div>
+    </nav>
   );
 };
 
@@ -11842,11 +11867,24 @@ function App() {
         setTimeout(() => setShowEasterEgg(false), 5000);
       }
 
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
       if (e.key === '?' && !e.ctrlKey && !e.metaKey) {
         setShowKeyboardHelp(prev => !prev);
       }
-      if (e.key === 'd' && !e.ctrlKey && !e.metaKey && e.target.tagName !== 'INPUT') {
+      // Section jump: 1-7
+      const sectionIds = ['sec-hero', 'sec-matchup', 'sec-standings', 'sec-draft', 'sec-trade', 'sec-analytics', 'sec-schedule'];
+      const secIdx = parseInt(e.key) - 1;
+      if (secIdx >= 0 && secIdx < sectionIds.length && !e.ctrlKey && !e.metaKey) {
+        const el = document.getElementById(sectionIds[secIdx]);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+        else document.getElementById('main-content')?.scrollIntoView({ behavior: 'smooth' });
+      }
+      if ((e.key === 'd' || e.key === 'D') && !e.ctrlKey && !e.metaKey) {
         toggleTheme();
+      }
+      if ((e.key === 'p' || e.key === 'P') && !e.ctrlKey && !e.metaKey) {
+        window.print();
       }
       if (e.key === 'Escape') {
         setShowKeyboardHelp(false);
@@ -11855,12 +11893,12 @@ function App() {
         setShowEasterEgg(false);
         setSelectedPlayer(null);
       }
-      if (e.key === 'ArrowDown' && e.target.tagName !== 'INPUT' && !e.repeat) {
+      if (e.key === 'ArrowDown' && !e.repeat) {
         e.preventDefault();
         const idx = games.findIndex(g => g.id === selectedGame?.id);
         if (idx < games.length - 1) setSelectedGame(games[idx + 1]);
       }
-      if (e.key === 'ArrowUp' && e.target.tagName !== 'INPUT' && !e.repeat) {
+      if (e.key === 'ArrowUp' && !e.repeat) {
         e.preventDefault();
         const idx = games.findIndex(g => g.id === selectedGame?.id);
         if (idx > 0) setSelectedGame(games[idx - 1]);
@@ -12117,7 +12155,18 @@ function App() {
       )}
       <main id="main-content" className="flex-1 overflow-hidden w-full max-w-[98%] mx-auto px-4 py-4" role="main">
         <div className="grid grid-cols-12 gap-4 h-full">
-          <div className="col-span-12 lg:col-span-2 h-full overflow-y-auto space-y-4 pb-4">
+          {/* Mobile sidebar toggle */}
+          <div className="col-span-12 lg:hidden mb-2">
+            <button 
+              onClick={() => { const el = document.getElementById('sidebar-panel'); if(el) el.classList.toggle('mobile-sidebar-hidden'); }}
+              className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold transition-all ${isDark ? 'bg-cmd-card border border-cmd-border text-slate-300 hover:border-raptors-red' : 'bg-white border border-light-border text-slate-700 hover:border-raptors-red'}`}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+              Scouting Sidebar
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+          </div>
+          <div id="sidebar-panel" className="col-span-12 lg:col-span-2 h-full overflow-y-auto space-y-4 pb-4 mobile-sidebar-hidden lg:!block">
             <QuickStatsBar isDark={isDark} />
             <SeasonProgress isDark={isDark} />
             <StreakCelebration streak={RAPTORS_STATS.streak} isDark={isDark} />
