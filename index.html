@@ -1703,6 +1703,18 @@
         to { opacity: 1; transform: translateY(0); }
       }
 
+      /* Kill ALL padding on widget wrappers in grid */
+      .dashboard-grid > div { padding: 0 !important; margin: 0 !important; }
+      .dashboard-grid .glass-card,
+      .dashboard-grid .premium-glass,
+      .dashboard-grid [class*="bg-white"][class*="border"] {
+        margin: 0 !important;
+        height: 100%;
+      }
+      .dashboard-grid .glass-card > div:first-child,
+      .dashboard-grid .premium-glass > div:first-child {
+        padding-top: 4px !important;
+      }
       /* ======== AGGRESSIVE COMPACT SPACING v13.0 ======== */
       /* Force tight spacing everywhere */
       .dashboard-grid .space-y-3 > * + *,
@@ -13555,6 +13567,7 @@ function App() {
             <RestFatigueWidget isDark={isDark} />
             <DraftWatchWidget isDark={isDark} />
             <PowerRankingsWidget isDark={isDark} />
+            <RaptorsPulseWidget isDark={isDark} />
             <RaptorsQuizWidget isDark={isDark} />
             <SocialShareWidget isDark={isDark} />
             <SocialLinksWidget isDark={isDark} />
@@ -13581,10 +13594,8 @@ function App() {
             )}
               </div>
               {/* ===== DASHBOARD GRID ===== */}
-              <div className={`flex items-center gap-2 mb-1 mt-2`}>
-                <div className="w-1 h-4 bg-raptors-red rounded-full"></div>
-                <h2 className={`text-xs font-black uppercase tracking-widest ${isDark ? 'text-white/80' : 'text-slate-700'}`}>Advanced Analytics Dashboard</h2>
-                <div className={`flex-1 h-px ${isDark ? 'bg-white/10' : 'bg-slate-200'}`}></div>
+              <div className="flex items-center gap-3 mb-2 mt-3">
+                <h2 className="text-2xl font-black text-white flex items-center gap-3 uppercase tracking-tight"><div className="bg-raptors-red p-2 rounded-lg shadow-lg shadow-raptors-red/30"><LayoutDashboard className="w-5 h-5 text-white" /></div>Advanced Analytics Dashboard</h2>
               </div>
               <div className="dashboard-grid">
                 {/* Game Day — red accent */}
@@ -13614,12 +13625,13 @@ function App() {
 
                 {/* Player Analysis — green accent */}
                 <div className="widget-tall dg-players"><PlayerSpotlightCarousel isDark={isDark} /></div>
-                <div className={`widget-tall dg-players ${isDark ? 'premium-glass' : 'bg-white border border-light-border shadow-lg'} rounded-md p-1`}>
+                <div className="widget-tall dg-players">
+                  <div className={`${isDark ? 'premium-glass' : 'bg-white border border-light-border shadow-lg'} rounded-md h-full overflow-hidden`} style={{padding:'6px'}}>
                   <div className="flex items-center gap-1 mb-1">
                     <Users className="w-3 h-3 text-raptors-red" />
                     <h3 className={`text-[9px] font-extrabold uppercase ${isDark ? 'text-white' : 'text-slate-800'}`}>Player Deep Dive</h3>
                   </div>
-                  <div className="space-y-0.5 max-h-[250px] overflow-y-auto custom-scrollbar">
+                  <div className="space-y-0.5 overflow-y-auto custom-scrollbar" style={{maxHeight:'calc(100% - 24px)'}}>
                     {RAPTORS_ROSTER.map((p) => (
                       <button key={p.id} onClick={() => setSelectedPlayer(p)} className={`w-full flex items-center gap-1 p-1 rounded text-left ${isDark ? 'hover:bg-cmd-card' : 'hover:bg-light-card'}`}>
                         <span className="text-[9px] font-bold w-4 text-raptors-red">#{p.number}</span>
@@ -13629,12 +13641,12 @@ function App() {
                       </button>
                     ))}
                   </div>
+                  </div>
                 </div>
                 <div className="dg-players"><UsageRateWidget isDark={isDark} /></div>
                 <div className="dg-players"><MinutesDistributionWidget isDark={isDark} /></div>
                 <div className="dg-players"><PlusMinusWidget isDark={isDark} /></div>
                 <div className="dg-players"><WinSharesWidget isDark={isDark} /></div>
-                <div className="dg-players"><DoublDoubleWidget isDark={isDark} /></div>
                 <div className="widget-large dg-players"><PlayerComparisonTool isDark={isDark} /></div>
                 <div className="dg-players"><FantasyProjectionsWidget isDark={isDark} /></div>
 
@@ -13662,7 +13674,7 @@ function App() {
                 <div className="dg-oncourt"><FastBreakWidget isDark={isDark} /></div>
                 <div className="dg-oncourt"><PaintScoringWidget isDark={isDark} /></div>
                 <div className="dg-oncourt"><SecondChanceWidget isDark={isDark} /></div>
-                <div className="widget-wide dg-oncourt"><ShotChartWidget isDark={isDark} /></div>
+                <div className="dg-oncourt"><ShotChartWidget isDark={isDark} /></div>
                 <div className="dg-oncourt"><MiniHeatMap isDark={isDark} /></div>
                 <div className="dg-oncourt"><BenchProductionWidget isDark={isDark} /></div>
                 <div className="dg-oncourt"><StarterVsBenchWidget isDark={isDark} /></div>
@@ -13673,19 +13685,15 @@ function App() {
 
                 {/* Season & FO — teal accent */}
                 <div className="dg-season"><StandingsVisualizationWidget isDark={isDark} /></div>
-                <div className="dg-season"><DivisionRivalsWidget isDark={isDark} /></div>
                 <div className="dg-season"><ScheduleStrengthWidget isDark={isDark} /></div>
                 <div className="dg-season"><SeasonTrackerWidget isDark={isDark} games={games} /></div>
                 <div className="widget-wide dg-season"><SeasonTimelineWidget isDark={isDark} /></div>
-                <div className="dg-season"><SeasonComparisonWidget isDark={isDark} /></div>
-                <div className="dg-season"><NationalTVWidget isDark={isDark} /></div>
                 <div className="dg-season"><MVPRaceWidget isDark={isDark} /></div>
                 <div className="dg-season"><AllStarTrackerWidget isDark={isDark} /></div>
                 <div className="dg-season"><TradeAnalysisWidget isDark={isDark} /></div>
                 <div className="dg-season"><DraftPickWidget isDark={isDark} /></div>
                 <div className="dg-season"><SalaryCapWidget isDark={isDark} /></div>
                 <div className="dg-season"><TeamSalaryWidget isDark={isDark} teamName="Raptors" opponentName={selectedGame?.opponent} /></div>
-                <div className="dg-season"><TeamAgeWidget isDark={isDark} /></div>
                 <div className="dg-season"><CoachInsightsWidget isDark={isDark} /></div>
 
                 {/* Community — pink accent */}
@@ -13696,7 +13704,6 @@ function App() {
                 <div className="dg-community"><SocialBuzzWidget isDark={isDark} /></div>
                 <div className="dg-community"><TeamChemistryWidget isDark={isDark} /></div>
                 <div className="dg-community"><MomentumTrackerWidget isDark={isDark} /></div>
-                <div className="dg-community"><RaptorsPulseWidget isDark={isDark} /></div>
               </div>
           </div>
         </div>
@@ -13707,7 +13714,7 @@ function App() {
         <div className="flex flex-col items-center gap-2">
           <div className="flex items-center gap-2 flex-wrap justify-center">
             <span className="font-bold text-raptors-red">RAPTORS INTEL</span>
-            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v13.2</span>
+            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v13.3</span>
           </div>
           <p style={{margin:0}}>Built with 🏀 by Raptors Intel • Data from ESPN • Not affiliated with the NBA</p>
           <p style={{margin:0, fontSize:'0.65rem', opacity:0.6}}>Last Updated: {new Date().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}</p>
