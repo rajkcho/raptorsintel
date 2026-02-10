@@ -1135,30 +1135,36 @@
 
       /* ======== MASONRY LAYOUT ======== */
       .widget-masonry {
-        columns: 3 300px;
-        column-gap: 0.5rem;
+        columns: 3 280px;
+        column-gap: 0.375rem;
       }
       .widget-masonry > * {
         break-inside: avoid;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.375rem;
       }
       .widget-full-span {
         column-span: all;
-        margin-bottom: 0.75rem;
+        margin-bottom: 0.375rem;
       }
       /* ======== COMPACT WIDGET PADDING ======== */
-      .glass-card, .premium-glass,
-      [class*="rounded-2xl"][class*="p-4"],
-      [class*="rounded-2xl"][class*="p-5"],
-      [class*="rounded-2xl"][class*="p-6"] {
-        padding: 0.625rem !important;
+      .widget-masonry > div,
+      .widget-masonry > div > div,
+      #sidebar-panel > div {
+        padding: 0.5rem !important;
       }
-      .glass-card h3, .premium-glass h3,
-      [class*="rounded-2xl"] h3 {
-        margin-bottom: 0.375rem !important;
+      .widget-masonry h3, #sidebar-panel h3 {
+        margin-bottom: 0.25rem !important;
+        font-size: 0.65rem !important;
       }
-      .max-h-64 { max-height: 12rem !important; }
-      .max-h-\[300px\] { max-height: 200px !important; }
+      .max-h-64 { max-height: 10rem !important; }
+      .max-h-\[300px\] { max-height: 160px !important; }
+      /* Kill all large internal padding */
+      .widget-masonry [class*="p-4"] { padding: 0.5rem !important; }
+      .widget-masonry [class*="p-5"] { padding: 0.5rem !important; }
+      .widget-masonry [class*="p-6"] { padding: 0.5rem !important; }
+      .widget-masonry [class*="p-2.5"] { padding: 0.375rem !important; }
+      .widget-masonry [class*="mb-3"] { margin-bottom: 0.25rem !important; }
+      .widget-masonry [class*="mb-4"] { margin-bottom: 0.25rem !important; }
 
       /* Mobile sidebar toggle */
       .mobile-sidebar-hidden { display: none !important; }
@@ -1645,30 +1651,30 @@
         to { opacity: 1; transform: translateY(0); }
       }
 
-      /* ======== AGGRESSIVE COMPACT SPACING v12.6 ======== */
-      .glass-card .space-y-3 > * + *, .premium-glass .space-y-3 > * + *,
-      [class*="rounded-2xl"] .space-y-3 > * + * { margin-top: 0.375rem !important; }
-      .glass-card .space-y-4 > * + *, .premium-glass .space-y-4 > * + *,
-      [class*="rounded-2xl"] .space-y-4 > * + * { margin-top: 0.375rem !important; }
-      .glass-card .space-y-2 > * + *, .premium-glass .space-y-2 > * + *,
-      [class*="rounded-2xl"] .space-y-2 > * + * { margin-top: 0.25rem !important; }
-      .glass-card .p-2, .premium-glass .p-2,
-      [class*="rounded-2xl"] .p-2 { padding: 0.375rem !important; }
-      .glass-card .p-3, .premium-glass .p-3,
-      [class*="rounded-2xl"] .p-3 { padding: 0.5rem !important; }
-      .glass-card .gap-3, .premium-glass .gap-3,
-      [class*="rounded-2xl"] .gap-3 { gap: 0.375rem !important; }
-      .glass-card .gap-4, .premium-glass .gap-4,
-      [class*="rounded-2xl"] .gap-4 { gap: 0.5rem !important; }
-      .glass-card .rounded-lg, .premium-glass .rounded-lg,
-      [class*="rounded-2xl"] .rounded-lg { border-radius: 0.375rem !important; }
-      .glass-card .text-xs, .premium-glass .text-xs { font-size: 0.7rem !important; }
-      .glass-card .text-sm, .premium-glass .text-sm { font-size: 0.75rem !important; }
+      /* ======== AGGRESSIVE COMPACT SPACING v12.7 ======== */
+      /* Force tight spacing everywhere */
+      .widget-masonry .space-y-3 > * + *,
+      .widget-masonry .space-y-4 > * + *,
+      #sidebar-panel .space-y-3 > * + *,
+      #sidebar-panel .space-y-4 > * + * { margin-top: 0.25rem !important; }
+      .widget-masonry .space-y-2 > * + *,
+      #sidebar-panel .space-y-2 > * + * { margin-top: 0.125rem !important; }
+      .widget-masonry .gap-3, #sidebar-panel .gap-3 { gap: 0.25rem !important; }
+      .widget-masonry .gap-4, #sidebar-panel .gap-4 { gap: 0.375rem !important; }
+      .widget-masonry .gap-2, #sidebar-panel .gap-2 { gap: 0.125rem !important; }
+      .widget-masonry .rounded-lg, #sidebar-panel .rounded-lg { border-radius: 0.25rem !important; }
+      .widget-masonry .rounded-2xl, #sidebar-panel .rounded-2xl { border-radius: 0.5rem !important; }
+      /* Compact text */
+      .widget-masonry .text-xs, #sidebar-panel .text-xs { font-size: 0.65rem !important; line-height: 1.1 !important; }
+      .widget-masonry .text-sm, #sidebar-panel .text-sm { font-size: 0.7rem !important; line-height: 1.2 !important; }
+      .widget-masonry .text-\[10px\], #sidebar-panel .text-\[10px\] { font-size: 9px !important; }
+      .widget-masonry .text-\[11px\], #sidebar-panel .text-\[11px\] { font-size: 10px !important; }
+      .widget-masonry .text-\[9px\], #sidebar-panel .text-\[9px\] { font-size: 8px !important; }
 
       /* Sidebar compact */
-      #sidebar-panel > * { margin-bottom: 0.5rem !important; }
-      #sidebar-panel .p-4 { padding: 0.5rem !important; }
-      #sidebar-panel .p-3 { padding: 0.375rem !important; }
+      #sidebar-panel > * { margin-bottom: 0.375rem !important; }
+      #sidebar-panel [class*="p-4"] { padding: 0.375rem !important; }
+      #sidebar-panel [class*="p-3"] { padding: 0.25rem !important; }
     </style>
   </head>
   <body>
@@ -13599,8 +13605,7 @@ function App() {
                 {selectedGame?.status === 'upcoming' && <PlayerPropsWidget isDark={isDark} opponent={selectedGame?.opponent} />}
                 {/* Game Day Info */}
                 {selectedGame?.status === 'upcoming' && <TVScheduleWidget isDark={isDark} game={selectedGame} />}
-                {selectedGame?.status === 'upcoming' && <GameDayChecklistWidget isDark={isDark} game={selectedGame} />}
-                {selectedGame?.status === 'upcoming' && <NotificationWidget isDark={isDark} game={selectedGame} />}
+                {/* GameDayChecklistWidget and NotificationWidget removed — too fluffy */}
               </SectionBody>
               {/* ===== TEAM STATS ===== */}
               <SectionHeader id="section-teamstats" icon="📊" title="Team Stats" />
@@ -13700,16 +13705,12 @@ function App() {
                 <StandingsVisualizationWidget isDark={isDark} />
                 <DivisionRivalsWidget isDark={isDark} />
                 {/* Schedule & Season */}
-                <div className="widget-full-span" id="schedule-section"><ScheduleResultsWidget isDark={isDark} /></div>
+                {/* ScheduleResultsWidget, SeasonGradesWidget, TravelWidget, AwardsWatchWidget removed */}
                 <ScheduleStrengthWidget isDark={isDark} />
                 <SeasonTrackerWidget isDark={isDark} games={games} />
                 <div className="widget-full-span"><SeasonTimelineWidget isDark={isDark} /></div>
                 <SeasonComparisonWidget isDark={isDark} />
-                <SeasonGradesWidget isDark={isDark} />
-                <TravelWidget isDark={isDark} />
                 <NationalTVWidget isDark={isDark} />
-                {/* Awards & Recognition */}
-                <AwardsWatchWidget isDark={isDark} />
                 <MVPRaceWidget isDark={isDark} />
                 <AllStarTrackerWidget isDark={isDark} />
                 {/* Trades, Draft & Salary */}
@@ -13726,7 +13727,6 @@ function App() {
                 <FanEngagementWidget isDark={isDark} />
                 <GamePredictionPoll isDark={isDark} />
                 <FanPollWidget isDark={isDark} />
-                <TriviaWidget isDark={isDark} />
                 <StorylinesWidget isDark={isDark} />
                 <SocialBuzzWidget isDark={isDark} />
                 <TeamChemistryWidget isDark={isDark} />
@@ -13744,7 +13744,7 @@ function App() {
         <div className="flex flex-col items-center gap-2">
           <div className="flex items-center gap-2 flex-wrap justify-center">
             <span className="font-bold text-raptors-red">RAPTORS INTEL</span>
-            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v12.6</span>
+            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v12.7</span>
           </div>
           <p style={{margin:0}}>Built with 🏀 by Raptors Intel • Data from ESPN • Not affiliated with the NBA</p>
           <p style={{margin:0, fontSize:'0.65rem', opacity:0.6}}>Last Updated: {new Date().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}</p>
