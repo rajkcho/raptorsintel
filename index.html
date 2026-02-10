@@ -4882,7 +4882,7 @@ const LiveScoreTicker = ({ isDark = true }) => {
     const load = async () => {
       const data = await fetchLiveScoreboard();
       if (data && mounted) {
-        setScores(data.length > 0 ? data : LIVE_NBA_SCORES);
+        setScores(data.length > 0 ? data : []);
         setLiveCount(data.filter(g => g.isLive).length);
       }
     };
@@ -4898,7 +4898,15 @@ const LiveScoreTicker = ({ isDark = true }) => {
     return () => clearInterval(interval);
   }, []);
 
-  const displayScores = scores.length > 0 ? scores : LIVE_NBA_SCORES;
+  if (scores.length === 0) {
+    return (
+      <div className={`w-full overflow-hidden ${isDark ? 'bg-cmd-bg border-cmd-border' : 'bg-light-card border-light-border'} border-b py-1.5`}>
+        <div className="flex items-center justify-center">
+          <span className={`text-[10px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>🏀 No games scheduled right now — check back on game day</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={`w-full overflow-hidden ${isDark ? 'bg-cmd-bg border-cmd-border' : 'bg-light-card border-light-border'} border-b py-1.5`}>
@@ -4908,7 +4916,7 @@ const LiveScoreTicker = ({ isDark = true }) => {
         </div>
         <div className="overflow-hidden flex-1">
           <div className="flex items-center gap-8 whitespace-nowrap" style={{ transform: `translateX(${offset}px)` }}>
-            {[...displayScores, ...displayScores].map((game, i) => {
+            {[...scores, ...scores].map((game, i) => {
               const isLive = game.isLive || game.status?.includes('Q');
               const isFinal = game.isFinal || game.status === 'Final';
               return (
