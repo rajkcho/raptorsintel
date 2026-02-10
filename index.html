@@ -175,6 +175,7 @@
       }
       .gameday-badge {
         animation: gameday-pulse-badge 1.5s ease-in-out infinite;
+        will-change: transform, opacity;
       }
 
       /* Glassmorphism 2.0 */
@@ -193,6 +194,7 @@
       .card-3d {
         transform-style: preserve-3d;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
+        will-change: transform;
       }
       .card-3d:hover {
         transform: perspective(1000px) rotateX(2deg) rotateY(-2deg) translateY(-4px);
@@ -5956,6 +5958,7 @@ const KeyMatchupsWidget = ({ opponent, isDark = true }) => {
             <img 
               src={getHeadshot(raptorsStar)} 
               className="w-full h-full object-cover object-top"
+              loading="lazy"
               onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
               alt={raptorsStar.name}
             />
@@ -5978,6 +5981,7 @@ const KeyMatchupsWidget = ({ opponent, isDark = true }) => {
             <img 
               src={getHeadshot(opponentStar)} 
               className="w-full h-full object-cover object-top"
+              loading="lazy"
               onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
               alt={opponentStar.name}
             />
@@ -6835,7 +6839,7 @@ const MatchupAnalyzer = ({ game }) => {
                               return (
                                 <div key={i} className={`bg-cmd-bg/50 border border-cmd-border border-l-2 ${sentimentColor} rounded-xl p-4 hover-lift`}>
                                     <div className="flex gap-3">
-                                        <div className="flex-shrink-0"><img src={avatar} onError={(e) => e.currentTarget.src = 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'} alt="avatar" className="w-10 h-10 rounded-full object-contain border border-cmd-border bg-cmd-surface p-1" /></div>
+                                        <div className="flex-shrink-0"><img src={avatar} loading="lazy" onError={(e) => e.currentTarget.src = 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'} alt="avatar" className="w-10 h-10 rounded-full object-contain border border-cmd-border bg-cmd-surface p-1" /></div>
                                         <div className="flex-1 min-w-0"><div className="flex items-center justify-between"><span className="text-sm font-bold text-white truncate">{item.source}</span><span className="text-xs text-slate-500">2h</span></div><p className="text-sm text-slate-300 mt-1 leading-snug">{item.headline}</p></div>
                                     </div>
                                 </div>
@@ -6954,7 +6958,7 @@ const MatchupAnalyzer = ({ game }) => {
               <div className="space-y-3">
                   <div className="flex items-center justify-between p-2 bg-cmd-bg/50 rounded-lg border border-cmd-border">
                       <div className="flex items-center gap-2">
-                          <img src="https://cdn.nba.com/logos/nba/1610612761/primary/L/logo.svg" className="w-5 h-5" alt="TOR" />
+                          <img src="https://cdn.nba.com/logos/nba/1610612761/primary/L/logo.svg" className="w-5 h-5" loading="lazy" alt="TOR" />
                           <span className="text-xs font-bold text-white">TOR</span>
                       </div>
                       <div className="flex gap-3 text-xs">
@@ -7266,7 +7270,7 @@ const MatchupAnalyzer = ({ game }) => {
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 hidden md:block"><div className="bg-raptors-red p-2.5 rounded-full border-2 border-raptors-red/50 shadow-xl shadow-raptors-red/20 animate-glow-pulse"><Swords className="w-4 h-4 text-white" /></div></div>
                 <div className="bg-gradient-to-br from-raptors-red/5 to-cmd-surface/50 rounded-xl p-4 border border-raptors-red/10">
                     <div className="flex justify-between items-end mb-4 pb-2 border-b-2 border-raptors-red/50">
-                        <div className="flex items-center gap-2"><img src="https://cdn.nba.com/logos/nba/1610612761/primary/L/logo.svg" className="w-6 h-6" alt="TOR" /><h3 className="text-raptors-red font-black uppercase text-sm tracking-wider neon-text-subtle">TORONTO</h3></div>
+                        <div className="flex items-center gap-2"><img src="https://cdn.nba.com/logos/nba/1610612761/primary/L/logo.svg" className="w-6 h-6" loading="lazy" alt="TOR" /><h3 className="text-raptors-red font-black uppercase text-sm tracking-wider neon-text-subtle">TORONTO</h3></div>
                         <div className="flex items-center gap-3">
                             <div className="text-[10px] font-mono text-slate-500">ORTG <span className="font-bold text-white">{raptorsAgg.ortg.toFixed(1)}</span></div>
                             <div className="text-[10px] font-mono text-slate-500">DRTG <span className="font-bold text-white">{raptorsAgg.drtg.toFixed(1)}</span></div>
@@ -11958,7 +11962,7 @@ function App() {
           <div className="flex items-center gap-3">
              <div className={`w-12 h-12 ${isDark ? 'bg-cmd-bg' : 'bg-light-card'} rounded-full flex items-center justify-center p-1.5 border-2 border-raptors-red/50 shadow-lg shadow-raptors-red/20 animate-glow-pulse relative overflow-hidden`}>
                <div className="absolute inset-0 bg-gradient-to-br from-raptors-red/20 to-transparent"></div>
-               <img src="https://cdn.nba.com/logos/nba/1610612761/primary/L/logo.svg" alt="Raptors Logo" className="w-full h-full object-contain relative z-10" style={{filter: isDark ? 'drop-shadow(0 0 8px rgba(206,17,65,0.5))' : 'none'}} />
+               <img src="https://cdn.nba.com/logos/nba/1610612761/primary/L/logo.svg" alt="Raptors Logo" loading="lazy" className="w-full h-full object-contain relative z-10" style={{filter: isDark ? 'drop-shadow(0 0 8px rgba(206,17,65,0.5))' : 'none'}} />
              </div>
              <div className="flex flex-col">
                <span className={`text-xl font-black tracking-tight ${isDark ? 'text-white' : 'text-slate-800'}`}>RAPTORS <span className={`text-raptors-red ${isDark ? 'neon-text' : ''}`}>INTEL</span></span>

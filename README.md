@@ -1,20 +1,50 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# 🦖 Raptors Intel
 
-# Run and deploy your AI Studio app
+**The ultimate Toronto Raptors game day scouting dashboard.**
 
-This contains everything you need to run your app locally.
+Advanced analytics, rotation simulator, matchup intelligence, and real-time game data — all in one place.
 
-View your app in AI Studio: https://ai.studio/apps/drive/1NVSPftKbAHIIoqTPQ5MsOvb1UG7Hq8Dn
+🔗 **Live:** [rajkcho.github.io/raptorsintel](https://rajkcho.github.io/raptorsintel)
 
-## Run Locally
+## Features
 
-**Prerequisites:**  Node.js
+- 🏀 **Game Day Preview** — Next opponent breakdown with key matchups and scouting notes
+- 📊 **Live Scoreboard** — Real-time scores via ESPN API
+- 🔄 **Rotation Simulator** — Build and analyze custom lineup combinations
+- 📋 **Playbook Analysis** — Opponent tendencies and Raptors counters
+- 🏥 **Injury Report** — Up-to-date injury status and impact ratings
+- 📈 **Player Analytics** — Season stats, last 5 games, hot/cold trends
+- 🗳️ **2026 Draft Intel** — Prospect profiles, lottery odds, and tank watch
+- 💰 **Betting Odds** — Live odds from The Odds API
+- 🏆 **Eastern Conference Standings** — Live standings with playoff picture
+- 🌙 **Dark/Light Mode** — Premium glassmorphism UI with theme toggle
+- 📱 **Fully Responsive** — PWA-ready, works on all devices
 
+## Tech Stack
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+- **React 18** (via CDN, no build step)
+- **Tailwind CSS** (CDN)
+- **ESPN API** — Live scores, standings, roster data
+- **The Odds API** — Real-time betting lines
+- **NBA CDN** — Player headshots and team logos
+- **GitHub Pages** — Hosting
+
+## Screenshots
+
+> _Coming soon_
+
+## Development
+
+This is a single-file React app (`index.html`). No build tools required — just open in a browser or serve with any static file server.
+
+```bash
+# Local development
+npx serve .
+
+# Or just open index.html directly
+open index.html
+```
+
+## License
+
+MIT
