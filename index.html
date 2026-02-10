@@ -9267,73 +9267,109 @@ const LiveViewersWidget = ({ isDark = true }) => {
 };
 
 // Betting Hub Widget - Main Container
-// ===== LIVE ODDS API INTEGRATION =====
-const ODDS_API_BASE = 'https://api.the-odds-api.com/v4';
-const ODDS_API_SPORT = 'basketball_nba';
-const ODDS_API_BOOKMAKERS = ['draftkings', 'fanduel', 'betmgm', 'bet365'];
-const BOOKMAKER_LABELS = { draftkings: 'DraftKings', fanduel: 'FanDuel', betmgm: 'BetMGM', 'bet365': 'bet365' };
+// ===== LIVE ODDS API INTEGRATION (SportsGameOdds) =====
+// NOTE: API key is obfuscated via atob(). For production, move to env/backend.
+const ODDS_API_BASE = 'https://api.sportsgameodds.com/v2';
+const ODDS_API_BOOKMAKERS = ['fanduel', 'draftkings', 'caesars', 'espnbet', 'pointsbet', 'unibet', 'williamhill'];
+const BOOKMAKER_LABELS = { fanduel: 'FanDuel', draftkings: 'DraftKings', caesars: 'Caesars', espnbet: 'ESPN BET', pointsbet: 'PointsBet', unibet: 'Unibet', williamhill: 'William Hill' };
 
-const useOddsApi = (teamName = 'Toronto Raptors') => {
+const useOddsApi = () => {
   const [liveOdds, setLiveOdds] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(null);
   const [lastFetch, setLastFetch] = React.useState(null);
   const [remaining, setRemaining] = React.useState(null);
 
-  const apiKey = React.useMemo(() => atob('NjAwM2I1NmE1NWY5ODVhN2Y5ODIyMDQ1NTEwYzllN2Q='), []);
-
   const fetchOdds = React.useCallback(async () => {
-    const key = atob('NjAwM2I1NmE1NWY5ODVhN2Y5ODIyMDQ1NTEwYzllN2Q=');
+    const key = atob('MjJmZjg4ZTQxZTZjYWVjNzVmYzA2YWJiNjg2ZjFkZjE=');
     setLoading(true);
     setError(null);
     try {
-      const url = `${ODDS_API_BASE}/sports/${ODDS_API_SPORT}/odds/?apiKey=${key}&regions=us&markets=h2h,spreads,totals&oddsFormat=american&bookmakers=${ODDS_API_BOOKMAKERS.join(',')}`;
+      const url = `${ODDS_API_BASE}/events?apiKey=${key}&leagueID=NBA&oddsAvailable=true&teamID=TORONTO_RAPTORS_NBA&limit=3`;
       const res = await fetch(url);
-      if (res.status === 401) { setError('Odds API monthly quota reached — lines refresh next billing cycle'); setLoading(false); return; }
+      if (res.status === 401) { setError('Odds API authentication failed — check API key'); setLoading(false); return; }
       if (!res.ok) throw new Error(`API error ${res.status}`);
-      setRemaining(res.headers.get('x-requests-remaining'));
-      const data = await res.json();
-      // Find Raptors game(s)
-      const raptorsGames = data.filter(g => g.home_team === teamName || g.away_team === teamName);
-      if (raptorsGames.length === 0) { setError('Lines not yet posted — odds typically appear 1-2 days before tip-off'); setLoading(false); return; }
-      const game = raptorsGames[0];
-      const isHome = game.home_team === teamName;
-      const opponent = isHome ? game.away_team : game.home_team;
+      const json = await res.json();
+      const events = json.data;
+      if (!events || events.length === 0) { setError('Lines not yet posted — odds typically appear 1-2 days before tip-off'); setLoading(false); return; }
+      const event = events[0];
+      const odds = event.odds || {};
+
+      // Determine if Raptors are home or away
+      const raptorsHome = event.teams?.home?.teamID === 'TORONTO_RAPTORS_NBA';
+      const opponent = raptorsHome
+        ? (event.teams?.away?.names?.long || 'Opponent')
+        : (event.teams?.home?.names?.long || 'Opponent');
+
+      // Helper to get odds value safely
+      const getOdds = (id) => odds[id] || {};
+
+      // Consensus odds
+      const mlHome = getOdds('points-home-game-ml-home');
+      const mlAway = getOdds('points-away-game-ml-away');
+      const spHome = getOdds('points-home-game-sp-home');
+      const spAway = getOdds('points-away-game-sp-away');
+      const ouOver = getOdds('points-all-game-ou-over');
+      const ouUnder = getOdds('points-all-game-ou-under');
+
+      // Raptors ML/spread depending on home/away
+      const raptorsML_consensus = raptorsHome ? mlHome : mlAway;
+      const oppML_consensus = raptorsHome ? mlAway : mlHome;
+      const raptorsSpread_consensus = raptorsHome ? spHome : spAway;
 
       // Parse bookmaker odds into our format
       const books = {};
-      game.bookmakers.forEach(bk => {
-        const label = BOOKMAKER_LABELS[bk.key] || bk.title;
-        const h2h = bk.markets.find(m => m.key === 'h2h');
-        const spreads = bk.markets.find(m => m.key === 'spreads');
-        const totals = bk.markets.find(m => m.key === 'totals');
-        const torH2H = h2h?.outcomes?.find(o => o.name === teamName);
-        const oppH2H = h2h?.outcomes?.find(o => o.name !== teamName);
-        const torSpread = spreads?.outcomes?.find(o => o.name === teamName);
-        const torTotal = totals?.outcomes?.find(o => o.name === 'Over');
-        const torTotalU = totals?.outcomes?.find(o => o.name === 'Under');
+      ODDS_API_BOOKMAKERS.forEach(bkKey => {
+        const label = BOOKMAKER_LABELS[bkKey] || bkKey;
+        const bkML_raptors = (raptorsHome ? mlHome : mlAway)?.byBookmaker?.[bkKey];
+        const bkML_opp = (raptorsHome ? mlAway : mlHome)?.byBookmaker?.[bkKey];
+        const bkSP = (raptorsHome ? spHome : spAway)?.byBookmaker?.[bkKey];
+        const bkOU_over = ouOver?.byBookmaker?.[bkKey];
+        const bkOU_under = ouUnder?.byBookmaker?.[bkKey];
+
+        // Skip bookmakers with no data available
+        if (!bkML_raptors?.available && !bkSP?.available && !bkOU_over?.available) return;
+
         books[label] = {
-          spread: { line: torSpread?.point || 0, vig: torSpread?.price || -110 },
-          ml: { raptors: torH2H?.price || 0, opp: oppH2H?.price || 0 },
-          ou: { line: torTotal?.point || 0, overVig: torTotal?.price || -110, underVig: torTotalU?.price || -110 },
-          updated: new Date(bk.last_update).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })
+          spread: { line: bkSP?.spread || raptorsSpread_consensus?.bookSpread || 0, vig: bkSP?.odds || raptorsSpread_consensus?.bookOdds || -110 },
+          ml: { raptors: bkML_raptors?.odds || raptorsML_consensus?.bookOdds || 0, opp: bkML_opp?.odds || oppML_consensus?.bookOdds || 0 },
+          ou: { line: bkOU_over?.overUnder || ouOver?.bookOverUnder || 0, overVig: bkOU_over?.odds || ouOver?.bookOdds || -110, underVig: bkOU_under?.odds || ouUnder?.bookOdds || -110 },
+          updated: bkML_raptors?.lastUpdatedAt ? new Date(bkML_raptors.lastUpdatedAt).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) : '',
+          deeplinks: {
+            ml: bkML_raptors?.deeplink || null,
+            spread: bkSP?.deeplink || null,
+            over: bkOU_over?.deeplink || null,
+            under: bkOU_under?.deeplink || null
+          }
         };
       });
 
+      // If no bookmaker-specific data, use consensus as fallback
+      if (Object.keys(books).length === 0 && (raptorsML_consensus?.bookOdds || raptorsSpread_consensus?.bookSpread)) {
+        books['Consensus'] = {
+          spread: { line: raptorsSpread_consensus?.bookSpread || 0, vig: raptorsSpread_consensus?.bookOdds || -110 },
+          ml: { raptors: raptorsML_consensus?.bookOdds || 0, opp: oppML_consensus?.bookOdds || 0 },
+          ou: { line: ouOver?.bookOverUnder || 0, overVig: ouOver?.bookOdds || -110, underVig: ouUnder?.bookOdds || -110 },
+          updated: ''
+        };
+      }
+
       // Update BETTING_INTEL.odds in place
       BETTING_INTEL.odds.books = books;
-      BETTING_INTEL.odds.opponent = opponent.split(' ').pop().substring(0,3).toUpperCase();
-      BETTING_INTEL.odds.gameTime = game.commence_time;
-      BETTING_INTEL.odds._live = true;
-      BETTING_INTEL.odds._gameId = game.id;
+      BETTING_INTEL.odds.opponent = opponent.split(' ').pop().substring(0, 3).toUpperCase();
+      BETTING_INTEL.odds.gameTime = event.status?.startsAt;
+      BETTING_INTEL.odds._live = event.status?.live || false;
+      BETTING_INTEL.odds._gameId = event.eventID || event.id;
+      BETTING_INTEL.odds._venue = event.info?.venue?.name || null;
+      BETTING_INTEL.odds._statusDisplay = event.status?.displayLong || '';
 
-      setLiveOdds({ books, opponent, gameTime: game.commence_time, gameId: game.id });
+      setLiveOdds({ books, opponent, gameTime: event.status?.startsAt, gameId: event.eventID || event.id });
       setLastFetch(new Date());
     } catch (e) {
       setError(e.message);
     }
     setLoading(false);
-  }, [teamName]);
+  }, []);
 
   // Auto-fetch on mount, then every 5 min
   React.useEffect(() => {
@@ -9346,8 +9382,6 @@ const useOddsApi = (teamName = 'Toronto Raptors') => {
 
   return { liveOdds, loading, error, lastFetch, remaining, fetchOdds };
 };
-
-// API key embedded (obfuscated)
 
 const BettingHubWidget = ({ isDark = true, game }) => {
   const { liveOdds, loading, error, lastFetch, remaining, fetchOdds } = useOddsApi();
