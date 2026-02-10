@@ -22,12 +22,18 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Raptors Intel" />
     <link rel="apple-touch-icon" href="https://cdn.nba.com/logos/nba/1610612761/primary/L/logo.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
         darkMode: 'class',
         theme: {
           extend: {
+            fontFamily: {
+              sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],
+            },
             colors: {
               raptors: {
                 red: '#CE1141',
@@ -72,6 +78,7 @@
       body {
         background-color: #0a0e17;
         color: #e2e8f0;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       }
       ::-webkit-scrollbar {
         width: 6px;
@@ -1438,6 +1445,30 @@
       }
       .win-ring-glow {
         filter: drop-shadow(0 0 8px rgba(206,17,65,0.5));
+      }
+
+      /* === PREMIUM MICRO-INTERACTIONS === */
+      button, [role="button"], a.btn, .btn-magnetic {
+        transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, background-color 0.2s ease, border-color 0.2s ease !important;
+      }
+      button:hover, [role="button"]:hover {
+        transform: scale(1.03);
+      }
+      button:active, [role="button"]:active {
+        transform: scale(0.97);
+      }
+      /* Card hover glow - raptors red */
+      .glass-card:hover, .premium-glass:hover, .glass-premium:hover {
+        border-color: rgba(206, 17, 65, 0.3) !important;
+        box-shadow: 0 12px 32px rgba(0,0,0,0.3), 0 0 20px rgba(206,17,65,0.08) !important;
+      }
+      /* Smooth accordion */
+      details[open] summary ~ * {
+        animation: accordion-open 0.3s ease-out;
+      }
+      @keyframes accordion-open {
+        from { opacity: 0; transform: translateY(-8px); }
+        to { opacity: 1; transform: translateY(0); }
       }
     </style>
   </head>
@@ -3306,32 +3337,186 @@ const CursorGlow = ({ isDark = true }) => {
   );
 };
 
-// Animated Hero Stats
-const HeroStatsBar = ({ isDark = true }) => {
-  const stats = [
-    { label: 'WINS', value: 25, icon: '🏆' },
-    { label: 'STREAK', value: 6, icon: '🔥' },
-    { label: 'PPG', value: 111.5, icon: '🏀' },
-    { label: 'RANK', value: '#10', icon: '📊' }
-  ];
-  
+// CSS-only Star Particles for Hero
+const HeroStarField = () => {
+  const stars = useMemo(() => Array.from({ length: 40 }, (_, i) => ({
+    id: i,
+    left: `${Math.random() * 100}%`,
+    top: `${Math.random() * 100}%`,
+    size: Math.random() * 2 + 1,
+    delay: `${Math.random() * 5}s`,
+    duration: `${2 + Math.random() * 3}s`,
+    opacity: 0.2 + Math.random() * 0.5,
+  })), []);
+
   return (
-    <div className={`flex justify-center gap-4 py-3 ${isDark ? 'aurora-bg' : 'bg-gradient-to-r from-raptors-red/5 via-transparent to-raptors-red/5'}`}>
-      {stats.map((s, i) => (
-        <div 
-          key={i} 
-          className={`flex items-center gap-2 px-4 py-2 rounded-full glass-premium hover-lift stagger-item`}
-          style={{ animationDelay: `${i * 0.1}s` }}
-        >
-          <span className="text-lg">{s.icon}</span>
-          <div>
-            <div className={`text-xs font-black ${typeof s.value === 'number' && s.value > 20 ? 'gradient-text' : isDark ? 'text-white' : 'text-slate-800'}`}>
-              {s.value}
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {stars.map(s => (
+        <div key={s.id} className="absolute rounded-full bg-white" style={{
+          left: s.left, top: s.top, width: s.size, height: s.size,
+          opacity: s.opacity,
+          animation: `star-twinkle ${s.duration} ease-in-out ${s.delay} infinite`,
+        }} />
+      ))}
+    </div>
+  );
+};
+
+// Countdown Timer Hook
+const useCountdown = (targetDate) => {
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  useEffect(() => {
+    const update = () => {
+      const now = new Date();
+      const diff = targetDate - now;
+      if (diff <= 0) { setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 }); return; }
+      setTimeLeft({
+        days: Math.floor(diff / 86400000),
+        hours: Math.floor((diff % 86400000) / 3600000),
+        minutes: Math.floor((diff % 3600000) / 60000),
+        seconds: Math.floor((diff % 60000) / 1000),
+      });
+    };
+    update();
+    const interval = setInterval(update, 1000);
+    return () => clearInterval(interval);
+  }, [targetDate]);
+  return timeLeft;
+};
+
+// Animated Win Counter
+const AnimatedWinCounter = ({ target, duration = 1500 }) => {
+  const [count, setCount] = useState(0);
+  const ref = useRef(null);
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        let start = 0;
+        const step = target / (duration / 16);
+        const timer = setInterval(() => {
+          start += step;
+          if (start >= target) { setCount(target); clearInterval(timer); }
+          else setCount(Math.floor(start));
+        }, 16);
+        observer.disconnect();
+      }
+    });
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [target, duration]);
+  return <span ref={ref}>{count}</span>;
+};
+
+// Premium Hero Section
+const HeroStatsBar = ({ isDark = true }) => {
+  // Next game: Feb 11 vs Pistons at 7:30 PM ET
+  const nextGameDate = useMemo(() => new Date('2026-02-12T00:30:00Z'), []); // 7:30 PM ET = 00:30 UTC next day
+  const countdown = useCountdown(nextGameDate);
+  const winPct = (RAPTORS_STATS.wins / (RAPTORS_STATS.wins + RAPTORS_STATS.losses)).toFixed(3);
+
+  return (
+    <div className={`relative overflow-hidden ${isDark ? 'bg-gradient-to-br from-black via-[#0a0e17] to-[#1a0010]' : 'bg-gradient-to-br from-white via-slate-50 to-red-50'}`}>
+      {isDark && <HeroStarField />}
+      {/* Subtle radial glow */}
+      {isDark && <div className="absolute inset-0 pointer-events-none" style={{background: 'radial-gradient(ellipse at 50% 80%, rgba(206,17,65,0.08) 0%, transparent 60%)'}} />}
+
+      <div className="relative z-10 max-w-5xl mx-auto px-4 py-6 md:py-8">
+        {/* Main Record Display */}
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-8">
+          {/* Left: Record */}
+          <div className="flex items-center gap-4 md:gap-6">
+            <div className="text-center">
+              <div className={`text-[3rem] md:text-[4rem] font-black leading-none tracking-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>
+                <AnimatedWinCounter target={RAPTORS_STATS.wins} />
+                <span className={`${isDark ? 'text-raptors-silver' : 'text-slate-400'} mx-1`}>-</span>
+                <span className={isDark ? 'text-slate-500' : 'text-slate-400'}>{RAPTORS_STATS.losses}</span>
+              </div>
+              <div className={`text-[0.75rem] uppercase tracking-[0.2em] font-bold mt-1 ${isDark ? 'text-raptors-silver' : 'text-slate-500'}`}>
+                2025-26 Season
+              </div>
             </div>
-            <div className={`text-[8px] ${isDark ? 'text-slate-500' : 'text-slate-400'} uppercase tracking-wider`}>{s.label}</div>
+            {/* Conference Ranking Badge */}
+            <div className={`flex flex-col items-center px-4 py-3 rounded-xl border ${isDark ? 'border-raptors-purple/40 bg-raptors-purple/10' : 'border-purple-200 bg-purple-50'}`}>
+              <span className={`text-[0.75rem] uppercase tracking-wider font-bold ${isDark ? 'text-raptors-purple' : 'text-purple-600'}`} style={{color: isDark ? '#7c5cbf' : undefined}}>East</span>
+              <span className={`text-2xl font-black ${isDark ? 'text-white' : 'text-slate-800'}`}>#5</span>
+              <span className={`text-[0.75rem] font-semibold ${isDark ? 'text-raptors-silver' : 'text-slate-500'}`}>{winPct} W%</span>
+            </div>
+          </div>
+
+          {/* Center: Next Game Countdown */}
+          <div className="flex flex-col items-center">
+            <div className={`text-[0.75rem] uppercase tracking-[0.15em] font-bold mb-2 ${isDark ? 'text-raptors-silver' : 'text-slate-500'}`}>
+              Next Game — <span className="text-raptors-red">vs Pistons</span>
+            </div>
+            <div className="flex items-center gap-2">
+              {[
+                { val: countdown.days, label: 'D' },
+                { val: countdown.hours, label: 'H' },
+                { val: countdown.minutes, label: 'M' },
+                { val: countdown.seconds, label: 'S' },
+              ].map((t, i) => (
+                <div key={i} className="flex flex-col items-center">
+                  <div className={`w-12 h-12 md:w-14 md:h-14 rounded-lg flex items-center justify-center text-xl md:text-2xl font-black ${isDark ? 'bg-white/5 border border-white/10 text-white' : 'bg-slate-100 border border-slate-200 text-slate-800'}`}
+                    style={{ fontVariantNumeric: 'tabular-nums' }}>
+                    {String(t.val).padStart(2, '0')}
+                  </div>
+                  <span className={`text-[0.625rem] mt-1 font-bold ${isDark ? 'text-slate-600' : 'text-slate-400'}`}>{t.label}</span>
+                </div>
+              ))}
+            </div>
+            <div className={`text-[0.75rem] mt-2 ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
+              Feb 11 · 7:30 PM ET · Scotiabank Arena
+            </div>
+          </div>
+
+          {/* Right: Quick metrics */}
+          <div className="flex gap-3">
+            {[
+              { icon: '🔥', value: RAPTORS_STATS.streak, label: 'Streak', color: RAPTORS_STATS.streak.startsWith('W') ? 'text-green-400' : 'text-red-400' },
+              { icon: '🏀', value: RAPTORS_STATS.ppg, label: 'PPG', color: isDark ? 'text-white' : 'text-slate-800' },
+            ].map((s, i) => (
+              <div key={i} className={`flex flex-col items-center px-3 py-2 rounded-xl ${isDark ? 'bg-white/5 border border-white/8' : 'bg-slate-50 border border-slate-200'}`}>
+                <span className="text-base">{s.icon}</span>
+                <span className={`text-lg font-black ${s.color}`}>{s.value}</span>
+                <span className={`text-[0.625rem] uppercase tracking-wider font-bold ${isDark ? 'text-slate-600' : 'text-slate-400'}`}>{s.label}</span>
+              </div>
+            ))}
           </div>
         </div>
-      ))}
+      </div>
+
+      {/* Bottom gradient fade */}
+      <div className={`absolute bottom-0 left-0 right-0 h-8 ${isDark ? 'bg-gradient-to-t from-[#0a0e17] to-transparent' : 'bg-gradient-to-t from-light-bg to-transparent'}`} />
+    </div>
+  );
+};
+
+// Quick Stats Dashboard (4 metric cards below hero)
+const QuickStatsDashboard = ({ isDark = true }) => {
+  const winPct = (RAPTORS_STATS.wins / (RAPTORS_STATS.wins + RAPTORS_STATS.losses)).toFixed(3);
+  const cards = [
+    { label: 'Win %', value: winPct, sub: `${RAPTORS_STATS.wins}W ${RAPTORS_STATS.losses}L`, gradient: 'from-[#CE1141] to-[#3E2680]' },
+    { label: 'PPG', value: RAPTORS_STATS.ppg.toFixed(1), sub: `Opp: ${RAPTORS_STATS.oppPpg}`, gradient: 'from-[#CE1141] to-[#ff6b35]' },
+    { label: 'Streak', value: RAPTORS_STATS.streak, sub: RAPTORS_STATS.streak.startsWith('W') ? '🔥 On Fire' : 'Bounce Back', gradient: 'from-[#3E2680] to-[#CE1141]' },
+    { label: 'Games Back', value: '3.5', sub: 'From 1st (CLE)', gradient: 'from-[#3E2680] to-[#6b46c1]' },
+  ];
+
+  return (
+    <div className="max-w-5xl mx-auto px-4 py-3">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {cards.map((c, i) => (
+          <div key={i} className={`relative rounded-xl p-[1.5px] overflow-hidden group`} style={{background: `linear-gradient(135deg, ${c.gradient.includes('CE1141') ? '#CE1141' : '#3E2680'}, ${c.gradient.includes('3E2680') ? '#3E2680' : '#CE1141'})`}}>
+            <div className={`rounded-[10px] px-4 py-3 h-full ${isDark ? 'bg-[#0a0e17]' : 'bg-white'} transition-all duration-300 group-hover:bg-opacity-90`}
+              style={{ boxShadow: isDark ? '0 0 20px rgba(206,17,65,0.05)' : 'none' }}>
+              <div className={`text-[0.75rem] uppercase tracking-wider font-bold ${isDark ? 'text-raptors-silver' : 'text-slate-500'}`}>{c.label}</div>
+              <div className={`text-[1.5rem] font-black mt-0.5 ${isDark ? 'text-white' : 'text-slate-800'}`}>{c.value}</div>
+              <div className={`text-[0.75rem] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{c.sub}</div>
+            </div>
+            {/* Hover glow */}
+            <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" style={{boxShadow: '0 0 25px rgba(206,17,65,0.15), inset 0 0 25px rgba(206,17,65,0.05)'}} />
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
@@ -11902,6 +12087,9 @@ function App() {
       
       {/* Hero Stats Bar */}
       <HeroStatsBar isDark={isDark} />
+      
+      {/* Quick Stats Dashboard */}
+      <QuickStatsDashboard isDark={isDark} />
 
       {/* Reminder Modal */}
       {showReminder && (
