@@ -4841,6 +4841,7 @@ const TriviaWidget = ({ isDark = true }) => {
       <div className="flex items-center justify-between mb-3">
         <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
           <Brain className="w-3 h-3 text-purple-400" /> Trivia
+          <span style={{fontSize:'0.5rem',background:'linear-gradient(135deg,#CE1141,#3E2680)',color:'#fff',padding:'1px 6px',borderRadius:'9999px',fontWeight:800,letterSpacing:'0.5px',marginLeft:'4px'}}>NEW</span>
         </h3>
         <span className="text-lg">🧠</span>
       </div>
@@ -7848,21 +7849,22 @@ const ThemeContext = React.createContext({ isDark: true, toggle: () => {} });
 
 // Mobile Bottom Nav
 const MobileBottomNav = ({ isDark = true, onThemeToggle, onShare, onReminder, onNavigate }) => {
+  const scrollTo = (id) => { const el = document.getElementById(id); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); };
   return (
     <div className={`mobile-bottom-nav lg:hidden fixed bottom-0 left-0 right-0 z-40 ${isDark ? 'bg-cmd-surface/95 border-cmd-border' : 'bg-white/95 border-light-border'} border-t backdrop-blur-lg py-2 px-4`} style={{ paddingBottom: 'calc(0.5rem + env(safe-area-inset-bottom, 0px))' }}>
       <div className="flex justify-around items-center">
-        <a href="#top" className={`flex flex-col items-center justify-center gap-1 p-2 min-w-[44px] min-h-[44px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+        <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className={`flex flex-col items-center justify-center gap-1 p-2 min-w-[44px] min-h-[44px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
           <Home className="w-5 h-5" />
           <span className="text-[9px]">Home</span>
-        </a>
-        <a href="#standings" className={`flex flex-col items-center justify-center gap-1 p-2 min-w-[44px] min-h-[44px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+        </button>
+        <button onClick={() => scrollTo('standings-section')} className={`flex flex-col items-center justify-center gap-1 p-2 min-w-[44px] min-h-[44px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
           <Trophy className="w-5 h-5" />
           <span className="text-[9px]">Standings</span>
-        </a>
-        <a href="#schedule" className={`flex flex-col items-center justify-center gap-1 p-2 min-w-[44px] min-h-[44px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+        </button>
+        <button onClick={() => scrollTo('schedule-section')} className={`flex flex-col items-center justify-center gap-1 p-2 min-w-[44px] min-h-[44px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
           <Calendar className="w-5 h-5" />
           <span className="text-[9px]">Schedule</span>
-        </a>
+        </button>
         <button onClick={onShare} className={`flex flex-col items-center justify-center gap-1 p-2 min-w-[44px] min-h-[44px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
           <MoreHorizontal className="w-5 h-5" />
           <span className="text-[9px]">More</span>
@@ -11340,6 +11342,7 @@ const QuickCompareWidget = ({ isDark = true }) => {
       <div className="flex items-center justify-between mb-3">
         <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
           <Swords className="w-3 h-3 text-orange-400" /> Quick Compare
+          <span style={{fontSize:'0.5rem',background:'linear-gradient(135deg,#CE1141,#3E2680)',color:'#fff',padding:'1px 6px',borderRadius:'9999px',fontWeight:800,letterSpacing:'0.5px',marginLeft:'4px'}}>NEW</span>
         </h3>
       </div>
       <div className="flex gap-2 mb-3">
@@ -12199,6 +12202,7 @@ const RaptorsQuizWidget = ({ isDark = true }) => {
     <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
       <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase mb-3`}>
         🧠 Test Your Raptors Knowledge
+        <span style={{fontSize:'0.5rem',background:'linear-gradient(135deg,#CE1141,#3E2680)',color:'#fff',padding:'1px 6px',borderRadius:'9999px',fontWeight:800,letterSpacing:'0.5px',marginLeft:'4px'}}>NEW</span>
       </h3>
       {finished ? (
         <div className="text-center animate-fade-in">
@@ -12897,7 +12901,7 @@ function App() {
             <RaptorsQuizWidget isDark={isDark} />
             <SocialShareWidget isDark={isDark} />
             <ScheduleList games={games} onSelectGame={setSelectedGame} selectedGameId={selectedGame?.id} isDark={isDark} />
-            <WidgetErrorBoundary name="Standings"><StandingsWidget isDark={isDark} /></WidgetErrorBoundary>
+            <div id="standings-section"><WidgetErrorBoundary name="Standings"><StandingsWidget isDark={isDark} /></WidgetErrorBoundary></div>
             <StandingsVisualizationWidget isDark={isDark} />
             <AwardsWatchWidget isDark={isDark} />
             <SeasonTrackerWidget isDark={isDark} games={games} />
@@ -12911,7 +12915,7 @@ function App() {
             <FourFactorsWidget isDark={isDark} opponent={selectedGame?.opponent} />
             <ClutchStatsWidget isDark={isDark} />
             <AdvancedStatsWidget isDark={isDark} />
-            <ScheduleResultsWidget isDark={isDark} />
+            <div id="schedule-section"><ScheduleResultsWidget isDark={isDark} /></div>
             <QuarterBreakdownWidget isDark={isDark} />
             {selectedGame?.status === 'upcoming' && <NotificationWidget isDark={isDark} game={selectedGame} />}
             {selectedGame?.status === 'upcoming' && <PlayerPropsWidget isDark={isDark} opponent={selectedGame?.opponent} />}
@@ -13026,6 +13030,7 @@ function App() {
             <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v11.3</span>
           </div>
           <p style={{margin:0}}>Built with 🏀 by Raptors Intel • Data from ESPN • Not affiliated with the NBA</p>
+          <p style={{margin:0, fontSize:'0.65rem', opacity:0.6}}>Last Updated: {new Date().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}</p>
           <button className="back-to-top" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>↑ Back to Top</button>
         </div>
       </footer>
