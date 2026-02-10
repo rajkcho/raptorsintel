@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Raptors Intel | Game Day Scouting Dashboard</title>
-    <meta name="description" content="Advanced Toronto Raptors game day scouting dashboard with rotation simulator, playbook analysis, injury reports, and real-time matchup intelligence." />
+    <meta name="description" content="Raptors Intel — the ultimate Toronto Raptors scouting dashboard. Live scores, standings, draft intel, trade tracker, rotation simulator, injury reports, awards watch, and 100+ analytics widgets. Free, real-time, and updated every game day." />
     <meta name="keywords" content="Toronto Raptors, NBA, scouting, analytics, game preview, rotation simulator, injury report" />
     <meta property="og:title" content="Raptors Intel | Game Day Scouting" />
     <meta property="og:description" content="The ultimate Raptors fan scouting dashboard. Deep analytics, rotation simulator, and matchup intelligence." />
@@ -15,6 +15,36 @@
     <meta name="twitter:title" content="Raptors Intel | Game Day Scouting" />
     <meta name="twitter:description" content="The ultimate Raptors fan scouting dashboard. Deep analytics, rotation simulator, and matchup intelligence." />
     <meta name="twitter:image" content="https://cdn.nba.com/logos/nba/1610612761/primary/L/logo.svg" />
+    <link rel="canonical" href="https://rajkcho.github.io/raptorsintel/" />
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Raptors Intel",
+      "description": "Advanced Toronto Raptors game day scouting dashboard with live scores, rotation simulator, playbook analysis, injury reports, standings, draft intel, and real-time matchup intelligence.",
+      "url": "https://rajkcho.github.io/raptorsintel/",
+      "applicationCategory": "SportsApplication",
+      "operatingSystem": "Web",
+      "author": {
+        "@type": "Organization",
+        "name": "Raptors Intel"
+      },
+      "about": {
+        "@type": "SportsTeam",
+        "name": "Toronto Raptors",
+        "sport": "Basketball",
+        "memberOf": {
+          "@type": "SportsOrganization",
+          "name": "NBA"
+        }
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
     <link rel="icon" href="https://cdn.nba.com/logos/nba/1610612761/primary/L/logo.svg" type="image/svg+xml" />
     <link rel="manifest" href="manifest.json" />
     <meta name="theme-color" content="#CE1141" />
@@ -176,6 +206,32 @@
           animation-iteration-count: 1 !important;
           transition-duration: 0.01ms !important;
         }
+      }
+
+      /* Live Game Mode */
+      .live-game-banner {
+        background: linear-gradient(90deg, #CE1141 0%, #1a1f2e 40%, #1a1f2e 60%, #CE1141 100%);
+        background-size: 200% 100%;
+        animation: live-banner-shift 3s ease-in-out infinite;
+      }
+      @keyframes live-banner-shift {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+      }
+      .gameday-badge-live {
+        animation: glow-pulse 0.8s ease-in-out infinite !important;
+      }
+      .live-pulse-dot {
+        animation: pulse-dot 1s ease-in-out infinite;
+      }
+      @keyframes pulse-dot {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.4; transform: scale(1.3); }
+      }
+
+      /* Standings Bar Chart */
+      .standings-bar {
+        transition: width 1s ease-out;
       }
 
       /* ======== PREMIUM DESIGN ELEMENTS ======== */
@@ -2628,6 +2684,116 @@ const fetchLiveScoreboard = async () => {
   }
 };
 
+// Fallback West standings (updated Feb 9, 2026)
+const FALLBACK_STANDINGS_WEST = [
+  { rank: 1, team: "Thunder", abbr: "OKC", id: "1610612760", wins: 39, losses: 12, gb: "-", l10: "8-2" },
+  { rank: 2, team: "Rockets", abbr: "HOU", id: "1610612745", wins: 34, losses: 18, gb: "5.5", l10: "7-3" },
+  { rank: 3, team: "Grizzlies", abbr: "MEM", id: "1610612763", wins: 33, losses: 19, gb: "6.5", l10: "6-4" },
+  { rank: 4, team: "Lakers", abbr: "LAL", id: "1610612747", wins: 31, losses: 21, gb: "8.5", l10: "5-5" },
+  { rank: 5, team: "Nuggets", abbr: "DEN", id: "1610612743", wins: 30, losses: 22, gb: "9.5", l10: "6-4" },
+  { rank: 6, team: "Mavericks", abbr: "DAL", id: "1610612742", wins: 29, losses: 23, gb: "10.5", l10: "5-5" },
+  { rank: 7, team: "Timberwolves", abbr: "MIN", id: "1610612750", wins: 28, losses: 24, gb: "11.5", l10: "4-6" },
+  { rank: 8, team: "Clippers", abbr: "LAC", id: "1610612746", wins: 27, losses: 25, gb: "12.5", l10: "5-5" },
+  { rank: 9, team: "Kings", abbr: "SAC", id: "1610612758", wins: 26, losses: 26, gb: "13.5", l10: "6-4" },
+  { rank: 10, team: "Warriors", abbr: "GSW", id: "1610612744", wins: 25, losses: 27, gb: "14.5", l10: "4-6" },
+  { rank: 11, team: "Spurs", abbr: "SAS", id: "1610612759", wins: 24, losses: 28, gb: "15.5", l10: "5-5" },
+  { rank: 12, team: "Suns", abbr: "PHX", id: "1610612756", wins: 23, losses: 29, gb: "16.5", l10: "3-7" },
+  { rank: 13, team: "Trail Blazers", abbr: "POR", id: "1610612757", wins: 18, losses: 34, gb: "21.5", l10: "3-7" },
+  { rank: 14, team: "Jazz", abbr: "UTA", id: "1610612762", wins: 14, losses: 37, gb: "25", l10: "2-8" },
+  { rank: 15, team: "Pelicans", abbr: "NOP", id: "1610612740", wins: 12, losses: 40, gb: "27.5", l10: "2-8" },
+];
+
+// Fetch West standings from ESPN API  
+const fetchWestStandings = async () => {
+  try {
+    const data = await espnFetch(
+      'https://site.api.espn.com/apis/v2/sports/basketball/nba/standings',
+      'standings_full',
+      300000
+    );
+    const westChildren = data.children?.find(c => c.name === 'Western Conference' || c.abbreviation === 'West');
+    if (!westChildren) throw new Error('No West data');
+    const entries = westChildren.standings?.entries || [];
+    const parsed = entries.map((entry, i) => {
+      const team = entry.team || {};
+      const stats = {};
+      (entry.stats || []).forEach(s => { stats[s.name] = s.displayValue || s.value; });
+      const espnId = parseInt(team.id);
+      const nbaId = ESPN_TO_NBA_ID[espnId] || team.id;
+      return {
+        rank: i + 1,
+        team: team.shortDisplayName || team.displayName || '',
+        abbr: team.abbreviation || '',
+        id: nbaId,
+        wins: parseInt(stats.wins) || 0,
+        losses: parseInt(stats.losses) || 0,
+        gb: stats.gamesBehind === '0' || stats.gamesBehind === '-' ? '-' : (stats.gamesBehind || '-'),
+        l10: stats.record || '',
+      };
+    });
+    parsed.sort((a, b) => b.wins - a.wins || a.losses - b.losses);
+    parsed.forEach((t, i) => t.rank = i + 1);
+    return parsed;
+  } catch (e) {
+    return FALLBACK_STANDINGS_WEST;
+  }
+};
+
+// Enhanced scoreboard fetch with quarter scores for live Raptors games
+const fetchEnhancedScoreboard = async () => {
+  try {
+    const data = await espnFetch(
+      'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard',
+      'scoreboard_enhanced',
+      30000
+    );
+    const events = data.events || [];
+    for (const ev of events) {
+      const comp = ev.competitions?.[0] || {};
+      const competitors = comp.competitors || [];
+      const home = competitors.find(c => c.homeAway === 'home') || {};
+      const away = competitors.find(c => c.homeAway === 'away') || {};
+      const homeTeam = home.team || {};
+      const awayTeam = away.team || {};
+      const isRaptors = homeTeam.abbreviation === 'TOR' || awayTeam.abbreviation === 'TOR';
+      const status = comp.status || ev.status || {};
+      const statusType = status.type || {};
+      if (isRaptors && statusType.state === 'in') {
+        const homeLinescores = (home.linescores || []).map(q => q.value || 0);
+        const awayLinescores = (away.linescores || []).map(q => q.value || 0);
+        return {
+          live: true,
+          home: homeTeam.abbreviation,
+          away: awayTeam.abbreviation,
+          homeScore: parseInt(home.score) || 0,
+          awayScore: parseInt(away.score) || 0,
+          period: status.period || 1,
+          clock: status.displayClock || '',
+          homeQuarters: homeLinescores,
+          awayQuarters: awayLinescores,
+          homeLogo: homeTeam.id,
+          awayLogo: awayTeam.id,
+          homeId: ESPN_TO_NBA_ID[parseInt(homeTeam.id)] || homeTeam.id,
+          awayId: ESPN_TO_NBA_ID[parseInt(awayTeam.id)] || awayTeam.id,
+        };
+      }
+    }
+    return { live: false };
+  } catch (e) {
+    return { live: false };
+  }
+};
+
+// Awards Watch data
+const AWARDS_WATCH = [
+  { category: 'MIP', emoji: '📈', players: [{ name: 'Scottie Barnes', note: 'In the conversation — career-best numbers across the board', team: 'TOR', highlight: true }] },
+  { category: 'All-Star', emoji: '⭐', players: [{ name: 'Scottie Barnes', note: 'Selected as 2026 All-Star starter', team: 'TOR', highlight: true }, { name: 'RJ Barrett', note: 'Borderline candidate — strong second-half push', team: 'TOR', highlight: true }] },
+  { category: 'MVP', emoji: '🏆', players: [{ name: 'Scottie Barnes', note: 'Outside top-10 but making noise', team: 'TOR', highlight: true }] },
+  { category: 'DPOY', emoji: '🛡️', players: [{ name: 'Jakob Poeltl', note: 'Anchoring a top-10 defense — in the conversation', team: 'TOR', highlight: true }] },
+  { category: '6MOY', emoji: '💪', players: [{ name: 'Chris Boucher', note: 'Consistent spark off the bench', team: 'TOR', highlight: true }] },
+  { category: 'ROY', emoji: '🌟', players: [{ name: 'No Raptors rookies in the race this season', note: '', team: '', highlight: false }] },
+];
+
 // Raptors Team Stats (will be updated from standings)
 // Raptors Team Stats (Feb 2026 - post All-Star)
 const RAPTORS_STATS = { wins: 32, losses: 22, ppg: 114.8, oppPpg: 112.6, streak: "W3", lastUpdate: "Feb 9, 2026", rpg: 44.2, apg: 26.8, fgPct: 47.5, threePtPct: 36.2 };
@@ -4750,35 +4916,241 @@ const WeatherImpactWidget = ({ isDark = true }) => {
 };
 
 // Power Rankings Widget
-const PowerRankingsWidget = ({ isDark = true }) => {
-  const rankings = {
-    current: 18,
-    previous: 20,
-    high: 12,
-    low: 24
-  };
+// ============================================================
+// LIVE GAME BANNER
+// ============================================================
+const LiveGameBanner = ({ isDark = true }) => {
+  const [liveData, setLiveData] = useState({ live: false });
   
-  const change = rankings.previous - rankings.current;
+  useEffect(() => {
+    let mounted = true;
+    const poll = async () => {
+      const data = await fetchEnhancedScoreboard();
+      if (mounted) setLiveData(data);
+    };
+    poll();
+    const interval = setInterval(poll, 30000); // 30s during live games
+    return () => { mounted = false; clearInterval(interval); };
+  }, []);
+
+  if (!liveData.live) return null;
+
+  const quarters = ['Q1', 'Q2', 'Q3', 'Q4'];
+  const homeWinning = liveData.homeScore > liveData.awayScore;
+  const awayWinning = liveData.awayScore > liveData.homeScore;
+
+  return (
+    <div className="live-game-banner text-white py-3 px-4 relative overflow-hidden z-20">
+      <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+        <div className="flex items-center gap-3">
+          <span className="live-pulse-dot w-3 h-3 bg-red-500 rounded-full inline-block"></span>
+          <span className="text-xs font-bold uppercase tracking-wider">LIVE NOW</span>
+        </div>
+        <div className="flex items-center gap-4">
+          <div className={`flex items-center gap-2 ${awayWinning ? 'font-black' : ''}`}>
+            <img src={'https://cdn.nba.com/logos/nba/' + (liveData.awayId || '') + '/primary/L/logo.svg'} className="w-6 h-6" alt="" />
+            <span className="text-sm font-bold">{liveData.away}</span>
+            <span className="text-xl font-black">{liveData.awayScore}</span>
+          </div>
+          <div className="flex flex-col items-center">
+            <span className="text-[10px] uppercase tracking-wider opacity-75">Q{liveData.period} {liveData.clock}</span>
+          </div>
+          <div className={`flex items-center gap-2 ${homeWinning ? 'font-black' : ''}`}>
+            <span className="text-xl font-black">{liveData.homeScore}</span>
+            <span className="text-sm font-bold">{liveData.home}</span>
+            <img src={'https://cdn.nba.com/logos/nba/' + (liveData.homeId || '') + '/primary/L/logo.svg'} className="w-6 h-6" alt="" />
+          </div>
+        </div>
+        {/* Quarter breakdown */}
+        <div className="flex gap-2">
+          {quarters.slice(0, Math.max(liveData.period || 1, (liveData.homeQuarters || []).length)).map((q, i) => (
+            <div key={q} className="text-center">
+              <div className="text-[9px] opacity-60">{q}</div>
+              <div className="text-[10px] font-mono">
+                {(liveData.awayQuarters || [])[i] ?? '-'}-{(liveData.homeQuarters || [])[i] ?? '-'}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ============================================================
+// AWARDS WATCH WIDGET
+// ============================================================
+const AwardsWatchWidget = ({ isDark = true }) => {
+  const [expanded, setExpanded] = useState(false);
+  const displayAwards = expanded ? AWARDS_WATCH : AWARDS_WATCH.slice(0, 3);
   
   return (
     <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
       <div className="flex items-center justify-between mb-3">
         <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
-          <TrendingUp className="w-3 h-3 text-green-400" /> Power Rankings
+          🏅 Awards Watch
+        </h3>
+        <span className={`text-[9px] px-2 py-0.5 rounded-full ${isDark ? 'bg-yellow-500/10 text-yellow-400' : 'bg-yellow-50 text-yellow-600'}`}>2025-26</span>
+      </div>
+      <div className="space-y-2.5">
+        {displayAwards.map((award, i) => (
+          <div key={i} className={`${isDark ? 'bg-cmd-bg/50' : 'bg-light-card'} rounded-lg p-2.5`}>
+            <div className="flex items-center gap-2 mb-1.5">
+              <span className="text-sm">{award.emoji}</span>
+              <span className={`text-[11px] font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>{award.category}</span>
+            </div>
+            {award.players.map((p, j) => (
+              <div key={j} className={`flex items-start gap-2 ${j > 0 ? 'mt-1.5 pt-1.5 border-t ' + (isDark ? 'border-cmd-border/30' : 'border-light-border') : ''}`}>
+                {p.highlight && <span className="text-raptors-red text-[10px] mt-0.5">🦖</span>}
+                <div className="flex-1">
+                  <span className={`text-[11px] font-semibold ${p.highlight ? 'text-raptors-red' : isDark ? 'text-slate-300' : 'text-slate-700'}`}>{p.name}</span>
+                  {p.note && <p className={`text-[9px] mt-0.5 ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{p.note}</p>}
+                </div>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+      {AWARDS_WATCH.length > 3 && (
+        <button onClick={() => setExpanded(e => !e)} className={`mt-2 w-full text-center text-[10px] ${isDark ? 'text-slate-500 hover:text-slate-300' : 'text-slate-400 hover:text-slate-600'} transition-colors`}>
+          {expanded ? '▲ Show less' : '▼ Show all categories'}
+        </button>
+      )}
+    </div>
+  );
+};
+
+// ============================================================
+// POWER RANKINGS WIDGET (Enhanced — Around the League)
+// ============================================================
+const PowerRankingsWidget = ({ isDark = true }) => {
+  const { standings: eastStandings } = useLiveStandings();
+  const [westStandings, setWestStandings] = useState(FALLBACK_STANDINGS_WEST);
+  const [tab, setTab] = useState('east');
+
+  useEffect(() => {
+    fetchWestStandings().then(setWestStandings);
+  }, []);
+
+  const eastTop5 = eastStandings.slice(0, 5);
+  const westTop5 = westStandings.slice(0, 5);
+  const raptors = eastStandings.find(t => t.abbr === 'TOR');
+  const current = tab === 'east' ? eastTop5 : westTop5;
+
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <TrendingUp className="w-3 h-3 text-green-400" /> Around the League
         </h3>
       </div>
-      
-      <div className="text-center mb-3">
-        <div className="flex items-center justify-center gap-2">
-          <span className={`text-3xl font-black ${isDark ? 'text-white' : 'text-slate-800'}`}>#{rankings.current}</span>
-          {change > 0 && <span className="text-green-400 text-sm">↑{change}</span>}
-          {change < 0 && <span className="text-red-400 text-sm">↓{Math.abs(change)}</span>}
+
+      {/* Raptors position callout */}
+      {raptors && (
+        <div className={`mb-3 p-2 rounded-lg ${isDark ? 'bg-raptors-red/10 border border-raptors-red/20' : 'bg-raptors-red/5 border border-raptors-red/15'}`}>
+          <div className="flex items-center justify-between">
+            <span className="text-raptors-red text-[11px] font-bold">🦖 Raptors: #{raptors.rank} East</span>
+            <span className={`text-[10px] font-mono ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{raptors.wins}-{raptors.losses}</span>
+          </div>
         </div>
+      )}
+
+      {/* Tab switcher */}
+      <div className="flex gap-1 mb-3">
+        {['east', 'west'].map(t => (
+          <button key={t} onClick={() => setTab(t)} className={`flex-1 text-[10px] font-bold py-1.5 rounded-lg transition-all uppercase ${tab === t ? 'bg-raptors-red text-white' : isDark ? 'bg-cmd-bg text-slate-500 hover:text-slate-300' : 'bg-light-card text-slate-400 hover:text-slate-600'}`}>
+            {t === 'east' ? 'East Top 5' : 'West Top 5'}
+          </button>
+        ))}
       </div>
-      
-      <div className={`flex justify-between text-[10px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-        <div>High: <span className="text-green-400 font-bold">#{rankings.high}</span></div>
-        <div>Low: <span className="text-red-400 font-bold">#{rankings.low}</span></div>
+
+      <div className="space-y-1.5">
+        {current.map((team, i) => (
+          <div key={team.abbr} className={`flex items-center justify-between py-1.5 px-2 rounded-lg text-xs ${team.abbr === 'TOR' ? (isDark ? 'bg-raptors-red/10' : 'bg-raptors-red/5') : ''}`}>
+            <div className="flex items-center gap-2">
+              <span className={`w-4 text-center font-bold ${i === 0 ? 'text-yellow-400' : i === 1 ? 'text-slate-300' : i === 2 ? 'text-amber-600' : isDark ? 'text-slate-500' : 'text-slate-400'}`}>{i + 1}</span>
+              <img loading="lazy" src={`https://cdn.nba.com/logos/nba/${team.id}/primary/L/logo.svg`} className="w-4 h-4" alt="" />
+              <span className={`font-semibold ${team.abbr === 'TOR' ? 'text-raptors-red' : isDark ? 'text-slate-300' : 'text-slate-700'}`}>{team.abbr}</span>
+            </div>
+            <span className={`font-mono ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{team.wins}-{team.losses}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// ============================================================
+// STANDINGS VISUALIZATION (Bar Chart)
+// ============================================================
+const StandingsVisualizationWidget = ({ isDark = true }) => {
+  const { standings } = useLiveStandings();
+  const [visible, setVisible] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setVisible(true); }, { threshold: 0.2 });
+    if (ref.current) obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, []);
+
+  if (!standings.length) return null;
+  const maxWins = Math.max(...standings.map(t => t.wins));
+  const playoffLine = 6;
+  const playInLine = 10;
+
+  return (
+    <div ref={ref} className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          📊 East Standings Chart
+        </h3>
+      </div>
+      <div className="space-y-1">
+        {standings.map((team, i) => {
+          const barWidth = visible ? `${(team.wins / maxWins) * 100}%` : '0%';
+          const isPlayoff = i < playoffLine;
+          const isPlayIn = i >= playoffLine && i < playInLine;
+          const isTOR = team.abbr === 'TOR';
+
+          return (
+            <React.Fragment key={team.abbr}>
+              {i === playoffLine && (
+                <div className="flex items-center gap-2 py-1">
+                  <div className={`flex-1 border-t border-dashed ${isDark ? 'border-green-500/40' : 'border-green-400/40'}`}></div>
+                  <span className="text-[8px] text-green-500 font-bold uppercase">Playoff ▲</span>
+                  <div className={`flex-1 border-t border-dashed ${isDark ? 'border-green-500/40' : 'border-green-400/40'}`}></div>
+                </div>
+              )}
+              {i === playInLine && (
+                <div className="flex items-center gap-2 py-1">
+                  <div className={`flex-1 border-t border-dashed ${isDark ? 'border-yellow-500/40' : 'border-yellow-400/40'}`}></div>
+                  <span className="text-[8px] text-yellow-500 font-bold uppercase">Play-In ▲</span>
+                  <div className={`flex-1 border-t border-dashed ${isDark ? 'border-yellow-500/40' : 'border-yellow-400/40'}`}></div>
+                </div>
+              )}
+              <div className="flex items-center gap-1.5">
+                <span className={`w-4 text-[9px] text-right ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{team.rank}</span>
+                <span className={`w-8 text-[9px] font-semibold ${isTOR ? 'text-raptors-red' : isDark ? 'text-slate-400' : 'text-slate-500'}`}>{team.abbr}</span>
+                <div className={`flex-1 h-3.5 rounded-sm overflow-hidden ${isDark ? 'bg-cmd-border/30' : 'bg-slate-100'}`}>
+                  <div
+                    className="standings-bar h-full rounded-sm"
+                    style={{
+                      width: barWidth,
+                      background: isTOR ? '#CE1141' : isPlayoff ? (isDark ? '#22c55e40' : '#22c55e30') : isPlayIn ? (isDark ? '#eab30840' : '#eab30830') : (isDark ? '#64748b30' : '#94a3b830'),
+                      transitionDelay: `${i * 50}ms`,
+                    }}
+                  />
+                </div>
+                <span className={`w-7 text-[9px] font-mono text-right ${isTOR ? 'text-raptors-red font-bold' : isDark ? 'text-slate-500' : 'text-slate-400'}`}>{team.wins}</span>
+              </div>
+            </React.Fragment>
+          );
+        })}
+      </div>
+      <div className={`flex justify-center gap-4 mt-3 text-[8px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
+        <span><span className="inline-block w-2 h-2 rounded-sm bg-green-500/40 mr-1"></span>Playoff (1-6)</span>
+        <span><span className="inline-block w-2 h-2 rounded-sm bg-yellow-500/40 mr-1"></span>Play-In (7-10)</span>
       </div>
     </div>
   );
@@ -12117,6 +12489,24 @@ function App() {
   const [showShare, setShowShare] = useState(false);
   const [showKeyboardHelp, setShowKeyboardHelp] = useState(false);
   const [gameDayMode, setGameDayMode] = useState(false);
+  const [raptorsLive, setRaptorsLive] = useState(false);
+
+  // Check for live Raptors game and auto-enable game day mode
+  useEffect(() => {
+    let mounted = true;
+    const checkLive = async () => {
+      const data = await fetchEnhancedScoreboard();
+      if (mounted && data.live) {
+        setRaptorsLive(true);
+        setGameDayMode(true);
+      } else if (mounted) {
+        setRaptorsLive(false);
+      }
+    };
+    checkLive();
+    const interval = setInterval(checkLive, 30000);
+    return () => { mounted = false; clearInterval(interval); };
+  }, []);
 
   const toggleTheme = () => {
     setIsDark(prev => {
@@ -12314,8 +12704,8 @@ function App() {
                 </div>
               </div>
               {gameDayMode && (
-                <div className="gameday-badge px-3 py-1.5 rounded-full bg-raptors-red text-white text-xs font-black tracking-wider shadow-lg shadow-raptors-red/40">
-                  🔥 GAME DAY
+                <div className={`gameday-badge ${raptorsLive ? 'gameday-badge-live' : ''} px-3 py-1.5 rounded-full bg-raptors-red text-white text-xs font-black tracking-wider shadow-lg shadow-raptors-red/40`}>
+                  {raptorsLive ? '🔴 LIVE GAME' : '🔥 GAME DAY'}
                 </div>
               )}
             </div>
@@ -12416,6 +12806,9 @@ function App() {
       {/* Player Detail Modal */}
       {selectedPlayer && <PlayerDetailModal player={selectedPlayer} isDark={isDark} onClose={() => setSelectedPlayer(null)} />}
 
+      {/* Live Game Banner (shows when Raptors game is in progress) */}
+      <LiveGameBanner isDark={isDark} />
+
       {/* Live Score Ticker */}
       <LiveScoreTicker isDark={isDark} />
       
@@ -12505,6 +12898,8 @@ function App() {
             <SocialShareWidget isDark={isDark} />
             <ScheduleList games={games} onSelectGame={setSelectedGame} selectedGameId={selectedGame?.id} isDark={isDark} />
             <WidgetErrorBoundary name="Standings"><StandingsWidget isDark={isDark} /></WidgetErrorBoundary>
+            <StandingsVisualizationWidget isDark={isDark} />
+            <AwardsWatchWidget isDark={isDark} />
             <SeasonTrackerWidget isDark={isDark} games={games} />
             <RaptorsPulseWidget isDark={isDark} />
             <TeamSalaryWidget isDark={isDark} teamName="Raptors" opponentName={selectedGame?.opponent} />
@@ -12628,7 +13023,7 @@ function App() {
         <div className="flex flex-col items-center gap-2">
           <div className="flex items-center gap-2 flex-wrap justify-center">
             <span className="font-bold text-raptors-red">RAPTORS INTEL</span>
-            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v11.2</span>
+            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v11.3</span>
           </div>
           <p style={{margin:0}}>Built with 🏀 by Raptors Intel • Data from ESPN • Not affiliated with the NBA</p>
           <button className="back-to-top" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>↑ Back to Top</button>
