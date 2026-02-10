@@ -1,4 +1,4 @@
-# 🦖 Raptors Intel
+# 🦖 Raptors Intel v11.3
 
 **The ultimate Toronto Raptors game day scouting dashboard.**
 
