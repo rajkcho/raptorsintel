@@ -2255,7 +2255,7 @@ const RAPTORS_STATS = { wins: 32, losses: 25, ppg: 113.8, oppPpg: 112.5, streak:
 // DRAFT INTELLIGENCE DATA
 // ============================================================
 const DRAFT_DATA = {
-  raptorsRecord: { wins: 32, losses: 25, pct: '.561', projectedSeed: 7 },
+  raptorsRecord: { wins: 17, losses: 38, pct: '.309', projectedSeed: 4 },
   lotteryOdds: [
     { seed: 1, first: 14.0, top4: 52.1 },
     { seed: 2, first: 14.0, top4: 52.1 },
@@ -2273,14 +2273,14 @@ const DRAFT_DATA = {
     { seed: 14, first: 0.5, top4: 2.4 },
   ],
   prospects: [
-    { name: "Cooper Flagg", school: "Duke", position: "PF/SF", projected: "1-2", stats: "18.2 PPG, 8.5 RPG, 3.4 APG", comparison: "Jayson Tatum", emoji: "🔥" },
-    { name: "Dylan Harper", school: "Rutgers", position: "SG/PG", projected: "2-4", stats: "22.1 PPG, 5.0 RPG, 4.3 APG", comparison: "Bradley Beal", emoji: "⚡" },
-    { name: "Ace Bailey", school: "Rutgers", position: "SF/PF", projected: "2-5", stats: "19.4 PPG, 7.8 RPG, 1.2 BPG", comparison: "Brandon Ingram", emoji: "🎯" },
-    { name: "VJ Edgecombe", school: "Baylor", position: "SG/SF", projected: "3-7", stats: "16.8 PPG, 4.2 RPG, 2.5 APG", comparison: "Jalen Green", emoji: "💨" },
-    { name: "Kasparas Jakucionis", school: "Illinois", position: "PG/SG", projected: "4-8", stats: "15.5 PPG, 5.8 RPG, 5.1 APG", comparison: "Luka Doncic (lite)", emoji: "🇱🇹" },
-    { name: "Kon Knueppel", school: "Duke", position: "SG/SF", projected: "5-10", stats: "14.2 PPG, 4.1 RPG, 3.0 APG", comparison: "Klay Thompson", emoji: "🎯" },
-    { name: "Tre Johnson", school: "Texas", position: "SG", projected: "3-7", stats: "19.6 PPG, 3.8 RPG, 2.2 APG", comparison: "Devin Booker", emoji: "🔥" },
-    { name: "Nolan Traore", school: "France", position: "PG", projected: "5-10", stats: "12.4 PPG, 6.8 APG, 1.8 SPG", comparison: "Tony Parker", emoji: "🇫🇷" },
+    { name: "Cameron Boozer", school: "Duke", position: "PF/C", projected: "1-3", stats: "17.8 PPG, 8.2 RPG, 2.8 APG", comparison: "Chris Bosh", emoji: "🔥" },
+    { name: "Airious Bailey", school: "Alabama", position: "SF/SG", projected: "1-4", stats: "16.5 PPG, 5.4 RPG, 2.1 APG", comparison: "Jimmy Butler", emoji: "⚡" },
+    { name: "Collin Murray-Boyles", school: "South Carolina", position: "PF/SF", projected: "2-5", stats: "17.1 PPG, 9.2 RPG, 2.3 APG", comparison: "Pascal Siakam", emoji: "🎯" },
+    { name: "Jalil Bethea", school: "Miami (FL)", position: "SG", projected: "3-7", stats: "18.9 PPG, 3.8 RPG, 3.5 APG", comparison: "Devin Booker", emoji: "💨" },
+    { name: "Jase Richardson", school: "Michigan State", position: "PG/SG", projected: "4-8", stats: "14.2 PPG, 4.1 RPG, 5.8 APG", comparison: "Jason Richardson (his dad)", emoji: "🏀" },
+    { name: "Ian Jackson", school: "North Carolina", position: "SG/SF", projected: "2-6", stats: "16.8 PPG, 4.5 RPG, 2.5 APG", comparison: "Anthony Edwards", emoji: "🎯" },
+    { name: "Liam McNeeley", school: "UConn", position: "SF/PF", projected: "5-10", stats: "15.4 PPG, 6.2 RPG, 1.9 APG", comparison: "Tobias Harris", emoji: "🔥" },
+    { name: "Nolan Traore", school: "France (NBL)", position: "PG", projected: "5-10", stats: "12.4 PPG, 6.8 APG, 1.8 SPG", comparison: "Tony Parker", emoji: "🇫🇷" },
     { name: "Egor Demin", school: "BYU", position: "PG/SG", projected: "6-12", stats: "13.1 PPG, 5.2 APG, 3.7 RPG", comparison: "Ricky Rubio", emoji: "🇷🇺" },
     { name: "Khaman Maluach", school: "Duke", position: "C", projected: "7-14", stats: "10.8 PPG, 8.4 RPG, 2.4 BPG", comparison: "Rudy Gobert", emoji: "🛡️" },
   ],
@@ -2288,7 +2288,7 @@ const DRAFT_DATA = {
     { team: "WAS", wins: 14, losses: 40, pct: '.259', lotteryPos: 1 },
     { team: "NOP", wins: 16, losses: 39, pct: '.291', lotteryPos: 2 },
     { team: "CHA", wins: 17, losses: 38, pct: '.309', lotteryPos: 3 },
-    { team: "PHI", wins: 18, losses: 38, pct: '.321', lotteryPos: 4 },
+    { team: "TOR", wins: 17, losses: 38, pct: '.309', lotteryPos: 4 },
     { team: "POR", wins: 19, losses: 37, pct: '.339', lotteryPos: 5 },
     { team: "BKN", wins: 19, losses: 37, pct: '.339', lotteryPos: 6 },
     { team: "UTA", wins: 20, losses: 36, pct: '.357', lotteryPos: 7 },
@@ -10695,7 +10695,7 @@ const DraftWatchWidget = ({ isDark = true }) => {
     <div className={`${isDark ? 'premium-glass' : 'bg-white border border-light-border shadow-lg'} rounded-2xl p-4`}>
       <div className="flex items-center gap-2 mb-3">
         <Target className="w-4 h-4 text-raptors-red" />
-        <h3 className={`text-xs font-bold uppercase ${isDark ? 'text-white' : 'text-slate-800'}`}>🎯 Draft Watch 2025</h3>
+        <h3 className={`text-xs font-bold uppercase ${isDark ? 'text-white' : 'text-slate-800'}`}>🎯 Draft Watch 2026</h3>
       </div>
       
       {/* Projected Pick Card */}
