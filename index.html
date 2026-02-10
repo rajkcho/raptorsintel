@@ -13450,7 +13450,7 @@ function App() {
               });
               const toggleSection = (id) => setMobileSectionCollapsed(prev => ({...prev, [id]: !prev[id]}));
               const SectionHeader = ({ id, icon, title }) => (
-                <div id={id} className="scroll-mt-20 pt-3 pb-1">
+                <div id={id} className="scroll-mt-16 pt-2 pb-1">
                   <button onClick={() => toggleSection(id)} className={`w-full flex items-center gap-2 group`}>
                     <span className="text-lg">{icon}</span>
                     <h2 className={`text-sm font-bold uppercase tracking-wider ${isDark ? 'text-white' : 'text-slate-800'}`}>{title}</h2>
@@ -13464,7 +13464,7 @@ function App() {
                 if (filtered.length === 0) return null;
                 return (
                 <div className={`${mobileSectionCollapsed[id] ? 'hidden lg:block' : ''}`}>
-                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3" style={{alignItems:'start'}}>
                     {filtered}
                   </div>
                 </div>
@@ -13686,7 +13686,7 @@ function App() {
         <div className="flex flex-col items-center gap-2">
           <div className="flex items-center gap-2 flex-wrap justify-center">
             <span className="font-bold text-raptors-red">RAPTORS INTEL</span>
-            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v12.1</span>
+            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v12.2</span>
           </div>
           <p style={{margin:0}}>Built with 🏀 by Raptors Intel • Data from ESPN • Not affiliated with the NBA</p>
           <p style={{margin:0, fontSize:'0.65rem', opacity:0.6}}>Last Updated: {new Date().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}</p>
