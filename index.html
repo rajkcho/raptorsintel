@@ -1134,37 +1134,79 @@
       }
 
       /* ======== MASONRY LAYOUT ======== */
-      .widget-masonry {
-        columns: 3 280px;
-        column-gap: 0.375rem;
+      /* ======== DASHBOARD GRID ======== */
+      .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        grid-auto-rows: minmax(120px, auto);
+        grid-auto-flow: dense;
+        gap: 4px;
       }
-      .widget-masonry > * {
-        break-inside: avoid;
-        margin-bottom: 0.375rem;
+      .widget-wide { grid-column: span 2; }
+      .widget-tall { grid-row: span 2; }
+      .widget-large { grid-column: span 2; grid-row: span 2; }
+
+      /* Category border accents */
+      .dg-gameday { border-left: 2px solid #CE1141; }
+      .dg-stats { border-left: 2px solid #3b82f6; }
+      .dg-players { border-left: 2px solid #22c55e; }
+      .dg-analytics { border-left: 2px solid #8b5cf6; }
+      .dg-oncourt { border-left: 2px solid #f97316; }
+      .dg-season { border-left: 2px solid #14b8a6; }
+      .dg-community { border-left: 2px solid #ec4899; }
+
+      /* Ultra-compact widget internals */
+      .dashboard-grid > div {
+        padding: 6px !important;
+        border-radius: 6px !important;
+        overflow: hidden;
       }
-      .widget-full-span {
-        column-span: all;
-        margin-bottom: 0.375rem;
+      .dashboard-grid > div > div { padding: 4px !important; }
+      .dashboard-grid h3 {
+        font-size: 9px !important;
+        font-weight: 800 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.05em !important;
+        margin-bottom: 4px !important;
+        opacity: 0.7;
       }
-      /* ======== COMPACT WIDGET PADDING ======== */
-      .widget-masonry > div,
-      .widget-masonry > div > div,
-      #sidebar-panel > div {
-        padding: 0.5rem !important;
-      }
-      .widget-masonry h3, #sidebar-panel h3 {
-        margin-bottom: 0.25rem !important;
-        font-size: 0.65rem !important;
-      }
+      .dashboard-grid .text-xs { font-size: 10px !important; }
+      .dashboard-grid .text-sm { font-size: 11px !important; }
+      .dashboard-grid .space-y-2 > * + * { margin-top: 2px !important; }
+      .dashboard-grid .space-y-3 > * + * { margin-top: 3px !important; }
+      .dashboard-grid .space-y-4 > * + * { margin-top: 4px !important; }
+      .dashboard-grid .p-2 { padding: 3px !important; }
+      .dashboard-grid .p-3 { padding: 4px !important; }
+      .dashboard-grid .p-4 { padding: 6px !important; }
+      .dashboard-grid [class*="p-5"] { padding: 6px !important; }
+      .dashboard-grid [class*="p-6"] { padding: 6px !important; }
+      .dashboard-grid .gap-2 { gap: 2px !important; }
+      .dashboard-grid .gap-3 { gap: 3px !important; }
+      .dashboard-grid .gap-4 { gap: 4px !important; }
+      .dashboard-grid .mb-3 { margin-bottom: 3px !important; }
+      .dashboard-grid .mb-4 { margin-bottom: 4px !important; }
+      .dashboard-grid .rounded-2xl { border-radius: 6px !important; }
+      .dashboard-grid .rounded-xl { border-radius: 4px !important; }
+      .dashboard-grid .rounded-lg { border-radius: 3px !important; }
+      .dashboard-grid .max-h-64 { max-height: 150px !important; }
+      .dashboard-grid .max-h-\[300px\] { max-height: 150px !important; }
+      .dashboard-grid .overflow-y-auto { max-height: 150px !important; }
+
+      #sidebar-panel > div { padding: 0.375rem !important; }
+      #sidebar-panel h3 { margin-bottom: 0.25rem !important; font-size: 0.6rem !important; }
       .max-h-64 { max-height: 10rem !important; }
       .max-h-\[300px\] { max-height: 160px !important; }
-      /* Kill all large internal padding */
-      .widget-masonry [class*="p-4"] { padding: 0.5rem !important; }
-      .widget-masonry [class*="p-5"] { padding: 0.5rem !important; }
-      .widget-masonry [class*="p-6"] { padding: 0.5rem !important; }
-      .widget-masonry [class*="p-2.5"] { padding: 0.375rem !important; }
-      .widget-masonry [class*="mb-3"] { margin-bottom: 0.25rem !important; }
-      .widget-masonry [class*="mb-4"] { margin-bottom: 0.25rem !important; }
+
+      /* Mobile: 2-col, no spans */
+      @media (max-width: 1023px) {
+        .dashboard-grid {
+          grid-template-columns: repeat(2, 1fr) !important;
+        }
+        .widget-wide, .widget-tall, .widget-large {
+          grid-column: span 1 !important;
+          grid-row: span 1 !important;
+        }
+      }
 
       /* Mobile sidebar toggle */
       .mobile-sidebar-hidden { display: none !important; }
@@ -1651,25 +1693,25 @@
         to { opacity: 1; transform: translateY(0); }
       }
 
-      /* ======== AGGRESSIVE COMPACT SPACING v12.7 ======== */
+      /* ======== AGGRESSIVE COMPACT SPACING v13.0 ======== */
       /* Force tight spacing everywhere */
-      .widget-masonry .space-y-3 > * + *,
-      .widget-masonry .space-y-4 > * + *,
+      .dashboard-grid .space-y-3 > * + *,
+      .dashboard-grid .space-y-4 > * + *,
       #sidebar-panel .space-y-3 > * + *,
       #sidebar-panel .space-y-4 > * + * { margin-top: 0.25rem !important; }
-      .widget-masonry .space-y-2 > * + *,
+      .dashboard-grid .space-y-2 > * + *,
       #sidebar-panel .space-y-2 > * + * { margin-top: 0.125rem !important; }
-      .widget-masonry .gap-3, #sidebar-panel .gap-3 { gap: 0.25rem !important; }
-      .widget-masonry .gap-4, #sidebar-panel .gap-4 { gap: 0.375rem !important; }
-      .widget-masonry .gap-2, #sidebar-panel .gap-2 { gap: 0.125rem !important; }
-      .widget-masonry .rounded-lg, #sidebar-panel .rounded-lg { border-radius: 0.25rem !important; }
-      .widget-masonry .rounded-2xl, #sidebar-panel .rounded-2xl { border-radius: 0.5rem !important; }
+      .dashboard-grid .gap-3, #sidebar-panel .gap-3 { gap: 0.25rem !important; }
+      .dashboard-grid .gap-4, #sidebar-panel .gap-4 { gap: 0.375rem !important; }
+      .dashboard-grid .gap-2, #sidebar-panel .gap-2 { gap: 0.125rem !important; }
+      .dashboard-grid .rounded-lg, #sidebar-panel .rounded-lg { border-radius: 0.25rem !important; }
+      .dashboard-grid .rounded-2xl, #sidebar-panel .rounded-2xl { border-radius: 0.5rem !important; }
       /* Compact text */
-      .widget-masonry .text-xs, #sidebar-panel .text-xs { font-size: 0.65rem !important; line-height: 1.1 !important; }
-      .widget-masonry .text-sm, #sidebar-panel .text-sm { font-size: 0.7rem !important; line-height: 1.2 !important; }
-      .widget-masonry .text-\[10px\], #sidebar-panel .text-\[10px\] { font-size: 9px !important; }
-      .widget-masonry .text-\[11px\], #sidebar-panel .text-\[11px\] { font-size: 10px !important; }
-      .widget-masonry .text-\[9px\], #sidebar-panel .text-\[9px\] { font-size: 8px !important; }
+      .dashboard-grid .text-xs, #sidebar-panel .text-xs { font-size: 0.65rem !important; line-height: 1.1 !important; }
+      .dashboard-grid .text-sm, #sidebar-panel .text-sm { font-size: 0.7rem !important; line-height: 1.2 !important; }
+      .dashboard-grid .text-\[10px\], #sidebar-panel .text-\[10px\] { font-size: 9px !important; }
+      .dashboard-grid .text-\[11px\], #sidebar-panel .text-\[11px\] { font-size: 10px !important; }
+      .dashboard-grid .text-\[9px\], #sidebar-panel .text-\[9px\] { font-size: 8px !important; }
 
       /* Sidebar compact */
       #sidebar-panel > * { margin-bottom: 0.375rem !important; }
@@ -13368,7 +13410,7 @@ function App() {
       </nav>
 
       {/* Sticky Section Navigation */}
-      <SectionNav isDark={isDark} />
+      {/* SectionNav removed in v13.0 */}
 
       {/* Keyboard Shortcuts Modal */}
       {showKeyboardHelp && (
@@ -13487,7 +13529,7 @@ function App() {
             </button>
           </div>
           {/* Slim Sidebar */}
-          <div id="sidebar-panel" className="col-span-12 lg:col-span-3 space-y-2 pb-4 mobile-sidebar-hidden lg:!block" role="complementary" aria-label="Sidebar widgets" style={{position:'sticky',top:'1rem',alignSelf:'start',maxHeight:'calc(100vh - 2rem)',overflowY:'auto'}}>
+          <div id="sidebar-panel" className="col-span-12 lg:col-span-2 space-y-1 pb-4 mobile-sidebar-hidden lg:!block" role="complementary" aria-label="Sidebar widgets" style={{position:'sticky',top:'1rem',alignSelf:'start',maxHeight:'calc(100vh - 2rem)',overflowY:'auto'}}>
             <ScheduleList games={games} onSelectGame={setSelectedGame} selectedGameId={selectedGame?.id} isDark={isDark} />
             <GameCountdown game={selectedGame} isDark={isDark} gameDayMode={gameDayMode} />
             <QuickStatsBar isDark={isDark} />
@@ -13510,67 +13552,9 @@ function App() {
             <AboutWidget isDark={isDark} />
           </div>
           {/* Main Content */}
-          <div className="col-span-12 lg:col-span-9 pb-20 lg:pb-10">
-            {/* Sticky Jump Nav */}
-            {(() => {
-              const jumpSections = [
-                { id: 'section-gameday', icon: '🏀', label: 'Game Day' },
-                { id: 'section-teamstats', icon: '📊', label: 'Team Stats' },
-                { id: 'section-players', icon: '👤', label: 'Players' },
-                { id: 'section-analytics', icon: '🧠', label: 'Analytics' },
-                { id: 'section-oncourt', icon: '⚔️', label: 'On-Court' },
-                { id: 'section-seasonfo', icon: '📅', label: 'Season & Front Office' },
-                { id: 'section-community', icon: '💬', label: 'Community' },
-              ];
-              const [activeJumpSection, setActiveJumpSection] = React.useState('section-gameday');
-              React.useEffect(() => {
-                const observer = new IntersectionObserver((entries) => {
-                  entries.forEach(e => { if (e.isIntersecting) setActiveJumpSection(e.target.id); });
-                }, { rootMargin: '-80px 0px -60% 0px', threshold: 0.1 });
-                jumpSections.forEach(s => { const el = document.getElementById(s.id); if (el) observer.observe(el); });
-                return () => observer.disconnect();
-              }, []);
-              const [mobileSectionCollapsed, setMobileSectionCollapsed] = React.useState(() => {
-                const m = {};
-                jumpSections.forEach(s => m[s.id] = window.innerWidth < 1024);
-                return m;
-              });
-              const toggleSection = (id) => setMobileSectionCollapsed(prev => ({...prev, [id]: !prev[id]}));
-              const SectionHeader = ({ id, icon, title }) => (
-                <div id={id} className="scroll-mt-16 pt-2 mb-1" style={{columnSpan:'all'}}>
-                  <button onClick={() => toggleSection(id)} className="inline-flex items-center gap-1.5">
-                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${isDark ? 'bg-raptors-red/15 text-raptors-red border border-raptors-red/20' : 'bg-raptors-red/10 text-raptors-red border border-raptors-red/15'}`}>
-                      {icon} {title}
-                    </span>
-                    <span className={`lg:hidden text-xs ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{mobileSectionCollapsed[id] ? '▶' : '▼'}</span>
-                  </button>
-                </div>
-              );
-              const SectionBody = ({ id, children }) => {
-                const filtered = React.Children.toArray(children).filter(Boolean);
-                if (filtered.length === 0) return null;
-                return (
-                <div className={`${mobileSectionCollapsed[id] ? 'hidden lg:block' : ''}`}>
-                  <div className="widget-masonry">
-                    {filtered}
-                  </div>
-                </div>
-                );
-              };
-              return (<>
-              <div className={`sticky top-0 z-30 mb-2 rounded-xl ${isDark ? 'bg-cmd-surface/95 border border-cmd-border' : 'bg-white/95 border border-light-border shadow-sm'} backdrop-blur-md`}>
-                <div className="flex overflow-x-auto gap-1 p-2 custom-scrollbar" style={{scrollbarWidth:'thin'}}>
-                  {jumpSections.map(s => (
-                    <button key={s.id} onClick={() => { const el = document.getElementById(s.id); if(el) el.scrollIntoView({behavior:'smooth'}); }}
-                      className={`flex items-center gap-1 px-2 py-1.5 rounded-lg text-[10px] font-semibold whitespace-nowrap transition-all ${activeJumpSection === s.id ? (isDark ? 'bg-raptors-red/20 text-raptors-red border border-raptors-red/30' : 'bg-raptors-red/10 text-raptors-red border border-raptors-red/20') : (isDark ? 'text-slate-400 hover:text-white hover:bg-cmd-card' : 'text-slate-500 hover:text-slate-800 hover:bg-light-card')}`}
-                    >
-                      <span>{s.icon}</span><span>{s.label}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-              {/* Matchup Analyzer area */}
-              <div className="mb-3">
+          <div className="col-span-12 lg:col-span-10 pb-20 lg:pb-10">
+              {/* Matchup Analyzer — full width above grid */}
+              <div className="mb-1">
             {loadingSchedule ? (
               <div className={`h-64 flex flex-col items-center justify-center ${isDark ? 'glass-card' : 'bg-white border border-light-border rounded-2xl shadow-lg'}`}>
                 <BasketballLoader size={60} />
@@ -13582,159 +13566,122 @@ function App() {
             ) : selectedGame ? (
               <WidgetErrorBoundary name="Matchup Analyzer"><MatchupAnalyzer game={selectedGame} isDark={isDark} /></WidgetErrorBoundary>
             ) : (
-              <div className={`h-48 flex flex-col items-center justify-center ${isDark ? 'glass-card text-slate-500' : 'bg-white border border-light-border rounded-2xl shadow-lg text-slate-400'}`}><LayoutDashboard className="w-12 h-12 mb-4 opacity-30" /><p>Select a game from the calendar to open the scouting report.</p></div>
+              <div className={`h-32 flex flex-col items-center justify-center ${isDark ? 'glass-card text-slate-500' : 'bg-white border border-light-border rounded-2xl shadow-lg text-slate-400'}`}><LayoutDashboard className="w-10 h-10 mb-2 opacity-30" /><p className="text-xs">Select a game from the calendar to open the scouting report.</p></div>
             )}
               </div>
-              {/* ===== GAME DAY ===== */}
-              <SectionHeader id="section-gameday" icon="🏀" title="Game Day" />
-              <SectionBody id="section-gameday">
-                {/* Matchup & Comparison */}
-                {selectedGame && <TeamStatsComparisonWidget isDark={isDark} opponent={selectedGame.opponent} />}
-                {selectedGame && <KeyMatchupsWidget opponent={selectedGame.opponent} isDark={isDark} />}
-                {selectedGame && <KeyStatsWidget isDark={isDark} opponent={selectedGame.opponent} />}
-                <HeadToHeadWidget isDark={isDark} />
-                <HistoricalH2HWidget isDark={isDark} opponent={selectedGame?.opponent} />
-                {selectedGame && <DefensiveAssignmentsWidget isDark={isDark} opponent={selectedGame.opponent} />}
-                {selectedGame && <OpponentScoutingWidget isDark={isDark} opponent={selectedGame.opponent} />}
-                {/* Predictions */}
-                {selectedGame && <PredictionBreakdownWidget isDark={isDark} opponent={selectedGame.opponent} />}
-                {selectedGame?.status === 'upcoming' && <PredictedScoreWidget isDark={isDark} opponent={selectedGame.opponent} />}
-                {selectedGame?.status === 'upcoming' && <ScorePredictorWidget isDark={isDark} opponent={selectedGame.opponent} />}
-                {/* Betting & Props */}
-                {selectedGame?.status === 'upcoming' && <WidgetErrorBoundary name="Betting Hub"><BettingHubWidget isDark={isDark} game={selectedGame} /></WidgetErrorBoundary>}
-                {selectedGame?.status === 'upcoming' && <PlayerPropsWidget isDark={isDark} opponent={selectedGame?.opponent} />}
-                {/* Game Day Info */}
-                {selectedGame?.status === 'upcoming' && <TVScheduleWidget isDark={isDark} game={selectedGame} />}
-                {/* GameDayChecklistWidget and NotificationWidget removed — too fluffy */}
-              </SectionBody>
-              {/* ===== TEAM STATS ===== */}
-              <SectionHeader id="section-teamstats" icon="📊" title="Team Stats" />
-              <SectionBody id="section-teamstats">
-                <RecordBreakdownWidget isDark={isDark} />
-                <HomeAwaySplitsWidget isDark={isDark} nextGameHome={selectedGame?.home} />
-                <RecordByDayWidget isDark={isDark} />
-                <RecordByMarginWidget isDark={isDark} />
-                <HalfPerformanceWidget isDark={isDark} />
-                <MonthlyPerformanceWidget isDark={isDark} />
-                <BigGamesWidget isDark={isDark} />
-                <SignatureWinsWidget isDark={isDark} />
-                <ComebackTrackerWidget isDark={isDark} />
-                <VsLeagueAvgWidget isDark={isDark} />
-              </SectionBody>
-              {/* ===== PLAYER ANALYSIS ===== */}
-              <SectionHeader id="section-players" icon="👤" title="Player Analysis" />
-              <SectionBody id="section-players">
-                <PlayerSpotlightCarousel isDark={isDark} />
-                <div className={`${isDark ? 'premium-glass' : 'bg-white border border-light-border shadow-lg'} rounded-2xl p-4`}>
-                  <div className="flex items-center gap-2 mb-3">
-                    <Users className="w-4 h-4 text-raptors-red" />
-                    <h3 className={`text-xs font-bold uppercase ${isDark ? 'text-white' : 'text-slate-800'}`}>👤 Player Deep Dive</h3>
+              {/* ===== DASHBOARD GRID ===== */}
+              <div className="dashboard-grid">
+                {/* Game Day — red accent */}
+                {selectedGame && <div className="widget-wide dg-gameday"><TeamStatsComparisonWidget isDark={isDark} opponent={selectedGame.opponent} /></div>}
+                {selectedGame && <div className="dg-gameday"><KeyMatchupsWidget opponent={selectedGame.opponent} isDark={isDark} /></div>}
+                {selectedGame && <div className="dg-gameday"><KeyStatsWidget isDark={isDark} opponent={selectedGame.opponent} /></div>}
+                <div className="dg-gameday"><HeadToHeadWidget isDark={isDark} /></div>
+                <div className="dg-gameday"><HistoricalH2HWidget isDark={isDark} opponent={selectedGame?.opponent} /></div>
+                {selectedGame && <div className="dg-gameday"><DefensiveAssignmentsWidget isDark={isDark} opponent={selectedGame.opponent} /></div>}
+                {selectedGame && <div className="dg-gameday"><OpponentScoutingWidget isDark={isDark} opponent={selectedGame.opponent} /></div>}
+                {selectedGame && <div className="dg-gameday"><PredictionBreakdownWidget isDark={isDark} opponent={selectedGame.opponent} /></div>}
+                {selectedGame?.status === 'upcoming' && <div className="dg-gameday"><PredictedScoreWidget isDark={isDark} opponent={selectedGame.opponent} /></div>}
+                {selectedGame?.status === 'upcoming' && <div className="dg-gameday"><ScorePredictorWidget isDark={isDark} opponent={selectedGame.opponent} /></div>}
+                {selectedGame?.status === 'upcoming' && <div className="dg-gameday"><WidgetErrorBoundary name="Betting Hub"><BettingHubWidget isDark={isDark} game={selectedGame} /></WidgetErrorBoundary></div>}
+                {selectedGame?.status === 'upcoming' && <div className="dg-gameday"><PlayerPropsWidget isDark={isDark} opponent={selectedGame?.opponent} /></div>}
+                {selectedGame?.status === 'upcoming' && <div className="dg-gameday"><TVScheduleWidget isDark={isDark} game={selectedGame} /></div>}
+
+                {/* Core Stats — blue accent */}
+                <div className="dg-stats"><RecordBreakdownWidget isDark={isDark} /></div>
+                <div className="dg-stats"><HomeAwaySplitsWidget isDark={isDark} nextGameHome={selectedGame?.home} /></div>
+                <div className="dg-stats"><RecordByMarginWidget isDark={isDark} /></div>
+                <div className="dg-stats"><HalfPerformanceWidget isDark={isDark} /></div>
+                <div className="dg-stats"><MonthlyPerformanceWidget isDark={isDark} /></div>
+                <div className="dg-stats"><BigGamesWidget isDark={isDark} /></div>
+                <div className="dg-stats"><SignatureWinsWidget isDark={isDark} /></div>
+                <div className="dg-stats"><VsLeagueAvgWidget isDark={isDark} /></div>
+
+                {/* Player Analysis — green accent */}
+                <div className="widget-tall dg-players"><PlayerSpotlightCarousel isDark={isDark} /></div>
+                <div className={`widget-tall dg-players ${isDark ? 'premium-glass' : 'bg-white border border-light-border shadow-lg'} rounded-md p-1`}>
+                  <div className="flex items-center gap-1 mb-1">
+                    <Users className="w-3 h-3 text-raptors-red" />
+                    <h3 className={`text-[9px] font-extrabold uppercase ${isDark ? 'text-white' : 'text-slate-800'}`}>Player Deep Dive</h3>
                   </div>
-                  <div className="space-y-1 max-h-[300px] overflow-y-auto custom-scrollbar">
+                  <div className="space-y-0.5 max-h-[250px] overflow-y-auto custom-scrollbar">
                     {RAPTORS_ROSTER.map((p) => (
-                      <button key={p.id} onClick={() => setSelectedPlayer(p)} className={`w-full flex items-center gap-2 p-2 rounded-lg transition-all text-left ${isDark ? 'hover:bg-cmd-card' : 'hover:bg-light-card'}`}>
-                        <span className={`text-[10px] font-bold w-5 text-raptors-red`}>#{p.number}</span>
-                        <span className={`text-xs font-medium flex-1 truncate ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>{p.name}</span>
-                        <span className={`text-[10px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{p.seasonStats?.ppg} PPG</span>
-                        <ChevronRight className={`w-3 h-3 ${isDark ? 'text-slate-600' : 'text-slate-400'}`} />
+                      <button key={p.id} onClick={() => setSelectedPlayer(p)} className={`w-full flex items-center gap-1 p-1 rounded text-left ${isDark ? 'hover:bg-cmd-card' : 'hover:bg-light-card'}`}>
+                        <span className="text-[9px] font-bold w-4 text-raptors-red">#{p.number}</span>
+                        <span className={`text-[10px] font-medium flex-1 truncate ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>{p.name}</span>
+                        <span className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{p.seasonStats?.ppg}</span>
+                        <ChevronRight className={`w-2.5 h-2.5 ${isDark ? 'text-slate-600' : 'text-slate-400'}`} />
                       </button>
                     ))}
                   </div>
                 </div>
-                {/* Stats */}
-                <UsageRateWidget isDark={isDark} />
-                <MinutesDistributionWidget isDark={isDark} />
-                <PlusMinusWidget isDark={isDark} />
-                <WinSharesWidget isDark={isDark} />
-                <DoublDoubleWidget isDark={isDark} />
-                <PlayerFormWidget isDark={isDark} />
-                {/* Comparison & Tools */}
-                <PlayerComparisonTool isDark={isDark} />
-                <FantasyProjectionsWidget isDark={isDark} />
-                {/* Development & Contracts */}
-                <RookieWatchWidget isDark={isDark} />
-                <ContractWidget isDark={isDark} />
-              </SectionBody>
-              {/* ===== ADVANCED ANALYTICS ===== */}
-              <SectionHeader id="section-analytics" icon="🧠" title="Advanced Analytics" />
-              <SectionBody id="section-analytics">
-                <AdvancedStatsWidget isDark={isDark} />
-                <NetRatingWidget isDark={isDark} />
-                <FourFactorsWidget isDark={isDark} opponent={selectedGame?.opponent} />
-                <ClutchStatsWidget isDark={isDark} />
-                <PaceEfficiencyWidget isDark={isDark} />
-                <OffensiveSetsWidget isDark={isDark} />
-                <DefensiveEfficiencyWidget isDark={isDark} />
-                <CrunchTimeWidget isDark={isDark} />
-                <EfficiencyWidget isDark={isDark} />
-                <AstToWidget isDark={isDark} />
-                <PacePredictorWidget isDark={isDark} opponent={selectedGame?.opponent} />
-                <QuarterBreakdownWidget isDark={isDark} />
-                <StreakProbabilityWidget isDark={isDark} streak={RAPTORS_STATS.streak} />
-              </SectionBody>
-              {/* ===== ON-COURT (Offense + Defense merged) ===== */}
-              <SectionHeader id="section-oncourt" icon="⚔️" title="On-Court" />
-              <SectionBody id="section-oncourt">
-                {/* Offense */}
-                <PointsDistributionWidget isDark={isDark} />
-                <AssistLeadersWidget isDark={isDark} />
-                <PointsOffAssistsWidget isDark={isDark} />
-                <ThreePointWidget isDark={isDark} />
-                <FreeThrowWidget isDark={isDark} />
-                <FastBreakWidget isDark={isDark} />
-                <PaintScoringWidget isDark={isDark} />
-                <SecondChanceWidget isDark={isDark} />
-                <div className="widget-full-span"><ShotChartWidget isDark={isDark} /></div>
-                <MiniHeatMap isDark={isDark} />
-                <ShotClockWidget isDark={isDark} />
-                {/* Lineups & Rotations */}
-                <BenchProductionWidget isDark={isDark} />
-                <StarterVsBenchWidget isDark={isDark} />
-                <div className="widget-full-span"><LineupCombosWidget isDark={isDark} /></div>
-                {/* Defense */}
-                <StealsBlocksWidget isDark={isDark} />
-                <ReboundBattleWidget isDark={isDark} />
-                <TurnoverWidget isDark={isDark} />
-                <FoulTroubleWidget isDark={isDark} />
-                <TimeoutTrackerWidget isDark={isDark} />
-              </SectionBody>
-              {/* ===== SEASON & FRONT OFFICE (merged) ===== */}
-              <SectionHeader id="section-seasonfo" icon="📅" title="Season & Front Office" />
-              <SectionBody id="section-seasonfo">
-                {/* Standings & Playoff */}
-                <StandingsVisualizationWidget isDark={isDark} />
-                <DivisionRivalsWidget isDark={isDark} />
-                {/* Schedule & Season */}
-                {/* ScheduleResultsWidget, SeasonGradesWidget, TravelWidget, AwardsWatchWidget removed */}
-                <ScheduleStrengthWidget isDark={isDark} />
-                <SeasonTrackerWidget isDark={isDark} games={games} />
-                <div className="widget-full-span"><SeasonTimelineWidget isDark={isDark} /></div>
-                <SeasonComparisonWidget isDark={isDark} />
-                <NationalTVWidget isDark={isDark} />
-                <MVPRaceWidget isDark={isDark} />
-                <AllStarTrackerWidget isDark={isDark} />
-                {/* Trades, Draft & Salary */}
-                <TradeAnalysisWidget isDark={isDark} />
-                <DraftPickWidget isDark={isDark} />
-                <SalaryCapWidget isDark={isDark} />
-                <TeamSalaryWidget isDark={isDark} teamName="Raptors" opponentName={selectedGame?.opponent} />
-                <TeamAgeWidget isDark={isDark} />
-                <CoachInsightsWidget isDark={isDark} />
-              </SectionBody>
-              {/* ===== COMMUNITY ===== */}
-              <SectionHeader id="section-community" icon="💬" title="Community" />
-              <SectionBody id="section-community">
-                <FanEngagementWidget isDark={isDark} />
-                <GamePredictionPoll isDark={isDark} />
-                <FanPollWidget isDark={isDark} />
-                <StorylinesWidget isDark={isDark} />
-                <SocialBuzzWidget isDark={isDark} />
-                <TeamChemistryWidget isDark={isDark} />
-                <MomentumTrackerWidget isDark={isDark} />
-                <RaptorsPulseWidget isDark={isDark} />
-              </SectionBody>
-              </>);
-            })()}
+                <div className="dg-players"><UsageRateWidget isDark={isDark} /></div>
+                <div className="dg-players"><MinutesDistributionWidget isDark={isDark} /></div>
+                <div className="dg-players"><PlusMinusWidget isDark={isDark} /></div>
+                <div className="dg-players"><WinSharesWidget isDark={isDark} /></div>
+                <div className="dg-players"><DoublDoubleWidget isDark={isDark} /></div>
+                <div className="widget-large dg-players"><PlayerComparisonTool isDark={isDark} /></div>
+                <div className="dg-players"><FantasyProjectionsWidget isDark={isDark} /></div>
+
+                {/* Analytics — purple accent */}
+                <div className="widget-wide dg-analytics"><AdvancedStatsWidget isDark={isDark} /></div>
+                <div className="widget-wide dg-analytics"><NetRatingWidget isDark={isDark} /></div>
+                <div className="dg-analytics"><FourFactorsWidget isDark={isDark} opponent={selectedGame?.opponent} /></div>
+                <div className="dg-analytics"><ClutchStatsWidget isDark={isDark} /></div>
+                <div className="dg-analytics"><PaceEfficiencyWidget isDark={isDark} /></div>
+                <div className="dg-analytics"><OffensiveSetsWidget isDark={isDark} /></div>
+                <div className="dg-analytics"><DefensiveEfficiencyWidget isDark={isDark} /></div>
+                <div className="dg-analytics"><CrunchTimeWidget isDark={isDark} /></div>
+                <div className="dg-analytics"><EfficiencyWidget isDark={isDark} /></div>
+                <div className="dg-analytics"><AstToWidget isDark={isDark} /></div>
+                <div className="dg-analytics"><PacePredictorWidget isDark={isDark} opponent={selectedGame?.opponent} /></div>
+                <div className="dg-analytics"><QuarterBreakdownWidget isDark={isDark} /></div>
+                <div className="dg-analytics"><StreakProbabilityWidget isDark={isDark} streak={RAPTORS_STATS.streak} /></div>
+
+                {/* On-Court — orange accent */}
+                <div className="dg-oncourt"><PointsDistributionWidget isDark={isDark} /></div>
+                <div className="dg-oncourt"><AssistLeadersWidget isDark={isDark} /></div>
+                <div className="dg-oncourt"><PointsOffAssistsWidget isDark={isDark} /></div>
+                <div className="dg-oncourt"><ThreePointWidget isDark={isDark} /></div>
+                <div className="dg-oncourt"><FreeThrowWidget isDark={isDark} /></div>
+                <div className="dg-oncourt"><FastBreakWidget isDark={isDark} /></div>
+                <div className="dg-oncourt"><PaintScoringWidget isDark={isDark} /></div>
+                <div className="dg-oncourt"><SecondChanceWidget isDark={isDark} /></div>
+                <div className="widget-wide dg-oncourt"><ShotChartWidget isDark={isDark} /></div>
+                <div className="dg-oncourt"><MiniHeatMap isDark={isDark} /></div>
+                <div className="dg-oncourt"><BenchProductionWidget isDark={isDark} /></div>
+                <div className="dg-oncourt"><StarterVsBenchWidget isDark={isDark} /></div>
+                <div className="widget-wide dg-oncourt"><LineupCombosWidget isDark={isDark} /></div>
+                <div className="dg-oncourt"><StealsBlocksWidget isDark={isDark} /></div>
+                <div className="dg-oncourt"><ReboundBattleWidget isDark={isDark} /></div>
+                <div className="dg-oncourt"><TurnoverWidget isDark={isDark} /></div>
+
+                {/* Season & FO — teal accent */}
+                <div className="dg-season"><StandingsVisualizationWidget isDark={isDark} /></div>
+                <div className="dg-season"><DivisionRivalsWidget isDark={isDark} /></div>
+                <div className="dg-season"><ScheduleStrengthWidget isDark={isDark} /></div>
+                <div className="dg-season"><SeasonTrackerWidget isDark={isDark} games={games} /></div>
+                <div className="widget-wide dg-season"><SeasonTimelineWidget isDark={isDark} /></div>
+                <div className="dg-season"><SeasonComparisonWidget isDark={isDark} /></div>
+                <div className="dg-season"><NationalTVWidget isDark={isDark} /></div>
+                <div className="dg-season"><MVPRaceWidget isDark={isDark} /></div>
+                <div className="dg-season"><AllStarTrackerWidget isDark={isDark} /></div>
+                <div className="dg-season"><TradeAnalysisWidget isDark={isDark} /></div>
+                <div className="dg-season"><DraftPickWidget isDark={isDark} /></div>
+                <div className="dg-season"><SalaryCapWidget isDark={isDark} /></div>
+                <div className="dg-season"><TeamSalaryWidget isDark={isDark} teamName="Raptors" opponentName={selectedGame?.opponent} /></div>
+                <div className="dg-season"><TeamAgeWidget isDark={isDark} /></div>
+                <div className="dg-season"><CoachInsightsWidget isDark={isDark} /></div>
+
+                {/* Community — pink accent */}
+                <div className="dg-community"><FanEngagementWidget isDark={isDark} /></div>
+                <div className="dg-community"><GamePredictionPoll isDark={isDark} /></div>
+                <div className="dg-community"><FanPollWidget isDark={isDark} /></div>
+                <div className="dg-community"><StorylinesWidget isDark={isDark} /></div>
+                <div className="dg-community"><SocialBuzzWidget isDark={isDark} /></div>
+                <div className="dg-community"><TeamChemistryWidget isDark={isDark} /></div>
+                <div className="dg-community"><MomentumTrackerWidget isDark={isDark} /></div>
+                <div className="dg-community"><RaptorsPulseWidget isDark={isDark} /></div>
+              </div>
           </div>
         </div>
       </main>
@@ -13744,7 +13691,7 @@ function App() {
         <div className="flex flex-col items-center gap-2">
           <div className="flex items-center gap-2 flex-wrap justify-center">
             <span className="font-bold text-raptors-red">RAPTORS INTEL</span>
-            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v12.7</span>
+            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v13.0</span>
           </div>
           <p style={{margin:0}}>Built with 🏀 by Raptors Intel • Data from ESPN • Not affiliated with the NBA</p>
           <p style={{margin:0, fontSize:'0.65rem', opacity:0.6}}>Last Updated: {new Date().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}</p>
