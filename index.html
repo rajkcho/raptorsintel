@@ -2439,10 +2439,10 @@ const TRADE_DEADLINE = {
 };
 
 const TRADE_RUMORS = [
-  { id: 1, status: 'Completed', teams: ['Raptors', 'Pelicans'], players: { sent: ['Chris Paul', 'Picks'], received: ['Brandon Ingram'] }, picks: 'TBD', source: 'ESPN', impact: 9, date: 'Feb 6', summary: 'Brandon Ingram acquired from the Pelicans. Elite scoring wing adds a massive offensive punch to the playoff push at 32-22.' },
+  { id: 1, status: 'Completed', teams: ['Raptors', 'Pelicans'], players: { sent: ['Picks'], received: ['Brandon Ingram'] }, picks: 'TBD', source: 'ESPN', impact: 9, date: 'Feb 6', summary: 'Brandon Ingram acquired from the Pelicans. Elite scoring wing adds a massive offensive punch to the playoff push at 32-22.' },
   { id: 2, status: 'Completed', teams: ['Raptors', 'Warriors'], players: { sent: ['2026 2nd Round Pick'], received: ['Trayce Jackson-Davis'] }, picks: '2026 2nd (TOR) to GSW', source: 'ESPN', impact: 5, date: 'Feb 5', summary: 'Added frontcourt depth from Golden State in exchange for a second-round pick. TJD provides energy off the bench.' },
   { id: 3, status: 'Rumored', teams: ['Raptors', 'Various'], players: { sent: ['Jakob Poeltl'], received: ['TBD'] }, picks: 'N/A', source: 'League Sources', impact: 6, summary: 'Poeltl was reportedly available at the deadline but Toronto ultimately held firm, keeping their core intact for the playoff push.' },
-  { id: 4, status: 'Completed', teams: ['Raptors', 'Clippers'], players: { sent: ['—'], received: ['Chris Paul'] }, picks: 'None', source: 'ESPN', impact: 5, date: 'Feb 5', summary: 'CP3 was briefly acquired from Clippers but was subsequently included in the Ingram trade package to New Orleans.' },
+  { id: 4, status: 'Completed', teams: ['Raptors', 'Clippers'], players: { sent: ['—'], received: ['Chris Paul (waived)'] }, picks: 'None', source: 'ESPN', impact: 3, date: 'Feb 5', summary: 'CP3 acquired from Clippers at the deadline and subsequently waived. Contract used as salary-matching for the Ingram deal.' },
   { id: 5, status: 'Unlikely', teams: ['Raptors', 'Spurs'], players: { sent: ['Scottie Barnes'], received: ['Victor Wembanyama'] }, picks: 'N/A', source: 'Fan Twitter', impact: 1, summary: 'Pure fantasy. Neither side had any interest. Wemby and Scottie are both untouchable franchise cornerstones.' },
 ];
 
@@ -3024,7 +3024,7 @@ const RAPTORS_NEWS = [
   { id: 4, headline: "Barnes All-Star Selection Cements His Rise as Franchise Cornerstone", source: "The Athletic", timeAgo: "5d ago", category: "Award" },
   { id: 5, headline: "Trayce Jackson-Davis Acquired from Warriors at Deadline", source: "ESPN", timeAgo: "5d ago", category: "Trade Rumor" },
   { id: 6, headline: "Murray-Boyles Day-to-Day with Thumb Issue", source: "Raptors Republic", timeAgo: "1d ago", category: "Injury" },
-  { id: 7, headline: "Chris Paul Shipped to Pelicans as Part of Ingram Deal", source: "TSN", timeAgo: "4d ago", category: "Trade Rumor" },
+  { id: 7, headline: "Chris Paul Waived After Being Acquired from Clippers", source: "TSN", timeAgo: "4d ago", category: "Trade" },
 ];
 
 const OPPONENT_DATA = {
@@ -3125,8 +3125,7 @@ const OPPONENT_DATA = {
     id: "1610612740",
     roster: [
        { id: "1629627", name: "Zion Williamson", position: "F", number: "1" },
-       { id: "101108", name: "Chris Paul", position: "G", number: "3" },
-       { id: "203468", name: "CJ McCollum", position: "G", number: "3" },
+       { id: "1630536", name: "Jordan Poole", position: "G", number: "5" },
        { id: "1627749", name: "Dejounte Murray", position: "G", number: "5" },
        { id: "1630529", name: "Herbert Jones", position: "F", number: "5" },
        { id: "1630530", name: "Trey Murphy III", position: "F", number: "25" },
@@ -3570,7 +3569,7 @@ const analyzeGameMatchup = async (opponent) => {
         socialChatter: [
             { headline: "Raptors land Brandon Ingram from Pelicans in blockbuster deadline deal", source: "Shams Charania (ESPN)", sentiment: "positive" },
             { headline: "Trayce Jackson-Davis traded from Warriors to Raptors for 2nd-round pick", source: "Chris Haynes (TNT)", sentiment: "neutral" },
-            { headline: "Chris Paul included in Ingram trade package, headed to Pelicans", source: "Marc Stein (Substack)", sentiment: "neutral" },
+            { headline: "Chris Paul waived after Clippers trade — salary used to facilitate Ingram deal", source: "Marc Stein (Substack)", sentiment: "neutral" },
             { headline: "Jakob Poeltl's back injury lingers — Raptors add depth at center", source: "Raptors Republic", sentiment: "neutral" },
             { headline: `${opponent} heading to Scotiabank Arena as Raptors adjust post-deadline roster`, source: "ESPN", sentiment: "positive" }
         ]
