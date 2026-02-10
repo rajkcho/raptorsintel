@@ -145,6 +145,25 @@
         background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
       }
       
+      /* Game Day Mode */
+      @keyframes gameday-gradient {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+      .gameday-bg {
+        background: linear-gradient(135deg, #0a0e17 0%, #1a0008 25%, #0a0e17 50%, #0d0005 75%, #0a0e17 100%);
+        background-size: 400% 400%;
+        animation: gameday-gradient 8s ease infinite;
+      }
+      @keyframes gameday-pulse-badge {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.7; transform: scale(1.05); }
+      }
+      .gameday-badge {
+        animation: gameday-pulse-badge 1.5s ease-in-out infinite;
+      }
+
       /* Glassmorphism 2.0 */
       .glass-premium {
         background: rgba(17, 24, 39, 0.6);
@@ -1941,6 +1960,47 @@ const TRADE_DEADLINE = {
   ]
 };
 
+const TRADE_RUMORS = [
+  { id: 1, status: 'Completed', teams: ['Raptors', 'Warriors'], players: { sent: ['Chris Boucher'], received: ['2026 2nd Round Pick', 'Cash'] }, picks: '2026 2nd (GSW)', source: 'Woj', impact: 7, date: 'Feb 5', summary: 'Boucher sent to Golden State for a 2nd rounder. Clears $10M in cap space for the summer.' },
+  { id: 2, status: 'Completed', teams: ['Raptors', 'Clippers'], players: { sent: ['Bruce Brown'], received: ['2027 1st Round Pick (top-14 protected)'] }, picks: '2027 1st (LAC)', source: 'Shams', impact: 9, date: 'Feb 5', summary: 'Brown flipped for a valuable future first. Raptors stockpile assets for rebuild.' },
+  { id: 3, status: 'Completed', teams: ['Raptors', 'Heat'], players: { sent: ['Gary Trent Jr.'], received: ['Duncan Robinson', '2026 2nd Round Pick'] }, picks: '2026 2nd (MIA)', source: 'Woj', impact: 6, date: 'Feb 4', summary: 'GTJ heads to Miami. Robinson\'s expiring deal gives Toronto flexibility.' },
+  { id: 4, status: 'Rumored', teams: ['Raptors', 'Lakers'], players: { sent: ['Jakob Poeltl'], received: ['Rui Hachimura', '2027 1st Round Pick'] }, picks: '2027 1st (LAL)', source: 'Marc Stein', impact: 8, summary: 'Lakers pushed hard for Poeltl but Toronto\'s asking price was too high. Could revisit in offseason.' },
+  { id: 5, status: 'Rumored', teams: ['Raptors', 'Celtics'], players: { sent: ['OG Anunoby'], received: ['Multiple 1sts'] }, picks: 'N/A', source: 'Brian Windhorst', impact: 5, summary: 'OG already traded in prior season. Boston inquired about a separate deal that never materialized.' },
+  { id: 6, status: 'Unlikely', teams: ['Raptors', 'Spurs'], players: { sent: ['Scottie Barnes'], received: ['Victor Wembanyama'] }, picks: 'N/A', source: 'Fan Twitter', impact: 1, summary: 'Pure fantasy. Neither side had any interest. Wemby is untouchable.' },
+  { id: 7, status: 'Rumored', teams: ['Raptors', 'Pacers'], players: { sent: ['Gradey Dick', '2026 1st'], received: ['Tyrese Haliburton'] }, picks: '2026 1st (TOR)', source: 'Jake Fischer', impact: 9, summary: 'Indiana explored a shake-up but ultimately held firm on Haliburton.' },
+  { id: 8, status: 'Completed', teams: ['Raptors', 'Pistons'], players: { sent: ['Thaddeus Young'], received: ['Cash Considerations'] }, picks: 'None', source: 'Team PR', impact: 3, date: 'Feb 6', summary: 'Veteran minimum buyout agreement. Young heads to Detroit for the rest of the season.' },
+  { id: 9, status: 'Rumored', teams: ['Raptors', 'Thunder'], players: { sent: ['Immanuel Quickley'], received: ['Lu Dort', '2027 1st Round Pick'] }, picks: '2027 1st (OKC)', source: 'Kevin O\'Connor', impact: 8, summary: 'OKC explored adding IQ for their bench but couldn\'t agree on pick protections.' },
+  { id: 10, status: 'Unlikely', teams: ['Raptors', 'Knicks'], players: { sent: ['Scottie Barnes'], received: ['Julius Randle', '3 1sts'] }, picks: '3 future 1sts', source: 'NY Post', impact: 2, summary: 'Clickbait rumor. Barnes is franchise cornerstone and untouchable.' }
+];
+
+const ADVANCED_STATS = {
+  raptors: { offRtg: 112.4, defRtg: 114.8, netRtg: -2.4, pace: 100.2, efgPct: 52.1, tsPct: 56.8, astPct: 61.2, rebPct: 50.4, tovPct: 13.1 },
+  leagueAvg: { offRtg: 114.2, defRtg: 114.2, netRtg: 0.0, pace: 99.8, efgPct: 53.0, tsPct: 57.5, astPct: 60.5, rebPct: 50.0, tovPct: 13.5 },
+  rank: { offRtg: 20, defRtg: 22, netRtg: 21, pace: 12, efgPct: 19, tsPct: 18 }
+};
+
+const SCHEDULE_DATA = {
+  upcoming: [
+    { date: 'Feb 11', opponent: 'Pistons', home: true, time: '7:30 PM ET', tv: 'TSN', oppRecord: '18-34', difficulty: 2 },
+    { date: 'Feb 13', opponent: 'Cavaliers', home: false, time: '7:00 PM ET', tv: 'SN', oppRecord: '40-12', difficulty: 5 },
+    { date: 'Feb 15', opponent: '76ers', home: true, time: '7:30 PM ET', tv: 'TSN', oppRecord: '22-30', difficulty: 3 },
+    { date: 'Feb 18', opponent: 'Celtics', home: false, time: '7:30 PM ET', tv: 'SN', oppRecord: '38-14', difficulty: 5 },
+    { date: 'Feb 20', opponent: 'Hawks', home: true, time: '7:30 PM ET', tv: 'TSN', oppRecord: '26-26', difficulty: 3 },
+    { date: 'Feb 22', opponent: 'Bucks', home: false, time: '8:00 PM ET', tv: 'SN', oppRecord: '30-22', difficulty: 4 },
+    { date: 'Feb 24', opponent: 'Magic', home: true, time: '7:30 PM ET', tv: 'TSN', oppRecord: '28-24', difficulty: 3 },
+    { date: 'Feb 26', opponent: 'Bulls', home: false, time: '8:00 PM ET', tv: 'TSN', oppRecord: '20-32', difficulty: 2 },
+    { date: 'Feb 28', opponent: 'Nets', home: true, time: '7:30 PM ET', tv: 'SN', oppRecord: '16-36', difficulty: 1 },
+    { date: 'Mar 2', opponent: 'Heat', home: false, time: '6:00 PM ET', tv: 'SN', oppRecord: '29-23', difficulty: 4 }
+  ],
+  recent: [
+    { date: 'Feb 8', opponent: 'Hawks', home: true, result: 'W', score: '118-105' },
+    { date: 'Feb 6', opponent: 'Knicks', home: false, result: 'L', score: '98-112' },
+    { date: 'Feb 4', opponent: 'Hornets', home: true, result: 'W', score: '124-101' },
+    { date: 'Feb 2', opponent: 'Wizards', home: false, result: 'W', score: '115-98' },
+    { date: 'Jan 31', opponent: 'Pacers', home: true, result: 'L', score: '108-116' }
+  ]
+};
+
 // Rest/Fatigue Data
 const REST_DATA = {
   lastGameDate: new Date('2026-02-08'), // Feb 8 vs Hawks
@@ -2183,7 +2243,113 @@ const fetchLiveStandings = async () => {
 
 // Raptors Team Stats (will be updated from standings)
 // Raptors Team Stats (Feb 2026 - post All-Star)
-const RAPTORS_STATS = { wins: 32, losses: 25, ppg: 113.8, oppPpg: 112.5, streak: "W3", lastUpdate: "Feb 9, 2026" };
+const RAPTORS_STATS = { wins: 32, losses: 25, ppg: 113.8, oppPpg: 112.5, streak: "W3", lastUpdate: "Feb 9, 2026", rpg: 44.2, apg: 26.8, fgPct: 47.5, threePtPct: 36.2 };
+
+// ============================================================
+// DRAFT INTELLIGENCE DATA
+// ============================================================
+const DRAFT_DATA = {
+  raptorsRecord: { wins: 32, losses: 25, pct: '.561', projectedSeed: 7 },
+  lotteryOdds: [
+    { seed: 1, first: 14.0, top4: 52.1 },
+    { seed: 2, first: 14.0, top4: 52.1 },
+    { seed: 3, first: 14.0, top4: 52.1 },
+    { seed: 4, first: 12.5, top4: 47.9 },
+    { seed: 5, first: 10.5, top4: 42.1 },
+    { seed: 6, first: 9.0, top4: 37.2 },
+    { seed: 7, first: 7.5, top4: 31.9 },
+    { seed: 8, first: 6.0, top4: 26.1 },
+    { seed: 9, first: 4.5, top4: 20.3 },
+    { seed: 10, first: 3.0, top4: 14.0 },
+    { seed: 11, first: 2.0, top4: 9.6 },
+    { seed: 12, first: 1.5, top4: 7.2 },
+    { seed: 13, first: 1.0, top4: 4.8 },
+    { seed: 14, first: 0.5, top4: 2.4 },
+  ],
+  prospects: [
+    { name: "Cooper Flagg", school: "Duke", position: "PF/SF", projected: "1-2", stats: "18.2 PPG, 8.5 RPG, 3.4 APG", comparison: "Jayson Tatum", emoji: "🔥" },
+    { name: "Dylan Harper", school: "Rutgers", position: "SG/PG", projected: "2-4", stats: "22.1 PPG, 5.0 RPG, 4.3 APG", comparison: "Bradley Beal", emoji: "⚡" },
+    { name: "Ace Bailey", school: "Rutgers", position: "SF/PF", projected: "2-5", stats: "19.4 PPG, 7.8 RPG, 1.2 BPG", comparison: "Brandon Ingram", emoji: "🎯" },
+    { name: "VJ Edgecombe", school: "Baylor", position: "SG/SF", projected: "3-7", stats: "16.8 PPG, 4.2 RPG, 2.5 APG", comparison: "Jalen Green", emoji: "💨" },
+    { name: "Kasparas Jakucionis", school: "Illinois", position: "PG/SG", projected: "4-8", stats: "15.5 PPG, 5.8 RPG, 5.1 APG", comparison: "Luka Doncic (lite)", emoji: "🇱🇹" },
+    { name: "Kon Knueppel", school: "Duke", position: "SG/SF", projected: "5-10", stats: "14.2 PPG, 4.1 RPG, 3.0 APG", comparison: "Klay Thompson", emoji: "🎯" },
+    { name: "Tre Johnson", school: "Texas", position: "SG", projected: "3-7", stats: "19.6 PPG, 3.8 RPG, 2.2 APG", comparison: "Devin Booker", emoji: "🔥" },
+    { name: "Nolan Traore", school: "France", position: "PG", projected: "5-10", stats: "12.4 PPG, 6.8 APG, 1.8 SPG", comparison: "Tony Parker", emoji: "🇫🇷" },
+    { name: "Egor Demin", school: "BYU", position: "PG/SG", projected: "6-12", stats: "13.1 PPG, 5.2 APG, 3.7 RPG", comparison: "Ricky Rubio", emoji: "🇷🇺" },
+    { name: "Khaman Maluach", school: "Duke", position: "C", projected: "7-14", stats: "10.8 PPG, 8.4 RPG, 2.4 BPG", comparison: "Rudy Gobert", emoji: "🛡️" },
+  ],
+  tankWatch: [
+    { team: "WAS", wins: 14, losses: 40, pct: '.259', lotteryPos: 1 },
+    { team: "NOP", wins: 16, losses: 39, pct: '.291', lotteryPos: 2 },
+    { team: "CHA", wins: 17, losses: 38, pct: '.309', lotteryPos: 3 },
+    { team: "PHI", wins: 18, losses: 38, pct: '.321', lotteryPos: 4 },
+    { team: "POR", wins: 19, losses: 37, pct: '.339', lotteryPos: 5 },
+    { team: "BKN", wins: 19, losses: 37, pct: '.339', lotteryPos: 6 },
+    { team: "UTA", wins: 20, losses: 36, pct: '.357', lotteryPos: 7 },
+    { team: "CHI", wins: 21, losses: 35, pct: '.375', lotteryPos: 8 },
+  ]
+};
+
+// ============================================================
+// INJURY REPORT DATA
+// ============================================================
+const INJURY_DATA = [
+  { player: "Scottie Barnes", status: "Out", injury: "Orbital fracture (right eye)", returnDate: "Feb 24, 2026", gamesOut: 12, ppg: 19.4, mpg: 35.2, impact: 9.5 },
+  { player: "Immanuel Quickley", status: "Questionable", injury: "Knee soreness (left)", returnDate: "Feb 12, 2026", gamesOut: 2, ppg: 16.9, mpg: 33.1, impact: 8.0 },
+  { player: "Brandon Ingram", status: "Doubtful", injury: "Ankle sprain (right)", returnDate: "Feb 18, 2026", gamesOut: 5, ppg: 21.9, mpg: 34.5, impact: 9.0 },
+  { player: "Chris Paul", status: "Probable", injury: "Rest (back tightness)", returnDate: "Feb 10, 2026", gamesOut: 1, ppg: 2.9, mpg: 16.0, impact: 4.0 },
+  { player: "Ja'Kobe Walter", status: "Out", injury: "Shoulder sprain (left)", returnDate: "Mar 5, 2026", gamesOut: 8, ppg: 6.5, mpg: 18.2, impact: 5.5 },
+];
+
+// ============================================================
+// PLAYER LAST 5 GAMES SAMPLE DATA
+// ============================================================
+const PLAYER_LAST_5_GAMES = {
+  "Scottie Barnes": [
+    { date: "Jan 27", opp: "MIA", pts: 28, reb: 10, ast: 7, fgm: 11, fga: 19, min: 38, result: "W" },
+    { date: "Jan 25", opp: "NYK", pts: 22, reb: 8, ast: 5, fgm: 9, fga: 20, min: 36, result: "L" },
+    { date: "Jan 23", opp: "CHI", pts: 18, reb: 12, ast: 8, fgm: 7, fga: 16, min: 34, result: "W" },
+    { date: "Jan 21", opp: "CLE", pts: 25, reb: 7, ast: 4, fgm: 10, fga: 18, min: 37, result: "W" },
+    { date: "Jan 19", opp: "BOS", pts: 15, reb: 9, ast: 6, fgm: 6, fga: 17, min: 35, result: "L" },
+  ],
+  "RJ Barrett": [
+    { date: "Feb 8", opp: "IND", pts: 24, reb: 6, ast: 4, fgm: 10, fga: 21, min: 36, result: "W" },
+    { date: "Feb 6", opp: "DET", pts: 20, reb: 5, ast: 3, fgm: 8, fga: 18, min: 34, result: "W" },
+    { date: "Feb 4", opp: "ATL", pts: 16, reb: 7, ast: 5, fgm: 6, fga: 15, min: 33, result: "W" },
+    { date: "Feb 2", opp: "ORL", pts: 22, reb: 4, ast: 2, fgm: 9, fga: 19, min: 35, result: "L" },
+    { date: "Jan 31", opp: "MIL", pts: 18, reb: 6, ast: 4, fgm: 7, fga: 16, min: 32, result: "L" },
+  ],
+  "Immanuel Quickley": [
+    { date: "Feb 6", opp: "DET", pts: 22, reb: 3, ast: 8, fgm: 8, fga: 17, min: 34, result: "W" },
+    { date: "Feb 4", opp: "ATL", pts: 18, reb: 5, ast: 7, fgm: 7, fga: 16, min: 33, result: "W" },
+    { date: "Feb 2", opp: "ORL", pts: 14, reb: 4, ast: 5, fgm: 5, fga: 14, min: 30, result: "L" },
+    { date: "Jan 31", opp: "MIL", pts: 20, reb: 6, ast: 9, fgm: 8, fga: 18, min: 36, result: "L" },
+    { date: "Jan 29", opp: "BKN", pts: 25, reb: 3, ast: 6, fgm: 10, fga: 20, min: 35, result: "W" },
+  ],
+  "Brandon Ingram": [
+    { date: "Feb 4", opp: "ATL", pts: 26, reb: 7, ast: 5, fgm: 10, fga: 20, min: 36, result: "W" },
+    { date: "Feb 2", opp: "ORL", pts: 30, reb: 5, ast: 3, fgm: 12, fga: 22, min: 38, result: "L" },
+    { date: "Jan 31", opp: "MIL", pts: 19, reb: 6, ast: 4, fgm: 8, fga: 19, min: 34, result: "L" },
+    { date: "Jan 29", opp: "BKN", pts: 24, reb: 4, ast: 6, fgm: 9, fga: 18, min: 35, result: "W" },
+    { date: "Jan 27", opp: "MIA", pts: 22, reb: 8, ast: 3, fgm: 9, fga: 21, min: 37, result: "W" },
+  ],
+  "Jakob Poeltl": [
+    { date: "Feb 8", opp: "IND", pts: 14, reb: 12, ast: 3, fgm: 7, fga: 9, min: 32, result: "W" },
+    { date: "Feb 6", opp: "DET", pts: 10, reb: 8, ast: 2, fgm: 5, fga: 7, min: 28, result: "W" },
+    { date: "Feb 4", opp: "ATL", pts: 8, reb: 10, ast: 1, fgm: 4, fga: 6, min: 30, result: "W" },
+    { date: "Feb 2", opp: "ORL", pts: 12, reb: 14, ast: 3, fgm: 6, fga: 8, min: 34, result: "L" },
+    { date: "Jan 31", opp: "MIL", pts: 6, reb: 9, ast: 2, fgm: 3, fga: 5, min: 26, result: "L" },
+  ],
+};
+
+const RAPTORS_NEWS = [
+  { id: 1, headline: "Barnes Named Eastern Conference Player of the Week", source: "NBA.com", timeAgo: "2h ago", category: "Award" },
+  { id: 2, headline: "Raptors Exploring Trade Options Before Deadline", source: "The Athletic", timeAgo: "5h ago", category: "Trade Rumor" },
+  { id: 3, headline: "Barrett Returns to Full Practice After Knee Soreness", source: "TSN", timeAgo: "8h ago", category: "Injury" },
+  { id: 4, headline: "Raptors Extend Win Streak to 3 with Dominant Pacers Victory", source: "Sportsnet", timeAgo: "1d ago", category: "Recap" },
+  { id: 5, headline: "Dick's Three-Point Shooting Fuels Bench Revival", source: "Raptors Republic", timeAgo: "1d ago", category: "Analysis" },
+  { id: 6, headline: "Poeltl Quietly Having Career-Best Season in Toronto", source: "ESPN", timeAgo: "2d ago", category: "Feature" },
+];
 
 const OPPONENT_DATA = {
   "Pistons": {
@@ -5368,7 +5534,7 @@ const SeasonProgress = ({ isDark = true }) => {
 };
 
 // Game Countdown Timer
-const GameCountdown = ({ game, isDark = true }) => {
+const GameCountdown = ({ game, isDark = true, gameDayMode = false }) => {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [isGameDay, setIsGameDay] = useState(false);
   
@@ -5445,7 +5611,7 @@ const GameCountdown = ({ game, isDark = true }) => {
             { label: 'Sec', value: timeLeft.seconds },
           ].map((unit, i) => (
             <div key={i} className={`p-2 rounded-lg ${isDark ? 'bg-cmd-bg' : 'bg-light-card'}`}>
-              <div className={`text-xl font-mono font-black ${isGameDay && i < 2 ? 'text-raptors-red' : isDark ? 'text-white' : 'text-slate-800'}`}>
+              <div className={`${gameDayMode ? 'text-2xl' : 'text-xl'} font-mono font-black ${isGameDay && i < 2 ? 'text-raptors-red' : isDark ? 'text-white' : 'text-slate-800'} transition-all duration-300`}>
                 {String(unit.value).padStart(2, '0')}
               </div>
               <div className={`text-[8px] uppercase font-bold ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{unit.label}</div>
@@ -6940,65 +7106,89 @@ const RestFatigueWidget = ({ isDark = true }) => {
 
 // Trade Deadline Countdown Widget
 const TradeDeadlineWidget = ({ isDark = true }) => {
-  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, mins: 0, secs: 0, expired: false });
+  return null; // Deadline passed, replaced by TradeAnalysisWidget
+};
+
+const TradeAnalysisWidget = ({ isDark = true }) => {
+  const [tab, setTab] = useState('completed');
+  const completed = TRADE_RUMORS.filter(t => t.status === 'Completed');
+  const rumored = TRADE_RUMORS.filter(t => t.status === 'Rumored');
+  const unlikely = TRADE_RUMORS.filter(t => t.status === 'Unlikely');
+  const filtered = tab === 'completed' ? completed : tab === 'rumored' ? rumored : unlikely;
   
-  useEffect(() => {
-    const calculate = () => {
-      const now = new Date();
-      const diff = TRADE_DEADLINE.date - now;
-      if (diff <= 0) {
-        setTimeLeft({ days: 0, hours: 0, mins: 0, secs: 0, expired: true });
-        return;
-      }
-      setTimeLeft({
-        days: Math.floor(diff / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((diff / (1000 * 60 * 60)) % 24),
-        mins: Math.floor((diff / (1000 * 60)) % 60),
-        secs: Math.floor((diff / 1000) % 60),
-        expired: false
-      });
-    };
-    calculate();
-    const interval = setInterval(calculate, 1000);
-    return () => clearInterval(interval);
-  }, []);
-  
-  if (timeLeft.expired) return null;
+  const capSpace = { before: 8.2, after: 28.5, max: 140.6 };
   
   return (
-    <div className={`${isDark ? 'glass-card border-orange-500/30' : 'bg-white border border-orange-300 shadow-lg rounded-2xl'} p-4`} style={{animation: 'border-glow 3s ease-in-out infinite'}}>
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
       <div className="flex items-center justify-between mb-3">
         <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
-          <Clock className="w-3 h-3 text-orange-400" /> Trade Deadline
+          <ArrowRightLeft className="w-3 h-3 text-orange-400" /> Trade Deadline Recap
         </h3>
-        <span className="text-lg animate-pulse">🔥</span>
+        <span className="text-[9px] px-1.5 py-0.5 rounded bg-green-500/20 text-green-400 font-bold">CLOSED</span>
       </div>
       
-      <div className="grid grid-cols-4 gap-1 text-center mb-3">
-        {[
-          { val: timeLeft.days, label: 'D' },
-          { val: timeLeft.hours, label: 'H' },
-          { val: timeLeft.mins, label: 'M' },
-          { val: timeLeft.secs, label: 'S' }
-        ].map((t, i) => (
-          <div key={i} className={`p-1 rounded ${isDark ? 'bg-cmd-bg' : 'bg-light-card'}`}>
-            <div className={`text-lg font-black ${isDark ? 'text-orange-400' : 'text-orange-500'}`}>{String(t.val).padStart(2, '0')}</div>
-            <div className={`text-[8px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{t.label}</div>
+      {/* Tabs */}
+      <div className="flex gap-1 mb-3">
+        {[{k:'completed',l:'Done',c:'green'},{k:'rumored',l:'What If',c:'yellow'},{k:'unlikely',l:'LOL',c:'red'}].map(t => (
+          <button key={t.k} onClick={() => setTab(t.k)}
+            className={`flex-1 text-[9px] py-1 rounded font-bold transition-all ${tab === t.k 
+              ? `bg-${t.c}-500/20 text-${t.c}-400 border border-${t.c}-500/30` 
+              : `${isDark ? 'bg-cmd-bg text-slate-500' : 'bg-light-card text-slate-400'}`}`}>
+            {t.l} ({t.k === 'completed' ? completed.length : t.k === 'rumored' ? rumored.length : unlikely.length})
+          </button>
+        ))}
+      </div>
+      
+      {/* Trades List */}
+      <div className="space-y-2 max-h-[250px] overflow-y-auto custom-scrollbar">
+        {filtered.map(trade => (
+          <div key={trade.id} className={`p-2 rounded-lg ${isDark ? 'bg-cmd-bg' : 'bg-light-card'}`}>
+            <div className="flex items-center justify-between mb-1">
+              <span className={`text-[10px] font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>
+                {trade.teams.join(' ↔ ')}
+              </span>
+              <div className="flex items-center gap-1">
+                {trade.date && <span className={`text-[8px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{trade.date}</span>}
+                <span className={`text-[8px] px-1 py-0.5 rounded font-bold ${
+                  trade.status === 'Completed' ? 'bg-green-500/20 text-green-400' :
+                  trade.status === 'Rumored' ? 'bg-yellow-500/20 text-yellow-400' :
+                  'bg-red-500/20 text-red-400'}`}>{trade.status}</span>
+              </div>
+            </div>
+            <div className={`text-[9px] ${isDark ? 'text-slate-400' : 'text-slate-500'} mb-1`}>
+              <span className="text-red-400">OUT:</span> {trade.players.sent.join(', ')} → <span className="text-green-400">IN:</span> {trade.players.received.join(', ')}
+            </div>
+            <div className={`text-[8px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{trade.summary}</div>
+            <div className="flex items-center justify-between mt-1">
+              <span className={`text-[8px] ${isDark ? 'text-slate-600' : 'text-slate-400'}`}>via {trade.source}</span>
+              <div className="flex items-center gap-0.5">
+                {Array.from({length: 5}, (_, i) => (
+                  <div key={i} className={`w-1.5 h-1.5 rounded-full ${i < Math.ceil(trade.impact / 2) ? 'bg-orange-400' : isDark ? 'bg-slate-700' : 'bg-slate-300'}`} />
+                ))}
+              </div>
+            </div>
           </div>
         ))}
       </div>
       
-      {TRADE_DEADLINE.rumorsActive && (
-        <div className={`pt-2 border-t ${isDark ? 'border-cmd-border' : 'border-light-border'}`}>
-          <div className={`text-[10px] font-bold ${isDark ? 'text-slate-400' : 'text-slate-500'} mb-1 uppercase`}>Raptors Trade Watch</div>
-          {TRADE_DEADLINE.raptorsPlayers.map((p, i) => (
-            <div key={i} className="flex justify-between text-[10px]">
-              <span className={isDark ? 'text-slate-300' : 'text-slate-600'}>{p.name}</span>
-              <span className={`${p.likelihood === 'High' ? 'text-red-400' : 'text-yellow-400'}`}>{p.likelihood}</span>
-            </div>
-          ))}
+      {/* Cap Space */}
+      <div className={`mt-3 pt-2 border-t ${isDark ? 'border-cmd-border' : 'border-light-border'}`}>
+        <div className={`text-[9px] font-bold ${isDark ? 'text-slate-400' : 'text-slate-500'} mb-1 uppercase`}>Cap Space Impact</div>
+        <div className="flex items-center gap-2 mb-1">
+          <span className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Before</span>
+          <div className="flex-1 h-2 rounded-full bg-slate-700/50 overflow-hidden">
+            <div className="h-full rounded-full bg-red-400/60" style={{width: `${(capSpace.before / capSpace.max) * 100}%`}} />
+          </div>
+          <span className={`text-[9px] font-bold ${isDark ? 'text-red-400' : 'text-red-500'}`}>${capSpace.before}M</span>
         </div>
-      )}
+        <div className="flex items-center gap-2">
+          <span className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>After</span>
+          <div className="flex-1 h-2 rounded-full bg-slate-700/50 overflow-hidden">
+            <div className="h-full rounded-full bg-green-400" style={{width: `${(capSpace.after / capSpace.max) * 100}%`}} />
+          </div>
+          <span className={`text-[9px] font-bold text-green-400`}>${capSpace.after}M</span>
+        </div>
+      </div>
     </div>
   );
 };
@@ -7235,9 +7425,17 @@ const ClutchStatsWidget = ({ isDark = true }) => {
     record: { w: 8, l: 5 },
     ppg: 4.2,
     fgPct: 45.8,
-    topClutchPlayer: 'Scottie Barnes',
-    clutchPts: 42
+    ftPct: 82.1,
+    threePct: 36.2,
+    netRtg: 3.8
   };
+  const clutchPerformers = [
+    { name: 'Scottie Barnes', pts: 42, fg: '48.2%', badge: '🔥' },
+    { name: 'Immanuel Quickley', pts: 35, fg: '44.5%', badge: '🎯' },
+    { name: 'RJ Barrett', pts: 28, fg: '41.8%', badge: '💪' },
+    { name: 'Gradey Dick', pts: 22, fg: '52.1%', badge: '🧊' },
+    { name: 'Jakob Poeltl', pts: 18, fg: '62.5%', badge: '🛡️' }
+  ];
   
   return (
     <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
@@ -7245,33 +7443,165 @@ const ClutchStatsWidget = ({ isDark = true }) => {
         <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
           <Timer className="w-3 h-3 text-amber-400" /> Clutch Time
         </h3>
-        <span className="text-lg">⏰</span>
+        <span className={`text-[9px] px-1.5 py-0.5 rounded font-bold ${clutchStats.record.w > clutchStats.record.l ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
+          {clutchStats.record.w > clutchStats.record.l ? 'CLOSERS' : 'CHOKERS'}
+        </span>
       </div>
       
       <div className="text-center mb-3">
         <div className={`text-2xl font-black ${clutchStats.record.w > clutchStats.record.l ? 'text-green-400' : 'text-red-400'}`}>
           {clutchStats.record.w}-{clutchStats.record.l}
         </div>
-        <div className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'} uppercase`}>Clutch Record</div>
+        <div className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'} uppercase`}>Within 5 pts, Last 5 Min</div>
       </div>
       
-      <div className={`grid grid-cols-2 gap-2 text-[10px] ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>
-        <div className="flex justify-between">
-          <span>Clutch PPG</span>
-          <span className={`font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>{clutchStats.ppg}</span>
-        </div>
-        <div className="flex justify-between">
-          <span>Clutch FG%</span>
-          <span className={`font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>{clutchStats.fgPct}%</span>
+      <div className="grid grid-cols-3 gap-1 mb-3">
+        {[
+          { label: 'PPG', val: clutchStats.ppg },
+          { label: 'FG%', val: clutchStats.fgPct + '%' },
+          { label: 'Net Rtg', val: '+' + clutchStats.netRtg }
+        ].map((s, i) => (
+          <div key={i} className={`text-center p-1.5 rounded ${isDark ? 'bg-cmd-bg' : 'bg-light-card'}`}>
+            <div className={`text-xs font-black ${isDark ? 'text-white' : 'text-slate-800'}`}>{s.val}</div>
+            <div className={`text-[8px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{s.label}</div>
+          </div>
+        ))}
+      </div>
+      
+      <div className={`pt-2 border-t ${isDark ? 'border-cmd-border' : 'border-light-border'}`}>
+        <div className={`text-[9px] font-bold ${isDark ? 'text-slate-400' : 'text-slate-500'} mb-1.5 uppercase`}>Top Clutch Performers</div>
+        {clutchPerformers.map((p, i) => (
+          <div key={i} className={`flex items-center justify-between py-1 ${i > 0 ? `border-t ${isDark ? 'border-slate-800' : 'border-slate-100'}` : ''}`}>
+            <div className="flex items-center gap-1.5">
+              <span className="text-[10px]">{p.badge}</span>
+              <span className={`text-[10px] font-medium ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>{p.name}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{p.fg}</span>
+              <span className={`text-[10px] font-bold ${isDark ? 'text-amber-400' : 'text-amber-500'}`}>{p.pts} pts</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Advanced Stats Widget
+const AdvancedStatsWidget = ({ isDark = true }) => {
+  const stats = [
+    { label: 'Off Rtg', key: 'offRtg', higher: true },
+    { label: 'Def Rtg', key: 'defRtg', higher: false },
+    { label: 'Net Rtg', key: 'netRtg', higher: true },
+    { label: 'Pace', key: 'pace', higher: true },
+    { label: 'eFG%', key: 'efgPct', higher: true },
+    { label: 'TS%', key: 'tsPct', higher: true }
+  ];
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <BarChart3 className="w-3 h-3 text-cyan-400" /> Advanced Analytics
+        </h3>
+        <span className="text-lg">📊</span>
+      </div>
+      
+      <div className="space-y-2">
+        {stats.map((s, i) => {
+          const tor = ADVANCED_STATS.raptors[s.key];
+          const avg = ADVANCED_STATS.leagueAvg[s.key];
+          const better = s.higher ? tor >= avg : tor <= avg;
+          const maxVal = Math.max(Math.abs(tor), Math.abs(avg)) * 1.2 || 1;
+          const torWidth = s.key === 'netRtg' ? 50 + (tor / maxVal) * 40 : (tor / (avg * 1.3)) * 100;
+          const avgWidth = s.key === 'netRtg' ? 50 + (avg / maxVal) * 40 : (avg / (avg * 1.3)) * 100;
+          const rank = ADVANCED_STATS.rank[s.key];
+          
+          return (
+            <div key={i}>
+              <div className="flex justify-between items-center mb-0.5">
+                <span className={`text-[9px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{s.label}</span>
+                <div className="flex items-center gap-2">
+                  {rank && <span className={`text-[8px] ${isDark ? 'text-slate-600' : 'text-slate-400'}`}>#{rank}</span>}
+                  <span className={`text-[10px] font-bold ${better ? 'text-green-400' : 'text-red-400'}`}>{tor}</span>
+                </div>
+              </div>
+              <div className="relative h-2 rounded-full overflow-hidden" style={{background: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)'}}>
+                <div className={`absolute h-full rounded-full ${better ? 'bg-green-400/60' : 'bg-red-400/60'}`} style={{width: `${Math.min(Math.max(torWidth, 5), 100)}%`}} />
+                <div className="absolute h-full w-0.5 bg-yellow-400/80" style={{left: `${Math.min(Math.max(avgWidth, 5), 100)}%`}} title={`League Avg: ${avg}`} />
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      
+      <div className={`mt-2 flex items-center gap-3 text-[8px] ${isDark ? 'text-slate-600' : 'text-slate-400'}`}>
+        <span className="flex items-center gap-1"><span className="w-2 h-1 bg-green-400/60 rounded" /> TOR</span>
+        <span className="flex items-center gap-1"><span className="w-0.5 h-2 bg-yellow-400/80" /> League Avg</span>
+      </div>
+    </div>
+  );
+};
+
+// Schedule & Results Widget
+const ScheduleResultsWidget = ({ isDark = true }) => {
+  const [view, setView] = useState('upcoming');
+  const diffColors = ['text-green-400', 'text-green-400', 'text-yellow-400', 'text-orange-400', 'text-red-400', 'text-red-400'];
+  const diffLabels = ['', 'Easy', 'Easy', 'Medium', 'Hard', 'Elite'];
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          <Calendar className="w-3 h-3 text-blue-400" /> Schedule
+        </h3>
+        <div className="flex gap-1">
+          {['upcoming', 'recent'].map(v => (
+            <button key={v} onClick={() => setView(v)}
+              className={`text-[9px] px-2 py-0.5 rounded font-bold ${view === v 
+                ? 'bg-blue-500/20 text-blue-400' 
+                : `${isDark ? 'text-slate-500' : 'text-slate-400'}`}`}>
+              {v === 'upcoming' ? 'Next' : 'Last 5'}
+            </button>
+          ))}
         </div>
       </div>
       
-      <div className={`mt-3 pt-2 border-t ${isDark ? 'border-cmd-border' : 'border-light-border'} text-[10px]`}>
-        <div className="flex justify-between items-center">
-          <span className={isDark ? 'text-slate-400' : 'text-slate-500'}>Top Closer</span>
-          <span className={`font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>{clutchStats.topClutchPlayer} ({clutchStats.clutchPts} pts)</span>
+      {view === 'upcoming' ? (
+        <div className="space-y-1.5 max-h-[300px] overflow-y-auto custom-scrollbar">
+          {SCHEDULE_DATA.upcoming.map((g, i) => (
+            <div key={i} className={`flex items-center gap-2 p-1.5 rounded-lg ${isDark ? 'bg-cmd-bg' : 'bg-light-card'}`}>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-1.5">
+                  <span className={`text-[10px] font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>{g.opponent}</span>
+                  <span className={`text-[8px] px-1 py-0.5 rounded font-bold ${g.home ? 'bg-green-500/20 text-green-400' : 'bg-purple-500/20 text-purple-400'}`}>
+                    {g.home ? 'HOME' : 'AWAY'}
+                  </span>
+                </div>
+                <div className={`text-[8px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{g.date} · {g.time} · {g.tv}</div>
+              </div>
+              <div className="text-right">
+                <div className={`text-[8px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{g.oppRecord}</div>
+                <div className={`text-[8px] font-bold ${diffColors[g.difficulty]}`}>{diffLabels[g.difficulty]}</div>
+              </div>
+            </div>
+          ))}
         </div>
-      </div>
+      ) : (
+        <div className="space-y-1.5">
+          {SCHEDULE_DATA.recent.map((g, i) => (
+            <div key={i} className={`flex items-center gap-2 p-1.5 rounded-lg ${isDark ? 'bg-cmd-bg' : 'bg-light-card'}`}>
+              <span className={`text-xs font-black w-5 text-center ${g.result === 'W' ? 'text-green-400' : 'text-red-400'}`}>{g.result}</span>
+              <div className="flex-1">
+                <span className={`text-[10px] font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>{g.opponent}</span>
+                <span className={`text-[8px] ml-1.5 ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{g.home ? '🏠' : '✈️'}</span>
+              </div>
+              <span className={`text-[10px] font-bold ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>{g.score}</span>
+              <span className={`text-[8px] ${isDark ? 'text-slate-600' : 'text-slate-400'}`}>{g.date}</span>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
@@ -10079,6 +10409,188 @@ const SkeletonCard = ({ isDark = true }) => (
   </div>
 );
 
+// ============================================================
+// TEAM STATS COMPARISON WIDGET (Head-to-Head)
+// ============================================================
+const TeamStatsComparisonWidget = ({ isDark = true, opponent }) => {
+  const opponentData = OPPONENT_DATA[opponent];
+  if (!opponent || !opponentData) return null;
+
+  // Calculate opponent team averages from roster
+  const oppRoster = opponentData.roster || [];
+  const oppStats = {
+    ppg: oppRoster.reduce((s, p) => s + (p.seasonStats?.ppg || 0), 0),
+    rpg: oppRoster.reduce((s, p) => s + (p.seasonStats?.rpg || 0), 0),
+    apg: oppRoster.reduce((s, p) => s + (p.seasonStats?.apg || 0), 0),
+  };
+
+  const stats = [
+    { label: 'PPG', rap: RAPTORS_STATS.ppg, opp: oppStats.ppg > 0 ? oppStats.ppg.toFixed(1) : '108.5' },
+    { label: 'RPG', rap: RAPTORS_STATS.rpg || 44.2, opp: oppStats.rpg > 0 ? oppStats.rpg.toFixed(1) : '42.8' },
+    { label: 'APG', rap: RAPTORS_STATS.apg || 26.8, opp: oppStats.apg > 0 ? oppStats.apg.toFixed(1) : '24.5' },
+    { label: 'FG%', rap: RAPTORS_STATS.fgPct || 47.5, opp: 46.2 },
+    { label: '3P%', rap: RAPTORS_STATS.threePtPct || 36.2, opp: 35.1 },
+    { label: 'Record', rap: `${RAPTORS_STATS.wins}-${RAPTORS_STATS.losses}`, opp: null, isRecord: true },
+  ];
+
+  return (
+    <div className={`${isDark ? 'premium-glass' : 'bg-white border border-light-border shadow-lg'} rounded-2xl p-4`}>
+      <div className="flex items-center gap-2 mb-3">
+        <BarChart3 className="w-4 h-4 text-raptors-red" />
+        <h3 className={`text-xs font-bold uppercase ${isDark ? 'text-white' : 'text-slate-800'}`}>Head-to-Head Stats</h3>
+      </div>
+      <div className="flex justify-between items-center mb-3 text-[10px] font-bold uppercase">
+        <span className="text-raptors-red">Raptors</span>
+        <span className={isDark ? 'text-slate-500' : 'text-slate-400'}>vs</span>
+        <span className="text-blue-400">{opponent}</span>
+      </div>
+      <div className="space-y-2">
+        {stats.filter(s => !s.isRecord).map(({ label, rap, opp }) => {
+          const rapVal = parseFloat(rap);
+          const oppVal = parseFloat(opp);
+          const total = rapVal + oppVal || 1;
+          const rapPct = (rapVal / total) * 100;
+          const rapWins = rapVal > oppVal;
+          return (
+            <div key={label}>
+              <div className="flex justify-between text-[10px] mb-0.5">
+                <span className={`font-mono font-bold ${rapWins ? 'text-green-400' : isDark ? 'text-white' : 'text-slate-700'}`}>{typeof rap === 'number' ? rap.toFixed(1) : rap}</span>
+                <span className={`${isDark ? 'text-slate-500' : 'text-slate-400'} font-bold`}>{label}</span>
+                <span className={`font-mono font-bold ${!rapWins ? 'text-green-400' : isDark ? 'text-white' : 'text-slate-700'}`}>{typeof opp === 'number' ? opp.toFixed(1) : opp}</span>
+              </div>
+              <div className="flex h-1.5 rounded-full overflow-hidden gap-0.5">
+                <div className="bg-raptors-red rounded-full transition-all duration-700" style={{width: `${rapPct}%`}}></div>
+                <div className="bg-blue-500 rounded-full flex-1"></div>
+              </div>
+            </div>
+          );
+        })}
+        {/* Record row */}
+        <div className="flex justify-between items-center pt-1 border-t border-cmd-border/50">
+          <span className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>{RAPTORS_STATS.wins}-{RAPTORS_STATS.losses}</span>
+          <span className={`text-[10px] font-bold ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>RECORD</span>
+          <span className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>—</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ============================================================
+// SEASON TRACKER WIDGET
+// ============================================================
+const SeasonTrackerWidget = ({ isDark = true, games }) => {
+  // Compute monthly records and streak from completed games
+  const completedGames = games.filter(g => g.status === 'completed' && g.result);
+  
+  const monthlyRecords = {};
+  completedGames.forEach(g => {
+    const month = g.date.split(' ')[0]; // "Jan", "Feb", etc.
+    if (!monthlyRecords[month]) monthlyRecords[month] = { wins: 0, losses: 0 };
+    if (g.result.startsWith('W')) monthlyRecords[month].wins++;
+    else monthlyRecords[month].losses++;
+  });
+
+  // Current streak
+  let streakCount = 0;
+  let streakType = '';
+  for (let i = completedGames.length - 1; i >= 0; i--) {
+    const isWin = completedGames[i].result.startsWith('W');
+    const type = isWin ? 'W' : 'L';
+    if (streakType === '') streakType = type;
+    if (type === streakType) streakCount++;
+    else break;
+  }
+
+  // Last 15 games
+  const last15 = completedGames.slice(-15);
+
+  return (
+    <div className={`${isDark ? 'premium-glass' : 'bg-white border border-light-border shadow-lg'} rounded-2xl p-4`}>
+      <div className="flex items-center gap-2 mb-3">
+        <History className="w-4 h-4 text-purple-400" />
+        <h3 className={`text-xs font-bold uppercase ${isDark ? 'text-white' : 'text-slate-800'}`}>Season Tracker</h3>
+      </div>
+      
+      {/* Current Streak */}
+      <div className={`flex items-center gap-2 mb-3 p-2 rounded-lg ${streakType === 'W' ? 'bg-green-500/10 border border-green-500/20' : 'bg-red-500/10 border border-red-500/20'}`}>
+        <Flame className={`w-4 h-4 ${streakType === 'W' ? 'text-green-400' : 'text-red-400'}`} />
+        <span className={`text-xs font-bold ${streakType === 'W' ? 'text-green-400' : 'text-red-400'}`}>
+          {streakCount} Game {streakType === 'W' ? 'Win' : 'Loss'} Streak
+        </span>
+      </div>
+
+      {/* Monthly Records */}
+      <div className="mb-3">
+        <div className={`text-[10px] font-bold uppercase mb-1.5 ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Monthly</div>
+        <div className="grid grid-cols-2 gap-1">
+          {Object.entries(monthlyRecords).map(([month, rec]) => (
+            <div key={month} className={`flex items-center justify-between px-2 py-1 rounded ${isDark ? 'bg-cmd-bg' : 'bg-light-card'} text-[10px]`}>
+              <span className={`font-bold ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>{month}</span>
+              <span className={`font-mono font-bold ${rec.wins > rec.losses ? 'text-green-400' : rec.wins < rec.losses ? 'text-red-400' : isDark ? 'text-white' : 'text-slate-700'}`}>{rec.wins}-{rec.losses}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Win/Loss Timeline - Last 15 */}
+      <div>
+        <div className={`text-[10px] font-bold uppercase mb-1.5 ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Last 15 Games</div>
+        <div className="flex gap-1 flex-wrap">
+          {last15.map((g, i) => {
+            const isWin = g.result.startsWith('W');
+            return (
+              <div
+                key={i}
+                title={`${g.date} vs ${g.opponent}: ${g.result}`}
+                className={`w-4 h-4 rounded-full ${isWin ? 'bg-green-500' : 'bg-red-500'} cursor-default transition-transform hover:scale-125`}
+              ></div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ============================================================
+// RAPTORS PULSE (News Feed) WIDGET
+// ============================================================
+const RaptorsPulseWidget = ({ isDark = true }) => {
+  const categoryColors = {
+    'Trade Rumor': 'bg-orange-500/20 text-orange-400 border-orange-500/30',
+    'Injury': 'bg-red-500/20 text-red-400 border-red-500/30',
+    'Recap': 'bg-green-500/20 text-green-400 border-green-500/30',
+    'Analysis': 'bg-blue-500/20 text-blue-400 border-blue-500/30',
+    'Award': 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
+    'Feature': 'bg-purple-500/20 text-purple-400 border-purple-500/30',
+  };
+
+  return (
+    <div className={`${isDark ? 'premium-glass' : 'bg-white border border-light-border shadow-lg'} rounded-2xl p-4`}>
+      <div className="flex items-center gap-2 mb-3">
+        <Radio className="w-4 h-4 text-raptors-red animate-pulse" />
+        <h3 className={`text-xs font-bold uppercase ${isDark ? 'text-white' : 'text-slate-800'}`}>Raptors Pulse</h3>
+      </div>
+      <div className="space-y-2 max-h-64 overflow-y-auto custom-scrollbar pr-1">
+        {RAPTORS_NEWS.map(item => (
+          <div key={item.id} className={`p-2.5 rounded-lg ${isDark ? 'bg-cmd-bg/80 hover:bg-cmd-card' : 'bg-light-card hover:bg-slate-200'} transition-colors cursor-default`}>
+            <div className="flex items-start justify-between gap-2 mb-1">
+              <span className={`text-[11px] font-semibold leading-tight ${isDark ? 'text-white' : 'text-slate-800'}`}>{item.headline}</span>
+            </div>
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className={`text-[9px] px-1.5 py-0.5 rounded border font-bold ${categoryColors[item.category] || 'bg-slate-500/20 text-slate-400 border-slate-500/30'}`}>{item.category}</span>
+              <span className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{item.source}</span>
+              <span className={`text-[9px] ${isDark ? 'text-slate-600' : 'text-slate-300'}`}>•</span>
+              <span className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{item.timeAgo}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 // Scroll to Top Button
 const ScrollToTop = ({ isDark = true }) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -10120,6 +10632,312 @@ const ScrollToTop = ({ isDark = true }) => {
   );
 };
 
+// ============================================================
+// DRAFT WATCH WIDGET
+// ============================================================
+const DraftWatchWidget = ({ isDark = true }) => {
+  const [activeTab, setActiveTab] = useState('prospects');
+  const prospects = DRAFT_DATA.prospects;
+  const tankWatch = DRAFT_DATA.tankWatch;
+  const lotteryOdds = DRAFT_DATA.lotteryOdds;
+  
+  return (
+    <div className={`${isDark ? 'premium-glass' : 'bg-white border border-light-border shadow-lg'} rounded-2xl p-4`}>
+      <div className="flex items-center gap-2 mb-3">
+        <Target className="w-4 h-4 text-raptors-red" />
+        <h3 className={`text-xs font-bold uppercase ${isDark ? 'text-white' : 'text-slate-800'}`}>🎯 Draft Watch 2025</h3>
+      </div>
+      
+      {/* Projected Pick Card */}
+      <div className={`${isDark ? 'bg-gradient-to-r from-raptors-red/20 to-raptors-purple/20 border border-raptors-red/30' : 'bg-raptors-red/5 border border-raptors-red/20'} rounded-xl p-3 mb-3`}>
+        <div className="flex justify-between items-center">
+          <div>
+            <div className={`text-[10px] uppercase ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Current Record</div>
+            <div className={`text-lg font-black ${isDark ? 'text-white' : 'text-slate-800'}`}>{RAPTORS_STATS.wins}-{RAPTORS_STATS.losses}</div>
+          </div>
+          <div className="text-center">
+            <div className={`text-[10px] uppercase ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Projected Pick</div>
+            <div className="text-2xl font-black text-raptors-red">#{DRAFT_DATA.raptorsRecord.projectedSeed > 10 ? 'N/A' : DRAFT_DATA.raptorsRecord.projectedSeed}</div>
+          </div>
+          <div className="text-right">
+            <div className={`text-[10px] uppercase ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Lottery Odds</div>
+            <div className={`text-sm font-bold ${isDark ? 'text-yellow-400' : 'text-yellow-600'}`}>
+              {DRAFT_DATA.raptorsRecord.projectedSeed <= 14 ? `${lotteryOdds[DRAFT_DATA.raptorsRecord.projectedSeed - 1]?.first}%` : 'N/A'}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Tabs */}
+      <div className="flex gap-1 mb-3">
+        {['prospects', 'odds', 'tank'].map(tab => (
+          <button key={tab} onClick={() => setActiveTab(tab)}
+            className={`flex-1 text-[10px] font-bold uppercase py-1.5 rounded-lg transition-all ${activeTab === tab 
+              ? 'bg-raptors-red text-white' 
+              : isDark ? 'bg-cmd-bg text-slate-400 hover:text-white' : 'bg-light-card text-slate-500 hover:text-slate-800'}`}>
+            {tab === 'prospects' ? '⭐ Prospects' : tab === 'odds' ? '🎲 Odds' : '📉 Tank'}
+          </button>
+        ))}
+      </div>
+
+      {/* Prospects Tab */}
+      {activeTab === 'prospects' && (
+        <div className="space-y-2 max-h-[400px] overflow-y-auto custom-scrollbar pr-1">
+          {prospects.map((p, i) => (
+            <div key={i} className={`${isDark ? 'bg-cmd-bg/80 hover:bg-cmd-card' : 'bg-light-card hover:bg-slate-200'} rounded-xl p-3 transition-all cursor-pointer group`}>
+              <div className="flex items-start gap-3">
+                <div className={`w-10 h-10 rounded-full ${isDark ? 'bg-cmd-card border border-cmd-border' : 'bg-slate-200 border border-slate-300'} flex items-center justify-center text-lg font-black flex-shrink-0`}>
+                  <span className="text-raptors-red text-xs">#{i + 1}</span>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <span className={`text-sm font-bold ${isDark ? 'text-white' : 'text-slate-800'} truncate`}>{p.emoji} {p.name}</span>
+                  </div>
+                  <div className={`text-[10px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{p.school} · {p.position} · Range: {p.projected}</div>
+                  <div className={`text-[10px] ${isDark ? 'text-slate-500' : 'text-slate-400'} mt-0.5`}>{p.stats}</div>
+                  <div className="flex items-center gap-1 mt-1">
+                    <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${isDark ? 'bg-raptors-red/20 text-raptors-red' : 'bg-raptors-red/10 text-raptors-red'}`}>
+                      Comp: {p.comparison}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Lottery Odds Tab */}
+      {activeTab === 'odds' && (
+        <div className="space-y-1.5 max-h-[400px] overflow-y-auto custom-scrollbar pr-1">
+          <div className={`text-[10px] ${isDark ? 'text-slate-500' : 'text-slate-400'} mb-2`}>NBA Draft Lottery Probabilities</div>
+          {lotteryOdds.map((o) => (
+            <div key={o.seed} className="flex items-center gap-2">
+              <span className={`text-[10px] w-6 text-right font-bold ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>#{o.seed}</span>
+              <div className="flex-1 h-4 bg-cmd-bg rounded-full overflow-hidden relative">
+                <div className="h-full rounded-full bg-gradient-to-r from-raptors-red to-raptors-purple transition-all" style={{ width: `${o.first * 5}%` }}></div>
+                <span className={`absolute inset-0 flex items-center justify-center text-[9px] font-bold ${isDark ? 'text-white' : 'text-slate-700'}`}>{o.first}%</span>
+              </div>
+              <span className={`text-[9px] w-12 ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Top 4: {o.top4}%</span>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Tank Watch Tab */}
+      {activeTab === 'tank' && (
+        <div className="space-y-1.5 max-h-[400px] overflow-y-auto custom-scrollbar pr-1">
+          <div className={`text-[10px] ${isDark ? 'text-slate-500' : 'text-slate-400'} mb-2`}>Teams competing for lottery position</div>
+          {tankWatch.map((t, i) => (
+            <div key={i} className={`flex items-center gap-2 p-2 rounded-lg ${isDark ? 'bg-cmd-bg/80' : 'bg-light-card'}`}>
+              <span className={`text-[10px] font-bold w-4 ${isDark ? 'text-yellow-400' : 'text-yellow-600'}`}>#{t.lotteryPos}</span>
+              <span className={`text-xs font-bold flex-1 ${isDark ? 'text-white' : 'text-slate-800'}`}>{t.team}</span>
+              <span className={`text-[10px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{t.wins}-{t.losses}</span>
+              <span className={`text-[10px] font-bold ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>{t.pct}</span>
+              <div className="w-16 h-2 bg-cmd-bg rounded-full overflow-hidden">
+                <div className="h-full bg-gradient-to-r from-green-500 to-red-500 rounded-full" style={{ width: `${(1 - (t.wins / (t.wins + t.losses))) * 100}%` }}></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ============================================================
+// PLAYER DETAIL MODAL
+// ============================================================
+const PlayerDetailModal = ({ player, isDark = true, onClose }) => {
+  if (!player) return null;
+  
+  const stats = player.seasonStats || {};
+  const last5 = PLAYER_LAST_5_GAMES[player.name] || [];
+  
+  // Position averages for comparison
+  const posAvg = {
+    PG: { ppg: 15.2, rpg: 3.8, apg: 6.4, fgPct: 44.5 },
+    SG: { ppg: 16.8, rpg: 3.5, apg: 3.2, fgPct: 45.0 },
+    SF: { ppg: 15.5, rpg: 5.2, apg: 2.8, fgPct: 46.2 },
+    PF: { ppg: 14.8, rpg: 6.8, apg: 2.5, fgPct: 48.0 },
+    C: { ppg: 12.5, rpg: 8.5, apg: 2.0, fgPct: 55.0 },
+  };
+  const pos = player.position?.replace(/\/.*/, '') || 'SF';
+  const avg = posAvg[pos] || posAvg.SF;
+  
+  const compStats = [
+    { label: 'PPG', val: stats.ppg, avg: avg.ppg },
+    { label: 'RPG', val: stats.rpg, avg: avg.rpg },
+    { label: 'APG', val: stats.apg, avg: avg.apg },
+    { label: 'FG%', val: stats.fgPct, avg: avg.fgPct },
+  ];
+
+  return (
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in" onClick={onClose}>
+      <div className={`${isDark ? 'bg-cmd-surface border-cmd-border' : 'bg-white border-light-border'} border rounded-2xl max-w-lg w-full max-h-[85vh] overflow-y-auto shadow-2xl transform transition-all`}
+        onClick={e => e.stopPropagation()} style={{animation: 'slide-up 0.3s ease-out'}}>
+        {/* Header */}
+        <div className="relative p-5 bg-gradient-to-r from-raptors-red/30 to-raptors-purple/20 rounded-t-2xl">
+          <button onClick={onClose} className={`absolute top-3 right-3 p-1.5 rounded-full ${isDark ? 'hover:bg-white/10 text-white' : 'hover:bg-black/10 text-slate-700'} transition-colors`}>
+            <X className="w-5 h-5" />
+          </button>
+          <div className="flex items-center gap-4">
+            <div className={`w-16 h-16 rounded-full ${isDark ? 'bg-cmd-bg border-2 border-raptors-red/50' : 'bg-light-card border-2 border-raptors-red/30'} flex items-center justify-center`}>
+              <span className="text-2xl font-black text-raptors-red">#{player.number}</span>
+            </div>
+            <div>
+              <h2 className={`text-xl font-black ${isDark ? 'text-white' : 'text-slate-800'}`}>{player.name}</h2>
+              <div className={`text-sm ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>{player.position} · #{player.number}</div>
+            </div>
+          </div>
+        </div>
+        
+        {/* Season Averages */}
+        <div className="p-4">
+          <h4 className={`text-xs font-bold uppercase mb-2 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Season Averages</h4>
+          <div className="grid grid-cols-4 gap-2 mb-4">
+            {[
+              { label: 'PPG', val: stats.ppg },
+              { label: 'RPG', val: stats.rpg },
+              { label: 'APG', val: stats.apg },
+              { label: 'FG%', val: stats.fgPct },
+              { label: '3P%', val: stats.threePtPct },
+              { label: 'FT%', val: stats.ftPct },
+              { label: 'SPG', val: stats.spg },
+              { label: '+/-', val: stats.plusMinus },
+            ].map((s, i) => (
+              <div key={i} className={`${isDark ? 'bg-cmd-bg' : 'bg-light-card'} rounded-lg p-2 text-center`}>
+                <div className={`text-[10px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{s.label}</div>
+                <div className={`text-sm font-black ${isDark ? 'text-white' : 'text-slate-800'}`}>{s.val ?? '—'}</div>
+              </div>
+            ))}
+          </div>
+          
+          {/* Last 5 Games */}
+          {last5.length > 0 && (
+            <>
+              <h4 className={`text-xs font-bold uppercase mb-2 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Last 5 Games</h4>
+              <div className="space-y-1 mb-4">
+                <div className={`grid grid-cols-7 text-[9px] font-bold uppercase ${isDark ? 'text-slate-500' : 'text-slate-400'} px-2`}>
+                  <span>Date</span><span>OPP</span><span>PTS</span><span>REB</span><span>AST</span><span>FG</span><span>W/L</span>
+                </div>
+                {last5.map((g, i) => (
+                  <div key={i} className={`grid grid-cols-7 text-[10px] px-2 py-1.5 rounded-lg ${isDark ? 'bg-cmd-bg/50 text-slate-300' : 'bg-light-card text-slate-600'}`}>
+                    <span>{g.date}</span>
+                    <span className="font-bold">{g.opp}</span>
+                    <span className="font-bold">{g.pts}</span>
+                    <span>{g.reb}</span>
+                    <span>{g.ast}</span>
+                    <span>{g.fgm}/{g.fga}</span>
+                    <span className={g.result === 'W' ? 'text-green-500 font-bold' : 'text-red-400 font-bold'}>{g.result}</span>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+          
+          {/* Shot Chart Placeholder */}
+          <h4 className={`text-xs font-bold uppercase mb-2 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Shot Chart</h4>
+          <div className={`${isDark ? 'bg-cmd-bg border border-cmd-border' : 'bg-light-card border border-light-border'} rounded-xl p-8 mb-4 flex items-center justify-center`}>
+            <div className="text-center">
+              <Target className={`w-8 h-8 mx-auto mb-2 ${isDark ? 'text-slate-600' : 'text-slate-300'}`} />
+              <span className={`text-xs ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Shot chart coming soon</span>
+            </div>
+          </div>
+          
+          {/* Vs Position Average */}
+          <h4 className={`text-xs font-bold uppercase mb-2 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>vs {pos} Average</h4>
+          <div className="space-y-2">
+            {compStats.map((c, i) => {
+              const diff = (c.val || 0) - c.avg;
+              const pct = Math.min(((c.val || 0) / (c.avg * 2)) * 100, 100);
+              return (
+                <div key={i} className="flex items-center gap-2">
+                  <span className={`text-[10px] w-8 font-bold ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{c.label}</span>
+                  <div className="flex-1 h-3 bg-cmd-bg rounded-full overflow-hidden relative">
+                    <div className={`h-full rounded-full ${diff >= 0 ? 'bg-green-500' : 'bg-red-500'}`} style={{ width: `${pct}%` }}></div>
+                  </div>
+                  <span className={`text-[10px] font-bold w-12 text-right ${diff >= 0 ? 'text-green-500' : 'text-red-400'}`}>
+                    {diff >= 0 ? '+' : ''}{diff.toFixed(1)}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ============================================================
+// INJURY DASHBOARD WIDGET
+// ============================================================
+const InjuryDashboardWidget = ({ isDark = true }) => {
+  const statusColors = {
+    Out: { bg: 'bg-red-500/20', text: 'text-red-400', border: 'border-red-500/30' },
+    Doubtful: { bg: 'bg-orange-500/20', text: 'text-orange-400', border: 'border-orange-500/30' },
+    Questionable: { bg: 'bg-yellow-500/20', text: 'text-yellow-400', border: 'border-yellow-500/30' },
+    Probable: { bg: 'bg-green-500/20', text: 'text-green-400', border: 'border-green-500/30' },
+  };
+  
+  const totalGamesOut = INJURY_DATA.reduce((sum, p) => sum + p.gamesOut, 0);
+  
+  return (
+    <div className={`${isDark ? 'premium-glass' : 'bg-white border border-light-border shadow-lg'} rounded-2xl p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <Heart className="w-4 h-4 text-red-500" />
+          <h3 className={`text-xs font-bold uppercase ${isDark ? 'text-white' : 'text-slate-800'}`}>🏥 Injury Dashboard</h3>
+        </div>
+        <span className={`text-[10px] px-2 py-0.5 rounded-full ${isDark ? 'bg-red-500/20 text-red-400' : 'bg-red-50 text-red-600'}`}>
+          {totalGamesOut} total games missed
+        </span>
+      </div>
+      
+      <div className="space-y-2">
+        {INJURY_DATA.map((p, i) => {
+          const sc = statusColors[p.status] || statusColors.Out;
+          const impactWidth = (p.impact / 10) * 100;
+          
+          return (
+            <div key={i} className={`${isDark ? 'bg-cmd-bg/80' : 'bg-light-card'} rounded-xl p-3`}>
+              <div className="flex items-start justify-between mb-1.5">
+                <div>
+                  <span className={`text-sm font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>{p.player}</span>
+                  <div className={`text-[10px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{p.injury}</div>
+                </div>
+                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${sc.bg} ${sc.text} border ${sc.border}`}>
+                  {p.status}
+                </span>
+              </div>
+              
+              {/* Impact Bar */}
+              <div className="flex items-center gap-2 mb-1.5">
+                <span className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>Impact</span>
+                <div className={`flex-1 h-1.5 ${isDark ? 'bg-cmd-card' : 'bg-slate-200'} rounded-full overflow-hidden`}>
+                  <div className={`h-full rounded-full ${p.impact >= 8 ? 'bg-red-500' : p.impact >= 5 ? 'bg-yellow-500' : 'bg-green-500'}`} style={{ width: `${impactWidth}%` }}></div>
+                </div>
+                <span className={`text-[9px] font-bold ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{p.ppg} PPG</span>
+              </div>
+              
+              {/* Return Timeline */}
+              <div className="flex items-center justify-between">
+                <span className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
+                  Est. return: <span className={`font-bold ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>{p.returnDate}</span>
+                </span>
+                <span className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
+                  {p.gamesOut} games missed
+                </span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
 // APP (ROOT)
 // ============================================================
 function App() {
@@ -10136,6 +10954,7 @@ function App() {
   const [showReminder, setShowReminder] = useState(false);
   const [showShare, setShowShare] = useState(false);
   const [showKeyboardHelp, setShowKeyboardHelp] = useState(false);
+  const [gameDayMode, setGameDayMode] = useState(false);
 
   const toggleTheme = () => {
     setIsDark(prev => {
@@ -10145,6 +10964,7 @@ function App() {
     });
   };
 
+  const [selectedPlayer, setSelectedPlayer] = useState(null);
   const [showEasterEgg, setShowEasterEgg] = useState(false);
   const konamiRef = useRef([]);
   const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
@@ -10172,6 +10992,7 @@ function App() {
         setShowReminder(false);
         setShowShare(false);
         setShowEasterEgg(false);
+        setSelectedPlayer(null);
       }
       if (e.key === 'ArrowDown' && e.target.tagName !== 'INPUT' && !e.repeat) {
         e.preventDefault();
@@ -10249,7 +11070,7 @@ function App() {
   return (
     <ThemeContext.Provider value={{ isDark, toggle: toggleTheme }}>
     <a href="#main-content" className="skip-link">Skip to main content</a>
-    <div className={`min-h-screen ${themeClasses} font-sans selection:bg-raptors-red selection:text-white flex flex-col h-screen overflow-hidden transition-colors duration-300 ${isDark ? 'gradient-mesh' : ''}`} role="application" aria-label="Raptors Intel Dashboard">
+    <div className={`min-h-screen ${themeClasses} font-sans selection:bg-raptors-red selection:text-white flex flex-col h-screen overflow-hidden transition-colors duration-300 ${isDark ? 'gradient-mesh' : ''} ${gameDayMode && isDark ? 'gameday-bg' : ''}`} role="application" aria-label="Raptors Intel Dashboard">
       {/* Animated Background Elements */}
       {isDark && <ParticleSystem isDark={isDark} />}
       {isDark && <GradientOrbs isDark={isDark} />}
@@ -10290,6 +11111,11 @@ function App() {
                   </span>
                 </div>
               </div>
+              {gameDayMode && (
+                <div className="gameday-badge px-3 py-1.5 rounded-full bg-raptors-red text-white text-xs font-black tracking-wider shadow-lg shadow-raptors-red/40">
+                  🔥 GAME DAY
+                </div>
+              )}
             </div>
             <div className="flex items-center gap-1">
               {/* Export Button */}
@@ -10301,6 +11127,10 @@ function App() {
               {/* Share Button */}
               <button onClick={() => setShowShare(true)} className={`p-2 rounded-lg transition-all ${isDark ? 'hover:bg-cmd-card text-slate-400 hover:text-white' : 'hover:bg-light-card text-slate-500 hover:text-slate-800'}`} title="Share">
                 <Share className="w-4 h-4" />
+              </button>
+              {/* Game Day Mode Toggle */}
+              <button onClick={() => setGameDayMode(prev => !prev)} className={`p-2 rounded-lg transition-all ${gameDayMode ? 'bg-raptors-red/20 text-raptors-red' : isDark ? 'hover:bg-cmd-card text-slate-400 hover:text-raptors-red' : 'hover:bg-light-card text-slate-500 hover:text-raptors-red'}`} title={gameDayMode ? 'Disable Game Day Mode' : 'Enable Game Day Mode'}>
+                <Flame className="w-4 h-4" />
               </button>
               {/* Theme Toggle */}
               <button onClick={toggleTheme} className={`p-2 rounded-lg transition-all ${isDark ? 'hover:bg-cmd-card text-slate-400 hover:text-yellow-400' : 'hover:bg-light-card text-slate-500 hover:text-blue-600'}`} title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}>
@@ -10372,6 +11202,9 @@ function App() {
         </div>
       )}
 
+      {/* Player Detail Modal */}
+      {selectedPlayer && <PlayerDetailModal player={selectedPlayer} isDark={isDark} onClose={() => setSelectedPlayer(null)} />}
+
       {/* Live Score Ticker */}
       <LiveScoreTicker isDark={isDark} />
       
@@ -10407,15 +11240,37 @@ function App() {
             <QuickStatsBar isDark={isDark} />
             <SeasonProgress isDark={isDark} />
             <StreakCelebration streak={RAPTORS_STATS.streak} isDark={isDark} />
-            <GameCountdown game={selectedGame} isDark={isDark} />
+            <GameCountdown game={selectedGame} isDark={isDark} gameDayMode={gameDayMode} />
             <RecentResultsWidget games={games} isDark={isDark} />
+            {selectedGame && <TeamStatsComparisonWidget isDark={isDark} opponent={selectedGame.opponent} />}
             {selectedGame && <KeyMatchupsWidget opponent={selectedGame.opponent} isDark={isDark} />}
             <InjuryReportWidget isDark={isDark} opponent={selectedGame?.opponent} />
             <RestFatigueWidget isDark={isDark} />
-            <TradeDeadlineWidget isDark={isDark} />
+            <TradeAnalysisWidget isDark={isDark} />
+            <DraftWatchWidget isDark={isDark} />
+            <InjuryDashboardWidget isDark={isDark} />
+            {/* Quick Roster - Click for Player Detail */}
+            <div className={`${isDark ? 'premium-glass' : 'bg-white border border-light-border shadow-lg'} rounded-2xl p-4`}>
+              <div className="flex items-center gap-2 mb-3">
+                <Users className="w-4 h-4 text-raptors-red" />
+                <h3 className={`text-xs font-bold uppercase ${isDark ? 'text-white' : 'text-slate-800'}`}>👤 Player Deep Dive</h3>
+              </div>
+              <div className="space-y-1 max-h-[300px] overflow-y-auto custom-scrollbar">
+                {RAPTORS_ROSTER.map((p) => (
+                  <button key={p.id} onClick={() => setSelectedPlayer(p)} className={`w-full flex items-center gap-2 p-2 rounded-lg transition-all text-left ${isDark ? 'hover:bg-cmd-card' : 'hover:bg-light-card'}`}>
+                    <span className={`text-[10px] font-bold w-5 ${isDark ? 'text-raptors-red' : 'text-raptors-red'}`}>#{p.number}</span>
+                    <span className={`text-xs font-medium flex-1 truncate ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>{p.name}</span>
+                    <span className={`text-[10px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{p.seasonStats?.ppg} PPG</span>
+                    <ChevronRight className={`w-3 h-3 ${isDark ? 'text-slate-600' : 'text-slate-400'}`} />
+                  </button>
+                ))}
+              </div>
+            </div>
             <FanPollWidget isDark={isDark} />
             <ScheduleList games={games} onSelectGame={setSelectedGame} selectedGameId={selectedGame?.id} isDark={isDark} />
             <StandingsWidget isDark={isDark} />
+            <SeasonTrackerWidget isDark={isDark} games={games} />
+            <RaptorsPulseWidget isDark={isDark} />
             <TeamSalaryWidget isDark={isDark} teamName="Raptors" opponentName={selectedGame?.opponent} />
             {selectedGame?.status === 'upcoming' && <BettingHubWidget isDark={isDark} game={selectedGame} />}
             <QuickCompareWidget isDark={isDark} />
@@ -10424,6 +11279,8 @@ function App() {
             <PacePredictorWidget isDark={isDark} opponent={selectedGame?.opponent} />
             <FourFactorsWidget isDark={isDark} opponent={selectedGame?.opponent} />
             <ClutchStatsWidget isDark={isDark} />
+            <AdvancedStatsWidget isDark={isDark} />
+            <ScheduleResultsWidget isDark={isDark} />
             <QuarterBreakdownWidget isDark={isDark} />
             {selectedGame?.status === 'upcoming' && <NotificationWidget isDark={isDark} game={selectedGame} />}
             {selectedGame?.status === 'upcoming' && <PlayerPropsWidget isDark={isDark} opponent={selectedGame?.opponent} />}
@@ -10532,7 +11389,7 @@ function App() {
         <div className="w-full max-w-[98%] mx-auto px-4 flex items-center justify-between text-xs text-slate-500">
           <div className="flex items-center gap-2">
             <span className="font-bold text-raptors-red neon-flicker">RAPTORS INTEL</span>
-            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v9.3</span>
+            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v10.1</span>
           </div>
           <div className="hidden md:flex items-center gap-4">
             <span>Built for Raptors fans 🦖</span>
