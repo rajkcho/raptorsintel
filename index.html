@@ -13218,7 +13218,7 @@ function App() {
     <ThemeContext.Provider value={{ isDark, toggle: toggleTheme }}>
     <a href="#main-content" className="skip-link">Skip to main content</a>
     <div className="print-header"><h1>Raptors Intel Scouting Report</h1><p>{new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p></div>
-    <div className={`min-h-screen ${themeClasses} ${!isDark ? 'light' : ''} font-sans selection:bg-raptors-red selection:text-white flex flex-col h-screen overflow-hidden transition-colors duration-300 ${isDark ? 'gradient-mesh' : ''} ${gameDayMode && isDark ? 'gameday-bg' : ''}`} role="application" aria-label="Raptors Intel Dashboard">
+    <div className={`min-h-screen ${themeClasses} ${!isDark ? 'light' : ''} font-sans selection:bg-raptors-red selection:text-white flex flex-col overflow-x-hidden transition-colors duration-300 ${isDark ? 'gradient-mesh' : ''} ${gameDayMode && isDark ? 'gameday-bg' : ''}`} role="application" aria-label="Raptors Intel Dashboard">
       {/* Animated Background Elements */}
       {isDark && <ParticleSystem isDark={isDark} />}
       {isDark && <GradientOrbs isDark={isDark} />}
