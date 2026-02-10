@@ -9,6 +9,12 @@
     <meta property="og:title" content="Raptors Intel | Game Day Scouting" />
     <meta property="og:description" content="The ultimate Raptors fan scouting dashboard. Deep analytics, rotation simulator, and matchup intelligence." />
     <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://cdn.nba.com/logos/nba/1610612761/primary/L/logo.svg" />
+    <meta property="og:url" content="https://raptors-intel.app" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Raptors Intel | Game Day Scouting" />
+    <meta name="twitter:description" content="The ultimate Raptors fan scouting dashboard. Deep analytics, rotation simulator, and matchup intelligence." />
+    <meta name="twitter:image" content="https://cdn.nba.com/logos/nba/1610612761/primary/L/logo.svg" />
     <link rel="icon" href="https://cdn.nba.com/logos/nba/1610612761/primary/L/logo.svg" type="image/svg+xml" />
     <link rel="manifest" href="manifest.json" />
     <meta name="theme-color" content="#CE1141" />
@@ -2653,7 +2659,10 @@ const fetchLiveRoster = async (teamName) => {
   const espnId = ESPN_TEAM_IDS[teamName];
   if (!espnId) return null;
   try {
-    const res = await fetch(`https://site.api.espn.com/apis/site/v2/sports/basketball/nba/teams/${espnId}/roster`);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
+    const res = await fetch(`https://site.api.espn.com/apis/site/v2/sports/basketball/nba/teams/${espnId}/roster`, { signal: controller.signal });
+    clearTimeout(timeoutId);
     if (!res.ok) return null;
     const data = await res.json();
     const roster = data.athletes.map(a => ({
@@ -2960,6 +2969,47 @@ class ErrorBoundary extends Component {
       );
     }
     
+    return this.props.children;
+  }
+}
+
+// ============================================================
+// LOADING SKELETON
+// ============================================================
+const LoadingSkeleton = ({ lines = 3, className = '' }) => (
+  <div className={`animate-pulse space-y-3 p-4 ${className}`}>
+    {Array.from({ length: lines }).map((_, i) => (
+      <div key={i} className="flex gap-3">
+        {i === 0 && <div className="w-10 h-10 bg-slate-700/50 rounded-lg flex-shrink-0" />}
+        <div className="flex-1 space-y-2">
+          <div className={`h-3 bg-slate-700/50 rounded-full ${i % 2 === 0 ? 'w-3/4' : 'w-1/2'}`} />
+          {i === 0 && <div className="h-3 bg-slate-700/40 rounded-full w-1/3" />}
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
+// ============================================================
+// WIDGET ERROR BOUNDARY - Wraps individual sections
+// ============================================================
+class WidgetErrorBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+  static getDerivedStateFromError() { return { hasError: true }; }
+  componentDidCatch(error, info) { console.error(`Widget error [${this.props.name || 'unknown'}]:`, error, info); }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="glass-card p-4 text-center text-slate-500 text-sm">
+          <span className="text-lg">⚠️</span>
+          <p className="mt-1">{this.props.name || 'Widget'} failed to load</p>
+          <button onClick={() => this.setState({ hasError: false })} className="mt-2 text-xs text-raptors-red hover:underline">Retry</button>
+        </div>
+      );
+    }
     return this.props.children;
   }
 }
@@ -4727,7 +4777,7 @@ const LiveScoreTicker = ({ isDark = true }) => {
           return (
             <div key={i} className="flex items-center gap-3 px-4">
               <div className="flex items-center gap-2">
-                <img src={`https://cdn.nba.com/logos/nba/${game.awayId}/primary/L/logo.svg`} className="w-4 h-4" alt="" />
+                <img loading="lazy" src={`https://cdn.nba.com/logos/nba/${game.awayId}/primary/L/logo.svg`} className="w-4 h-4" alt="" />
                 <span className={`text-xs font-bold ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>{game.away}</span>
                 <span className={`text-xs font-mono font-bold ${game.awayScore > game.homeScore ? 'text-green-500' : isDark ? 'text-white' : 'text-slate-800'}`}>{game.awayScore || '-'}</span>
               </div>
@@ -4737,7 +4787,7 @@ const LiveScoreTicker = ({ isDark = true }) => {
               <div className="flex items-center gap-2">
                 <span className={`text-xs font-mono font-bold ${game.homeScore > game.awayScore ? 'text-green-500' : isDark ? 'text-white' : 'text-slate-800'}`}>{game.homeScore || '-'}</span>
                 <span className={`text-xs font-bold ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>{game.home}</span>
-                <img src={`https://cdn.nba.com/logos/nba/${game.homeId}/primary/L/logo.svg`} className="w-4 h-4" alt="" />
+                <img loading="lazy" src={`https://cdn.nba.com/logos/nba/${game.homeId}/primary/L/logo.svg`} className="w-4 h-4" alt="" />
               </div>
             </div>
           );
@@ -5367,7 +5417,7 @@ const RecentResultsWidget = ({ games, isDark = true }) => {
                   {isWin ? 'W' : 'L'}
                 </span>
                 <div className="flex items-center gap-1.5">
-                  <img src={`https://cdn.nba.com/logos/nba/${game.opponentId}/primary/L/logo.svg`} className="w-4 h-4" alt="" />
+                  <img loading="lazy" src={`https://cdn.nba.com/logos/nba/${game.opponentId}/primary/L/logo.svg`} className="w-4 h-4" alt="" />
                   <span className={`text-[11px] font-medium ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>{game.opponent}</span>
                 </div>
               </div>
@@ -5840,7 +5890,7 @@ const PlayerDeepDive = ({ player, opponentName, onClose, teamName = 'Raptors' })
         <div className="relative h-48 bg-cmd-bg overflow-hidden flex-shrink-0">
              <div className="absolute inset-0 bg-gradient-to-r from-cmd-bg via-cmd-surface to-raptors-red/20"></div>
              {!imgError ? (
-               <img src={getHeadshot(player)} onError={() => setImgError(true)} className="absolute bottom-0 right-10 h-[120%] object-contain" style={{filter: 'drop-shadow(0 0 20px rgba(206,17,65,0.4))'}} alt={player.name} />
+               <img loading="lazy" src={getHeadshot(player)} onError={() => setImgError(true)} className="absolute bottom-0 right-10 h-[120%] object-contain" style={{filter: 'drop-shadow(0 0 20px rgba(206,17,65,0.4))'}} alt={player.name} />
              ) : (
                <div className="absolute bottom-0 right-10 h-[120%] w-48 flex flex-col items-center justify-center bg-gradient-to-br from-raptors-red/20 to-raptors-purple/30 rounded-full" style={{filter: 'drop-shadow(0 0 20px rgba(206,17,65,0.4))'}}>
                  <div className="text-6xl font-black text-raptors-red/80">{getInitials(player.name)}</div>
@@ -6017,7 +6067,7 @@ const ScheduleList = ({ games, onSelectGame, selectedGameId, isDark = true }) =>
                     <div className="flex items-center gap-1.5 mb-0.5">
                         <span className={`text-[10px] font-bold uppercase ${game.isHome ? 'text-slate-500' : 'text-slate-400'}`}>{game.isHome ? 'VS' : '@'}</span>
                         <div className="flex items-center gap-1.5 min-w-0">
-                             {game.opponentId ? (<img src={`https://cdn.nba.com/logos/nba/${game.opponentId}/primary/L/logo.svg`} className="w-4 h-4 object-contain" alt={game.opponent} />) : (<div className={`w-4 h-4 rounded-full ${isDark ? 'bg-cmd-border' : 'bg-light-border'}`}></div>)}
+                             {game.opponentId ? (<img loading="lazy" src={`https://cdn.nba.com/logos/nba/${game.opponentId}/primary/L/logo.svg`} className="w-4 h-4 object-contain" alt={game.opponent} />) : (<div className={`w-4 h-4 rounded-full ${isDark ? 'bg-cmd-border' : 'bg-light-border'}`}></div>)}
                              <span className={`font-bold ${isDark ? 'text-slate-200' : 'text-slate-700'} text-xs truncate leading-none`}>{game.opponent}</span>
                         </div>
                     </div>
@@ -6051,7 +6101,7 @@ const PlayerCard = ({ player, onClick, onDeepDive, isOpponent, isSelected }) => 
     return (
         <div className={`card-3d group relative rounded-xl overflow-hidden transition-all duration-300 cursor-pointer ${isSelected ? 'ring-2 ring-raptors-red scale-105 z-20 shadow-xl shadow-raptors-red/20' : 'hover-lift'} bg-cmd-card border border-cmd-border h-40 flex flex-col justify-end`} onClick={onClick}>
             <div className="absolute inset-0 bg-gradient-to-t from-cmd-bg via-transparent to-transparent opacity-95"></div>
-            {!imgError ? (<img src={getHeadshot(player)} onError={() => setImgError(true)} className={`absolute top-0 left-1/2 -translate-x-1/2 w-[140%] max-w-none object-cover object-top h-full ${isOpponent ? 'grayscale-[0.3]' : ''}`} alt={player.name} />
+            {!imgError ? (<img loading="lazy" src={getHeadshot(player)} onError={() => setImgError(true)} className={`absolute top-0 left-1/2 -translate-x-1/2 w-[140%] max-w-none object-cover object-top h-full ${isOpponent ? 'grayscale-[0.3]' : ''}`} alt={player.name} />
             ) : (
               <div className={`absolute inset-0 flex flex-col items-center justify-center ${isOpponent ? 'bg-gradient-to-br from-blue-900/50 to-blue-950/80' : 'bg-gradient-to-br from-raptors-red/20 to-raptors-purple/30'}`}>
                 <div className={`text-3xl font-black ${isOpponent ? 'text-blue-400' : 'text-raptors-red'} opacity-80`}>{getInitials(player.name)}</div>
@@ -6083,7 +6133,7 @@ const BenchCard = ({ player, onClick, isOpponent, isHighlighted }) => {
     };
     return (
         <div onClick={onClick} className={`flex-shrink-0 w-16 h-20 rounded-lg overflow-hidden relative cursor-pointer group transition-all bg-cmd-card border ${isHighlighted ? 'ring-2 ring-raptors-red/50 border-raptors-red/30 shadow-lg shadow-raptors-red/10' : 'border-cmd-border hover:ring-2 hover:ring-raptors-red/30 hover:border-raptors-red/20'}`} style={isHighlighted ? {animation: 'border-glow 2s ease-in-out infinite'} : {}}>
-             {!imgError ? (<img src={getHeadshot(player)} onError={() => setImgError(true)} className={`w-full h-full object-cover object-top ${isOpponent ? 'grayscale-[0.3]' : ''}`} alt={player.name} />) : (
+             {!imgError ? (<img loading="lazy" src={getHeadshot(player)} onError={() => setImgError(true)} className={`w-full h-full object-cover object-top ${isOpponent ? 'grayscale-[0.3]' : ''}`} alt={player.name} />) : (
                <div className={`w-full h-full flex flex-col items-center justify-center ${isOpponent ? 'bg-gradient-to-br from-blue-900/30 to-blue-950/50' : 'bg-gradient-to-br from-raptors-red/10 to-raptors-purple/20'}`}>
                  <div className={`text-sm font-black ${isOpponent ? 'text-blue-400/70' : 'text-raptors-red/70'}`}>{getInitials(player.name)}</div>
                  <div className={`text-[9px] font-mono ${isOpponent ? 'text-blue-500/50' : 'text-raptors-red/50'}`}>#{player.number}</div>
@@ -6234,7 +6284,7 @@ const MatchupAnalyzer = ({ game }) => {
       <div className="glass-card gradient-border p-8 relative overflow-hidden animate-slide-up">
          <div className="absolute inset-0 bg-grid opacity-30"></div>
          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full" style={{background: 'radial-gradient(circle, rgba(206,17,65,0.08) 0%, transparent 70%)'}}></div>
-         <div className="absolute top-0 right-0 p-4 opacity-[0.04] animate-float"><img src={`https://cdn.nba.com/logos/nba/${game.opponentId}/primary/L/logo.svg`} className="w-64 h-64" alt="logo" /></div>
+         <div className="absolute top-0 right-0 p-4 opacity-[0.04] animate-float"><img loading="lazy" src={`https://cdn.nba.com/logos/nba/${game.opponentId}/primary/L/logo.svg`} className="w-64 h-64" alt="logo" /></div>
          <div className="relative z-10 flex flex-col md:flex-row gap-8">
              <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2"><span className="bg-raptors-red/20 text-raptors-red border border-raptors-red/30 px-2 py-0.5 rounded text-xs font-bold uppercase">Game Prep</span><span className="text-slate-500 text-sm font-mono">{game.date} &bull; {game.venue}</span></div>
@@ -6430,7 +6480,7 @@ const MatchupAnalyzer = ({ game }) => {
                   </div>
                   <div className="flex items-center justify-between p-2 bg-cmd-bg/50 rounded-lg border border-cmd-border">
                       <div className="flex items-center gap-2">
-                          {game.opponentId && <img src={`https://cdn.nba.com/logos/nba/${game.opponentId}/primary/L/logo.svg`} className="w-5 h-5" alt="" />}
+                          {game.opponentId && <img loading="lazy" src={`https://cdn.nba.com/logos/nba/${game.opponentId}/primary/L/logo.svg`} className="w-5 h-5" alt="" />}
                           <span className="text-xs font-bold text-white">{game.opponent?.slice(0,3).toUpperCase()}</span>
                       </div>
                       <div className="flex gap-3 text-xs">
@@ -6747,7 +6797,7 @@ const MatchupAnalyzer = ({ game }) => {
                 </div>
                 <div className="bg-gradient-to-br from-blue-500/5 to-cmd-surface/50 rounded-xl p-4 border border-blue-500/10">
                     <div className="flex justify-between items-end mb-4 pb-2 border-b-2 border-blue-500/50">
-                        <div className="flex items-center gap-2">{game.opponentId && <img src={`https://cdn.nba.com/logos/nba/${game.opponentId}/primary/L/logo.svg`} className="w-6 h-6" alt={game.opponent} />}<h3 className="text-blue-400 font-black uppercase text-sm tracking-wider">{game.opponent}</h3></div>
+                        <div className="flex items-center gap-2">{game.opponentId && <img loading="lazy" src={`https://cdn.nba.com/logos/nba/${game.opponentId}/primary/L/logo.svg`} className="w-6 h-6" alt={game.opponent} />}<h3 className="text-blue-400 font-black uppercase text-sm tracking-wider">{game.opponent}</h3></div>
                         <div className="flex items-center gap-3">
                             <div className="text-[10px] font-mono text-slate-500">ORTG <span className="font-bold text-white">{opponentAgg.ortg.toFixed(1)}</span></div>
                             <div className="text-[10px] font-mono text-slate-500">DRTG <span className="font-bold text-white">{opponentAgg.drtg.toFixed(1)}</span></div>
@@ -6849,7 +6899,7 @@ const StandingsWidget = ({ isDark = true }) => {
           <div key={team.abbr} className={`flex items-center justify-between px-3 py-1.5 text-xs ${team.highlight ? 'bg-raptors-red/10' : ''}`}>
             <div className="flex items-center gap-2">
               <span className="text-slate-500 w-4">{team.rank}</span>
-              <img src={`https://cdn.nba.com/logos/nba/${team.id}/primary/L/logo.svg`} className="w-4 h-4" alt="" />
+              <img loading="lazy" src={`https://cdn.nba.com/logos/nba/${team.id}/primary/L/logo.svg`} className="w-4 h-4" alt="" />
               <span className={team.highlight ? 'text-raptors-red font-bold' : isDark ? 'text-slate-300' : 'text-slate-700'}>{team.abbr}</span>
             </div>
             <span className={`font-mono ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{team.wins}-{team.losses}</span>
@@ -7958,7 +8008,7 @@ const BettingHubWidget = ({ isDark = true, game }) => {
           <span>Updated: {lastFetch.toLocaleTimeString()}</span>
           <div className="flex items-center gap-2">
             {remaining && <span>Credits: {remaining}</span>}
-            <button onClick={fetchOdds} className="text-emerald-400 hover:text-emerald-300 underline">Refresh</button>
+            <button onClick={fetchOdds} aria-label="Refresh betting odds" className="text-emerald-400 hover:text-emerald-300 underline">Refresh</button>
           </div>
         </div>
       )}
@@ -10749,6 +10799,13 @@ const DraftWatchWidget = ({ isDark = true }) => {
 // PLAYER DETAIL MODAL
 // ============================================================
 const PlayerDetailModal = ({ player, isDark = true, onClose }) => {
+  // Keyboard: Escape to close
+  React.useEffect(() => {
+    const handler = (e) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [onClose]);
+
   if (!player) return null;
   
   const stats = player.seasonStats || {};
@@ -10773,12 +10830,12 @@ const PlayerDetailModal = ({ player, isDark = true, onClose }) => {
   ];
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in" onClick={onClose}>
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in" role="dialog" aria-modal="true" aria-label={`Player details for ${player.name}`} onClick={onClose}>
       <div className={`${isDark ? 'bg-cmd-surface border-cmd-border' : 'bg-white border-light-border'} border rounded-2xl max-w-lg w-full max-h-[85vh] overflow-y-auto shadow-2xl transform transition-all`}
         onClick={e => e.stopPropagation()} style={{animation: 'slide-up 0.3s ease-out'}}>
         {/* Header */}
         <div className="relative p-5 bg-gradient-to-r from-raptors-red/30 to-raptors-purple/20 rounded-t-2xl">
-          <button onClick={onClose} className={`absolute top-3 right-3 p-1.5 rounded-full ${isDark ? 'hover:bg-white/10 text-white' : 'hover:bg-black/10 text-slate-700'} transition-colors`}>
+          <button onClick={onClose} aria-label="Close player details" className={`absolute top-3 right-3 p-1.5 rounded-full ${isDark ? 'hover:bg-white/10 text-white' : 'hover:bg-black/10 text-slate-700'} transition-colors`}>
             <X className="w-5 h-5" />
           </button>
           <div className="flex items-center gap-4">
@@ -11268,11 +11325,11 @@ function App() {
             </div>
             <FanPollWidget isDark={isDark} />
             <ScheduleList games={games} onSelectGame={setSelectedGame} selectedGameId={selectedGame?.id} isDark={isDark} />
-            <StandingsWidget isDark={isDark} />
+            <WidgetErrorBoundary name="Standings"><StandingsWidget isDark={isDark} /></WidgetErrorBoundary>
             <SeasonTrackerWidget isDark={isDark} games={games} />
             <RaptorsPulseWidget isDark={isDark} />
             <TeamSalaryWidget isDark={isDark} teamName="Raptors" opponentName={selectedGame?.opponent} />
-            {selectedGame?.status === 'upcoming' && <BettingHubWidget isDark={isDark} game={selectedGame} />}
+            {selectedGame?.status === 'upcoming' && <WidgetErrorBoundary name="Betting Hub"><BettingHubWidget isDark={isDark} game={selectedGame} /></WidgetErrorBoundary>}
             <QuickCompareWidget isDark={isDark} />
             <HistoricalH2HWidget isDark={isDark} opponent={selectedGame?.opponent} />
             <NetRatingWidget isDark={isDark} />
@@ -11376,7 +11433,7 @@ function App() {
                 <p className={`font-medium ${isDark ? 'text-slate-400' : 'text-slate-600'} mt-4`}>Loading Season Data...</p>
               </div>
             ) : selectedGame ? (
-              <MatchupAnalyzer game={selectedGame} isDark={isDark} />
+              <WidgetErrorBoundary name="Matchup Analyzer"><MatchupAnalyzer game={selectedGame} isDark={isDark} /></WidgetErrorBoundary>
             ) : (
               <div className={`h-full flex flex-col items-center justify-center ${isDark ? 'glass-card text-slate-500' : 'bg-white border border-light-border rounded-2xl shadow-lg text-slate-400'}`}><LayoutDashboard className="w-12 h-12 mb-4 opacity-30" /><p>Select a game from the calendar to open the scouting report.</p></div>
             )}
@@ -11413,5 +11470,15 @@ const rootElement = document.getElementById('root');
 const root = ReactDOM.createRoot(rootElement);
 root.render(<ErrorBoundary><App /></ErrorBoundary>);
     </script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').then(
+          (reg) => console.log('SW registered:', reg.scope),
+          (err) => console.warn('SW registration failed:', err)
+        );
+      });
+    }
+  </script>
   </body>
 </html>
