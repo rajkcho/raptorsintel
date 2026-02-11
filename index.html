@@ -3133,7 +3133,7 @@ const DRAFT_DATA = {
 const INJURY_DATA = [
   { player: "Jakob Poeltl", status: "Out", injury: "Back", returnDate: "TBD", gamesOut: 1, ppg: 14.2, mpg: 30.5, impact: 8.5 },
   { player: "Chucky Hepburn", status: "Out", injury: "Undisclosed", returnDate: "TBD", gamesOut: 3, ppg: 1.8, mpg: 8.0, impact: 2.0 },
-  { player: "Collin Murray-Boyles", status: "Day-To-Day", injury: "Left thumb (aggravated vs Pacers)", returnDate: "Feb 11, 2026", gamesOut: 0, ppg: 8.6, mpg: 22.0, impact: 6.0 },
+  { player: "Collin Murray-Boyles", status: "Out", injury: "Left thumb (aggravated vs Pacers)", returnDate: "TBD", gamesOut: 2, ppg: 8.6, mpg: 22.0, impact: 6.0 },
 ];
 
 // ============================================================
@@ -3171,13 +3171,13 @@ const PLAYER_LAST_5_GAMES = {
 };
 
 const RAPTORS_NEWS = [
-  { id: 1, headline: "Brandon Ingram Acquired from Pelicans in Blockbuster Deadline Deal", source: "ESPN", timeAgo: "4d ago", category: "Trade Rumor" },
-  { id: 2, headline: "Poeltl Out with Back Injury — Timeline Uncertain", source: "Sportsnet", timeAgo: "1d ago", category: "Injury" },
+  { id: 1, headline: "Brandon Ingram Acquired from Pelicans in Blockbuster Deadline Deal", source: "ESPN", timeAgo: "5d ago", category: "Trade Rumor" },
+  { id: 2, headline: "Poeltl Out with Back Injury — Timeline Uncertain", source: "Sportsnet", timeAgo: "3d ago", category: "Injury" },
   { id: 3, headline: "Raptors Host Pistons Tuesday in Key Playoff Positioning Game", source: "NBA.com", timeAgo: "6h ago", category: "Recap" },
   { id: 4, headline: "Barnes All-Star Selection Cements His Rise as Franchise Cornerstone", source: "The Athletic", timeAgo: "5d ago", category: "Award" },
   { id: 5, headline: "Trayce Jackson-Davis Acquired from Warriors at Deadline", source: "ESPN", timeAgo: "5d ago", category: "Trade Rumor" },
-  { id: 6, headline: "Murray-Boyles Day-to-Day with Thumb Issue", source: "Raptors Republic", timeAgo: "1d ago", category: "Injury" },
-  { id: 7, headline: "Chris Paul Waived After Being Acquired from Clippers", source: "TSN", timeAgo: "4d ago", category: "Trade" },
+  { id: 6, headline: "Murray-Boyles Out with Thumb Injury", source: "Raptors Republic", timeAgo: "3d ago", category: "Injury" },
+  { id: 7, headline: "Chris Paul Waived After Being Acquired from Clippers", source: "TSN", timeAgo: "5d ago", category: "Trade" },
 ];
 
 const OPPONENT_DATA = {
@@ -3656,7 +3656,7 @@ const analyzeGameMatchup = async (opponent) => {
         injuries: [
             { player: "Jakob Poeltl", status: "Out", details: "Back — ruled out Feb 8 vs Pacers", team: "raptors" },
             { player: "Chucky Hepburn", status: "Out", details: "Out — no timetable", team: "raptors" },
-            { player: "Collin Murray-Boyles", status: "Questionable", details: "Left thumb — day-to-day", team: "raptors" },
+            { player: "Collin Murray-Boyles", status: "Out", details: "Left thumb — out indefinitely", team: "raptors" },
             { player: "Brandon Ingram", status: "Active", details: "Acquired via trade from Pelicans — available", team: "raptors" },
             { player: "Trayce Jackson-Davis", status: "Active", details: "Acquired via trade — available", team: "raptors" },
             { player: opponentRoster[0]?.name || "Star Player", status: "Active", details: "Full go", team: "opponent" },
@@ -13236,7 +13236,7 @@ const InsightsTicker = ({ isDark }) => {
     "📈 Raptors 7-3 in last 10 — 5th seed in East",
     "🏠 16-12 at home, next: vs Pistons (39-13)",
     "⚡ W2 streak — momentum building into playoff push",
-    "🎯 Brandon Ingram debut adds elite scoring to lineup",
+    "🎯 Brandon Ingram adds elite scoring punch since trade deadline",
     "📊 114.8 PPG (top 10 in NBA) vs 112.6 opponent PPG",
   ];
   
@@ -15382,7 +15382,7 @@ const GamePredictionsWidget = ({ isDark = true, opponent = 'Pistons' }) => {
   const [overUnder, setOverUnder] = useState(() => localStorage.getItem('ri-prediction-ou') || 'over');
   const [submitted, setSubmitted] = useState(() => localStorage.getItem('ri-prediction-submitted') === 'true');
 
-  const players = ['Scottie Barnes', 'RJ Barrett', 'Immanuel Quickley', 'Gradey Dick', 'Jakob Poeltl', 'Jalen Shead', 'Brandon Ingram'];
+  const players = ['Scottie Barnes', 'RJ Barrett', 'Immanuel Quickley', 'Gradey Dick', 'Jakob Poeltl', 'Jamal Shead', 'Brandon Ingram'];
   const totalLine = 220.5;
   const communityAvg = { tor: 114, opp: 106, mvp: 'Scottie Barnes', over: 62 };
 
@@ -16415,6 +16415,169 @@ function App() {
 }
 
 // ============================================================
+// ============================================================
+// DATA INTEGRITY TESTS
+// Runs on load in development, validates all hardcoded data
+// Add ?test=true to URL to see results, or check console
+// ============================================================
+const runDataIntegrityTests = async () => {
+  const results = [];
+  const pass = (name) => results.push({ name, status: 'PASS' });
+  const fail = (name, msg) => results.push({ name, status: 'FAIL', msg });
+  const warn = (name, msg) => results.push({ name, status: 'WARN', msg });
+
+  // Test 1: Verify roster against ESPN
+  try {
+    const res = await fetch('https://site.api.espn.com/apis/site/v2/sports/basketball/nba/teams/TOR/roster');
+    const data = await res.json();
+    const espnRoster = (data.athletes || []).map(a => a.displayName);
+    
+    // Check RAPTORS_ROSTER has correct players
+    const localRoster = (typeof RAPTORS_ROSTER !== 'undefined') ? RAPTORS_ROSTER.map(p => p.name) : [];
+    const missingFromLocal = espnRoster.filter(p => !localRoster.some(lp => lp.includes(p.split(' ').pop())));
+    const extraInLocal = localRoster.filter(p => !espnRoster.some(ep => ep.includes(p.split(' ').pop())));
+    
+    if (missingFromLocal.length === 0 && extraInLocal.length === 0) pass('Roster matches ESPN');
+    else {
+      if (missingFromLocal.length > 0) fail('Roster missing players', missingFromLocal.join(', '));
+      if (extraInLocal.length > 0) warn('Roster has extra players', extraInLocal.join(', '));
+    }
+
+    // Check injuries
+    const espnInjuries = {};
+    (data.athletes || []).forEach(a => {
+      if (a.injuries && a.injuries.length > 0) {
+        espnInjuries[a.displayName] = a.injuries[0].status;
+      }
+    });
+    Object.entries(espnInjuries).forEach(([player, status]) => {
+      console.log(`[DATA CHECK] ESPN Injury: ${player} = ${status}`);
+    });
+    pass('Injury data logged');
+  } catch(e) {
+    warn('Roster check failed', e.message);
+  }
+
+  // Test 2: Verify record
+  try {
+    const res = await fetch('https://site.api.espn.com/apis/site/v2/sports/basketball/nba/teams/TOR/schedule');
+    const data = await res.json();
+    const completed = (data.events || []).filter(e => e.competitions?.[0]?.status?.type?.completed);
+    const wins = completed.filter(e => {
+      const tor = e.competitions[0].competitors.find(c => c.team?.abbreviation === 'TOR');
+      return tor?.winner;
+    }).length;
+    const losses = completed.length - wins;
+    
+    if (typeof RAPTORS_STATS !== 'undefined') {
+      if (RAPTORS_STATS.wins === wins && RAPTORS_STATS.losses === losses) {
+        pass(`Record correct: ${wins}-${losses}`);
+      } else {
+        fail('Record mismatch', `Local: ${RAPTORS_STATS.wins}-${RAPTORS_STATS.losses}, ESPN: ${wins}-${losses}`);
+      }
+    }
+
+    // Verify streak
+    let streakCount = 0, streakType = null;
+    for (const e of [...completed].reverse()) {
+      const tor = e.competitions[0].competitors.find(c => c.team?.abbreviation === 'TOR');
+      const won = tor?.winner;
+      if (streakType === null) { streakType = won ? 'W' : 'L'; streakCount = 1; }
+      else if ((won && streakType === 'W') || (!won && streakType === 'L')) streakCount++;
+      else break;
+    }
+    const espnStreak = `${streakType}${streakCount}`;
+    if (typeof RAPTORS_STATS !== 'undefined') {
+      if (RAPTORS_STATS.streak === espnStreak) pass(`Streak correct: ${espnStreak}`);
+      else fail('Streak mismatch', `Local: ${RAPTORS_STATS.streak}, ESPN: ${espnStreak}`);
+    }
+
+    // Verify last 5 game results
+    const last5 = completed.slice(-5);
+    last5.forEach(e => {
+      const tor = e.competitions[0].competitors.find(c => c.team?.abbreviation === 'TOR');
+      const opp = e.competitions[0].competitors.find(c => c.team?.abbreviation !== 'TOR');
+      const torScore = typeof tor.score === 'object' ? tor.score.displayValue : tor.score;
+      const oppScore = typeof opp.score === 'object' ? opp.score.displayValue : opp.score;
+      const result = tor.winner ? 'W' : 'L';
+      const date = e.date?.substring(0, 10);
+      console.log(`[DATA CHECK] Game: ${date} ${result} vs ${opp.team.abbreviation} ${torScore}-${oppScore}`);
+    });
+    pass('Last 5 games logged');
+  } catch(e) {
+    warn('Schedule check failed', e.message);
+  }
+
+  // Test 3: Verify standings
+  try {
+    const res = await fetch('https://site.api.espn.com/apis/v2/sports/basketball/nba/standings');
+    const data = await res.json();
+    const east = data.children?.find(c => c.name?.includes('East'));
+    if (east) {
+      const entries = east.standings?.entries || [];
+      const getWins = (e) => {
+        const s = e.stats?.find(s => s.name === 'wins');
+        return s ? parseFloat(s.displayValue || s.value) : 0;
+      };
+      entries.sort((a, b) => getWins(b) - getWins(a));
+      const tor = entries.find(e => e.team?.abbreviation === 'TOR');
+      const torIdx = entries.indexOf(tor);
+      const torSeed = torIdx + 1;
+      const torWins = getWins(tor);
+      console.log(`[DATA CHECK] ESPN: Raptors are ${torSeed}th seed with ${torWins} wins`);
+      
+      // Log top 5 for verification
+      entries.slice(0, 5).forEach((e, i) => {
+        const getLosses = (e) => { const s = e.stats?.find(s => s.name === 'losses'); return s ? parseFloat(s.displayValue || s.value) : 0; };
+        console.log(`[DATA CHECK] ${i+1}. ${e.team?.displayName}: ${getWins(e)}-${getLosses(e)}`);
+      });
+      pass(`Standings: TOR is ${torSeed}th seed`);
+    }
+  } catch(e) {
+    warn('Standings check failed', e.message);
+  }
+
+  // Test 4: No Chris Paul on active roster
+  if (typeof RAPTORS_ROSTER !== 'undefined') {
+    const hasCP3 = RAPTORS_ROSTER.some(p => p.name?.includes('Chris Paul') || p.name?.includes('CP3'));
+    if (!hasCP3) pass('Chris Paul not in active roster');
+    else fail('Chris Paul found in active roster', 'Should be waived');
+  }
+
+  // Test 5: Brandon Ingram IS on roster
+  if (typeof RAPTORS_ROSTER !== 'undefined') {
+    const hasIngram = RAPTORS_ROSTER.some(p => p.name?.includes('Ingram'));
+    if (hasIngram) pass('Brandon Ingram in roster');
+    else fail('Brandon Ingram missing from roster', 'Should be on team');
+  }
+
+  // Print results
+  console.log('%c=== RAPTORS INTEL DATA INTEGRITY TESTS ===', 'font-weight:bold;font-size:14px;color:#CE1141');
+  let passes = 0, fails = 0, warns = 0;
+  results.forEach(r => {
+    if (r.status === 'PASS') { console.log(`%c ✅ ${r.name}`, 'color:green'); passes++; }
+    else if (r.status === 'FAIL') { console.log(`%c ❌ ${r.name}: ${r.msg}`, 'color:red;font-weight:bold'); fails++; }
+    else { console.log(`%c ⚠️ ${r.name}: ${r.msg}`, 'color:orange'); warns++; }
+  });
+  console.log(`%c Results: ${passes} passed, ${fails} failed, ${warns} warnings`, 'font-weight:bold');
+  
+  // Show on page if ?test=true
+  if (window.location.search.includes('test=true')) {
+    const div = document.createElement('div');
+    div.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:#111;color:#fff;padding:16px;font-family:monospace;font-size:12px;max-height:50vh;overflow-y:auto;border-bottom:3px solid #CE1141';
+    div.innerHTML = '<h3 style="color:#CE1141;margin:0 0 8px">🏀 Data Integrity Tests</h3>' + 
+      results.map(r => `<div style="color:${r.status==='PASS'?'#22c55e':r.status==='FAIL'?'#ef4444':'#f59e0b'}">${r.status==='PASS'?'✅':r.status==='FAIL'?'❌':'⚠️'} ${r.name}${r.msg?' — '+r.msg:''}</div>`).join('') +
+      `<div style="margin-top:8px;font-weight:bold">${passes} passed, ${fails} failed, ${warns} warnings</div>` +
+      '<button onclick="this.parentElement.remove()" style="position:absolute;top:8px;right:12px;background:none;border:none;color:#fff;font-size:18px;cursor:pointer">✕</button>';
+    document.body.prepend(div);
+  }
+  
+  return { passes, fails, warns, results };
+};
+
+// Run tests on load
+setTimeout(runDataIntegrityTests, 3000);
+
 // RENDER
 // ============================================================
 const rootElement = document.getElementById('root');
