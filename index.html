@@ -14561,6 +14561,555 @@ function initAnimatedCounters() {
   document.querySelectorAll('.stat-counter[data-target]').forEach(el => observer.observe(el));
 }
 
+// ============================================================
+// WIDGET 1: SHOT DISTRIBUTION BREAKDOWN
+// ============================================================
+const ShotDistributionWidget = ({ isDark = true }) => {
+  const [selectedSegment, setSelectedSegment] = useState(null);
+  
+  const shotData = [
+    { id: '2pt-paint', label: '2PT Paint', pct: 35, color: '#ef4444', leagueAvg: 32, topScorers: ['Poeltl 8.2', 'Barnes 6.4', 'TJD 4.1'] },
+    { id: '2pt-mid', label: '2PT Mid-Range', pct: 12, color: '#f97316', leagueAvg: 14, topScorers: ['Barrett 3.8', 'Ingram 2.9', 'Barnes 2.1'] },
+    { id: '3pt', label: '3-Pointers', pct: 28, color: '#3b82f6', leagueAvg: 30, topScorers: ['Dick 5.6', 'Barrett 4.2', 'Quickley 3.8'] },
+    { id: 'ft', label: 'Free Throws', pct: 18, color: '#8b5cf6', leagueAvg: 17, topScorers: ['Barnes 4.1', 'Barrett 3.6', 'Ingram 3.2'] },
+    { id: 'fastbreak', label: 'Fast Break', pct: 7, color: '#10b981', leagueAvg: 7, topScorers: ['Barrett 2.8', 'Quickley 1.9', 'Shead 1.4'] }
+  ];
+  
+  const total = shotData.reduce((sum, d) => sum + d.pct, 0);
+  let currentAngle = -90;
+  
+  const segments = shotData.map(item => {
+    const angle = (item.pct / total) * 360;
+    const startAngle = currentAngle;
+    const endAngle = currentAngle + angle;
+    currentAngle = endAngle;
+    
+    const startRad = (startAngle * Math.PI) / 180;
+    const endRad = (endAngle * Math.PI) / 180;
+    
+    const x1 = 100 + 60 * Math.cos(startRad);
+    const y1 = 100 + 60 * Math.sin(startRad);
+    const x2 = 100 + 60 * Math.cos(endRad);
+    const y2 = 100 + 60 * Math.sin(endRad);
+    
+    const largeArc = angle > 180 ? 1 : 0;
+    const pathData = `M 100 100 L ${x1} ${y1} A 60 60 0 ${largeArc} 1 ${x2} ${y2} Z`;
+    
+    const midAngle = (startAngle + endAngle) / 2;
+    const midRad = (midAngle * Math.PI) / 180;
+    const labelX = 100 + 75 * Math.cos(midRad);
+    const labelY = 100 + 75 * Math.sin(midRad);
+    
+    return { ...item, pathData, labelX, labelY };
+  });
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4 h-full`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          🎯 Shot Distribution
+        </h3>
+        <span className={`text-[8px] px-1.5 py-0.5 rounded ${isDark ? 'bg-cmd-bg text-slate-400' : 'bg-light-card text-slate-500'}`}>Points Source</span>
+      </div>
+      
+      <div className="flex flex-col items-center">
+        <svg viewBox="0 0 200 200" className="w-full max-w-[200px]">
+          <circle cx="100" cy="100" r="35" fill={isDark ? '#1a1f2e' : '#f1f5f9'} stroke={isDark ? '#334155' : '#cbd5e1'} strokeWidth="1"/>
+          {segments.map((seg, i) => (
+            <g key={seg.id} onMouseEnter={() => setSelectedSegment(seg.id)} onMouseLeave={() => setSelectedSegment(null)} style={{cursor:'pointer'}}>
+              <path d={seg.pathData} fill={seg.color} opacity={selectedSegment === seg.id ? 1 : selectedSegment ? 0.3 : 0.85} stroke={isDark ? '#0a0e17' : '#ffffff'} strokeWidth="2" style={{transition:'opacity 0.2s'}}/>
+              <text x={seg.labelX} y={seg.labelY} textAnchor="middle" dominantBaseline="middle" fill="white" fontSize="11" fontWeight="800" style={{textShadow:'0 1px 3px rgba(0,0,0,0.9)',pointerEvents:'none'}}>{seg.pct}%</text>
+            </g>
+          ))}
+          <text x="100" y="95" textAnchor="middle" fill={isDark ? '#64748b' : '#94a3b8'} fontSize="10" fontWeight="600">Points</text>
+          <text x="100" y="108" textAnchor="middle" fill={isDark ? '#cbd5e1' : '#475569'} fontSize="14" fontWeight="900">From</text>
+        </svg>
+        
+        <div className="w-full mt-3 space-y-1">
+          {shotData.map(item => (
+            <div key={item.id} className={`flex items-center justify-between p-1.5 rounded ${selectedSegment === item.id ? (isDark ? 'bg-cmd-card' : 'bg-light-card') : ''}`} onMouseEnter={() => setSelectedSegment(item.id)} onMouseLeave={() => setSelectedSegment(null)} style={{cursor:'pointer'}}>
+              <div className="flex items-center gap-1.5">
+                <div className="w-2 h-2 rounded-full" style={{backgroundColor:item.color}}/>
+                <span className={`text-[9px] font-medium ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>{item.label}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className={`text-[8px] ${item.pct > item.leagueAvg ? 'text-green-400' : 'text-red-400'}`}>
+                  {item.pct > item.leagueAvg ? '+' : ''}{(item.pct - item.leagueAvg).toFixed(1)}% vs avg
+                </span>
+                <span className={`text-[9px] font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>{item.pct}%</span>
+              </div>
+            </div>
+          ))}
+        </div>
+        
+        {selectedSegment && (() => {
+          const seg = shotData.find(s => s.id === selectedSegment);
+          return (
+            <div className={`mt-2 p-2 rounded-lg w-full ${isDark ? 'bg-cmd-bg' : 'bg-light-card'}`}>
+              <div className={`text-[9px] font-bold ${isDark ? 'text-white' : 'text-slate-800'} mb-1`}>Top Contributors</div>
+              <div className={`text-[8px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+                {seg.topScorers.join(' • ')}
+              </div>
+            </div>
+          );
+        })()}
+      </div>
+    </div>
+  );
+};
+
+// ============================================================
+// WIDGET 2: WIN PROBABILITY HISTORY
+// ============================================================
+const WinProbabilityWidget = ({ isDark = true }) => {
+  const [hoveredPoint, setHoveredPoint] = useState(null);
+  
+  // W vs Pacers 122-104 - Raptors dominated
+  const winProbData = [
+    { time: 'Q1 Start', min: 0, prob: 50, score: '0-0' },
+    { time: 'Q1 5:00', min: 7, prob: 62, score: '14-9' },
+    { time: 'Q1 End', min: 12, prob: 68, score: '28-22' },
+    { time: 'Q2 6:00', min: 18, prob: 75, score: '46-35' },
+    { time: 'Q2 End', min: 24, prob: 82, score: '64-51', key: true, label: 'Halftime Lead' },
+    { time: 'Q3 8:00', min: 28, prob: 78, score: '72-59' },
+    { time: 'Q3 4:00', min: 32, prob: 88, score: '88-68', key: true, label: '20pt Lead' },
+    { time: 'Q3 End', min: 36, prob: 91, score: '96-77' },
+    { time: 'Q4 6:00', min: 42, prob: 94, score: '110-90' },
+    { time: 'Q4 End', min: 48, prob: 99, score: '122-104', key: true, label: 'Final' }
+  ];
+  
+  const width = 600;
+  const height = 160;
+  const padding = { top: 20, right: 40, bottom: 25, left: 40 };
+  const chartWidth = width - padding.left - padding.right;
+  const chartHeight = height - padding.top - padding.bottom;
+  
+  const xScale = (min) => padding.left + (min / 48) * chartWidth;
+  const yScale = (prob) => padding.top + ((100 - prob) / 100) * chartHeight;
+  
+  const areaPath = winProbData.map((d, i) => {
+    const x = xScale(d.min);
+    const y = yScale(d.prob);
+    if (i === 0) return `M ${x} ${yScale(0)} L ${x} ${y}`;
+    return `L ${x} ${y}`;
+  }).join(' ') + ` L ${xScale(48)} ${yScale(0)} Z`;
+  
+  const linePath = winProbData.map((d, i) => {
+    const x = xScale(d.min);
+    const y = yScale(d.prob);
+    return i === 0 ? `M ${x} ${y}` : `L ${x} ${y}`;
+  }).join(' ');
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-2">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          📈 Win Probability History
+        </h3>
+        <span className={`text-[8px] px-1.5 py-0.5 rounded bg-green-500/20 text-green-400 font-bold`}>W 122-104 vs IND</span>
+      </div>
+      
+      <svg viewBox={`0 0 ${width} ${height}`} className="w-full" style={{overflow:'visible'}}>
+        <defs>
+          <linearGradient id="winProbGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#10b981" stopOpacity="0.6"/>
+            <stop offset="100%" stopColor="#10b981" stopOpacity="0.1"/>
+          </linearGradient>
+        </defs>
+        
+        {/* Grid lines */}
+        {[0, 25, 50, 75, 100].map(prob => (
+          <line key={prob} x1={padding.left} y1={yScale(prob)} x2={width - padding.right} y2={yScale(prob)} stroke={isDark ? '#334155' : '#e2e8f0'} strokeWidth="1" strokeDasharray="3,3"/>
+        ))}
+        
+        {/* Quarter markers */}
+        {[12, 24, 36].map(min => (
+          <line key={min} x1={xScale(min)} y1={padding.top} x2={xScale(min)} y2={height - padding.bottom} stroke={isDark ? '#475569' : '#cbd5e1'} strokeWidth="1" strokeDasharray="5,5"/>
+        ))}
+        
+        {/* 50% line (highlighted) */}
+        <line x1={padding.left} y1={yScale(50)} x2={width - padding.right} y2={yScale(50)} stroke={isDark ? '#64748b' : '#94a3b8'} strokeWidth="1.5"/>
+        
+        {/* Area fill */}
+        <path d={areaPath} fill="url(#winProbGradient)"/>
+        
+        {/* Line */}
+        <path d={linePath} fill="none" stroke="#10b981" strokeWidth="2.5"/>
+        
+        {/* Key moments */}
+        {winProbData.filter(d => d.key).map((d, i) => (
+          <g key={i}>
+            <circle cx={xScale(d.min)} cy={yScale(d.prob)} r="5" fill="#10b981" stroke={isDark ? '#0a0e17' : '#ffffff'} strokeWidth="2"/>
+            <text x={xScale(d.min)} y={yScale(d.prob) - 10} textAnchor="middle" fill={isDark ? '#10b981' : '#059669'} fontSize="8" fontWeight="700">{d.label}</text>
+          </g>
+        ))}
+        
+        {/* Data points */}
+        {winProbData.map((d, i) => (
+          <circle key={i} cx={xScale(d.min)} cy={yScale(d.prob)} r="3" fill={isDark ? '#0a0e17' : '#ffffff'} stroke="#10b981" strokeWidth="1.5" style={{cursor:'pointer'}} onMouseEnter={() => setHoveredPoint(i)} onMouseLeave={() => setHoveredPoint(null)}/>
+        ))}
+        
+        {/* Y-axis labels */}
+        {[0, 25, 50, 75, 100].map(prob => (
+          <text key={prob} x={padding.left - 8} y={yScale(prob)} textAnchor="end" dominantBaseline="middle" fill={isDark ? '#64748b' : '#94a3b8'} fontSize="9" fontWeight="600">{prob}%</text>
+        ))}
+        
+        {/* X-axis labels */}
+        {['Q1', 'Q2', 'Q3', 'Q4'].map((q, i) => (
+          <text key={q} x={xScale(i * 12 + 6)} y={height - padding.bottom + 15} textAnchor="middle" fill={isDark ? '#64748b' : '#94a3b8'} fontSize="9" fontWeight="700">{q}</text>
+        ))}
+        
+        {/* Hover tooltip */}
+        {hoveredPoint !== null && (() => {
+          const d = winProbData[hoveredPoint];
+          return (
+            <g>
+              <rect x={xScale(d.min) - 35} y={yScale(d.prob) - 30} width="70" height="22" rx="4" fill={isDark ? '#1a1f2e' : '#ffffff'} stroke={isDark ? '#334155' : '#cbd5e1'} strokeWidth="1"/>
+              <text x={xScale(d.min)} y={yScale(d.prob) - 22} textAnchor="middle" fill={isDark ? '#10b981' : '#059669'} fontSize="9" fontWeight="800">{d.prob}%</text>
+              <text x={xScale(d.min)} y={yScale(d.min) - 13} textAnchor="middle" fill={isDark ? '#cbd5e1' : '#475569'} fontSize="8" fontWeight="600">{d.score}</text>
+            </g>
+          );
+        })()}
+      </svg>
+    </div>
+  );
+};
+
+// ============================================================
+// WIDGET 3: ADVANCED PLAYER METRICS TABLE
+// ============================================================
+const AdvancedMetricsTable = ({ isDark = true }) => {
+  const [sortCol, setSortCol] = useState('PER');
+  const [sortDir, setSortDir] = useState('desc');
+  
+  const metricsData = [
+    { player: 'S. Barnes', PER: 22.5, TS: 57.8, USG: 28.4, ORtg: 115, DRtg: 108, BPM: 4.2, VORP: 2.8, WS: 6.4 },
+    { player: 'R. Barrett', PER: 18.3, TS: 55.2, USG: 24.1, ORtg: 111, DRtg: 111, BPM: 1.8, VORP: 1.6, WS: 4.2 },
+    { player: 'I. Quickley', PER: 16.8, TS: 54.6, USG: 22.3, ORtg: 109, DRtg: 113, BPM: 0.9, VORP: 1.2, WS: 3.5 },
+    { player: 'B. Ingram', PER: 20.1, TS: 56.5, USG: 26.8, ORtg: 113, DRtg: 110, BPM: 2.9, VORP: 2.1, WS: 5.3 },
+    { player: 'J. Poeltl', PER: 19.4, TS: 62.1, USG: 16.2, ORtg: 116, DRtg: 106, BPM: 3.1, VORP: 2.4, WS: 5.8 },
+    { player: 'G. Dick', PER: 14.2, TS: 56.8, USG: 18.5, ORtg: 110, DRtg: 112, BPM: 0.2, VORP: 0.8, WS: 2.6 },
+    { player: 'J. Shead', PER: 12.5, TS: 52.4, USG: 14.8, ORtg: 106, DRtg: 109, BPM: -0.4, VORP: 0.5, WS: 1.8 },
+    { player: 'T. Jackson-Davis', PER: 15.1, TS: 60.2, USG: 15.5, ORtg: 112, DRtg: 110, BPM: 1.1, VORP: 0.9, WS: 2.9 }
+  ];
+  
+  const sortedData = [...metricsData].sort((a, b) => {
+    const aVal = a[sortCol];
+    const bVal = b[sortCol];
+    return sortDir === 'asc' ? aVal - bVal : bVal - aVal;
+  });
+  
+  const handleSort = (col) => {
+    if (sortCol === col) {
+      setSortDir(sortDir === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortCol(col);
+      setSortDir('desc');
+    }
+  };
+  
+  const cols = [
+    { key: 'player', label: 'Player', align: 'left', width: '25%' },
+    { key: 'PER', label: 'PER', align: 'right', width: '9%' },
+    { key: 'TS', label: 'TS%', align: 'right', width: '9%' },
+    { key: 'USG', label: 'USG%', align: 'right', width: '9%' },
+    { key: 'ORtg', label: 'ORtg', align: 'right', width: '10%' },
+    { key: 'DRtg', label: 'DRtg', align: 'right', width: '10%' },
+    { key: 'BPM', label: 'BPM', align: 'right', width: '9%' },
+    { key: 'VORP', label: 'VORP', align: 'right', width: '9%' },
+    { key: 'WS', label: 'WS', align: 'right', width: '10%' }
+  ];
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          📊 Advanced Player Metrics
+        </h3>
+        <span className={`text-[8px] px-1.5 py-0.5 rounded ${isDark ? 'bg-cmd-bg text-slate-400' : 'bg-light-card text-slate-500'}`}>Click to Sort</span>
+      </div>
+      
+      <div className="overflow-x-auto">
+        <table className="w-full" style={{fontFamily:'monospace',fontSize:'10px'}}>
+          <thead>
+            <tr className={`${isDark ? 'border-b border-cmd-border' : 'border-b border-light-border'}`}>
+              {cols.map(col => (
+                <th key={col.key} onClick={col.key !== 'player' ? () => handleSort(col.key) : undefined} className={`pb-2 ${col.align === 'right' ? 'text-right' : 'text-left'} ${col.key !== 'player' ? 'cursor-pointer hover:text-raptors-red' : ''}`} style={{width:col.width}}>
+                  <span className={`font-bold ${isDark ? 'text-slate-400' : 'text-slate-600'} uppercase tracking-tight`}>
+                    {col.label}
+                    {sortCol === col.key && <span className="ml-1 text-raptors-red">{sortDir === 'asc' ? '↑' : '↓'}</span>}
+                  </span>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {sortedData.map((row, i) => (
+              <tr key={i} className={`${isDark ? 'hover:bg-cmd-card' : 'hover:bg-light-card'} ${i < sortedData.length - 1 ? (isDark ? 'border-b border-cmd-border/50' : 'border-b border-light-border/50') : ''}`} style={{transition:'background 0.15s'}}>
+                <td className={`py-1.5 font-medium ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>{row.player}</td>
+                <td className={`py-1.5 text-right ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>{row.PER.toFixed(1)}</td>
+                <td className={`py-1.5 text-right ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>{row.TS.toFixed(1)}</td>
+                <td className={`py-1.5 text-right ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>{row.USG.toFixed(1)}</td>
+                <td className={`py-1.5 text-right ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>{row.ORtg}</td>
+                <td className={`py-1.5 text-right ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>{row.DRtg}</td>
+                <td className={`py-1.5 text-right ${row.BPM > 0 ? 'text-green-400' : 'text-red-400'}`}>{row.BPM > 0 ? '+' : ''}{row.BPM.toFixed(1)}</td>
+                <td className={`py-1.5 text-right ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>{row.VORP.toFixed(1)}</td>
+                <td className={`py-1.5 text-right ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>{row.WS.toFixed(1)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      
+      <div className={`mt-2 pt-2 border-t ${isDark ? 'border-cmd-border' : 'border-light-border'} flex flex-wrap gap-2 text-[7px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
+        <span>PER: Player Efficiency Rating</span>
+        <span>•</span>
+        <span>TS%: True Shooting %</span>
+        <span>•</span>
+        <span>USG%: Usage Rate</span>
+        <span>•</span>
+        <span>BPM: Box Plus/Minus</span>
+        <span>•</span>
+        <span>VORP: Value Over Replacement</span>
+        <span>•</span>
+        <span>WS: Win Shares</span>
+      </div>
+    </div>
+  );
+};
+
+// ============================================================
+// WIDGET 4: PACE & EFFICIENCY SCATTER PLOT
+// ============================================================
+const PaceEfficiencyScatter = ({ isDark = true }) => {
+  const [hoveredTeam, setHoveredTeam] = useState(null);
+  
+  const teamsData = [
+    { abbr: 'TOR', name: 'Raptors', pace: 98.4, ortg: 112.3, isRaptors: true },
+    { abbr: 'BOS', name: 'Celtics', pace: 99.2, ortg: 120.1 },
+    { abbr: 'GSW', name: 'Warriors', pace: 100.8, ortg: 118.2 },
+    { abbr: 'LAL', name: 'Lakers', pace: 101.2, ortg: 115.8 },
+    { abbr: 'MIL', name: 'Bucks', pace: 98.9, ortg: 117.5 },
+    { abbr: 'DEN', name: 'Nuggets', pace: 97.5, ortg: 118.9 },
+    { abbr: 'PHX', name: 'Suns', pace: 100.1, ortg: 116.4 },
+    { abbr: 'DAL', name: 'Mavericks', pace: 97.8, ortg: 117.2 },
+    { abbr: 'PHI', name: '76ers', pace: 98.3, ortg: 114.6 },
+    { abbr: 'MIA', name: 'Heat', pace: 96.8, ortg: 113.5 },
+    { abbr: 'CLE', name: 'Cavaliers', pace: 97.2, ortg: 116.8 },
+    { abbr: 'NYK', name: 'Knicks', pace: 96.5, ortg: 115.2 },
+    { abbr: 'BKN', name: 'Nets', pace: 99.8, ortg: 111.4 },
+    { abbr: 'ATL', name: 'Hawks', pace: 100.5, ortg: 114.9 },
+    { abbr: 'CHI', name: 'Bulls', pace: 98.7, ortg: 112.8 },
+    { abbr: 'ORL', name: 'Magic', pace: 97.1, ortg: 113.9 },
+    { abbr: 'IND', name: 'Pacers', pace: 102.3, ortg: 119.5 },
+    { abbr: 'WAS', name: 'Wizards', pace: 99.4, ortg: 109.2 },
+    { abbr: 'CHA', name: 'Hornets', pace: 100.9, ortg: 110.6 },
+    { abbr: 'DET', name: 'Pistons', pace: 98.1, ortg: 110.1 },
+    { abbr: 'LAC', name: 'Clippers', pace: 98.6, ortg: 116.1 },
+    { abbr: 'SAC', name: 'Kings', pace: 101.5, ortg: 117.8 },
+    { abbr: 'POR', name: 'Trail Blazers', pace: 99.7, ortg: 111.8 },
+    { abbr: 'MIN', name: 'Timberwolves', pace: 97.9, ortg: 115.7 },
+    { abbr: 'OKC', name: 'Thunder', pace: 99.1, ortg: 118.6 },
+    { abbr: 'UTA', name: 'Jazz', pace: 98.2, ortg: 112.1 },
+    { abbr: 'NOP', name: 'Pelicans', pace: 99.5, ortg: 114.2 },
+    { abbr: 'SAS', name: 'Spurs', pace: 100.3, ortg: 113.3 },
+    { abbr: 'MEM', name: 'Grizzlies', pace: 97.4, ortg: 114.5 },
+    { abbr: 'HOU', name: 'Rockets', pace: 100.7, ortg: 113.7 }
+  ];
+  
+  const avgPace = teamsData.reduce((sum, t) => sum + t.pace, 0) / teamsData.length;
+  const avgORtg = teamsData.reduce((sum, t) => sum + t.ortg, 0) / teamsData.length;
+  
+  const minPace = Math.min(...teamsData.map(t => t.pace));
+  const maxPace = Math.max(...teamsData.map(t => t.pace));
+  const minORtg = Math.min(...teamsData.map(t => t.ortg));
+  const maxORtg = Math.max(...teamsData.map(t => t.ortg));
+  
+  const width = 600;
+  const height = 300;
+  const padding = { top: 30, right: 50, bottom: 40, left: 50 };
+  const chartWidth = width - padding.left - padding.right;
+  const chartHeight = height - padding.top - padding.bottom;
+  
+  const xScale = (pace) => padding.left + ((pace - minPace) / (maxPace - minPace)) * chartWidth;
+  const yScale = (ortg) => padding.top + ((maxORtg - ortg) / (maxORtg - minORtg)) * chartHeight;
+  
+  const avgX = xScale(avgPace);
+  const avgY = yScale(avgORtg);
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4`}>
+      <div className="flex items-center justify-between mb-2">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          ⚡ Pace & Efficiency Plot
+        </h3>
+        <span className={`text-[8px] px-1.5 py-0.5 rounded ${isDark ? 'bg-cmd-bg text-slate-400' : 'bg-light-card text-slate-500'}`}>All 30 Teams</span>
+      </div>
+      
+      <svg viewBox={`0 0 ${width} ${height}`} className="w-full">
+        {/* Quadrant backgrounds */}
+        <rect x={avgX} y={padding.top} width={width - padding.right - avgX} height={avgY - padding.top} fill={isDark ? 'rgba(34,197,94,0.05)' : 'rgba(34,197,94,0.03)'} />
+        <rect x={padding.left} y={avgY} width={avgX - padding.left} height={height - padding.bottom - avgY} fill={isDark ? 'rgba(239,68,68,0.05)' : 'rgba(239,68,68,0.03)'} />
+        
+        {/* Quadrant lines */}
+        <line x1={avgX} y1={padding.top} x2={avgX} y2={height - padding.bottom} stroke={isDark ? '#64748b' : '#94a3b8'} strokeWidth="1.5" strokeDasharray="5,5"/>
+        <line x1={padding.left} y1={avgY} x2={width - padding.right} y2={avgY} stroke={isDark ? '#64748b' : '#94a3b8'} strokeWidth="1.5" strokeDasharray="5,5"/>
+        
+        {/* Quadrant labels */}
+        <text x={avgX + (width - padding.right - avgX) / 2} y={padding.top + 15} textAnchor="middle" fill={isDark ? '#22c55e' : '#16a34a'} fontSize="9" fontWeight="700">Fast & Efficient</text>
+        <text x={padding.left + (avgX - padding.left) / 2} y={padding.top + 15} textAnchor="middle" fill={isDark ? '#64748b' : '#94a3b8'} fontSize="9" fontWeight="700">Slow & Efficient</text>
+        <text x={avgX + (width - padding.right - avgX) / 2} y={height - padding.bottom - 5} textAnchor="middle" fill={isDark ? '#64748b' : '#94a3b8'} fontSize="9" fontWeight="700">Fast & Inefficient</text>
+        <text x={padding.left + (avgX - padding.left) / 2} y={height - padding.bottom - 5} textAnchor="middle" fill={isDark ? '#ef4444' : '#dc2626'} fontSize="9" fontWeight="700">Slow & Inefficient</text>
+        
+        {/* Team dots */}
+        {teamsData.map((team, i) => {
+          const x = xScale(team.pace);
+          const y = yScale(team.ortg);
+          const isHovered = hoveredTeam === team.abbr;
+          const r = team.isRaptors ? 7 : isHovered ? 5 : 3.5;
+          const fill = team.isRaptors ? '#CE1141' : isDark ? '#3b82f6' : '#60a5fa';
+          
+          return (
+            <g key={i} onMouseEnter={() => setHoveredTeam(team.abbr)} onMouseLeave={() => setHoveredTeam(null)} style={{cursor:'pointer'}}>
+              <circle cx={x} cy={y} r={r} fill={fill} stroke={isDark ? '#0a0e17' : '#ffffff'} strokeWidth={team.isRaptors ? 2 : 1.5} opacity={isHovered || team.isRaptors ? 1 : 0.7} style={{transition:'r 0.2s, opacity 0.2s'}}/>
+              {(team.isRaptors || isHovered) && (
+                <text x={x} y={y - r - 4} textAnchor="middle" fill={team.isRaptors ? '#CE1141' : isDark ? '#3b82f6' : '#2563eb'} fontSize="9" fontWeight="800">{team.abbr}</text>
+              )}
+            </g>
+          );
+        })}
+        
+        {/* Axes labels */}
+        <text x={width / 2} y={height - 5} textAnchor="middle" fill={isDark ? '#94a3b8' : '#64748b'} fontSize="11" fontWeight="700">Pace (Possessions per Game) →</text>
+        <text x={15} y={height / 2} textAnchor="middle" fill={isDark ? '#94a3b8' : '#64748b'} fontSize="11" fontWeight="700" transform={`rotate(-90, 15, ${height / 2})`}>← Offensive Rating</text>
+        
+        {/* Tick marks */}
+        {[96, 98, 100, 102].map(pace => (
+          <text key={pace} x={xScale(pace)} y={height - padding.bottom + 12} textAnchor="middle" fill={isDark ? '#64748b' : '#94a3b8'} fontSize="8">{pace}</text>
+        ))}
+        {[110, 115, 120].map(ortg => (
+          <text key={ortg} x={padding.left - 8} y={yScale(ortg)} textAnchor="end" dominantBaseline="middle" fill={isDark ? '#64748b' : '#94a3b8'} fontSize="8">{ortg}</text>
+        ))}
+      </svg>
+      
+      {hoveredTeam && (() => {
+        const team = teamsData.find(t => t.abbr === hoveredTeam);
+        return (
+          <div className={`mt-2 p-2 rounded-lg ${isDark ? 'bg-cmd-bg' : 'bg-light-card'} text-center`}>
+            <div className={`text-[10px] font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>{team.name}</div>
+            <div className={`text-[9px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+              Pace: {team.pace} • ORtg: {team.ortg}
+            </div>
+          </div>
+        );
+      })()}
+    </div>
+  );
+};
+
+// ============================================================
+// WIDGET 5: DEFENSIVE MATCHUP HEATMAP
+// ============================================================
+const DefensiveMatchupWidget = ({ isDark = true }) => {
+  const [selectedCell, setSelectedCell] = useState(null);
+  
+  const defenders = ['Barnes', 'Shead', 'Barrett', 'Poeltl', 'Dick'];
+  const positions = ['PG', 'SG', 'SF', 'PF', 'C'];
+  
+  // Defensive Rating by matchup (lower is better)
+  const matchupData = {
+    'Barnes-PG': 108, 'Barnes-SG': 106, 'Barnes-SF': 104, 'Barnes-PF': 107, 'Barnes-C': 111,
+    'Shead-PG': 105, 'Shead-SG': 107, 'Shead-SF': 112, 'Shead-PF': 116, 'Shead-C': 120,
+    'Barrett-PG': 110, 'Barrett-SG': 108, 'Barrett-SF': 109, 'Barrett-PF': 111, 'Barrett-C': 115,
+    'Poeltl-PG': 118, 'Poeltl-SG': 116, 'Poeltl-SF': 112, 'Poeltl-PF': 106, 'Poeltl-C': 102,
+    'Dick-PG': 112, 'Dick-SG': 109, 'Dick-SF': 110, 'Dick-PF': 113, 'Dick-C': 117
+  };
+  
+  const minRating = Math.min(...Object.values(matchupData));
+  const maxRating = Math.max(...Object.values(matchupData));
+  
+  const getCellColor = (rating) => {
+    const normalized = (rating - minRating) / (maxRating - minRating);
+    if (normalized < 0.2) return { bg: 'rgba(34,197,94,0.7)', text: '#ffffff', label: 'Elite' };
+    if (normalized < 0.4) return { bg: 'rgba(74,222,128,0.6)', text: '#ffffff', label: 'Good' };
+    if (normalized < 0.6) return { bg: 'rgba(250,204,21,0.6)', text: '#000000', label: 'Average' };
+    if (normalized < 0.8) return { bg: 'rgba(251,146,60,0.6)', text: '#ffffff', label: 'Below Avg' };
+    return { bg: 'rgba(239,68,68,0.7)', text: '#ffffff', label: 'Poor' };
+  };
+  
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4 h-full`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          🛡️ Defensive Matchups
+        </h3>
+        <span className={`text-[8px] px-1.5 py-0.5 rounded ${isDark ? 'bg-cmd-bg text-slate-400' : 'bg-light-card text-slate-500'}`}>DRtg by Position</span>
+      </div>
+      
+      <div className="overflow-x-auto">
+        <table className="w-full border-collapse" style={{fontSize:'9px'}}>
+          <thead>
+            <tr>
+              <th className={`p-1 text-left font-bold ${isDark ? 'text-slate-400' : 'text-slate-600'} border ${isDark ? 'border-cmd-border' : 'border-light-border'}`}>Defender</th>
+              {positions.map(pos => (
+                <th key={pos} className={`p-1 text-center font-bold ${isDark ? 'text-slate-400' : 'text-slate-600'} border ${isDark ? 'border-cmd-border' : 'border-light-border'}`}>{pos}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {defenders.map(defender => (
+              <tr key={defender}>
+                <td className={`p-1.5 font-bold ${isDark ? 'text-slate-300' : 'text-slate-700'} border ${isDark ? 'border-cmd-border' : 'border-light-border'}`}>{defender}</td>
+                {positions.map(pos => {
+                  const key = `${defender}-${pos}`;
+                  const rating = matchupData[key];
+                  const colors = getCellColor(rating);
+                  const isSelected = selectedCell === key;
+                  
+                  return (
+                    <td key={pos} className={`p-1.5 text-center font-bold border ${isDark ? 'border-cmd-border' : 'border-light-border'} cursor-pointer`} style={{backgroundColor:colors.bg,color:colors.text,opacity:isSelected ? 1 : 0.85,transition:'opacity 0.2s'}} onMouseEnter={() => setSelectedCell(key)} onMouseLeave={() => setSelectedCell(null)}>
+                      {rating}
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      
+      {selectedCell && (() => {
+        const [defender, pos] = selectedCell.split('-');
+        const rating = matchupData[selectedCell];
+        const colors = getCellColor(rating);
+        return (
+          <div className={`mt-2 p-2 rounded-lg ${isDark ? 'bg-cmd-bg' : 'bg-light-card'}`}>
+            <div className={`text-[9px] font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>{defender} vs {pos}</div>
+            <div className={`text-[8px] ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+              DRtg: {rating} ({colors.label})
+            </div>
+          </div>
+        );
+      })()}
+      
+      <div className="flex items-center justify-center gap-2 mt-3 flex-wrap">
+        {[
+          { label: 'Elite', color: 'rgba(34,197,94,0.7)' },
+          { label: 'Good', color: 'rgba(74,222,128,0.6)' },
+          { label: 'Avg', color: 'rgba(250,204,21,0.6)' },
+          { label: 'Below', color: 'rgba(251,146,60,0.6)' },
+          { label: 'Poor', color: 'rgba(239,68,68,0.7)' }
+        ].map((item, i) => (
+          <div key={i} className="flex items-center gap-1">
+            <div className="w-2.5 h-2.5 rounded" style={{backgroundColor:item.color}}/>
+            <span className={`text-[7px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{item.label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 function App() {
   const [games, setGames] = useState([]);
   const [selectedGame, setSelectedGame] = useState(null);
@@ -14703,6 +15252,11 @@ function App() {
     { id: 'opponent-preview', name: 'Opponent Preview', mode: 'gameday', icon: '🎯' },
     { id: 'season-pace', name: 'Season Pace Tracker', mode: 'season', icon: '📊' },
     { id: 'league-comparison', name: 'League Comparison Matrix', mode: 'analytics', icon: '🏀' },
+    { id: 'shot-distribution', name: 'Shot Distribution', mode: 'analytics', icon: '🎯' },
+    { id: 'win-probability', name: 'Win Probability', mode: 'analytics', icon: '📈' },
+    { id: 'advanced-metrics', name: 'Advanced Player Metrics', mode: 'players', icon: '📊' },
+    { id: 'pace-efficiency-scatter', name: 'Pace & Efficiency Plot', mode: 'analytics', icon: '⚡' },
+    { id: 'defensive-matchups', name: 'Defensive Matchups', mode: 'analytics', icon: '🛡️' },
   ];
 
   // Save preferences to localStorage
@@ -15225,6 +15779,9 @@ function App() {
                 <div id="player-comparison" data-mode="players" className="widget-large" style={{position:'relative'}} onClick={(e) => { if (e.target.closest('select') || e.target.closest('button')) return; setExpandedWidget('player-comparison'); }}><span className="widget-expand-icon">↗</span><PlayerComparisonTool isDark={isDark} /></div>
                 <div id="fantasy-projections" data-mode="players" style={{position:'relative'}} onClick={() => setExpandedWidget('fantasy-projections')}><span className="widget-expand-icon">↗</span><FantasyProjectionsWidget isDark={isDark} /></div>
                 <div className="widget-wide dg-players" data-mode="players" id="player-game-log" style={{position:'relative'}} onClick={(e) => { if (e.target.closest('select')) return; setExpandedWidget('player-game-log'); }}><span className="widget-expand-icon">↗</span><PlayerGameLogWidget isDark={isDark} roster={RAPTORS_ROSTER} /></div>
+                
+                {/* NEW ADVANCED ANALYTICS WIDGETS - WAVE 4 */}
+                <div className="widget-wide dg-players" data-mode="analytics players" id="advanced-metrics" style={{position:'relative'}} onClick={() => setExpandedWidget('advanced-metrics')}><span className="widget-expand-icon">↗</span><AdvancedMetricsTable isDark={isDark} /></div>
 
                 {/* Analytics — purple accent */}
                 <div className="widget-wide dg-analytics" data-mode="analytics" id="rolling-averages" style={{position:'relative'}} onClick={() => setExpandedWidget('rolling-averages')}><span className="widget-expand-icon">↗</span><RollingAveragesWidget isDark={isDark} /></div>
@@ -15261,6 +15818,12 @@ function App() {
                 <div id="steals-blocks" data-mode="analytics" style={{position:'relative'}} onClick={() => setExpandedWidget('steals-blocks')}><span className="widget-expand-icon">↗</span><StealsBlocksWidget isDark={isDark} /></div>
                 <div id="rebound-battle" data-mode="analytics" style={{position:'relative'}} onClick={() => setExpandedWidget('rebound-battle')}><span className="widget-expand-icon">↗</span><ReboundBattleWidget isDark={isDark} /></div>
                 <div id="turnover" data-mode="analytics" style={{position:'relative'}} onClick={() => setExpandedWidget('turnover')}><span className="widget-expand-icon">↗</span><TurnoverWidget isDark={isDark} /></div>
+                
+                {/* WAVE 4 ADVANCED ANALYTICS WIDGETS */}
+                <div className="dg-oncourt" data-mode="analytics" id="shot-distribution" style={{position:'relative'}} onClick={() => setExpandedWidget('shot-distribution')}><span className="widget-expand-icon">↗</span><ShotDistributionWidget isDark={isDark} /></div>
+                <div className="widget-wide dg-analytics" data-mode="analytics" id="win-probability" style={{position:'relative'}} onClick={() => setExpandedWidget('win-probability')}><span className="widget-expand-icon">↗</span><WinProbabilityWidget isDark={isDark} /></div>
+                <div className="widget-wide dg-analytics" data-mode="analytics" id="pace-efficiency-scatter" style={{position:'relative'}} onClick={() => setExpandedWidget('pace-efficiency-scatter')}><span className="widget-expand-icon">↗</span><PaceEfficiencyScatter isDark={isDark} /></div>
+                <div className="dg-analytics" data-mode="analytics gameday" id="defensive-matchups" style={{position:'relative'}} onClick={() => setExpandedWidget('defensive-matchups')}><span className="widget-expand-icon">↗</span><DefensiveMatchupWidget isDark={isDark} /></div>
 
                 {/* Season & FO — teal accent */}
                 <div className="dg-season" data-mode="analytics season" id="season-pace" style={{position:'relative'}} onClick={() => setExpandedWidget('season-pace')}><span className="widget-expand-icon">↗</span><SeasonPaceWidget isDark={isDark} /></div>
