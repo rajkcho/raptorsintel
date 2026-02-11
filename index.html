@@ -1734,6 +1734,159 @@
       #sidebar-panel > * { margin-bottom: 0.375rem !important; }
       #sidebar-panel [class*="p-4"] { padding: 0.375rem !important; }
       #sidebar-panel [class*="p-3"] { padding: 0.25rem !important; }
+
+      /* ======== v14.0 DASHBOARD UPGRADE ======== */
+      
+      /* Ticker Animation */
+      @keyframes ticker {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+      }
+      .animate-ticker {
+        animation: ticker 40s linear infinite;
+      }
+      .animate-ticker:hover {
+        animation-play-state: paused;
+      }
+
+      /* Layout Density Classes */
+      .dashboard-grid.density-dense {
+        columns: 4 240px;
+        column-gap: 3px;
+      }
+      .dashboard-grid.density-comfortable {
+        columns: 3 300px;
+        column-gap: 8px;
+      }
+      .dashboard-grid.density-comfortable > div > div {
+        padding: 8px !important;
+      }
+      .dashboard-grid.density-comfortable h3 {
+        font-size: 11px !important;
+      }
+      .dashboard-grid.density-compact {
+        columns: 2 350px;
+        column-gap: 6px;
+      }
+      .dashboard-grid.density-compact > div > div {
+        padding: 10px !important;
+      }
+      .dashboard-grid.density-compact h3 {
+        font-size: 12px !important;
+      }
+
+      /* Widget Expand Icon */
+      .widget-expand-icon {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        z-index: 10;
+        background: rgba(206, 17, 65, 0.2);
+        padding: 4px;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      .dashboard-grid > div:hover .widget-expand-icon {
+        opacity: 1;
+      }
+      .widget-expand-icon:hover {
+        background: rgba(206, 17, 65, 0.4);
+      }
+
+      /* Widget Filter Transitions */
+      .dashboard-grid > div {
+        transition: opacity 0.3s ease, transform 0.3s ease, height 0.3s ease;
+      }
+      .dashboard-grid > div.widget-hidden {
+        opacity: 0;
+        transform: scale(0.95);
+        height: 0;
+        overflow: hidden;
+        margin: 0 !important;
+      }
+
+      /* Search Modal */
+      .search-modal-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 9998;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        padding-top: 20vh;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(8px);
+      }
+      .search-modal-content {
+        width: 90%;
+        max-width: 600px;
+        background: #0d1117;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      }
+      .light .search-modal-content {
+        background: #ffffff;
+        border-color: rgba(0, 0, 0, 0.1);
+      }
+      .search-result-item {
+        padding: 10px 16px;
+        cursor: pointer;
+        transition: background 0.15s ease;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      }
+      .search-result-item:hover {
+        background: rgba(206, 17, 65, 0.1);
+      }
+      .light .search-result-item {
+        border-bottom-color: rgba(0, 0, 0, 0.05);
+      }
+
+      /* Widget Pulse Highlight */
+      @keyframes widget-pulse {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(206, 17, 65, 0.7); }
+        50% { box-shadow: 0 0 0 8px rgba(206, 17, 65, 0); }
+      }
+      .widget-highlight {
+        animation: widget-pulse 1.5s ease-out 2;
+      }
+
+      /* Keyboard Shortcuts Help Modal */
+      .shortcuts-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 9997;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(8px);
+      }
+      .shortcuts-content {
+        background: #0d1117;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        padding: 24px;
+        max-width: 500px;
+        width: 90%;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+      }
+      .light .shortcuts-content {
+        background: #ffffff;
+        border-color: rgba(0, 0, 0, 0.1);
+      }
+      .shortcut-key {
+        display: inline-block;
+        padding: 2px 8px;
+        background: rgba(206, 17, 65, 0.2);
+        border: 1px solid rgba(206, 17, 65, 0.4);
+        border-radius: 4px;
+        font-family: monospace;
+        font-size: 11px;
+        font-weight: bold;
+      }
     </style>
   </head>
   <body>
@@ -13041,6 +13194,209 @@ const HeadToHeadWidget = ({ isDark = true }) => {
 };
 
 // ============================================================
+// v14.0 COMPONENTS
+// ============================================================
+
+// Widget Modal Component
+const WidgetModal = ({ children, onClose, isDark }) => {
+  React.useEffect(() => {
+    const handler = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [onClose]);
+  
+  return ReactDOM.createPortal(
+    React.createElement('div', {
+      className: 'fixed inset-0 z-[9999] flex items-center justify-center',
+      onClick: onClose
+    },
+      React.createElement('div', { className: 'absolute inset-0 bg-black/70 backdrop-blur-sm' }),
+      React.createElement('div', {
+        className: 'relative w-[90vw] max-w-4xl max-h-[85vh] overflow-y-auto rounded-2xl shadow-2xl',
+        style: { background: isDark ? '#0d1117' : '#fff', border: '1px solid rgba(255,255,255,0.1)' },
+        onClick: e => e.stopPropagation()
+      },
+        React.createElement('button', {
+          onClick: onClose,
+          className: 'absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-red-500/20 text-red-400 hover:bg-red-500/30 flex items-center justify-center text-sm font-bold'
+        }, '✕'),
+        React.createElement('div', { className: 'p-6' }, children)
+      )
+    ),
+    document.body
+  );
+};
+
+// Insights Ticker Component
+const InsightsTicker = ({ isDark }) => {
+  const insights = [
+    "🔥 Scottie Barnes averaging 24.2 PPG over last 5 games",
+    "📈 Raptors 7-3 in last 10 — 5th seed in East",
+    "🏠 16-12 at home, next: vs Pistons (39-13)",
+    "⚡ W2 streak — momentum building into playoff push",
+    "🎯 Brandon Ingram debut adds elite scoring to lineup",
+    "📊 114.8 PPG (top 10 in NBA) vs 112.6 opponent PPG",
+  ];
+  
+  return (
+    <div className="overflow-hidden whitespace-nowrap py-1.5 border-b border-cmd-border/50 mb-2">
+      <div className="inline-flex gap-12 animate-ticker">
+        {[...insights, ...insights].map((text, i) => (
+          <span key={i} className="text-[11px] text-slate-400">{text}</span>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Search Spotlight Component
+const SearchSpotlight = ({ isOpen, onClose, isDark, widgetRegistry, onSelectWidget }) => {
+  const [query, setQuery] = React.useState('');
+  const inputRef = React.useRef(null);
+  
+  React.useEffect(() => {
+    if (isOpen && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isOpen]);
+  
+  React.useEffect(() => {
+    const handler = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [onClose]);
+  
+  if (!isOpen) return null;
+  
+  const filteredWidgets = query.trim()
+    ? widgetRegistry.filter(w => 
+        w.name.toLowerCase().includes(query.toLowerCase()) ||
+        w.mode.toLowerCase().includes(query.toLowerCase())
+      )
+    : widgetRegistry;
+  
+  return ReactDOM.createPortal(
+    React.createElement('div', {
+      className: 'search-modal-overlay',
+      onClick: onClose
+    },
+      React.createElement('div', {
+        className: 'search-modal-content',
+        onClick: e => e.stopPropagation()
+      },
+        React.createElement('div', { className: 'p-4 border-b ' + (isDark ? 'border-cmd-border' : 'border-light-border') },
+          React.createElement('input', {
+            ref: inputRef,
+            type: 'text',
+            placeholder: 'Search widgets... (Cmd/Ctrl+K)',
+            className: 'w-full bg-transparent text-base outline-none ' + (isDark ? 'text-white placeholder-slate-500' : 'text-slate-900 placeholder-slate-400'),
+            value: query,
+            onChange: e => setQuery(e.target.value)
+          })
+        ),
+        React.createElement('div', {
+          className: 'max-h-96 overflow-y-auto',
+          style: { maxHeight: '400px' }
+        },
+          filteredWidgets.length > 0
+            ? filteredWidgets.map(w => 
+                React.createElement('div', {
+                  key: w.id,
+                  className: 'search-result-item flex items-center gap-3',
+                  onClick: () => {
+                    onSelectWidget(w.id);
+                    onClose();
+                  }
+                },
+                  React.createElement('span', { className: 'text-lg' }, w.icon),
+                  React.createElement('div', { className: 'flex-1' },
+                    React.createElement('div', {
+                      className: 'text-sm font-semibold ' + (isDark ? 'text-white' : 'text-slate-900')
+                    }, w.name),
+                    React.createElement('div', {
+                      className: 'text-xs ' + (isDark ? 'text-slate-500' : 'text-slate-400')
+                    }, w.mode)
+                  )
+                )
+              )
+            : React.createElement('div', {
+                className: 'p-8 text-center ' + (isDark ? 'text-slate-500' : 'text-slate-400')
+              }, 'No widgets found')
+        )
+      )
+    ),
+    document.body
+  );
+};
+
+// Keyboard Shortcuts Help Modal
+const KeyboardShortcutsHelp = ({ isOpen, onClose, isDark }) => {
+  React.useEffect(() => {
+    const handler = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+    if (isOpen) {
+      window.addEventListener('keydown', handler);
+    }
+    return () => window.removeEventListener('keydown', handler);
+  }, [isOpen, onClose]);
+  
+  if (!isOpen) return null;
+  
+  const shortcuts = [
+    { key: '1-5', desc: 'Switch dashboard modes' },
+    { key: 'Cmd/Ctrl+K', desc: 'Open widget search' },
+    { key: 'Esc', desc: 'Close modals/search' },
+    { key: '?', desc: 'Show this help' },
+    { key: 'Click widget', desc: 'Expand to full view' },
+  ];
+  
+  return ReactDOM.createPortal(
+    React.createElement('div', {
+      className: 'shortcuts-modal',
+      onClick: onClose
+    },
+      React.createElement('div', {
+        className: 'shortcuts-content',
+        onClick: e => e.stopPropagation()
+      },
+        React.createElement('div', {
+          className: 'flex items-center justify-between mb-4'
+        },
+          React.createElement('h3', {
+            className: 'text-lg font-bold ' + (isDark ? 'text-white' : 'text-slate-900')
+          }, '⌨️ Keyboard Shortcuts'),
+          React.createElement('button', {
+            onClick: onClose,
+            className: 'w-6 h-6 rounded-full text-red-400 hover:bg-red-500/20 flex items-center justify-center text-sm font-bold'
+          }, '✕')
+        ),
+        React.createElement('div', { className: 'space-y-3' },
+          shortcuts.map((s, i) =>
+            React.createElement('div', {
+              key: i,
+              className: 'flex items-center justify-between py-2 border-b ' + (isDark ? 'border-cmd-border' : 'border-light-border')
+            },
+              React.createElement('span', {
+                className: 'shortcut-key ' + (isDark ? 'text-white' : 'text-slate-900')
+              }, s.key),
+              React.createElement('span', {
+                className: 'text-sm ' + (isDark ? 'text-slate-400' : 'text-slate-600')
+              }, s.desc)
+            )
+          )
+        )
+      )
+    ),
+    document.body
+  );
+};
+
+// ============================================================
 // PLAYER SPOTLIGHT CAROUSEL
 // ============================================================
 const PlayerSpotlightCarousel = ({ isDark = true }) => {
@@ -13243,6 +13599,115 @@ function App() {
   const konamiRef = useRef([]);
   const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
 
+  // v14.0 Dashboard Mode & Features
+  const [dashboardMode, setDashboardMode] = useState(() => localStorage.getItem('ri-mode') || 'all');
+  const [density, setDensity] = useState(() => localStorage.getItem('ri-density') || 'dense');
+  const [expandedWidget, setExpandedWidget] = useState(null);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showShortcutsHelp, setShowShortcutsHelp] = useState(false);
+
+  // Widget Registry for Search
+  const WIDGET_REGISTRY = [
+    { id: 'team-stats-comparison', name: 'Team Stats Comparison', mode: 'gameday', icon: '🎯' },
+    { id: 'key-matchups', name: 'Key Matchups', mode: 'gameday', icon: '🎯' },
+    { id: 'key-stats', name: 'Key Stats', mode: 'gameday', icon: '🎯' },
+    { id: 'head-to-head', name: 'Head to Head', mode: 'gameday', icon: '🎯' },
+    { id: 'historical-h2h', name: 'Historical H2H', mode: 'gameday', icon: '🎯' },
+    { id: 'defensive-assignments', name: 'Defensive Assignments', mode: 'gameday', icon: '🎯' },
+    { id: 'opponent-scouting', name: 'Opponent Scouting', mode: 'gameday', icon: '🎯' },
+    { id: 'prediction-breakdown', name: 'Prediction Breakdown', mode: 'gameday', icon: '🎯' },
+    { id: 'predicted-score', name: 'Predicted Score', mode: 'gameday', icon: '🎯' },
+    { id: 'score-predictor', name: 'Score Predictor', mode: 'gameday', icon: '🎯' },
+    { id: 'betting-hub', name: 'Betting Intelligence Hub', mode: 'betting gameday', icon: '💰' },
+    { id: 'player-props', name: 'Player Props', mode: 'betting gameday', icon: '💰' },
+    { id: 'tv-schedule', name: 'TV Schedule', mode: 'gameday', icon: '🎯' },
+    { id: 'record-breakdown', name: 'Record Splits', mode: 'analytics', icon: '📊' },
+    { id: 'home-away', name: 'Home/Away Splits', mode: 'analytics', icon: '📊' },
+    { id: 'record-by-margin', name: 'Record by Margin', mode: 'analytics', icon: '📊' },
+    { id: 'half-performance', name: 'Half Performance', mode: 'analytics', icon: '📊' },
+    { id: 'monthly-performance', name: 'Monthly Performance', mode: 'analytics', icon: '📊' },
+    { id: 'big-games', name: 'Big Games', mode: 'analytics', icon: '📊' },
+    { id: 'signature-wins', name: 'Signature Wins', mode: 'analytics', icon: '📊' },
+    { id: 'vs-league-avg', name: 'Vs League Average', mode: 'analytics', icon: '📊' },
+    { id: 'player-spotlight', name: 'Player Spotlight', mode: 'players', icon: '👥' },
+    { id: 'player-deep-dive', name: 'Player Deep Dive', mode: 'players', icon: '👥' },
+    { id: 'usage-rate', name: 'Usage Rate', mode: 'players', icon: '👥' },
+    { id: 'minutes-distribution', name: 'Minutes Distribution', mode: 'players', icon: '👥' },
+    { id: 'plus-minus', name: 'Plus/Minus', mode: 'players', icon: '👥' },
+    { id: 'win-shares', name: 'Win Shares', mode: 'players', icon: '👥' },
+    { id: 'player-comparison', name: 'Player Comparison Tool', mode: 'players', icon: '👥' },
+    { id: 'fantasy-projections', name: 'Fantasy Projections', mode: 'players', icon: '👥' },
+    { id: 'advanced-stats', name: 'Advanced Stats', mode: 'analytics', icon: '📊' },
+    { id: 'net-rating', name: 'Net Rating', mode: 'analytics', icon: '📊' },
+    { id: 'four-factors', name: 'Four Factors', mode: 'analytics', icon: '📊' },
+    { id: 'clutch-stats', name: 'Clutch Time', mode: 'analytics', icon: '📊' },
+    { id: 'pace-efficiency', name: 'Pace & Efficiency', mode: 'analytics', icon: '📊' },
+    { id: 'offensive-sets', name: 'Offensive Sets', mode: 'analytics', icon: '📊' },
+    { id: 'defensive-efficiency', name: 'Defensive Efficiency', mode: 'analytics', icon: '📊' },
+    { id: 'crunch-time', name: 'Crunch Time', mode: 'analytics', icon: '📊' },
+    { id: 'efficiency', name: 'Efficiency', mode: 'analytics', icon: '📊' },
+    { id: 'ast-to', name: 'Ast/TO Ratio', mode: 'analytics', icon: '📊' },
+    { id: 'pace-predictor', name: 'Pace Predictor', mode: 'analytics', icon: '📊' },
+    { id: 'quarter-breakdown', name: 'Quarter Breakdown', mode: 'analytics', icon: '📊' },
+    { id: 'streak-probability', name: 'Streak Probability', mode: 'analytics', icon: '📊' },
+    { id: 'points-distribution', name: 'Points Distribution', mode: 'analytics', icon: '📊' },
+    { id: 'assist-leaders', name: 'Assist Leaders', mode: 'analytics', icon: '📊' },
+    { id: 'points-off-assists', name: 'Points Off Assists', mode: 'analytics', icon: '📊' },
+    { id: 'three-point', name: '3-Point Shooting', mode: 'analytics', icon: '📊' },
+    { id: 'free-throw', name: 'Free Throw', mode: 'analytics', icon: '📊' },
+    { id: 'fast-break', name: 'Fast Break', mode: 'analytics', icon: '📊' },
+    { id: 'paint-scoring', name: 'Paint Scoring', mode: 'analytics', icon: '📊' },
+    { id: 'second-chance', name: 'Second Chance', mode: 'analytics', icon: '📊' },
+    { id: 'shot-chart', name: 'Shot Chart', mode: 'analytics', icon: '📊' },
+    { id: 'mini-heatmap', name: 'Mini Heatmap', mode: 'analytics', icon: '📊' },
+    { id: 'bench-production', name: 'Bench Production', mode: 'analytics', icon: '📊' },
+    { id: 'starter-vs-bench', name: 'Starter vs Bench', mode: 'analytics', icon: '📊' },
+    { id: 'lineup-combos', name: 'Lineup Combinations', mode: 'analytics', icon: '📊' },
+    { id: 'steals-blocks', name: 'Steals & Blocks', mode: 'analytics', icon: '📊' },
+    { id: 'rebound-battle', name: 'Rebound Battle', mode: 'analytics', icon: '📊' },
+    { id: 'turnover', name: 'Turnover Analysis', mode: 'analytics', icon: '📊' },
+    { id: 'standings-viz', name: 'Standings', mode: 'season', icon: '🏀' },
+    { id: 'schedule-strength', name: 'Schedule Strength', mode: 'season', icon: '🏀' },
+    { id: 'season-tracker', name: 'Season Tracker', mode: 'season', icon: '🏀' },
+    { id: 'mvp-race', name: 'MVP Race', mode: 'season', icon: '🏀' },
+    { id: 'all-star-tracker', name: 'All-Star Tracker', mode: 'season', icon: '🏀' },
+    { id: 'trade-analysis', name: 'Trade Analysis', mode: 'season', icon: '🏀' },
+    { id: 'draft-pick', name: 'Draft Pick Tracker', mode: 'season', icon: '🏀' },
+    { id: 'salary-cap', name: 'Salary Cap', mode: 'season', icon: '🏀' },
+    { id: 'team-salary', name: 'Team Salary', mode: 'season', icon: '🏀' },
+    { id: 'coach-insights', name: 'Coach Insights', mode: 'season', icon: '🏀' },
+    { id: 'fan-engagement', name: 'Fan Engagement', mode: 'community', icon: '🎉' },
+    { id: 'game-prediction-poll', name: 'Game Prediction Poll', mode: 'community', icon: '🎉' },
+    { id: 'fan-poll', name: 'Fan Poll', mode: 'community', icon: '🎉' },
+    { id: 'storylines', name: 'Storylines', mode: 'community', icon: '🎉' },
+    { id: 'social-buzz', name: 'Social Buzz', mode: 'community', icon: '🎉' },
+    { id: 'team-chemistry', name: 'Team Chemistry', mode: 'community', icon: '🎉' },
+    { id: 'momentum-tracker', name: 'Momentum Tracker', mode: 'community', icon: '🎉' },
+  ];
+
+  // Save preferences to localStorage
+  useEffect(() => {
+    localStorage.setItem('ri-mode', dashboardMode);
+  }, [dashboardMode]);
+
+  useEffect(() => {
+    localStorage.setItem('ri-density', density);
+  }, [density]);
+
+  // Widget filtering based on dashboard mode
+  useEffect(() => {
+    const allWidgets = document.querySelectorAll('.dashboard-grid > div[data-mode]');
+    allWidgets.forEach(widget => {
+      const modes = widget.getAttribute('data-mode');
+      if (dashboardMode === 'all' || modes.includes(dashboardMode)) {
+        widget.classList.remove('widget-hidden');
+      } else {
+        widget.classList.add('widget-hidden');
+      }
+    });
+  }, [dashboardMode]);
+
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeydown = (e) => {
@@ -13255,15 +13720,31 @@ function App() {
         setTimeout(() => setShowEasterEgg(false), 5000);
       }
 
+      // v14.0 - Cmd/Ctrl+K for search
+      if (e.key === 'k' && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault();
+        setSearchOpen(prev => !prev);
+        return;
+      }
+
       if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
+      // v14.0 - ? for shortcuts help
       if (e.key === '?' && !e.ctrlKey && !e.metaKey) {
-        setShowKeyboardHelp(prev => !prev);
+        setShowShortcutsHelp(prev => !prev);
       }
-      // Section jump: 1-7
-      const sectionIds = ['sec-hero', 'sec-matchup', 'sec-standings', 'sec-draft', 'sec-trade', 'sec-analytics', 'sec-schedule'];
+
+      // v14.0 - 1-5 for dashboard modes
+      if (e.key === '1' && !e.ctrlKey && !e.metaKey) setDashboardMode('gameday');
+      if (e.key === '2' && !e.ctrlKey && !e.metaKey) setDashboardMode('analytics');
+      if (e.key === '3' && !e.ctrlKey && !e.metaKey) setDashboardMode('players');
+      if (e.key === '4' && !e.ctrlKey && !e.metaKey) setDashboardMode('betting');
+      if (e.key === '5' && !e.ctrlKey && !e.metaKey) setDashboardMode('all');
+
+      // Section jump: 6-9
+      const sectionIds = ['', '', '', '', '', 'sec-hero', 'sec-matchup', 'sec-standings', 'sec-draft'];
       const secIdx = parseInt(e.key) - 1;
-      if (secIdx >= 0 && secIdx < sectionIds.length && !e.ctrlKey && !e.metaKey) {
+      if (secIdx >= 5 && secIdx < sectionIds.length && !e.ctrlKey && !e.metaKey) {
         const el = document.getElementById(sectionIds[secIdx]);
         if (el) el.scrollIntoView({ behavior: 'smooth' });
         else document.getElementById('main-content')?.scrollIntoView({ behavior: 'smooth' });
@@ -13280,6 +13761,9 @@ function App() {
         setShowShare(false);
         setShowEasterEgg(false);
         setSelectedPlayer(null);
+        setExpandedWidget(null);
+        setSearchOpen(false);
+        setShowShortcutsHelp(false);
       }
       if (e.key === 'ArrowDown' && !e.repeat) {
         e.preventDefault();
@@ -13620,39 +14104,77 @@ function App() {
               <div className={`h-32 flex flex-col items-center justify-center ${isDark ? 'glass-card text-slate-500' : 'bg-white border border-light-border rounded-2xl shadow-lg text-slate-400'}`}><LayoutDashboard className="w-10 h-10 mb-2 opacity-30" /><p className="text-xs">Select a game from the calendar to open the scouting report.</p></div>
             )}
               </div>
-              {/* ===== DASHBOARD GRID ===== */}
-              <div className="flex items-center gap-3 mb-2 mt-3">
-                <h2 className="text-2xl font-black text-white flex items-center gap-3 uppercase tracking-tight"><div className="bg-raptors-red p-2 rounded-lg shadow-lg shadow-raptors-red/30"><LayoutDashboard className="w-5 h-5 text-white" /></div>Advanced Analytics Dashboard</h2>
+              {/* ===== v14.0 DASHBOARD ===== */}
+              <InsightsTicker isDark={isDark} />
+              
+              {/* Dashboard Mode Tabs */}
+              <div className="sticky top-0 z-30 backdrop-blur-xl bg-cmd-bg/80 border-b border-cmd-border py-2 px-4 flex items-center gap-2 mb-3" style={{marginTop:'0.75rem'}}>
+                {[
+                  { id: 'gameday', icon: '🎯', label: 'Game Day' },
+                  { id: 'analytics', icon: '📊', label: 'Analytics' },
+                  { id: 'players', icon: '👥', label: 'Players' },
+                  { id: 'betting', icon: '💰', label: 'Betting' },
+                  { id: 'all', icon: '🏀', label: 'All' }
+                ].map(m => (
+                  <button key={m.id} onClick={() => setDashboardMode(m.id)}
+                    className={`px-4 py-2 rounded-full text-xs font-bold transition-all ${
+                      dashboardMode === m.id 
+                        ? 'bg-raptors-red text-white shadow-lg shadow-raptors-red/30' 
+                        : 'bg-cmd-card text-slate-400 hover:text-white hover:bg-cmd-card/80'
+                    }`}>
+                    {m.icon} {m.label}
+                  </button>
+                ))}
+                <div className="ml-auto flex items-center gap-2">
+                  {/* Density Toggle */}
+                  <div className="flex items-center gap-1 bg-cmd-card rounded-full p-0.5">
+                    {[{id:'dense',icon:'▪▪▪▪'},{id:'comfortable',icon:'▪▪▪'},{id:'compact',icon:'▪▪'}].map(d => (
+                      <button key={d.id} onClick={() => setDensity(d.id)} 
+                        className={`px-2 py-1 rounded-full text-[9px] ${
+                          density === d.id ? 'bg-slate-600 text-white' : 'text-slate-500 hover:text-slate-300'
+                        }`}>{d.icon}</button>
+                    ))}
+                  </div>
+                  <span className="text-[10px] text-slate-500">
+                    {(() => {
+                      const allWidgets = document.querySelectorAll('.dashboard-grid > div');
+                      const visibleCount = Array.from(allWidgets).filter(w => !w.classList.contains('widget-hidden')).length;
+                      return visibleCount || WIDGET_REGISTRY.length;
+                    })()} widgets
+                  </span>
+                </div>
               </div>
-              <div className="dashboard-grid">
+              
+              <div className={`dashboard-grid density-${density}`}>
                 {/* Game Day — red accent */}
-                {selectedGame && <div className="widget-wide dg-gameday"><TeamStatsComparisonWidget isDark={isDark} opponent={selectedGame.opponent} /></div>}
-                {selectedGame && <div className="dg-gameday"><KeyMatchupsWidget opponent={selectedGame.opponent} isDark={isDark} /></div>}
-                {selectedGame && <div className="dg-gameday"><KeyStatsWidget isDark={isDark} opponent={selectedGame.opponent} /></div>}
-                <div className="dg-gameday"><HeadToHeadWidget isDark={isDark} /></div>
-                <div className="dg-gameday"><HistoricalH2HWidget isDark={isDark} opponent={selectedGame?.opponent} /></div>
-                {selectedGame && <div className="dg-gameday"><DefensiveAssignmentsWidget isDark={isDark} opponent={selectedGame.opponent} /></div>}
-                {selectedGame && <div className="dg-gameday"><OpponentScoutingWidget isDark={isDark} opponent={selectedGame.opponent} /></div>}
-                {selectedGame && <div className="dg-gameday"><PredictionBreakdownWidget isDark={isDark} opponent={selectedGame.opponent} /></div>}
-                {selectedGame?.status === 'upcoming' && <div className="dg-gameday"><PredictedScoreWidget isDark={isDark} opponent={selectedGame.opponent} /></div>}
-                {selectedGame?.status === 'upcoming' && <div className="dg-gameday"><ScorePredictorWidget isDark={isDark} opponent={selectedGame.opponent} /></div>}
-                {selectedGame?.status === 'upcoming' && <div className="dg-gameday"><WidgetErrorBoundary name="Betting Hub"><BettingHubWidget isDark={isDark} game={selectedGame} /></WidgetErrorBoundary></div>}
-                {selectedGame?.status === 'upcoming' && <div className="dg-gameday"><PlayerPropsWidget isDark={isDark} opponent={selectedGame?.opponent} /></div>}
-                {selectedGame?.status === 'upcoming' && <div className="dg-gameday"><TVScheduleWidget isDark={isDark} game={selectedGame} /></div>}
+                {selectedGame && <div id="team-stats-comparison" data-mode="gameday" className="widget-wide" style={{position:'relative'}} onClick={() => setExpandedWidget('team-stats-comparison')}><span className="widget-expand-icon">↗</span><TeamStatsComparisonWidget isDark={isDark} opponent={selectedGame.opponent} /></div>}
+                {selectedGame && <div id="key-matchups" data-mode="gameday" style={{position:'relative'}} onClick={() => setExpandedWidget('key-matchups')}><span className="widget-expand-icon">↗</span><KeyMatchupsWidget opponent={selectedGame.opponent} isDark={isDark} /></div>}
+                {selectedGame && <div id="key-stats" data-mode="gameday" style={{position:'relative'}} onClick={() => setExpandedWidget('key-stats')}><span className="widget-expand-icon">↗</span><KeyStatsWidget isDark={isDark} opponent={selectedGame.opponent} /></div>}
+                <div id="head-to-head" data-mode="gameday" style={{position:'relative'}} onClick={() => setExpandedWidget('head-to-head')}><span className="widget-expand-icon">↗</span><HeadToHeadWidget isDark={isDark} /></div>
+                <div id="historical-h2h" data-mode="gameday" style={{position:'relative'}} onClick={() => setExpandedWidget('historical-h2h')}><span className="widget-expand-icon">↗</span><HistoricalH2HWidget isDark={isDark} opponent={selectedGame?.opponent} /></div>
+                {selectedGame && <div id="defensive-assignments" data-mode="gameday" style={{position:'relative'}} onClick={() => setExpandedWidget('defensive-assignments')}><span className="widget-expand-icon">↗</span><DefensiveAssignmentsWidget isDark={isDark} opponent={selectedGame.opponent} /></div>}
+                {selectedGame && <div id="opponent-scouting" data-mode="gameday" style={{position:'relative'}} onClick={() => setExpandedWidget('opponent-scouting')}><span className="widget-expand-icon">↗</span><OpponentScoutingWidget isDark={isDark} opponent={selectedGame.opponent} /></div>}
+                {selectedGame && <div id="prediction-breakdown" data-mode="gameday betting" style={{position:'relative'}} onClick={() => setExpandedWidget('prediction-breakdown')}><span className="widget-expand-icon">↗</span><PredictionBreakdownWidget isDark={isDark} opponent={selectedGame.opponent} /></div>}
+                {selectedGame?.status === 'upcoming' && <div id="predicted-score" data-mode="gameday betting" style={{position:'relative'}} onClick={() => setExpandedWidget('predicted-score')}><span className="widget-expand-icon">↗</span><PredictedScoreWidget isDark={isDark} opponent={selectedGame.opponent} /></div>}
+                {selectedGame?.status === 'upcoming' && <div id="score-predictor" data-mode="gameday betting" style={{position:'relative'}} onClick={() => setExpandedWidget('score-predictor')}><span className="widget-expand-icon">↗</span><ScorePredictorWidget isDark={isDark} opponent={selectedGame.opponent} /></div>}
+                {selectedGame?.status === 'upcoming' && <div id="betting-hub" data-mode="gameday betting" style={{position:'relative'}} onClick={() => setExpandedWidget('betting-hub')}><span className="widget-expand-icon">↗</span><WidgetErrorBoundary name="Betting Hub"><BettingHubWidget isDark={isDark} game={selectedGame} /></WidgetErrorBoundary></div>}
+                {selectedGame?.status === 'upcoming' && <div id="player-props" data-mode="gameday betting" style={{position:'relative'}} onClick={() => setExpandedWidget('player-props')}><span className="widget-expand-icon">↗</span><PlayerPropsWidget isDark={isDark} opponent={selectedGame?.opponent} /></div>}
+                {selectedGame?.status === 'upcoming' && <div id="tv-schedule" data-mode="gameday" style={{position:'relative'}} onClick={() => setExpandedWidget('tv-schedule')}><span className="widget-expand-icon">↗</span><TVScheduleWidget isDark={isDark} game={selectedGame} /></div>}
 
                 {/* Core Stats — blue accent */}
-                <div className="dg-stats"><RecordBreakdownWidget isDark={isDark} /></div>
-                <div className="dg-stats"><HomeAwaySplitsWidget isDark={isDark} nextGameHome={selectedGame?.home} /></div>
-                <div className="dg-stats"><RecordByMarginWidget isDark={isDark} /></div>
-                <div className="dg-stats"><HalfPerformanceWidget isDark={isDark} /></div>
-                <div className="dg-stats"><MonthlyPerformanceWidget isDark={isDark} /></div>
-                <div className="dg-stats"><BigGamesWidget isDark={isDark} /></div>
-                <div className="dg-stats"><SignatureWinsWidget isDark={isDark} /></div>
-                <div className="dg-stats"><VsLeagueAvgWidget isDark={isDark} /></div>
+                <div id="record-breakdown" data-mode="analytics" style={{position:'relative'}} onClick={() => setExpandedWidget('record-breakdown')}><span className="widget-expand-icon">↗</span><RecordBreakdownWidget isDark={isDark} /></div>
+                <div id="home-away" data-mode="analytics" style={{position:'relative'}} onClick={() => setExpandedWidget('home-away')}><span className="widget-expand-icon">↗</span><HomeAwaySplitsWidget isDark={isDark} nextGameHome={selectedGame?.home} /></div>
+                <div id="record-by-margin" data-mode="analytics" style={{position:'relative'}} onClick={() => setExpandedWidget('record-by-margin')}><span className="widget-expand-icon">↗</span><RecordByMarginWidget isDark={isDark} /></div>
+                <div id="half-performance" data-mode="analytics" style={{position:'relative'}} onClick={() => setExpandedWidget('half-performance')}><span className="widget-expand-icon">↗</span><HalfPerformanceWidget isDark={isDark} /></div>
+                <div id="monthly-performance" data-mode="analytics" style={{position:'relative'}} onClick={() => setExpandedWidget('monthly-performance')}><span className="widget-expand-icon">↗</span><MonthlyPerformanceWidget isDark={isDark} /></div>
+                <div id="big-games" data-mode="analytics" style={{position:'relative'}} onClick={() => setExpandedWidget('big-games')}><span className="widget-expand-icon">↗</span><BigGamesWidget isDark={isDark} /></div>
+                <div id="signature-wins" data-mode="analytics" style={{position:'relative'}} onClick={() => setExpandedWidget('signature-wins')}><span className="widget-expand-icon">↗</span><SignatureWinsWidget isDark={isDark} /></div>
+                <div id="vs-league-avg" data-mode="analytics" style={{position:'relative'}} onClick={() => setExpandedWidget('vs-league-avg')}><span className="widget-expand-icon">↗</span><VsLeagueAvgWidget isDark={isDark} /></div>
 
                 {/* Player Analysis — green accent */}
-                <div className="widget-tall dg-players"><PlayerSpotlightCarousel isDark={isDark} /></div>
-                <div className="widget-tall dg-players">
+                <div id="player-spotlight" data-mode="players" className="widget-tall" style={{position:'relative'}} onClick={() => setExpandedWidget('player-spotlight')}><span className="widget-expand-icon">↗</span><PlayerSpotlightCarousel isDark={isDark} /></div>
+                <div id="player-deep-dive" data-mode="players" className="widget-tall" style={{position:'relative'}} onClick={(e) => { if (e.target.closest('button')) return; setExpandedWidget('player-deep-dive'); }}>
+                  <span className="widget-expand-icon">↗</span>
                   <div className={`${isDark ? 'premium-glass' : 'bg-white border border-light-border shadow-lg'} rounded-md h-full overflow-hidden`} style={{padding:'6px'}}>
                   <div className="flex items-center gap-1 mb-1">
                     <Users className="w-3 h-3 text-raptors-red" />
@@ -13660,7 +14182,7 @@ function App() {
                   </div>
                   <div className="space-y-0.5 overflow-y-auto custom-scrollbar" style={{maxHeight:'calc(100% - 24px)'}}>
                     {RAPTORS_ROSTER.map((p) => (
-                      <button key={p.id} onClick={() => setSelectedPlayer(p)} className={`w-full flex items-center gap-1 p-1 rounded text-left ${isDark ? 'hover:bg-cmd-card' : 'hover:bg-light-card'}`}>
+                      <button key={p.id} onClick={(e) => { e.stopPropagation(); setSelectedPlayer(p); }} className={`w-full flex items-center gap-1 p-1 rounded text-left ${isDark ? 'hover:bg-cmd-card' : 'hover:bg-light-card'}`}>
                         <span className="text-[9px] font-bold w-4 text-raptors-red">#{p.number}</span>
                         <span className={`text-[10px] font-medium flex-1 truncate ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>{p.name}</span>
                         <span className={`text-[9px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>{p.seasonStats?.ppg}</span>
@@ -13670,67 +14192,67 @@ function App() {
                   </div>
                   </div>
                 </div>
-                <div className="dg-players"><UsageRateWidget isDark={isDark} /></div>
-                <div className="dg-players"><MinutesDistributionWidget isDark={isDark} /></div>
-                <div className="dg-players"><PlusMinusWidget isDark={isDark} /></div>
-                <div className="dg-players"><WinSharesWidget isDark={isDark} /></div>
-                <div className="widget-large dg-players"><PlayerComparisonTool isDark={isDark} /></div>
-                <div className="dg-players"><FantasyProjectionsWidget isDark={isDark} /></div>
+                <div id="usage-rate" data-mode="players" style={{position:'relative'}} onClick={() => setExpandedWidget('usage-rate')}><span className="widget-expand-icon">↗</span><UsageRateWidget isDark={isDark} /></div>
+                <div id="minutes-distribution" data-mode="players" style={{position:'relative'}} onClick={() => setExpandedWidget('minutes-distribution')}><span className="widget-expand-icon">↗</span><MinutesDistributionWidget isDark={isDark} /></div>
+                <div id="plus-minus" data-mode="players" style={{position:'relative'}} onClick={() => setExpandedWidget('plus-minus')}><span className="widget-expand-icon">↗</span><PlusMinusWidget isDark={isDark} /></div>
+                <div id="win-shares" data-mode="players" style={{position:'relative'}} onClick={() => setExpandedWidget('win-shares')}><span className="widget-expand-icon">↗</span><WinSharesWidget isDark={isDark} /></div>
+                <div id="player-comparison" data-mode="players" className="widget-large" style={{position:'relative'}} onClick={(e) => { if (e.target.closest('select') || e.target.closest('button')) return; setExpandedWidget('player-comparison'); }}><span className="widget-expand-icon">↗</span><PlayerComparisonTool isDark={isDark} /></div>
+                <div id="fantasy-projections" data-mode="players" style={{position:'relative'}} onClick={() => setExpandedWidget('fantasy-projections')}><span className="widget-expand-icon">↗</span><FantasyProjectionsWidget isDark={isDark} /></div>
 
                 {/* Analytics — purple accent */}
-                <div className="widget-wide dg-analytics"><AdvancedStatsWidget isDark={isDark} /></div>
-                <div className="widget-wide dg-analytics"><NetRatingWidget isDark={isDark} /></div>
-                <div className="dg-analytics"><FourFactorsWidget isDark={isDark} opponent={selectedGame?.opponent} /></div>
-                <div className="dg-analytics"><ClutchStatsWidget isDark={isDark} /></div>
-                <div className="dg-analytics"><PaceEfficiencyWidget isDark={isDark} /></div>
-                <div className="dg-analytics"><OffensiveSetsWidget isDark={isDark} /></div>
-                <div className="dg-analytics"><DefensiveEfficiencyWidget isDark={isDark} /></div>
-                <div className="dg-analytics"><CrunchTimeWidget isDark={isDark} /></div>
-                <div className="dg-analytics"><EfficiencyWidget isDark={isDark} /></div>
-                <div className="dg-analytics"><AstToWidget isDark={isDark} /></div>
-                <div className="dg-analytics"><PacePredictorWidget isDark={isDark} opponent={selectedGame?.opponent} /></div>
-                <div className="dg-analytics"><QuarterBreakdownWidget isDark={isDark} /></div>
-                <div className="dg-analytics"><StreakProbabilityWidget isDark={isDark} streak={RAPTORS_STATS.streak} /></div>
+                <div id="advanced-stats" data-mode="analytics" className="widget-wide" style={{position:'relative'}} onClick={() => setExpandedWidget('advanced-stats')}><span className="widget-expand-icon">↗</span><AdvancedStatsWidget isDark={isDark} /></div>
+                <div id="net-rating" data-mode="analytics" className="widget-wide" style={{position:'relative'}} onClick={() => setExpandedWidget('net-rating')}><span className="widget-expand-icon">↗</span><NetRatingWidget isDark={isDark} /></div>
+                <div id="four-factors" data-mode="analytics" style={{position:'relative'}} onClick={() => setExpandedWidget('four-factors')}><span className="widget-expand-icon">↗</span><FourFactorsWidget isDark={isDark} opponent={selectedGame?.opponent} /></div>
+                <div id="clutch-stats" data-mode="analytics" style={{position:'relative'}} onClick={() => setExpandedWidget('clutch-stats')}><span className="widget-expand-icon">↗</span><ClutchStatsWidget isDark={isDark} /></div>
+                <div id="pace-efficiency" data-mode="analytics" style={{position:'relative'}} onClick={() => setExpandedWidget('pace-efficiency')}><span className="widget-expand-icon">↗</span><PaceEfficiencyWidget isDark={isDark} /></div>
+                <div id="offensive-sets" data-mode="analytics" style={{position:'relative'}} onClick={() => setExpandedWidget('offensive-sets')}><span className="widget-expand-icon">↗</span><OffensiveSetsWidget isDark={isDark} /></div>
+                <div id="defensive-efficiency" data-mode="analytics" style={{position:'relative'}} onClick={() => setExpandedWidget('defensive-efficiency')}><span className="widget-expand-icon">↗</span><DefensiveEfficiencyWidget isDark={isDark} /></div>
+                <div id="crunch-time" data-mode="analytics" style={{position:'relative'}} onClick={() => setExpandedWidget('crunch-time')}><span className="widget-expand-icon">↗</span><CrunchTimeWidget isDark={isDark} /></div>
+                <div id="efficiency" data-mode="analytics" style={{position:'relative'}} onClick={() => setExpandedWidget('efficiency')}><span className="widget-expand-icon">↗</span><EfficiencyWidget isDark={isDark} /></div>
+                <div id="ast-to" data-mode="analytics" style={{position:'relative'}} onClick={() => setExpandedWidget('ast-to')}><span className="widget-expand-icon">↗</span><AstToWidget isDark={isDark} /></div>
+                <div id="pace-predictor" data-mode="analytics" style={{position:'relative'}} onClick={() => setExpandedWidget('pace-predictor')}><span className="widget-expand-icon">↗</span><PacePredictorWidget isDark={isDark} opponent={selectedGame?.opponent} /></div>
+                <div id="quarter-breakdown" data-mode="analytics" style={{position:'relative'}} onClick={() => setExpandedWidget('quarter-breakdown')}><span className="widget-expand-icon">↗</span><QuarterBreakdownWidget isDark={isDark} /></div>
+                <div id="streak-probability" data-mode="analytics" style={{position:'relative'}} onClick={() => setExpandedWidget('streak-probability')}><span className="widget-expand-icon">↗</span><StreakProbabilityWidget isDark={isDark} streak={RAPTORS_STATS.streak} /></div>
 
                 {/* On-Court — orange accent */}
-                <div className="dg-oncourt"><PointsDistributionWidget isDark={isDark} /></div>
-                <div className="dg-oncourt"><AssistLeadersWidget isDark={isDark} /></div>
-                <div className="dg-oncourt"><PointsOffAssistsWidget isDark={isDark} /></div>
-                <div className="dg-oncourt"><ThreePointWidget isDark={isDark} /></div>
-                <div className="dg-oncourt"><FreeThrowWidget isDark={isDark} /></div>
-                <div className="dg-oncourt"><FastBreakWidget isDark={isDark} /></div>
-                <div className="dg-oncourt"><PaintScoringWidget isDark={isDark} /></div>
-                <div className="dg-oncourt"><SecondChanceWidget isDark={isDark} /></div>
-                <div className="dg-oncourt"><ShotChartWidget isDark={isDark} /></div>
-                <div className="dg-oncourt"><MiniHeatMap isDark={isDark} /></div>
-                <div className="dg-oncourt"><BenchProductionWidget isDark={isDark} /></div>
-                <div className="dg-oncourt"><StarterVsBenchWidget isDark={isDark} /></div>
-                <div className="widget-wide dg-oncourt"><LineupCombosWidget isDark={isDark} /></div>
-                <div className="dg-oncourt"><StealsBlocksWidget isDark={isDark} /></div>
-                <div className="dg-oncourt"><ReboundBattleWidget isDark={isDark} /></div>
-                <div className="dg-oncourt"><TurnoverWidget isDark={isDark} /></div>
+                <div id="points-distribution" data-mode="analytics" style={{position:'relative'}} onClick={() => setExpandedWidget('points-distribution')}><span className="widget-expand-icon">↗</span><PointsDistributionWidget isDark={isDark} /></div>
+                <div id="assist-leaders" data-mode="analytics" style={{position:'relative'}} onClick={() => setExpandedWidget('assist-leaders')}><span className="widget-expand-icon">↗</span><AssistLeadersWidget isDark={isDark} /></div>
+                <div id="points-off-assists" data-mode="analytics" style={{position:'relative'}} onClick={() => setExpandedWidget('points-off-assists')}><span className="widget-expand-icon">↗</span><PointsOffAssistsWidget isDark={isDark} /></div>
+                <div id="three-point" data-mode="analytics" style={{position:'relative'}} onClick={() => setExpandedWidget('three-point')}><span className="widget-expand-icon">↗</span><ThreePointWidget isDark={isDark} /></div>
+                <div id="free-throw" data-mode="analytics" style={{position:'relative'}} onClick={() => setExpandedWidget('free-throw')}><span className="widget-expand-icon">↗</span><FreeThrowWidget isDark={isDark} /></div>
+                <div id="fast-break" data-mode="analytics" style={{position:'relative'}} onClick={() => setExpandedWidget('fast-break')}><span className="widget-expand-icon">↗</span><FastBreakWidget isDark={isDark} /></div>
+                <div id="paint-scoring" data-mode="analytics" style={{position:'relative'}} onClick={() => setExpandedWidget('paint-scoring')}><span className="widget-expand-icon">↗</span><PaintScoringWidget isDark={isDark} /></div>
+                <div id="second-chance" data-mode="analytics" style={{position:'relative'}} onClick={() => setExpandedWidget('second-chance')}><span className="widget-expand-icon">↗</span><SecondChanceWidget isDark={isDark} /></div>
+                <div id="shot-chart" data-mode="analytics" style={{position:'relative'}} onClick={() => setExpandedWidget('shot-chart')}><span className="widget-expand-icon">↗</span><ShotChartWidget isDark={isDark} /></div>
+                <div id="mini-heatmap" data-mode="analytics" style={{position:'relative'}} onClick={() => setExpandedWidget('mini-heatmap')}><span className="widget-expand-icon">↗</span><MiniHeatMap isDark={isDark} /></div>
+                <div id="bench-production" data-mode="analytics" style={{position:'relative'}} onClick={() => setExpandedWidget('bench-production')}><span className="widget-expand-icon">↗</span><BenchProductionWidget isDark={isDark} /></div>
+                <div id="starter-vs-bench" data-mode="analytics" style={{position:'relative'}} onClick={() => setExpandedWidget('starter-vs-bench')}><span className="widget-expand-icon">↗</span><StarterVsBenchWidget isDark={isDark} /></div>
+                <div id="lineup-combos" data-mode="analytics" className="widget-wide" style={{position:'relative'}} onClick={() => setExpandedWidget('lineup-combos')}><span className="widget-expand-icon">↗</span><LineupCombosWidget isDark={isDark} /></div>
+                <div id="steals-blocks" data-mode="analytics" style={{position:'relative'}} onClick={() => setExpandedWidget('steals-blocks')}><span className="widget-expand-icon">↗</span><StealsBlocksWidget isDark={isDark} /></div>
+                <div id="rebound-battle" data-mode="analytics" style={{position:'relative'}} onClick={() => setExpandedWidget('rebound-battle')}><span className="widget-expand-icon">↗</span><ReboundBattleWidget isDark={isDark} /></div>
+                <div id="turnover" data-mode="analytics" style={{position:'relative'}} onClick={() => setExpandedWidget('turnover')}><span className="widget-expand-icon">↗</span><TurnoverWidget isDark={isDark} /></div>
 
                 {/* Season & FO — teal accent */}
-                <div className="dg-season"><StandingsVisualizationWidget isDark={isDark} /></div>
-                <div className="dg-season"><ScheduleStrengthWidget isDark={isDark} /></div>
-                <div className="dg-season"><SeasonTrackerWidget isDark={isDark} games={games} /></div>
+                <div id="standings-viz" data-mode="all" style={{position:'relative'}} onClick={() => setExpandedWidget('standings-viz')}><span className="widget-expand-icon">↗</span><StandingsVisualizationWidget isDark={isDark} /></div>
+                <div id="schedule-strength" data-mode="all" style={{position:'relative'}} onClick={() => setExpandedWidget('schedule-strength')}><span className="widget-expand-icon">↗</span><ScheduleStrengthWidget isDark={isDark} /></div>
+                <div id="season-tracker" data-mode="all" style={{position:'relative'}} onClick={() => setExpandedWidget('season-tracker')}><span className="widget-expand-icon">↗</span><SeasonTrackerWidget isDark={isDark} games={games} /></div>
                 {/* SeasonTimelineWidget (Season Milestones) removed per request */}
-                <div className="dg-season"><MVPRaceWidget isDark={isDark} /></div>
-                <div className="dg-season"><AllStarTrackerWidget isDark={isDark} /></div>
-                <div className="dg-season"><TradeAnalysisWidget isDark={isDark} /></div>
-                <div className="dg-season"><DraftPickWidget isDark={isDark} /></div>
-                <div className="dg-season"><SalaryCapWidget isDark={isDark} /></div>
-                <div className="dg-season"><TeamSalaryWidget isDark={isDark} teamName="Raptors" opponentName={selectedGame?.opponent} /></div>
-                <div className="dg-season"><CoachInsightsWidget isDark={isDark} /></div>
+                <div id="mvp-race" data-mode="all" style={{position:'relative'}} onClick={() => setExpandedWidget('mvp-race')}><span className="widget-expand-icon">↗</span><MVPRaceWidget isDark={isDark} /></div>
+                <div id="all-star-tracker" data-mode="all" style={{position:'relative'}} onClick={() => setExpandedWidget('all-star-tracker')}><span className="widget-expand-icon">↗</span><AllStarTrackerWidget isDark={isDark} /></div>
+                <div id="trade-analysis" data-mode="all" style={{position:'relative'}} onClick={() => setExpandedWidget('trade-analysis')}><span className="widget-expand-icon">↗</span><TradeAnalysisWidget isDark={isDark} /></div>
+                <div id="draft-pick" data-mode="all" style={{position:'relative'}} onClick={() => setExpandedWidget('draft-pick')}><span className="widget-expand-icon">↗</span><DraftPickWidget isDark={isDark} /></div>
+                <div id="salary-cap" data-mode="all" style={{position:'relative'}} onClick={() => setExpandedWidget('salary-cap')}><span className="widget-expand-icon">↗</span><SalaryCapWidget isDark={isDark} /></div>
+                <div id="team-salary" data-mode="all" style={{position:'relative'}} onClick={() => setExpandedWidget('team-salary')}><span className="widget-expand-icon">↗</span><TeamSalaryWidget isDark={isDark} teamName="Raptors" opponentName={selectedGame?.opponent} /></div>
+                <div id="coach-insights" data-mode="all" style={{position:'relative'}} onClick={() => setExpandedWidget('coach-insights')}><span className="widget-expand-icon">↗</span><CoachInsightsWidget isDark={isDark} /></div>
 
                 {/* Community — pink accent */}
-                <div className="dg-community"><FanEngagementWidget isDark={isDark} /></div>
-                <div className="dg-community"><GamePredictionPoll isDark={isDark} /></div>
-                <div className="dg-community"><FanPollWidget isDark={isDark} /></div>
-                <div className="dg-community"><StorylinesWidget isDark={isDark} /></div>
-                <div className="dg-community"><SocialBuzzWidget isDark={isDark} /></div>
-                <div className="dg-community"><TeamChemistryWidget isDark={isDark} /></div>
-                <div className="dg-community"><MomentumTrackerWidget isDark={isDark} /></div>
+                <div id="fan-engagement" data-mode="all" style={{position:'relative'}} onClick={() => setExpandedWidget('fan-engagement')}><span className="widget-expand-icon">↗</span><FanEngagementWidget isDark={isDark} /></div>
+                <div id="game-prediction-poll" data-mode="all" style={{position:'relative'}} onClick={(e) => { if (e.target.closest('button')) return; setExpandedWidget('game-prediction-poll'); }}><span className="widget-expand-icon">↗</span><GamePredictionPoll isDark={isDark} /></div>
+                <div id="fan-poll" data-mode="all" style={{position:'relative'}} onClick={(e) => { if (e.target.closest('button')) return; setExpandedWidget('fan-poll'); }}><span className="widget-expand-icon">↗</span><FanPollWidget isDark={isDark} /></div>
+                <div id="storylines" data-mode="all" style={{position:'relative'}} onClick={() => setExpandedWidget('storylines')}><span className="widget-expand-icon">↗</span><StorylinesWidget isDark={isDark} /></div>
+                <div id="social-buzz" data-mode="all" style={{position:'relative'}} onClick={() => setExpandedWidget('social-buzz')}><span className="widget-expand-icon">↗</span><SocialBuzzWidget isDark={isDark} /></div>
+                <div id="team-chemistry" data-mode="all" style={{position:'relative'}} onClick={(e) => { if (e.target.closest('input[type="range"]')) return; setExpandedWidget('team-chemistry'); }}><span className="widget-expand-icon">↗</span><TeamChemistryWidget isDark={isDark} /></div>
+                <div id="momentum-tracker" data-mode="all" style={{position:'relative'}} onClick={() => setExpandedWidget('momentum-tracker')}><span className="widget-expand-icon">↗</span><MomentumTrackerWidget isDark={isDark} /></div>
               </div>
           </div>
         </div>
@@ -13741,13 +14263,50 @@ function App() {
         <div className="flex flex-col items-center gap-2">
           <div className="flex items-center gap-2 flex-wrap justify-center">
             <span className="font-bold text-raptors-red">RAPTORS INTEL</span>
-            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v13.4</span>
+            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v14.0</span>
           </div>
           <p style={{margin:0}}>Built with 🏀 by Raptors Intel • Data from ESPN • Not affiliated with the NBA</p>
           <p style={{margin:0, fontSize:'0.65rem', opacity:0.6}}>Last Updated: {new Date().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}</p>
           <button className="back-to-top" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>↑ Back to Top</button>
         </div>
       </footer>
+      
+      {/* v14.0 Modals */}
+      {expandedWidget && (
+        <WidgetModal isDark={isDark} onClose={() => setExpandedWidget(null)}>
+          {(() => {
+            const widgetEl = document.getElementById(expandedWidget);
+            if (!widgetEl) return null;
+            const clone = widgetEl.cloneNode(true);
+            clone.style.position = 'static';
+            clone.onclick = null;
+            const expandIcon = clone.querySelector('.widget-expand-icon');
+            if (expandIcon) expandIcon.remove();
+            return <div dangerouslySetInnerHTML={{ __html: clone.innerHTML }} />;
+          })()}
+        </WidgetModal>
+      )}
+      
+      <SearchSpotlight 
+        isOpen={searchOpen} 
+        onClose={() => setSearchOpen(false)} 
+        isDark={isDark}
+        widgetRegistry={WIDGET_REGISTRY}
+        onSelectWidget={(widgetId) => {
+          const el = document.getElementById(widgetId);
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            el.classList.add('widget-highlight');
+            setTimeout(() => el.classList.remove('widget-highlight'), 3000);
+          }
+        }}
+      />
+      
+      <KeyboardShortcutsHelp 
+        isOpen={showShortcutsHelp} 
+        onClose={() => setShowShortcutsHelp(false)} 
+        isDark={isDark}
+      />
     </div>
     </ThemeContext.Provider>
   );
