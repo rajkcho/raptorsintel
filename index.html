@@ -16179,7 +16179,7 @@ function App() {
 
                 {/* Player Analysis — green accent */}
                 {shouldShow('players') && <div id="player-spotlight" data-mode="players" className="widget-tall" style={{position:'relative'}} onClick={() => setExpandedWidget('player-spotlight')}><span className="widget-expand-icon">↗</span><PlayerSpotlightCarousel isDark={isDark} /></div>}
-                {shouldShow('players') && <div id="player-deep-dive" data-mode="players" className="widget-tall" style={{position:'relative'}} onClick={(e) => { if (e.target.closest('button')) return; setExpandedWidget('player-deep-dive'); }}>}
+                {shouldShow('players') && <div id="player-deep-dive" data-mode="players" className="widget-tall" style={{position:'relative'}} onClick={(e) => { if (e.target.closest('button')) return; setExpandedWidget('player-deep-dive'); }}>
                   <span className="widget-expand-icon">↗</span>
                   <div className={`${isDark ? 'premium-glass' : 'bg-white border border-light-border shadow-lg'} rounded-md h-full overflow-hidden`} style={{padding:'6px'}}>
                   <div className="flex items-center gap-1 mb-1">
@@ -16197,7 +16197,7 @@ function App() {
                     ))}
                   </div>
                   </div>
-                </div>
+                </div>}
                 {shouldShow('players') && <div id="usage-rate" data-mode="players" style={{position:'relative'}} onClick={() => setExpandedWidget('usage-rate')}><span className="widget-expand-icon">↗</span><UsageRateWidget isDark={isDark} /></div>}
                 {shouldShow('players') && <div id="minutes-distribution" data-mode="players" style={{position:'relative'}} onClick={() => setExpandedWidget('minutes-distribution')}><span className="widget-expand-icon">↗</span><MinutesDistributionWidget isDark={isDark} /></div>}
                 {shouldShow('players') && <div id="plus-minus" data-mode="players" style={{position:'relative'}} onClick={() => setExpandedWidget('plus-minus')}><span className="widget-expand-icon">↗</span><PlusMinusWidget isDark={isDark} /></div>}
