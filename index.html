@@ -15110,6 +15110,442 @@ const DefensiveMatchupWidget = ({ isDark = true }) => {
   );
 };
 
+// ========== WAVE 5: PREMIUM WIDGETS ==========
+
+// WIDGET 1: Transaction Tracker / Trade Deadline Recap
+const TransactionTrackerWidget = ({ isDark = true }) => {
+  const transactions = [
+    { date: 'Oct 2025', type: 'season', title: 'Season Opener', details: '32-22 through 54 games' },
+    { date: 'Feb 5', type: 'trade', title: 'Acquired Chris Paul', details: 'From LA Clippers' },
+    { date: 'Feb 5', type: 'trade', title: 'Acquired Trayce Jackson-Davis', details: 'From Golden State Warriors' },
+    { date: 'Feb 6', type: 'trade', title: 'Acquired Brandon Ingram', details: 'From New Orleans Pelicans' },
+    { date: 'Feb 6', type: 'waiver', title: 'Waived Chris Paul', details: 'After 1 day with team' }
+  ];
+
+  const getTypeColor = (type) => {
+    if (type === 'trade') return isDark ? 'bg-blue-500/20 border-blue-500/40' : 'bg-blue-50 border-blue-200';
+    if (type === 'waiver') return isDark ? 'bg-orange-500/20 border-orange-500/40' : 'bg-orange-50 border-orange-200';
+    if (type === 'signing') return isDark ? 'bg-green-500/20 border-green-500/40' : 'bg-green-50 border-green-200';
+    return isDark ? 'bg-slate-500/20 border-slate-500/40' : 'bg-slate-50 border-slate-200';
+  };
+
+  const getTypeIcon = (type) => {
+    if (type === 'trade') return '🔄';
+    if (type === 'waiver') return '✂️';
+    if (type === 'signing') return '✍️';
+    return '📅';
+  };
+
+  const getTypeName = (type) => {
+    if (type === 'trade') return 'Trade';
+    if (type === 'waiver') return 'Waiver';
+    if (type === 'signing') return 'Signing';
+    return 'Event';
+  };
+
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4 h-full`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          📋 Transaction Tracker
+        </h3>
+        <span className={`text-[8px] px-1.5 py-0.5 rounded ${isDark ? 'bg-cmd-bg text-slate-400' : 'bg-light-card text-slate-500'}`}>2025-26 Season</span>
+      </div>
+
+      <div className="relative">
+        {/* Timeline line */}
+        <div className={`absolute left-3 top-0 bottom-0 w-0.5 ${isDark ? 'bg-cmd-border' : 'bg-light-border'}`} />
+        
+        <div className="space-y-3 relative">
+          {transactions.map((txn, i) => (
+            <div key={i} className="flex gap-3 relative">
+              {/* Timeline dot */}
+              <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 z-10 ${isDark ? 'bg-cmd-card' : 'bg-white'} border-2 ${txn.type === 'trade' ? 'border-blue-500' : txn.type === 'waiver' ? 'border-orange-500' : txn.type === 'signing' ? 'border-green-500' : 'border-slate-500'}`}>
+                <span className="text-[10px]">{getTypeIcon(txn.type)}</span>
+              </div>
+              
+              {/* Transaction card */}
+              <div className={`flex-1 p-2.5 rounded-lg border ${getTypeColor(txn.type)}`}>
+                <div className="flex items-start justify-between mb-1">
+                  <div className={`text-[9px] font-bold uppercase ${isDark ? 'text-white' : 'text-slate-800'}`}>
+                    {txn.title}
+                  </div>
+                  <span className={`text-[7px] px-1.5 py-0.5 rounded ${txn.type === 'trade' ? 'bg-blue-500 text-white' : txn.type === 'waiver' ? 'bg-orange-500 text-white' : txn.type === 'signing' ? 'bg-green-500 text-white' : 'bg-slate-500 text-white'}`}>
+                    {getTypeName(txn.type)}
+                  </span>
+                </div>
+                <div className={`text-[8px] ${isDark ? 'text-slate-400' : 'text-slate-600'} mb-1`}>
+                  {txn.details}
+                </div>
+                <div className={`text-[7px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
+                  {txn.date}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className={`mt-3 pt-3 border-t ${isDark ? 'border-cmd-border' : 'border-light-border'} text-[8px] ${isDark ? 'text-slate-500' : 'text-slate-400'} text-center`}>
+        Trade deadline: Feb 6, 2026
+      </div>
+    </div>
+  );
+};
+
+// WIDGET 2: Hustle Stats Widget
+const HustleStatsWidget = ({ isDark = true }) => {
+  const hustleData = [
+    { category: 'Deflections', leaders: [
+      { name: 'Scottie Barnes', value: 3.8 },
+      { name: 'Jalen Shead', value: 3.2 },
+      { name: 'RJ Barrett', value: 2.1 }
+    ], leagueAvg: 2.0 },
+    { category: 'Loose Balls', leaders: [
+      { name: 'Jalen Shead', value: 1.9 },
+      { name: 'Scottie Barnes', value: 1.6 },
+      { name: 'Jakob Poeltl', value: 1.2 }
+    ], leagueAvg: 0.9 },
+    { category: 'Charges', leaders: [
+      { name: 'Scottie Barnes', value: 0.4 },
+      { name: 'Jalen Shead', value: 0.3 },
+      { name: 'Jakob Poeltl', value: 0.2 }
+    ], leagueAvg: 0.2 },
+    { category: 'Screen Ast', leaders: [
+      { name: 'Jakob Poeltl', value: 4.2 },
+      { name: 'Scottie Barnes', value: 2.8 },
+      { name: 'RJ Barrett', value: 1.7 }
+    ], leagueAvg: 1.5 },
+    { category: 'Contested', leaders: [
+      { name: 'Scottie Barnes', value: 11.2 },
+      { name: 'Jalen Shead', value: 9.8 },
+      { name: 'Jakob Poeltl', value: 8.4 }
+    ], leagueAvg: 6.5 }
+  ];
+
+  const effortIndex = 87; // Combined score
+
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4 h-full`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          💪 Hustle Stats
+        </h3>
+        <div className={`text-[9px] px-2 py-1 rounded font-bold ${isDark ? 'bg-raptors-red/20 text-raptors-red border border-raptors-red/40' : 'bg-red-50 text-red-600 border border-red-200'}`}>
+          Effort Index: {effortIndex}
+        </div>
+      </div>
+
+      <div className="space-y-3">
+        {hustleData.map((stat, i) => (
+          <div key={i}>
+            <div className={`flex items-center justify-between mb-1.5`}>
+              <span className={`text-[9px] font-bold uppercase ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
+                {stat.category}
+              </span>
+              <span className={`text-[7px] ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
+                Lg Avg: {stat.leagueAvg}
+              </span>
+            </div>
+            <div className="space-y-1">
+              {stat.leaders.map((player, j) => {
+                const barWidth = Math.min((player.value / (stat.leagueAvg * 2.5)) * 100, 100);
+                const aboveAvg = player.value > stat.leagueAvg;
+                
+                return (
+                  <div key={j} className="flex items-center gap-2">
+                    <span className={`text-[8px] w-20 truncate ${j === 0 ? 'font-bold text-raptors-red' : isDark ? 'text-slate-300' : 'text-slate-700'}`}>
+                      {j + 1}. {player.name.split(' ')[1] || player.name}
+                    </span>
+                    <div className="flex-1 relative">
+                      <div className={`h-4 rounded ${isDark ? 'bg-cmd-border' : 'bg-light-border'}`}>
+                        <div 
+                          className={`h-full rounded transition-all duration-500 ${aboveAvg ? 'bg-gradient-to-r from-green-500 to-green-400' : isDark ? 'bg-slate-600' : 'bg-slate-400'}`}
+                          style={{ width: `${barWidth}%` }}
+                        />
+                      </div>
+                    </div>
+                    <span className={`text-[9px] font-bold w-8 text-right ${isDark ? 'text-white' : 'text-slate-800'}`}>
+                      {player.value}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className={`mt-3 pt-3 border-t ${isDark ? 'border-cmd-border' : 'border-light-border'} text-[7px] ${isDark ? 'text-slate-500' : 'text-slate-400'} text-center`}>
+        Effort Index = composite of all hustle metrics vs league avg
+      </div>
+    </div>
+  );
+};
+
+// WIDGET 3: Shooting Splits by Quarter
+const ShootingSplitsByQuarterWidget = ({ isDark = true }) => {
+  const quarterData = [
+    { quarter: 'Q1', fg: 48.2, threePt: 37.1, ft: 79.5, ppg: 29.8 },
+    { quarter: 'Q2', fg: 47.0, threePt: 35.8, ft: 81.2, ppg: 28.2 },
+    { quarter: 'Q3', fg: 44.8, threePt: 33.5, ft: 77.3, ppg: 26.5 },
+    { quarter: 'Q4', fg: 48.9, threePt: 38.2, ft: 83.1, ppg: 30.3 },
+    { quarter: 'OT', fg: 46.5, threePt: 36.0, ft: 80.0, ppg: 8.5 }
+  ];
+
+  const seasonAvg = { fg: 47.2, threePt: 36.2, ft: 80.3, ppg: 28.7 };
+
+  const getCellColor = (value, avg) => {
+    if (value > avg) return isDark ? 'text-green-400' : 'text-green-600';
+    if (value < avg) return isDark ? 'text-red-400' : 'text-red-600';
+    return isDark ? 'text-slate-400' : 'text-slate-600';
+  };
+
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4 h-full`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          📊 Shooting by Quarter
+        </h3>
+        <span className={`text-[8px] px-1.5 py-0.5 rounded ${isDark ? 'bg-cmd-bg text-slate-400' : 'bg-light-card text-slate-500'}`}>2025-26</span>
+      </div>
+
+      <div className="overflow-x-auto">
+        <table className="w-full border-collapse" style={{fontSize:'9px'}}>
+          <thead>
+            <tr>
+              <th className={`p-2 text-left font-bold ${isDark ? 'text-slate-400' : 'text-slate-600'} border ${isDark ? 'border-cmd-border' : 'border-light-border'}`}>Quarter</th>
+              <th className={`p-2 text-center font-bold ${isDark ? 'text-slate-400' : 'text-slate-600'} border ${isDark ? 'border-cmd-border' : 'border-light-border'}`}>FG%</th>
+              <th className={`p-2 text-center font-bold ${isDark ? 'text-slate-400' : 'text-slate-600'} border ${isDark ? 'border-cmd-border' : 'border-light-border'}`}>3PT%</th>
+              <th className={`p-2 text-center font-bold ${isDark ? 'text-slate-400' : 'text-slate-600'} border ${isDark ? 'border-cmd-border' : 'border-light-border'}`}>FT%</th>
+              <th className={`p-2 text-center font-bold ${isDark ? 'text-slate-400' : 'text-slate-600'} border ${isDark ? 'border-cmd-border' : 'border-light-border'}`}>PPG</th>
+            </tr>
+          </thead>
+          <tbody>
+            {quarterData.map((q, i) => (
+              <tr key={i} className={q.quarter === 'Q3' ? (isDark ? 'bg-red-500/10' : 'bg-red-50') : ''}>
+                <td className={`p-2 font-bold ${isDark ? 'text-white' : 'text-slate-800'} border ${isDark ? 'border-cmd-border' : 'border-light-border'}`}>
+                  {q.quarter}
+                  {q.quarter === 'Q3' && <span className="ml-1 text-[7px] text-red-400">⚠️</span>}
+                  {q.quarter === 'Q4' && <span className="ml-1 text-[7px] text-green-400">🔥</span>}
+                </td>
+                <td className={`p-2 text-center font-bold border ${isDark ? 'border-cmd-border' : 'border-light-border'} ${getCellColor(q.fg, seasonAvg.fg)}`}>
+                  {q.fg.toFixed(1)}%
+                </td>
+                <td className={`p-2 text-center font-bold border ${isDark ? 'border-cmd-border' : 'border-light-border'} ${getCellColor(q.threePt, seasonAvg.threePt)}`}>
+                  {q.threePt.toFixed(1)}%
+                </td>
+                <td className={`p-2 text-center font-bold border ${isDark ? 'border-cmd-border' : 'border-light-border'} ${getCellColor(q.ft, seasonAvg.ft)}`}>
+                  {q.ft.toFixed(1)}%
+                </td>
+                <td className={`p-2 text-center font-bold border ${isDark ? 'border-cmd-border' : 'border-light-border'} ${getCellColor(q.ppg, seasonAvg.ppg)}`}>
+                  {q.ppg.toFixed(1)}
+                </td>
+              </tr>
+            ))}
+            <tr className={`${isDark ? 'bg-cmd-bg/50' : 'bg-slate-100'} border-t-2 ${isDark ? 'border-cmd-border-light' : 'border-light-border-light'}`}>
+              <td className={`p-2 font-bold ${isDark ? 'text-slate-300' : 'text-slate-700'} border ${isDark ? 'border-cmd-border' : 'border-light-border'}`}>Season Avg</td>
+              <td className={`p-2 text-center font-bold ${isDark ? 'text-slate-300' : 'text-slate-700'} border ${isDark ? 'border-cmd-border' : 'border-light-border'}`}>{seasonAvg.fg.toFixed(1)}%</td>
+              <td className={`p-2 text-center font-bold ${isDark ? 'text-slate-300' : 'text-slate-700'} border ${isDark ? 'border-cmd-border' : 'border-light-border'}`}>{seasonAvg.threePt.toFixed(1)}%</td>
+              <td className={`p-2 text-center font-bold ${isDark ? 'text-slate-300' : 'text-slate-700'} border ${isDark ? 'border-cmd-border' : 'border-light-border'}`}>{seasonAvg.ft.toFixed(1)}%</td>
+              <td className={`p-2 text-center font-bold ${isDark ? 'text-slate-300' : 'text-slate-700'} border ${isDark ? 'border-cmd-border' : 'border-light-border'}`}>{seasonAvg.ppg.toFixed(1)}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div className="flex items-center justify-center gap-4 mt-3 text-[8px]">
+        <div className="flex items-center gap-1">
+          <span className="text-green-400">↑</span>
+          <span className={isDark ? 'text-slate-500' : 'text-slate-400'}>Above avg</span>
+        </div>
+        <div className="flex items-center gap-1">
+          <span className="text-red-400">↓</span>
+          <span className={isDark ? 'text-slate-500' : 'text-slate-400'}>Below avg</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// WIDGET 4: Game Predictions Interactive Widget
+const GamePredictionsWidget = ({ isDark = true, opponent = 'Pistons' }) => {
+  const [torScore, setTorScore] = useState(() => {
+    const saved = localStorage.getItem('ri-prediction-tor');
+    return saved ? parseInt(saved) : 112;
+  });
+  const [oppScore, setOppScore] = useState(() => {
+    const saved = localStorage.getItem('ri-prediction-opp');
+    return saved ? parseInt(saved) : 108;
+  });
+  const [mvp, setMvp] = useState(() => localStorage.getItem('ri-prediction-mvp') || 'Scottie Barnes');
+  const [overUnder, setOverUnder] = useState(() => localStorage.getItem('ri-prediction-ou') || 'over');
+  const [submitted, setSubmitted] = useState(() => localStorage.getItem('ri-prediction-submitted') === 'true');
+
+  const players = ['Scottie Barnes', 'RJ Barrett', 'Immanuel Quickley', 'Gradey Dick', 'Jakob Poeltl', 'Jalen Shead', 'Brandon Ingram'];
+  const totalLine = 220.5;
+  const communityAvg = { tor: 114, opp: 106, mvp: 'Scottie Barnes', over: 62 };
+
+  const handleSubmit = () => {
+    localStorage.setItem('ri-prediction-tor', torScore);
+    localStorage.setItem('ri-prediction-opp', oppScore);
+    localStorage.setItem('ri-prediction-mvp', mvp);
+    localStorage.setItem('ri-prediction-ou', overUnder);
+    localStorage.setItem('ri-prediction-submitted', 'true');
+    setSubmitted(true);
+  };
+
+  const handleReset = () => {
+    localStorage.removeItem('ri-prediction-submitted');
+    setSubmitted(false);
+  };
+
+  const totalPrediction = torScore + oppScore;
+  const predictedOU = totalPrediction > totalLine ? 'over' : 'under';
+
+  return (
+    <div className={`${isDark ? 'glass-card' : 'bg-white border border-light-border shadow-lg rounded-2xl'} p-4 h-full`}>
+      <div className="flex items-center justify-between mb-3">
+        <h3 className={`text-xs font-bold ${isDark ? 'text-white' : 'text-slate-800'} flex items-center gap-2 uppercase`}>
+          🎮 Game Predictions
+        </h3>
+        {submitted && (
+          <button 
+            onClick={handleReset}
+            className={`text-[8px] px-2 py-1 rounded ${isDark ? 'bg-cmd-bg hover:bg-cmd-card text-slate-400' : 'bg-light-card hover:bg-light-border text-slate-600'} transition-colors`}
+          >
+            Edit
+          </button>
+        )}
+      </div>
+
+      {!submitted ? (
+        <div className="space-y-3">
+          {/* Score prediction */}
+          <div>
+            <div className={`text-[9px] font-bold uppercase mb-2 ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
+              Predicted Score
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className={`text-[8px] ${isDark ? 'text-slate-500' : 'text-slate-400'} block mb-1`}>Raptors</label>
+                <input 
+                  type="number" 
+                  value={torScore} 
+                  onChange={(e) => setTorScore(parseInt(e.target.value) || 0)}
+                  className={`w-full px-2 py-1.5 rounded text-center font-bold ${isDark ? 'bg-cmd-card text-white border border-cmd-border' : 'bg-light-card text-slate-800 border border-light-border'}`}
+                  style={{fontSize:'16px'}}
+                />
+              </div>
+              <div>
+                <label className={`text-[8px] ${isDark ? 'text-slate-500' : 'text-slate-400'} block mb-1`}>{opponent}</label>
+                <input 
+                  type="number" 
+                  value={oppScore} 
+                  onChange={(e) => setOppScore(parseInt(e.target.value) || 0)}
+                  className={`w-full px-2 py-1.5 rounded text-center font-bold ${isDark ? 'bg-cmd-card text-white border border-cmd-border' : 'bg-light-card text-slate-800 border border-light-border'}`}
+                  style={{fontSize:'16px'}}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* MVP prediction */}
+          <div>
+            <div className={`text-[9px] font-bold uppercase mb-2 ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
+              Game MVP
+            </div>
+            <select 
+              value={mvp} 
+              onChange={(e) => setMvp(e.target.value)}
+              className={`w-full px-2 py-1.5 rounded font-bold ${isDark ? 'bg-cmd-card text-white border border-cmd-border' : 'bg-light-card text-slate-800 border border-light-border'}`}
+              style={{fontSize:'10px'}}
+            >
+              {players.map(p => <option key={p} value={p}>{p}</option>)}
+            </select>
+          </div>
+
+          {/* Over/Under */}
+          <div>
+            <div className={`text-[9px] font-bold uppercase mb-2 ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
+              Total Points O/U {totalLine}
+            </div>
+            <div className="flex gap-2">
+              <button 
+                onClick={() => setOverUnder('over')}
+                className={`flex-1 py-2 rounded font-bold text-[10px] transition-all ${overUnder === 'over' ? 'bg-green-500 text-white' : isDark ? 'bg-cmd-card text-slate-400 hover:bg-cmd-border' : 'bg-light-card text-slate-600 hover:bg-light-border'}`}
+              >
+                OVER
+              </button>
+              <button 
+                onClick={() => setOverUnder('under')}
+                className={`flex-1 py-2 rounded font-bold text-[10px] transition-all ${overUnder === 'under' ? 'bg-red-500 text-white' : isDark ? 'bg-cmd-card text-slate-400 hover:bg-cmd-border' : 'bg-light-card text-slate-600 hover:bg-light-border'}`}
+              >
+                UNDER
+              </button>
+            </div>
+            <div className={`text-[8px] text-center mt-1 ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
+              Your prediction: {totalPrediction} ({predictedOU === overUnder ? '✓' : '✗'} {predictedOU})
+            </div>
+          </div>
+
+          <button 
+            onClick={handleSubmit}
+            className="w-full py-2 rounded font-bold text-[11px] bg-gradient-to-r from-raptors-red to-raptors-purple text-white hover:opacity-90 transition-opacity"
+          >
+            Submit Prediction
+          </button>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          <div className={`p-3 rounded-lg text-center ${isDark ? 'bg-green-500/20 border border-green-500/40' : 'bg-green-50 border border-green-200'}`}>
+            <div className="text-2xl mb-1">✅</div>
+            <div className={`text-[9px] font-bold ${isDark ? 'text-green-400' : 'text-green-600'}`}>Prediction Submitted!</div>
+          </div>
+
+          <div className={`p-3 rounded-lg ${isDark ? 'bg-cmd-card/50' : 'bg-slate-100'}`}>
+            <div className={`text-[9px] font-bold uppercase mb-2 ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>Your Picks</div>
+            <div className="space-y-1.5">
+              <div className="flex justify-between text-[10px]">
+                <span className={isDark ? 'text-slate-400' : 'text-slate-600'}>Score:</span>
+                <span className={`font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>TOR {torScore} - {oppScore} {opponent}</span>
+              </div>
+              <div className="flex justify-between text-[10px]">
+                <span className={isDark ? 'text-slate-400' : 'text-slate-600'}>MVP:</span>
+                <span className={`font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>{mvp}</span>
+              </div>
+              <div className="flex justify-between text-[10px]">
+                <span className={isDark ? 'text-slate-400' : 'text-slate-600'}>O/U:</span>
+                <span className={`font-bold ${overUnder === 'over' ? 'text-green-400' : 'text-red-400'}`}>{overUnder.toUpperCase()}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className={`p-3 rounded-lg ${isDark ? 'bg-cmd-bg' : 'bg-light-card'}`}>
+            <div className={`text-[9px] font-bold uppercase mb-2 ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>Community Average</div>
+            <div className="space-y-1.5">
+              <div className="flex justify-between text-[9px]">
+                <span className={isDark ? 'text-slate-500' : 'text-slate-400'}>Score:</span>
+                <span className={`font-bold ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>TOR {communityAvg.tor} - {communityAvg.opp}</span>
+              </div>
+              <div className="flex justify-between text-[9px]">
+                <span className={isDark ? 'text-slate-500' : 'text-slate-400'}>Top MVP:</span>
+                <span className={`font-bold ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>{communityAvg.mvp}</span>
+              </div>
+              <div className="flex justify-between text-[9px]">
+                <span className={isDark ? 'text-slate-500' : 'text-slate-400'}>OVER picks:</span>
+                <span className={`font-bold ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>{communityAvg.over}%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ========== END WAVE 5 WIDGETS ==========
+
 function App() {
   const [games, setGames] = useState([]);
   const [selectedGame, setSelectedGame] = useState(null);
@@ -15257,6 +15693,10 @@ function App() {
     { id: 'advanced-metrics', name: 'Advanced Player Metrics', mode: 'players', icon: '📊' },
     { id: 'pace-efficiency-scatter', name: 'Pace & Efficiency Plot', mode: 'analytics', icon: '⚡' },
     { id: 'defensive-matchups', name: 'Defensive Matchups', mode: 'analytics', icon: '🛡️' },
+    { id: 'transaction-tracker', name: 'Transaction Tracker', mode: 'season', icon: '📋' },
+    { id: 'hustle-stats', name: 'Hustle Stats', mode: 'analytics', icon: '💪' },
+    { id: 'shooting-splits-quarter', name: 'Shooting by Quarter', mode: 'analytics', icon: '📊' },
+    { id: 'game-predictions', name: 'Game Predictions', mode: 'gameday', icon: '🎮' },
   ];
 
   // Save preferences to localStorage
@@ -15848,6 +16288,12 @@ function App() {
                 <div id="social-buzz" data-mode="all" style={{position:'relative'}} onClick={() => setExpandedWidget('social-buzz')}><span className="widget-expand-icon">↗</span><SocialBuzzWidget isDark={isDark} /></div>
                 <div id="team-chemistry" data-mode="all" style={{position:'relative'}} onClick={(e) => { if (e.target.closest('input[type="range"]')) return; setExpandedWidget('team-chemistry'); }}><span className="widget-expand-icon">↗</span><TeamChemistryWidget isDark={isDark} /></div>
                 <div id="momentum-tracker" data-mode="all" style={{position:'relative'}} onClick={() => setExpandedWidget('momentum-tracker')}><span className="widget-expand-icon">↗</span><MomentumTrackerWidget isDark={isDark} /></div>
+
+                {/* WAVE 5 PREMIUM WIDGETS */}
+                <div className="dg-season" data-mode="season all" id="transaction-tracker" style={{position:'relative'}} onClick={() => setExpandedWidget('transaction-tracker')}><span className="widget-expand-icon">↗</span><TransactionTrackerWidget isDark={isDark} /></div>
+                <div className="dg-stats" data-mode="analytics" id="hustle-stats" style={{position:'relative'}} onClick={() => setExpandedWidget('hustle-stats')}><span className="widget-expand-icon">↗</span><HustleStatsWidget isDark={isDark} /></div>
+                <div className="dg-analytics" data-mode="analytics" id="shooting-splits-quarter" style={{position:'relative'}} onClick={() => setExpandedWidget('shooting-splits-quarter')}><span className="widget-expand-icon">↗</span><ShootingSplitsByQuarterWidget isDark={isDark} /></div>
+                <div className="dg-community" data-mode="gameday community" id="game-predictions" style={{position:'relative'}} onClick={(e) => { if (e.target.closest('button') || e.target.closest('input') || e.target.closest('select')) return; setExpandedWidget('game-predictions'); }}><span className="widget-expand-icon">↗</span><GamePredictionsWidget isDark={isDark} opponent={selectedGame?.opponent} /></div>
               </div>
           </div>
         </div>
@@ -15919,7 +16365,7 @@ function App() {
         <div className="flex flex-col items-center gap-2">
           <div className="flex items-center gap-2 flex-wrap justify-center">
             <span className="font-bold text-raptors-red">RAPTORS INTEL</span>
-            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v14.0</span>
+            <span className={isDark ? 'text-slate-600' : 'text-slate-400'}>v14.5</span>
           </div>
           <p style={{margin:0}}>Built with 🏀 by Raptors Intel • Data from ESPN • Not affiliated with the NBA</p>
           <p style={{margin:0, fontSize:'0.65rem', opacity:0.6}}>Last Updated: {new Date().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })}</p>
