@@ -1146,7 +1146,7 @@
       .widget-wide, .widget-tall, .widget-large { /* no special sizing in column layout */ }
       @media (max-width: 1280px) { .dashboard-grid { columns: 3 220px; } }
       @media (max-width: 1024px) { .dashboard-grid { columns: 2 200px; } }
-      @media (max-width: 640px) { .dashboard-grid { columns: 2 150px; column-gap: 2px; } }
+      @media (max-width: 640px) { .dashboard-grid { columns: 1; column-gap: 0; } }
 
       /* Category border accents */
       .dg-gameday { border-left: 2px solid #CE1141; }
@@ -16090,7 +16090,7 @@ function App() {
             <AboutWidget isDark={isDark} />
           </div>
           {/* Main Content */}
-          <div className="col-span-1 lg:col-span-10 pb-20 lg:pb-10">
+          <div className="col-span-1 lg:col-span-10 pb-20 lg:pb-10 overflow-x-hidden">
               {/* Matchup Analyzer — full width above grid */}
               <div className="mb-0">
             {loadingSchedule ? (
@@ -16111,7 +16111,7 @@ function App() {
               <InsightsTicker isDark={isDark} />
               
               {/* Dashboard Mode Tabs */}
-              <div className="sticky top-0 z-30 backdrop-blur-xl bg-cmd-bg/80 border-b border-cmd-border py-2 px-4 flex items-center gap-2 mb-3" style={{marginTop:'0.75rem'}}>
+              <div className="sticky top-0 z-30 backdrop-blur-xl bg-cmd-bg/80 border-b border-cmd-border py-2 px-4 flex items-center gap-2 mb-3 overflow-x-auto" style={{marginTop:'0.75rem', WebkitOverflowScrolling:'touch'}}>
                 {[
                   { id: 'gameday', icon: '🎯', label: 'Game Day' },
                   { id: 'analytics', icon: '📊', label: 'Analytics' },
@@ -16128,7 +16128,7 @@ function App() {
                     {m.icon} {m.label}
                   </button>
                 ))}
-                <div className="ml-auto flex items-center gap-2">
+                <div className="ml-auto hidden sm:flex items-center gap-2">
                   {/* Density Toggle */}
                   <div className="flex items-center gap-1 bg-cmd-card rounded-full p-0.5">
                     {[{id:'dense',icon:'▪▪▪▪'},{id:'comfortable',icon:'▪▪▪'},{id:'compact',icon:'▪▪'}].map(d => (
