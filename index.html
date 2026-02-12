@@ -7811,22 +7811,22 @@ const MatchupAnalyzer = ({ game }) => {
   return (
     <div className="space-y-6 pb-20 animate-fade-in relative">
       {/* 1. MATCHUP HEADER */}
-      <div className="glass-card gradient-border p-8 relative overflow-hidden animate-slide-up">
+      <div className="glass-card gradient-border p-4 sm:p-8 relative overflow-hidden animate-slide-up">
          <div className="absolute inset-0 bg-grid opacity-30"></div>
          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full" style={{background: 'radial-gradient(circle, rgba(206,17,65,0.08) 0%, transparent 70%)'}}></div>
          <div className="absolute top-0 right-0 p-4 opacity-[0.04] animate-float"><img loading="lazy" src={`https://cdn.nba.com/logos/nba/${game.opponentId}/primary/L/logo.svg`} className="w-64 h-64" alt="logo" /></div>
-         <div className="relative z-10 flex flex-col md:flex-row gap-8">
+         <div className="relative z-10 flex flex-col md:flex-row gap-4 sm:gap-8">
              <div className="flex-1">
                 <div className="flex items-center gap-3 mb-2"><span className="bg-raptors-red/20 text-raptors-red border border-raptors-red/30 px-2 py-0.5 rounded text-xs font-bold uppercase">Game Prep</span><span className="text-slate-500 text-sm font-mono">{game.date} &bull; {game.venue}</span></div>
-                <h1 className="text-4xl md:text-6xl font-black text-white italic uppercase tracking-tighter mb-4 neon-text" style={{animation: 'text-reveal 0.8s ease-out both'}}>Raptors vs {game.opponent}</h1>
-                <p className="text-lg text-slate-400 max-w-2xl leading-relaxed border-l-4 border-raptors-red/50 pl-4">{analysis.summary}</p>
+                <h1 className="text-3xl sm:text-4xl md:text-6xl font-black text-white italic uppercase tracking-tighter mb-4 neon-text break-words" style={{animation: 'text-reveal 0.8s ease-out both', wordBreak: 'break-word', overflowWrap: 'break-word'}}>Raptors vs {game.opponent}</h1>
+                <p className="text-base sm:text-lg text-slate-400 max-w-2xl leading-relaxed border-l-4 border-raptors-red/50 pl-4 break-words" style={{overflowWrap: 'break-word'}}>{analysis.summary}</p>
              </div>
-             <div className="flex gap-4 items-end">
+             <div className="flex flex-wrap gap-4 items-end justify-center md:justify-end mt-4 md:mt-0">
                 <WinProbRing value={analysis.winProbability} size={100} />
-                <div className="h-12 w-px bg-cmd-border"></div>
-                <div className="text-center"><div className="text-4xl font-black text-white neon-text-subtle"><AnimatedCounter value={raptorsAgg.per} /></div><div className="text-xs text-slate-500 uppercase font-bold">TOR PER</div></div>
-                <div className="h-12 w-px bg-cmd-border"></div>
-                <div className="text-center"><div className="text-4xl font-black text-white"><AnimatedCounter value={opponentAgg.per} /></div><div className="text-xs text-slate-500 uppercase font-bold">OPP PER</div></div>
+                <div className="hidden sm:block h-12 w-px bg-cmd-border"></div>
+                <div className="text-center"><div className="text-3xl sm:text-4xl font-black text-white neon-text-subtle"><AnimatedCounter value={raptorsAgg.per} /></div><div className="text-xs text-slate-500 uppercase font-bold">TOR PER</div></div>
+                <div className="hidden sm:block h-12 w-px bg-cmd-border"></div>
+                <div className="text-center"><div className="text-3xl sm:text-4xl font-black text-white"><AnimatedCounter value={opponentAgg.per} /></div><div className="text-xs text-slate-500 uppercase font-bold">OPP PER</div></div>
              </div>
          </div>
       </div>
