@@ -16055,7 +16055,7 @@ function App() {
       <main id="main-content" className="flex-1 w-full max-w-[98%] mx-auto px-4 py-4" role="main" aria-label="Raptors Intel main content">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-3">
           {/* Mobile sidebar toggle */}
-          <div className="col-span-12 lg:hidden mb-2">
+          <div className="col-span-1 lg:col-span-12 lg:hidden mb-2">
             <button 
               onClick={() => { const el = document.getElementById('sidebar-panel'); if(el) el.classList.toggle('mobile-sidebar-hidden'); }}
               className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold transition-all ${isDark ? 'bg-cmd-card border border-cmd-border text-slate-300 hover:border-raptors-red' : 'bg-white border border-light-border text-slate-700 hover:border-raptors-red'}`}
@@ -16066,7 +16066,7 @@ function App() {
             </button>
           </div>
           {/* Slim Sidebar */}
-          <div id="sidebar-panel" className="col-span-12 lg:col-span-2 space-y-1 pb-4 mobile-sidebar-hidden lg:!block" role="complementary" aria-label="Sidebar widgets" style={{alignSelf:'start'}}>
+          <div id="sidebar-panel" className="col-span-1 lg:col-span-2 space-y-1 pb-4 mobile-sidebar-hidden lg:!block" role="complementary" aria-label="Sidebar widgets" style={{alignSelf:'start'}}>
             <ScheduleList games={games} onSelectGame={setSelectedGame} selectedGameId={selectedGame?.id} isDark={isDark} />
             <GameCountdown game={selectedGame} isDark={isDark} gameDayMode={gameDayMode} />
             <QuickStatsBar isDark={isDark} />
@@ -16090,7 +16090,7 @@ function App() {
             <AboutWidget isDark={isDark} />
           </div>
           {/* Main Content */}
-          <div className="col-span-12 lg:col-span-10 pb-20 lg:pb-10">
+          <div className="col-span-1 lg:col-span-10 pb-20 lg:pb-10">
               {/* Matchup Analyzer — full width above grid */}
               <div className="mb-0">
             {loadingSchedule ? (
