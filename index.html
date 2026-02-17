@@ -3588,27 +3588,66 @@ const enrichRoster = (simpleRoster) => {
 };
 
 const fetchRaptorsSchedule = async () => {
-  const games = [
-    { id: "g43", date: "Jan 17", opponent: "Clippers", opponentId: "1610612746", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "completed", result: "L 117-121 OT" },
-    { id: "g44", date: "Jan 19", opponent: "Lakers", opponentId: "1610612747", isHome: false, time: "10:30 PM", venue: "Crypto.com Arena", status: "completed", result: "L 93-110" },
-    { id: "g45", date: "Jan 21", opponent: "Warriors", opponentId: "1610612744", isHome: false, time: "10:00 PM", venue: "Chase Center", status: "completed", result: "W 145-127" },
-    { id: "g46", date: "Jan 22", opponent: "Kings", opponentId: "1610612758", isHome: false, time: "10:00 PM", venue: "Golden 1 Center", status: "completed", result: "W 122-109" },
-    { id: "g47", date: "Jan 24", opponent: "Trail Blazers", opponentId: "1610612757", isHome: false, time: "10:00 PM", venue: "Moda Center", status: "completed", result: "W 110-98" },
-    { id: "g48", date: "Jan 26", opponent: "Thunder", opponentId: "1610612760", isHome: false, time: "8:00 PM", venue: "Paycom Center", status: "completed", result: "W 103-101" },
-    { id: "g49", date: "Jan 29", opponent: "Knicks", opponentId: "1610612752", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "completed", result: "L 92-119" },
-    { id: "g50", date: "Jan 31", opponent: "Magic", opponentId: "1610612753", isHome: false, time: "7:00 PM", venue: "Kia Center", status: "completed", result: "L 120-130" },
-    { id: "g51", date: "Feb 1", opponent: "Jazz", opponentId: "1610612762", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "completed", result: "W 107-100" },
-    { id: "g52", date: "Feb 5", opponent: "Timberwolves", opponentId: "1610612750", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "completed", result: "L 126-128" },
-    { id: "g53", date: "Feb 6", opponent: "Bulls", opponentId: "1610612741", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "completed", result: "W 123-107" },
-    { id: "g54", date: "Feb 8", opponent: "Pacers", opponentId: "1610612754", isHome: true, time: "3:00 PM", venue: "Scotiabank Arena", status: "completed", result: "W 122-104" },
-    { id: "g55", date: "Feb 11", opponent: "Pistons", opponentId: "1610612765", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "upcoming" },
-    { id: "g56", date: "Feb 19", opponent: "Bulls", opponentId: "1610612741", isHome: false, time: "8:00 PM", venue: "United Center", status: "upcoming" },
-    { id: "g57", date: "Feb 21", opponent: "Bucks", opponentId: "1610612749", isHome: false, time: "3:30 PM", venue: "Fiserv Forum", status: "upcoming" },
-    { id: "g58", date: "Feb 24", opponent: "Thunder", opponentId: "1610612760", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "upcoming" },
-    { id: "g59", date: "Feb 25", opponent: "Spurs", opponentId: "1610612759", isHome: true, time: "7:30 PM", venue: "Scotiabank Arena", status: "upcoming" },
-    { id: "g60", date: "Feb 28", opponent: "Wizards", opponentId: "1610612764", isHome: false, time: "7:00 PM", venue: "Capital One Arena", status: "upcoming" },
-  ];
-  return { games, sources: [] };
+  try {
+    const data = await espnFetch(
+      'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/teams/28/schedule?season=2026',
+      'raptors-schedule',
+      600000 // 10 min cache
+    );
+    const events = data.events || [];
+    const games = events.map((ev, i) => {
+      const comp = ev.competitions?.[0] || {};
+      const competitors = comp.competitors || [];
+      const home = competitors.find(c => c.homeAway === 'home') || competitors[0] || {};
+      const away = competitors.find(c => c.homeAway === 'away') || competitors[1] || {};
+      const homeTeam = home.team || {};
+      const awayTeam = away.team || {};
+      const statusType = (comp.status || ev.status || {}).type || {};
+      const isHome = homeTeam.abbreviation === 'TOR';
+      const opponentTeam = isHome ? awayTeam : homeTeam;
+      const opponentEspnId = parseInt(opponentTeam.id);
+      const opponentNbaId = ESPN_TO_NBA_ID[opponentEspnId] || opponentTeam.id;
+
+      // Date formatting
+      const dt = new Date(ev.date || comp.date);
+      const dateStr = dt.toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'America/New_York' });
+      const timeStr = dt.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' });
+
+      // Status & result
+      let status = 'upcoming';
+      let result = undefined;
+      if (statusType.completed) {
+        status = 'completed';
+        const hs = Math.round(parseFloat(home.score?.displayValue || home.score?.value || home.score || 0));
+        const as = Math.round(parseFloat(away.score?.displayValue || away.score?.value || away.score || 0));
+        const torScore = isHome ? hs : as;
+        const oppScore = isHome ? as : hs;
+        const won = torScore > oppScore;
+        result = `${won ? 'W' : 'L'} ${torScore}-${oppScore}`;
+      } else if (statusType.state === 'in') {
+        status = 'live';
+      }
+
+      const venue = comp.venue?.fullName || (isHome ? 'Scotiabank Arena' : '');
+
+      return {
+        id: `g${i + 1}`,
+        date: dateStr,
+        opponent: opponentTeam.shortDisplayName || opponentTeam.displayName || opponentTeam.abbreviation || 'TBD',
+        opponentId: String(opponentNbaId),
+        isHome,
+        time: timeStr,
+        venue,
+        status,
+        result
+      };
+    });
+    return { games, sources: [{ name: 'ESPN Schedule API', url: 'https://espn.com/nba/team/schedule/_/name/tor' }] };
+  } catch (e) {
+    console.error('ESPN schedule fetch failed:', e.message);
+    // Return empty schedule on failure
+    return { games: [], sources: [] };
+  }
 };
 
 const analyzeGameMatchup = async (opponent) => {
