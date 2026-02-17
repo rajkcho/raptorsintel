@@ -2646,6 +2646,61 @@ const FUN_FACTS = [
 // Live Viewers (simulated)
 const LIVE_VIEWERS = Math.floor(Math.random() * 500) + 150;
 
+// Fetch live Raptors roster from ESPN
+const fetchLiveRaptorsRoster = async () => {
+  try {
+    const data = await espnFetch(
+      'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/teams/28/roster',
+      'raptors-roster',
+      600000
+    );
+    return (data.athletes || []).map(a => ({
+      id: String(a.id),
+      name: a.fullName,
+      position: a.position?.abbreviation || '',
+      number: a.jersey || '',
+      headshot: a.headshot?.href || '',
+      height: a.displayHeight || '',
+      weight: a.displayWeight || '',
+      age: a.age || 0,
+      _espnId: String(a.id)
+    }));
+  } catch (e) {
+    console.warn('Live Raptors roster fetch failed:', e);
+    return null;
+  }
+};
+
+// Fetch live injuries from ESPN for both Raptors and opponent
+const fetchLiveInjuries = async (opponentName) => {
+  try {
+    const data = await espnFetch(
+      'https://site.api.espn.com/apis/site/v2/sports/basketball/nba/injuries',
+      'nba-injuries',
+      300000
+    );
+    const injuries = [];
+    for (const team of (data.injuries || [])) {
+      const isRaptors = team.displayName?.includes('Raptors');
+      const isOpponent = team.displayName?.includes(opponentName);
+      if (!isRaptors && !isOpponent) continue;
+      for (const inj of (team.injuries || [])) {
+        const athlete = inj.athlete || {};
+        injuries.push({
+          player: athlete.displayName || 'Unknown',
+          status: inj.status || 'Unknown',
+          details: inj.shortComment || inj.longComment?.slice(0, 120) || 'No details',
+          team: isRaptors ? 'raptors' : 'opponent'
+        });
+      }
+    }
+    return injuries;
+  } catch (e) {
+    console.warn('Injuries fetch failed:', e);
+    return [];
+  }
+};
+
 const RAPTORS_ROSTER = [
   // --- STARTERS ---
   {
@@ -3652,6 +3707,8 @@ const fetchRaptorsSchedule = async () => {
 
 const analyzeGameMatchup = async (opponent) => {
   await new Promise(resolve => setTimeout(resolve, 300));
+  const liveInjuries = await fetchLiveInjuries(opponent);
+  const liveRaptorsRoster = await fetchLiveRaptorsRoster();
   // Try to fetch live roster from ESPN
   const liveRoster = await fetchLiveRoster(opponent);
   let opponentData = OPPONENT_DATA[opponent];
@@ -3672,11 +3729,11 @@ const analyzeGameMatchup = async (opponent) => {
   // Prefer live ESPN roster over hardcoded data
   const baseRoster = liveRoster || opponentData.roster;
   const opponentRoster = enrichRoster(baseRoster);
-  const raptorsRoster = RAPTORS_ROSTER;
+  const raptorsRoster = liveRaptorsRoster ? enrichRoster(liveRaptorsRoster) : RAPTORS_ROSTER;
   const starPlayer = opponentRoster[0].name;
   const keyDefender = opponentRoster.length > 7 ? opponentRoster[7].name : "the bench";
   const analysis = {
-    summary: `The Raptors face the ${opponent} in a crucial February matchup. With the trade deadline looming, Toronto must focus on containing ${starPlayer}. The ${opponent} have been relying on their ${opponentData.tendencies[0].toLowerCase()}, requiring disciplined rotation.`,
+    summary: `The Raptors face the ${opponent} in a key matchup. Toronto must focus on containing ${starPlayer}. The ${opponent} have been relying on their ${opponentData.tendencies[0].toLowerCase()}, requiring disciplined defensive rotation from the Raptors.`,
     winProbability: Math.floor(40 + Math.random() * 20),
     raptorsRoster, opponentRoster,
     lineupPresets: [
@@ -3692,14 +3749,8 @@ const analyzeGameMatchup = async (opponent) => {
         keysToVictory: [`Limit ${opponentRoster[0].name} in transition`, "Win the rebounding battle", "Generate 15+ deflections", `Force ${opponentRoster[1].name} to drive left`]
     },
     intel: {
-        injuries: [
-            { player: "Jakob Poeltl", status: "Out", details: "Back — ruled out Feb 8 vs Pacers", team: "raptors" },
-            { player: "Chucky Hepburn", status: "Out", details: "Out — no timetable", team: "raptors" },
-            { player: "Collin Murray-Boyles", status: "Out", details: "Left thumb — out indefinitely", team: "raptors" },
-            { player: "Brandon Ingram", status: "Active", details: "Acquired via trade from Pelicans — available", team: "raptors" },
-            { player: "Trayce Jackson-Davis", status: "Active", details: "Acquired via trade — available", team: "raptors" },
-            { player: opponentRoster[0]?.name || "Star Player", status: "Active", details: "Full go", team: "opponent" },
-            { player: opponentRoster[3]?.name || "Key Forward", status: "Questionable", details: "Knee soreness — GTD", team: "opponent" }
+        injuries: liveInjuries.length > 0 ? liveInjuries : [
+            { player: "No injury data available", status: "Unknown", details: "Check ESPN for latest updates", team: "raptors" }
         ],
         restDays: { raptors: 2, opponent: 1 },
         backToBack: { raptors: false, opponent: true },
